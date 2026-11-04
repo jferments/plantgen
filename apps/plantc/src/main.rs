@@ -493,22 +493,28 @@ Usage:
       low) unless --levels package; the export flags are plantc export's.
   plantc fill <community.json>... --tile X,Y --tile-m N [--seed N]
               [--years N] [--stands stands.json] [--out DIR]
-              [--prototypes none|used|all] [--classes N] [--seeds N]
-              [--threads N] [--quality draft|standard] [--day N]
-              [--shade attribute|baked] [--compress none|quantize|meshopt]
+              [--prototypes none|used|all] [--ages N,N,...] [--seeds N]
+              [--herbs yes|no] [--threads N] [--quality draft|standard]
+              [--day N] [--shade attribute|baked]
+              [--compress none|quantize|meshopt]
               [--attributes all|wind|none] [--triangles N[,N,N,N]]
               [--max-mib N] [--levels tiers|package]
       Fill one map tile with plant communities (each a JSON file: an id
-      and members, each a species, a layer and stems per hectare) as the
-      library API's Fill does, and write DIR/tiles/X_Y.json (header,
-      ground cover and far canopy per stand cell) and DIR/tiles/X_Y.bin
-      (32-byte instances; docs/LIBRARY-API.md). Without --stands (a
-      StandMap: cell_m, cols and cells), the first community covers the
-      tile at --years since disturbance (default 100). --prototypes used
-      (the default) also grows and exports, into DIR/prototypes with
-      prototypes.json, each prototype the tile places that is not there
-      yet; all exports every prototype; none only the tile. The plan is
-      the same on every machine and thread count, and a tile meets its
+      and members, each a species, optionally the layer it keeps to and
+      its abundance) as the library API's Fill does, and write
+      DIR/tiles/X_Y.json (header, ground cover and far canopy per stand
+      cell, stand numbers) and DIR/tiles/X_Y.bin (32-byte instances;
+      docs/LIBRARY-API.md). Each community's stand is developed at each of
+      --ages years since disturbance (default 10,20,40,80,160,320,640);
+      a stand cell takes the nearest. Without --stands (a StandMap:
+      cell_m, cols and cells), the first community covers the tile at
+      --years since disturbance (default 100). Every prototype is measured
+      first, its size kept in DIR/prototypes so a later fill grows none
+      again. --prototypes used (the default) also exports, into
+      DIR/prototypes with prototypes.json, each prototype the tile places
+      that is not there yet; all exports every prototype; none only the
+      tile. --herbs no leaves herbs to the ground cover. The plan is the
+      same on every machine and thread count, and a tile meets its
       neighbours without a seam.
   plantc inspect <package.afterplant>
       Check every object of a package and summarise it.
@@ -6061,7 +6067,8 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
             "stands",
             "out",
             "prototypes",
-            "classes",
+            "ages",
+            "herbs",
             "seeds",
             "threads",
             "quality",
@@ -6105,9 +6112,18 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
     let seed: u64 = options.number("seed")?.unwrap_or(1);
     let years: f32 = options.number("years")?.unwrap_or(100.0);
     let mut settings = api::FillSettings::default();
-    if let Some(classes) = options.number::<u16>("classes")? {
-        settings.age_classes = classes;
+    if let Some(ages) = options.flags.get("ages") {
+        settings.stand_ages = ages
+            .split(',')
+            .map(|age| age.trim().parse::<f64>())
+            .collect::<Result<Vec<_>, _>>()
+            .map_err(|_| format!("--ages takes years separated by commas, found `{ages}`"))?;
     }
+    settings.herbs = match options.flags.get("herbs").map(String::as_str) {
+        None | Some("yes") => true,
+        Some("no") => false,
+        Some(other) => return Err(format!("--herbs takes yes or no, found `{other}`").into()),
+    };
     if let Some(seeds) = options.number::<u16>("seeds")? {
         settings.seeds = seeds;
     }
@@ -6119,6 +6135,15 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
     let out = PathBuf::from(options.flags.get("out").map_or("fill", String::as_str));
     let started = Instant::now();
     let fill = api::Fill::new(&communities, &settings).map_err(|error| error.to_string())?;
+    let grown = fill
+        .measure(&[], threads, Some(&out.join("prototypes")))
+        .map_err(|error| error.to_string())?;
+    out!(
+        "measured {} prototypes ({grown} grown, the rest kept) in {:.1} s",
+        fill.prototypes().len(),
+        started.elapsed().as_secs_f64()
+    );
+    let started = Instant::now();
     let site = api::Site::flat(tile, tile_m).map_err(|error| error.to_string())?;
     let stands = match options.flags.get("stands") {
         Some(path) => {

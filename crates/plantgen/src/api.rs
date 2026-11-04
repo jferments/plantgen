@@ -48,7 +48,7 @@ use sha2::{Digest, Sha256};
 
 use crate::export;
 use crate::library::Library;
-use crate::package::{self, Inputs, Measurements};
+use crate::package::{self, Inputs};
 use crate::quality;
 
 pub use crate::export::{
@@ -58,9 +58,10 @@ pub use crate::export::{
 pub use crate::fill::{
     CanopyCell, Community, Cover, CoverKind, FieldTile, Fill, FillSettings, INSTANCE_BYTES,
     INSTANCE_SCHEMA, Instance, Layer, Member, PROTOTYPES_FILE, Prototype, PrototypeFiles,
-    PrototypeKey, STAND_CELL_M, Site, StandCell, StandMap, TileId, TilePlan, TileStats,
-    moisture_from_wetness,
+    PrototypeKey, STAND_AGES, STAND_CELL_M, STAND_SCALE, Site, StandCell, StandMap, TileId,
+    TilePlan, TileStats, moisture_from_wetness,
 };
+pub use crate::package::Measurements;
 pub use crate::quality::Quality;
 pub use crate::spec::{Environment, PlantSpec};
 
@@ -71,8 +72,13 @@ pub use crate::spec::{Environment, PlantSpec};
 /// break nothing; [`Variants`] draws tiers unless chosen. 3: [`Level`]
 /// gained `cards`, the baked-card tier a level is drawn as. 4: [`Level`]
 /// gained `parts`, its share in each region of
-/// [`Generator::export_parts`].
-pub const API_VERSION: u32 = 4;
+/// [`Generator::export_parts`]. 5: a [`Fill`] develops its stands at
+/// [`FillSettings::stand_ages`] in place of age classes, keys a
+/// [`PrototypeKey`] by its age (`age_tenths`) and is measured
+/// ([`Fill::measure`]) before [`Fill::tile`]; [`FillSettings`] is no
+/// longer `Copy` and [`TileStats`] is non-exhaustive; a plant grows past
+/// its spec's years to its old ages.
+pub const API_VERSION: u32 = 5;
 
 /// The name of the file listing a set of variants ([`VariantSet`]).
 pub const VARIANTS_FILE: &str = "variants.json";

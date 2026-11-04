@@ -177,15 +177,17 @@ fn a_young_stand_is_open_grown_and_closes_as_it_ages() {
 }
 
 #[test]
-fn ground_that_takes_no_plant_holds_none_and_a_tile_needs_its_sizes() {
+fn herbs_left_to_the_ground_cover_are_not_placed_and_a_tile_needs_its_sizes() {
     let fill = fill();
     let site = Site::flat(TileId { x: 9, y: 1 }, 40.0).expect("site");
-    let stands = StandMap::uniform(40.0, 1, 40.0);
-    let plan = fill.tile(&site, &stands, 4).expect("tile");
+    let plan = fill
+        .tile(&site, &StandMap::uniform(40.0, 1, 40.0), 4)
+        .expect("tile");
     assert!(plan.stats.instances > 0);
     // Herbs left to the ground cover: none placed, the cover kept.
     let mut settings = settings();
     settings.herbs = false;
+    let stands = StandMap::uniform(40.0, 0, 40.0);
     let bare = Fill::new(&[meadow()], &settings).expect("fill");
     assert!(bare.tile(&site, &stands, 4).is_err(), "not measured yet");
     bare.measure(&[], 2, None).expect("measured");

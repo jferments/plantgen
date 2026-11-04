@@ -697,8 +697,8 @@ fn fill_writes_a_tile_and_the_prototypes_it_places() {
         "40",
         "--seed",
         "5",
-        "--classes",
-        "2",
+        "--ages",
+        "20,40",
         "--seeds",
         "1",
         "--quality",
@@ -734,8 +734,11 @@ fn fill_writes_a_tile_and_the_prototypes_it_places() {
             );
         }
     }
-    // Filling again keeps the prototypes and writes the same tile.
+    assert!(made.contains("measured 1 prototypes (1 grown"), "{made}");
+    // Filling again keeps the prototypes, measures none and writes the
+    // same tile.
     let again = stdout(&plantc(&args));
     assert!(again.contains("wrote"), "{again}");
+    assert!(again.contains("(0 grown"), "{again}");
     assert_eq!(fs::read(out.join("tiles/2_-3.bin")).unwrap(), bin);
 }
