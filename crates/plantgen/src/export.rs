@@ -754,7 +754,9 @@ pub fn grow(inputs: &Inputs, variant: usize, age: f64) -> Result<Plant, PackageE
             variants.len()
         ))
     })?;
-    grow_chosen(inputs, variant, chosen, age)
+    grow_chosen(inputs, variant, chosen, &[age])?
+        .pop()
+        .ok_or_else(|| format_error("the growth kept no keyframe"))
 }
 
 /// Grow the inputs' spec in `environment` from any `seed`, over all its
@@ -767,14 +769,33 @@ pub fn grow(inputs: &Inputs, variant: usize, age: f64) -> Result<Plant, PackageE
 ///
 /// # Errors
 ///
-/// When the age is not within the spec's years, or the plant does not
-/// grow.
+/// When the age is not within the spec's years or its old ages
+/// ([`PlantSpec::old_ages`](crate::spec::PlantSpec::old_ages)), or the
+/// plant does not grow.
 pub fn grow_seed(
     inputs: &Inputs,
     environment: Environment,
     seed: u64,
     age: f64,
 ) -> Result<Plant, PackageError> {
+    grow_seed_ages(inputs, environment, seed, &[age])?
+        .pop()
+        .ok_or_else(|| format_error("the growth kept no keyframe"))
+}
+
+/// [`grow_seed`] at each of `ages` (ascending), from one growth: the
+/// plant as it stands at each age, as a stand's cohorts of one species
+/// and seed are.
+///
+/// # Errors
+///
+/// As [`grow_seed`], for any of the ages.
+pub fn grow_seed_ages(
+    inputs: &Inputs,
+    environment: Environment,
+    seed: u64,
+    ages: &[f64],
+) -> Result<Vec<Plant>, PackageError> {
     let spec = &inputs.spec;
     let variants = spec.variant_list();
     let listed = variants.iter().position(|variant| {
@@ -797,38 +818,59 @@ pub fn grow_seed(
     };
     // A seed the package does not keep gets an index past its variants,
     // so no package check takes it for one it keeps.
-    grow_chosen(inputs, listed.unwrap_or(variants.len()), &chosen, age)
+    grow_chosen(inputs, listed.unwrap_or(variants.len()), &chosen, ages)
 }
 
 fn grow_chosen(
     inputs: &Inputs,
     variant: usize,
     chosen: &crate::spec::Variant,
-    age: f64,
-) -> Result<Plant, PackageError> {
-    if !(age > 0.0 && age <= inputs.spec.growth.years) {
+    ages: &[f64],
+) -> Result<Vec<Plant>, PackageError> {
+    // Past its years, a plant grows on to its old ages as a grown-old
+    // spec does (`PlantSpec::grown_old`).
+    let years = inputs.spec.growth.years;
+    let oldest = inputs
+        .spec
+        .old_ages()
+        .last()
+        .copied()
+        .unwrap_or(years)
+        .max(years);
+    if let Some(age) = ages.iter().find(|age| !(**age > 0.0 && **age <= oldest)) {
         return Err(format_error(format!(
-            "{} grows for {} years; an age must be above 0 and at most that, found {age}",
-            inputs.spec.id, inputs.spec.growth.years
+            "{} grows for {oldest} years; an age must be above 0 and at most that, found {age}",
+            inputs.spec.id
         )));
     }
-    let growth = package::grow_one(inputs, chosen, &[age])?;
+    if ages.windows(2).any(|pair| pair[1] <= pair[0]) {
+        return Err(format_error(format!(
+            "{}: ages must rise, found {ages:?}",
+            inputs.spec.id
+        )));
+    }
+    let until = ages.last().copied().unwrap_or(years).max(years);
+    let growth = package::grow_until(inputs, chosen, ages, until)?;
     let organ_types = growth.organ_types;
-    let graph = growth
+    if growth.keyframes.len() != ages.len() {
+        return Err(format_error("the growth kept no keyframe"));
+    }
+    Ok(growth
         .keyframes
         .into_iter()
-        .next()
-        .ok_or_else(|| format_error("the growth kept no keyframe"))?;
-    let size = Measurements::of(&graph, &organ_types);
-    Ok(Plant {
-        variant,
-        environment: chosen.environment,
-        seed: chosen.seed,
-        class: chosen.class.map(|class| class.to_string()),
-        graph,
-        organ_types,
-        size,
-    })
+        .map(|graph| {
+            let size = Measurements::of(&graph, &organ_types);
+            Plant {
+                variant,
+                environment: chosen.environment,
+                seed: chosen.seed,
+                class: chosen.class.map(|class| class.to_string()),
+                graph,
+                organ_types: organ_types.clone(),
+                size,
+            }
+        })
+        .collect())
 }
 
 /// Export `plant` of `inputs` as `settings` say; with `built`, the package
