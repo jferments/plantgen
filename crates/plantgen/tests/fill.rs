@@ -295,3 +295,360 @@ fn a_tall_plants_parts_draw_each_level_between_them() {
     let small = yarrow.grow(1).expect("it grows");
     assert!(plantgen::api::crown_regions(&small.size).is_empty());
 }
+
+/// A fill over a measured site: plants on shallow soil stay small, and
+/// plants that came up by themselves in a pavement's cracks are drawn.
+mod on_a_site_field {
+    use std::sync::Arc;
+
+    use std::sync::LazyLock;
+
+    use super::{StandMap, TileId, fill};
+    use plantgen::api::{Community, CrackPlant, FieldSettings, Fill, FillSettings, Site};
+    use plantgen::math::Vec3;
+    use plantgen::pavement::{Crack, CrackTile, Hole, Pavement};
+    use plantgen::site::{SiteMesh, Surface};
+    use plantgen::site_field::build;
+    use plantgen::substrate::{BUILT, ROCK, SOIL};
+    use plantgen::succession::{Colonist, Dispersal, Settings, Size, Source, microsites};
+
+    type Parts = (Vec<Vec3>, Vec<[u32; 3]>, Vec<u8>);
+
+    /// A box from `low` to `high`, its faces wound outward.
+    fn cuboid(low: Vec3, high: Vec3, material: u8, out: &mut Parts) {
+        let first = u32::try_from(out.0.len()).unwrap();
+        for i in 0..8 {
+            out.0.push(Vec3::new(
+                if i & 1 == 0 { low.x } else { high.x },
+                if i & 2 == 0 { low.y } else { high.y },
+                if i & 4 == 0 { low.z } else { high.z },
+            ));
+        }
+        for [a, b, c, d] in [
+            [0, 4, 6, 2],
+            [1, 3, 7, 5],
+            [0, 1, 5, 4],
+            [2, 6, 7, 3],
+            [0, 2, 3, 1],
+            [4, 5, 7, 6],
+        ] {
+            out.1.push([first + a, first + b, first + c]);
+            out.1.push([first + a, first + c, first + d]);
+            out.2.extend([material, material]);
+        }
+    }
+
+    /// Ground 40 m across, its top at 0: `soil_m` of soil over rock.
+    fn ground(soil_m: f64) -> SiteMesh {
+        let mut parts = (Vec::new(), Vec::new(), Vec::new());
+        cuboid(
+            Vec3::new(-20.0, -soil_m, -20.0),
+            Vec3::new(20.0, 0.0, 20.0),
+            SOIL,
+            &mut parts,
+        );
+        cuboid(
+            Vec3::new(-20.0, -soil_m - 3.0, -20.0),
+            Vec3::new(20.0, -soil_m, 20.0),
+            ROCK,
+            &mut parts,
+        );
+        SiteMesh::new(&parts.0, &parts.1, &parts.2).unwrap()
+    }
+
+    fn settings() -> FieldSettings {
+        FieldSettings {
+            cell_m: 1.0,
+            margin_m: 0.0,
+            sky_rays: 16,
+            ..FieldSettings::default()
+        }
+    }
+
+    /// The fill's tile over all of `mesh`: 40 m, its south-west corner at
+    /// (-20, 20), north being -z.
+    fn tile_of(mesh: &SiteMesh) -> Site {
+        let field = build(mesh, [-20.0, -20.0], [20.0, 20.0], &settings()).unwrap();
+        Site::from_field(TileId { x: 0, y: 0 }, 40.0, Arc::new(field), [-20.0, 20.0]).unwrap()
+    }
+
+    #[test]
+    fn trees_on_shallow_soil_are_drawn_smaller_and_cover_less() {
+        let fill = fill();
+        let stands = StandMap::uniform(40.0, 0, 40.0);
+        let deep = fill.tile(&tile_of(&ground(4.0)), &stands, 5).unwrap();
+        let shallow = fill.tile(&tile_of(&ground(0.03)), &stands, 5).unwrap();
+        // The same plants stand in the same places, only smaller.
+        assert_eq!(deep.instances.len(), shallow.instances.len());
+        let mut smaller = 0;
+        for (d, s) in deep.instances.iter().zip(&shallow.instances) {
+            assert_eq!(
+                (d.prototype, d.position[0], d.position[1]),
+                (s.prototype, s.position[0], s.position[1])
+            );
+            assert!(s.scale <= d.scale + 1.0e-6, "{} > {}", s.scale, d.scale);
+            smaller += usize::from(s.scale < 0.9 * d.scale);
+        }
+        assert!(smaller > 0, "no plant was held back by 3 cm of soil");
+        // Firs have no `soil@1`, so only the herbs count for less.
+        assert!(shallow.stats.basal_area_m2_per_ha <= deep.stats.basal_area_m2_per_ha);
+        assert!(shallow.stats.canopy_cover <= deep.stats.canopy_cover);
+    }
+
+    /// Ground 40 m across under a slab with one 2 cm crack across it, east
+    /// to west at z = 2, and a pothole 7 cm deep in soil at (0, 6).
+    fn cracked_lot() -> SiteMesh {
+        let mut site = ground(2.0);
+        let tile = CrackTile {
+            version: 1,
+            origin_m: [-20.0, -20.0],
+            size_m: [40.0, 40.0],
+            top_m: 0.0,
+            thickness_m: 0.08,
+            base_m: 0.2,
+            base_rootable: None,
+            subgrade_m: None,
+            subgrade_rootable: None,
+            surface: "asphalt".into(),
+            cell_m: None,
+            cracks: vec![Crack {
+                points_m: vec![[-15.0, 2.0], [15.0, 2.0]],
+                width_m: vec![0.02, 0.02],
+                fill_m: vec![0.06, 0.06],
+            }],
+            holes: vec![Hole {
+                outline_m: (0..12)
+                    .map(|k| {
+                        let t = std::f64::consts::TAU * f64::from(k) / 12.0;
+                        [0.35 * t.cos(), 6.0 + 0.35 * t.sin()]
+                    })
+                    .collect(),
+                depth_m: 0.12,
+                fill_m: 0.07,
+            }],
+            traffic: Vec::new(),
+            made_by: None,
+        };
+        site.add_pavement(Pavement::new(&tile).unwrap());
+        site
+    }
+
+    #[test]
+    fn plants_that_came_up_in_a_crack_are_drawn_after_the_stands() {
+        let fill = fill();
+        let mesh = cracked_lot();
+        let traits = plantgen::library::Library::builtin()
+            .traits_of("achillea-millefolium")
+            .unwrap();
+        let soil = plantgen::api::Generator::new(
+            "achillea-millefolium",
+            &plantgen::api::Options::default(),
+        )
+        .unwrap()
+        .soil_need();
+        let mut yarrow = Colonist::new(
+            "achillea-millefolium",
+            &traits,
+            false,
+            soil,
+            vec![
+                Size {
+                    age: 1.0,
+                    height: 0.15,
+                    crown: 0.08,
+                },
+                Size {
+                    age: 3.0,
+                    height: 0.4,
+                    crown: 0.15,
+                },
+                Size {
+                    age: 8.0,
+                    height: 0.6,
+                    crown: 0.2,
+                },
+            ],
+        );
+        yarrow.dispersal = vec![Dispersal::Wind];
+        let sites = microsites(&mesh, 2);
+        let settings = Settings {
+            seed: 3,
+            traffic: 0.0,
+            maintenance: 0.0,
+        };
+        // A yarrow at the lot's edge seeds it.
+        let parent = Source {
+            colonist: 0,
+            x: 0.0,
+            z: 9.0,
+            age: 5.0,
+        };
+        let site = tile_of(&mesh)
+            .with_colonists(&sites, &[yarrow], &[parent], &settings, 8)
+            .unwrap();
+        assert!(!site.colonists.is_empty(), "nothing came up in 8 years");
+        // The slab leaves no room for the stand; only the crack's plants.
+        let mut stands = StandMap::uniform(40.0, 1, 40.0);
+        stands.cells[0].community = None;
+        let plan = fill.tile(&site, &stands, 5).unwrap();
+        assert_eq!(plan.instances.len(), site.colonists.len());
+        for (instance, plant) in plan.instances.iter().zip(&site.colonists) {
+            // North 18 m from the corner at z = 20 is the crack at z = 2,
+            // north 14 m the pothole at z = 6.
+            let north = f64::from(instance.position[1]);
+            assert!(
+                (north - 18.0).abs() < 0.2 || (north - 14.0).abs() < 0.5,
+                "{plant:?} at {:?}",
+                instance.position
+            );
+            assert!((plant.north - north).abs() < 1.0e-3, "{plant:?}");
+            assert!(plant.height_m > 0.0 && instance.scale > 0.0);
+        }
+        // The same site fills the same way.
+        assert_eq!(
+            fill.tile(&site, &stands, 5).unwrap().instances,
+            plan.instances
+        );
+        // A colonist the fill holds no prototype of is refused.
+        let mut stranger = site.clone();
+        stranger.colonists.push(CrackPlant {
+            species: "taraxacum-sect-taraxacum".into(),
+            east: 1.0,
+            north: 18.0,
+            age_years: 2.0,
+            height_m: 0.2,
+            crown_m: 0.1,
+        });
+        let error = fill.tile(&stranger, &stands, 5).unwrap_err().to_string();
+        assert!(error.contains("crack pool"), "{error}");
+    }
+
+    /// Soil 1 m deep over rock, 40 m across, and a brick shed 10 m by 10 m
+    /// and 3 m high from x = -10 to 0 and z = -5 to 5, 4 cm of soil
+    /// gathered on its flat roof.
+    fn yard() -> SiteMesh {
+        let mut parts = (Vec::new(), Vec::new(), Vec::new());
+        cuboid(
+            Vec3::new(-20.0, -1.0, -20.0),
+            Vec3::new(20.0, 0.0, 20.0),
+            SOIL,
+            &mut parts,
+        );
+        cuboid(
+            Vec3::new(-20.0, -4.0, -20.0),
+            Vec3::new(20.0, -1.0, 20.0),
+            ROCK,
+            &mut parts,
+        );
+        cuboid(
+            Vec3::new(-10.0, -0.3, -5.0),
+            Vec3::new(0.0, 3.0, 5.0),
+            BUILT,
+            &mut parts,
+        );
+        let mut surfaces: Vec<Surface> = parts.2.iter().map(|m| Surface::solid(*m)).collect();
+        // The shed's top: its fourth face, triangles 6 and 7 of its 12.
+        let top = surfaces.len() - 12 + 6;
+        for surface in &mut surfaces[top..top + 2] {
+            surface.soil_m = 0.04;
+        }
+        SiteMesh::with_surfaces(&parts.0, &parts.1, &surfaces).unwrap()
+    }
+
+    /// A yard's herbs and the ivy on its walls, its climbers grown on a
+    /// wall.
+    static YARD_FILL: LazyLock<Fill> = LazyLock::new(|| {
+        let yard = Community::from_json(
+            r#"{"id": "test-yard", "members": [
+                {"species": "achillea-millefolium", "layer": "herb", "environments": ["open"], "abundance": 1.6},
+                {"species": "hedera-helix", "layer": "climber"}
+            ]}"#,
+        )
+        .unwrap();
+        let mut settings = FillSettings::default();
+        settings.stand_ages = vec![20.0];
+        settings.seeds = 1;
+        let fill = Fill::new(&[yard], &settings).unwrap();
+        fill.measure(&[], 8, None).unwrap();
+        fill
+    });
+
+    /// `v` turned by the quaternion `q` (x, y, z, w).
+    #[allow(clippy::many_single_char_names)]
+    fn turned(q: [f32; 4], v: [f64; 3]) -> [f64; 3] {
+        let [x, y, z, w] = q.map(f64::from);
+        let t = [
+            2.0 * (y * v[2] - z * v[1]),
+            2.0 * (z * v[0] - x * v[2]),
+            2.0 * (x * v[1] - y * v[0]),
+        ];
+        [
+            v[0] + w * t[0] + (y * t[2] - z * t[1]),
+            v[1] + w * t[1] + (z * t[0] - x * t[2]),
+            v[2] + w * t[2] + (x * t[1] - y * t[0]),
+        ]
+    }
+
+    #[test]
+    fn ivy_stands_at_the_foot_of_walls_and_herbs_on_a_roof_with_soil() {
+        let fill = &*YARD_FILL;
+        let site = tile_of(&yard());
+        let stands = StandMap::uniform(40.0, 0, 20.0);
+        let plan = fill.tile(&site, &stands, 3).unwrap();
+        assert_eq!(fill.tile(&site, &stands, 3).unwrap(), plan);
+        let shed =
+            |east: f32, north: f32| (10.0..=20.0).contains(&east) && (15.0..=25.0).contains(&north);
+        let (mut ivy, mut on_roof, mut on_ground) = (0, Vec::new(), Vec::new());
+        for instance in &plan.instances {
+            let prototype = &fill.prototypes()[instance.prototype as usize];
+            let [east, north, up] = instance.position;
+            if prototype.key.on_wall {
+                ivy += 1;
+                assert_eq!(prototype.key.species, "hedera-helix");
+                assert_eq!(instance.extra, 30, "clipped at the 3 m wall's top");
+                // 0.3 m out from one of the shed's faces, its own face
+                // (the prototype's south) turned onto the wall's.
+                let x = f64::from(east) - 20.0;
+                let z = 20.0 - f64::from(north);
+                let faces = [
+                    ((x + 10.3).abs(), [-1.0, 0.0]),
+                    ((x - 0.3).abs(), [1.0, 0.0]),
+                    ((z + 5.3).abs(), [0.0, 1.0]),
+                    ((z - 5.3).abs(), [0.0, -1.0]),
+                ];
+                let (gap, out) = faces
+                    .iter()
+                    .copied()
+                    .min_by(|a, b| a.0.total_cmp(&b.0))
+                    .unwrap();
+                assert!(
+                    gap < 0.3,
+                    "ivy {gap:.2} m off the 0.3 m line at ({x:.2}, {z:.2})"
+                );
+                let facing = turned(instance.rotation, [0.0, -1.0, 0.0]);
+                assert!(
+                    (facing[0] - out[0]).abs() < 1e-3 && (facing[1] - out[1]).abs() < 1e-3,
+                    "faces {facing:?}, the wall {out:?}"
+                );
+                assert!(up.abs() < 0.05);
+            } else if shed(east, north) {
+                assert!((up - 3.0).abs() < 0.05, "a herb inside the shed at {up} m");
+                on_roof.push(instance.scale);
+            } else {
+                on_ground.push(instance.scale);
+            }
+        }
+        // 40 m of wall foot, one ivy every 3 m or so.
+        assert!((6..=24).contains(&ivy), "{ivy} ivies");
+        assert!(!on_roof.is_empty() && !on_ground.is_empty());
+        // 4 cm of roof soil holds a herb back.
+        #[allow(clippy::cast_precision_loss)]
+        let mean = |v: &[f32]| v.iter().sum::<f32>() / v.len() as f32;
+        assert!(
+            mean(&on_roof) < 0.8 * mean(&on_ground),
+            "{} {}",
+            mean(&on_roof),
+            mean(&on_ground)
+        );
+    }
+}

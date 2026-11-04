@@ -24,7 +24,7 @@ carry soil green; wetness and heat load from above.
 | Pavement | `crates/plantgen/src/pavement.rs` | `CrackTile` (what a host hands over: slab, cracks, holes, soil in them) and `Pavement` (the tile rasterised; footing, classify, wear, openings). |
 | Pavement colonisation | `crates/plantgen/src/succession.rs` | Which plants come up by themselves in the cracks, year by year, without growing each one. |
 | Site field | `crates/plantgen/src/site_field.rs` | `SiteField`: one tile measured once (ground grid, hosts and patches, crack sites) for stands and other hosts. |
-| Stand fill's ground | `crates/plantgen/src/fill.rs` | `Site::from_field`: a fill tile over a site field, where plants may stand (`plantable_at`) and what their niches read (`site_factors_at`, moisture from the wetness index by `moisture_from_wetness`). See SITE-FIELD.md, "Reading it for stands". |
+| Stand fill's ground | `crates/plantgen/src/fill.rs` | `Site::from_field`: a fill tile over a site field, where plants may stand (`plantable_at`), what their niches read (`site_factors_at`, moisture from the wetness index by `moisture_from_wetness`), how much soil their roots find (`soil_ratio_at`), and the plants that came up in its cracks (`with_colonists`). See SITE-FIELD.md, "Reading it for stands". |
 | Host API | `crates/plantgen/src/api.rs` | `SiteInput`, `site_mesh`, `site_field`, `site_material`: the same from plain arrays, no files. |
 | CLI | `apps/plantc/src/main.rs` | `plantc site` (grow and draw plants on a site), `plantc cracks` (colonisation), `plantc field` (measure a field). |
 | Tests | `crates/plantgen/tests/sites.rs` | Sites, pavements, colonisation, and the `field` module. Unit tests of the tracer are in `site_field.rs`. |
@@ -182,6 +182,7 @@ fifth of that. What made the difference, so it is not lost:
 ```bash
 cargo test --release -p plantgen --test sites field   # the field
 cargo test --release -p plantgen --lib site_field     # the tracer
+cargo test --release -p plantgen --test fill on_a_site_field  # a fill on a field
 python3 docs/sites/make_block.py                      # rewrites block.*
 ./target/release/plantc field docs/sites/block.json --out /tmp/block-field.json \
   --tile -20,-18,20,18 --margin 0
