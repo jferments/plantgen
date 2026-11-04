@@ -75,6 +75,8 @@ macro_rules! out {
     };
 }
 
+mod scene;
+
 fn main() -> ExitCode {
     match run() {
         Ok(()) | Err(Failure::OutputClosed) => ExitCode::SUCCESS,
@@ -118,7 +120,9 @@ fn run() -> Result<(), Failure> {
         "audit" => audit_command(&args),
         "grow" => grow_command(&args),
         "stand" => stand_command(&args),
+        "scene" => scene::scene_command(&args),
         "site" => site_command(&args),
+        "cracks" => cracks_command(&args),
         "render" => render_command(&args),
         "sheet" => sheet_command(&args),
         "tiers" => tiers_command(&args),
@@ -253,6 +257,24 @@ Usage:
       and north: the stand is a tile that wraps at its edges) and
       conditions (a place every plant grows in). Seeds default to each
       spec's first.
+  plantc scene <scene.json> [--out PREFIX] [--views side,oblique,top,close]
+               [--size PIXELS] [--day N] [--quality draft|standard]
+               [--focus X,Y,Z [--span METRES]] [--cover HALF]
+      Lay grown variants out as instances and draw them together, as a
+      host's renderer draws a forest (stands plan, step 1). The document
+      gives instances: each one's species, env (open, edge, interior or
+      suppressed; open when left out), seed, age (years), at (metres east
+      and north), yaw (degrees, anticlockwise from above) and scale. Each
+      species, environment and seed grows once, to its oldest age; nothing
+      grows together. --out writes PREFIX-VIEW.png for each view (close
+      frames --focus, SPAN metres across, default 4). --cover prints the
+      share of the square HALF metres each way from the middle that crowns
+      cover seen straight down. A `lay_out` block lays members out on a
+      tile by their crowns (plantgen::stand_tile); a `develop` block
+      builds the stand from its stand_age and species pool (species, env,
+      seeds), each species' niche and lifespan, and a site's moisture,
+      heat_load, elevation_m and slope_deg (plantgen::development), with
+      tile_m, seed, repeat, cover, scale, overlap and herb_radius_m.
   plantc site <site.json> [--out FILE.png] [--view VIEW] [--size PIXELS]
               [--day N] [--quality draft|standard]
               [--focus X,Y,Z [--span METRES]]
@@ -280,6 +302,31 @@ Usage:
       or with --focus a close-up of SPAN metres (default 2) round a point
       in the mesh's frame. docs/sites/house.json is a house with windows
       and a door kept clear, a picket fence and a wire fence.
+      pavements lists crack tiles (JSON files, plantgen::pavement): a
+      paved slab with its cracks and holes and the soil in them, standing
+      in for the mesh at and below its surface. A plant set on one roots
+      in a crack: on sound slab it moves to the nearest opening within
+      snap_m (0.05 m when left out) or is refused. docs/sites/road.json
+      is a street with its cracks at three decay levels
+      (docs/sites/make_road.py).
+  plantc cracks <site.json> [--years 0,2,5,10,20] [--traffic 0-1]
+                [--maintenance 0-1] [--seed N] [--pool ID,ID...]
+                [--explain 1] [--out FOLDER [--render 1] [--view VIEW]
+                [--size PIXELS] [--quality draft|standard]
+                [--focus X,Y,Z [--span METRES]]]
+      Which plants come up by themselves in a site's pavements, year by
+      year from bare slab (pavement-cracks plan K3, plantgen::succession):
+      seed from far off and from the document's seed_sources (plants
+      near the site: species, at [x, z], years), caught by each crack
+      and hole; seedlings that take hold as the soil there carries them;
+      growth held back by that soil; death by life span, drought,
+      trampling (the tiles' traffic lanes, scaled by --traffic), shade
+      and upkeep (--maintenance, a yearly chance of weeding). The pool
+      is the Pacific Northwest's pavement weeds unless --pool names
+      species. Prints the plants of each year in --years, by species and
+      by tile; with --explain, each species' soil supply by kind of
+      opening. With --out, writes the site with each year's plants
+      (SITE-year-N.json, for plantc site), and with --render 1 draws it.
   plantc tiers <species>... --out FOLDER [--seed N] [--size PIXELS] [--age YEARS]
                [--columns full,cards,far] [--view VIEW] [--focus F,S]
                [--views side,oblique,close]
@@ -405,13 +452,18 @@ Usage:
       sheet with each stage's tile lit and a trunk wearing it.
   plantc build <species|spec.json> [--out DIR] [--quality draft|standard]
                [--threads N] [--profile static|motion] [--cards yes|no]
+               [--old yes|no]
       Build a .afterplant package in DIR (default `plants`) and print its
       key. A package that is already built is not built again. With
       --profile motion it also holds each keyframe's bones and branches
       and each level's binding to them (plant motion S2), under a key of
       its own; the static package is unchanged. With --cards yes it also
       holds each keyframe's baked-card tiers (low and minimal cards, the
-      far impostor; see `plantc tiers`), under a key of its own.
+      far impostor; see `plantc tiers`), under a key of its own. With
+      --old yes it also grows the species' old ages, for stands: each
+      twice the one before past its oldest keyframe, up to the age its old
+      plants commonly reach (`age_max_years`; Douglas-fir 120, 240 and 480
+      years), under a key of its own.
   plantc variants <species|spec.json> --count N [--out DIR] [--first-seed N]
                  [--env ENV] [--age N] [--day N] [--quality draft|standard]
                  [--threads N] [--shade attribute|baked]
@@ -2428,12 +2480,14 @@ fn grow_command(args: &[String]) -> Result<(), Failure> {
     let environment = options.environment(&spec)?;
     let seed = options.number("seed")?.unwrap_or(spec.variants.seeds[0]);
     let years = options.number("years")?.unwrap_or(spec.growth.years);
-    // The spec's ages, the ages it gives reference sizes for, and the end.
+    // The spec's ages, its old ages, the ages it gives reference sizes
+    // for, and the end.
     let mut keyframes: Vec<f64> = spec
         .growth
         .keyframes
         .iter()
         .copied()
+        .chain(spec.old_ages())
         .chain(
             spec.allometry
                 .iter()
@@ -3078,6 +3132,450 @@ fn site_size(spec: &PlantSpec, age: f64) -> (f64, f64) {
     (height, reach.max(height * 0.3))
 }
 
+/// The mesh and pavements of a site document whose files are named from
+/// `folder` (`plantc site`, `plantc cracks`).
+fn site_mesh_of(
+    document: &serde_json::Value,
+    folder: &Path,
+) -> Result<plantgen::site::SiteMesh, Failure> {
+    use plantgen::site::Surface;
+    let mesh_path = folder.join(
+        document["mesh"]
+            .as_str()
+            .ok_or("a site names its mesh, an OBJ file")?,
+    );
+    let mut names: BTreeMap<String, Surface> = BTreeMap::new();
+    if let Some(table) = document["materials"].as_object() {
+        for (name, given) in table {
+            names.insert(name.clone(), site_surface(name, given)?);
+        }
+    }
+    let fallback = names
+        .get("*")
+        .copied()
+        .unwrap_or(Surface::solid(plantgen::substrate::SOIL));
+    let material_of = |name: Option<&str>| -> Result<Surface, String> {
+        Ok(name
+            .and_then(|name| names.get(name))
+            .copied()
+            .unwrap_or(fallback))
+    };
+    let z_up = document["z_up"].as_bool().unwrap_or(false);
+    let obj = fs::read_to_string(&mesh_path)
+        .map_err(|error| format!("cannot read {}: {error}", mesh_path.display()))?;
+    let mut site_mesh = plantgen::site::SiteMesh::from_obj(&obj, z_up, &material_of)
+        .map_err(|error| format!("{}: {error}", mesh_path.display()))?;
+    for given in document["pavements"].as_array().into_iter().flatten() {
+        let name = given
+            .as_str()
+            .ok_or("site pavements are crack tile files")?;
+        let path = folder.join(name);
+        let text = fs::read_to_string(&path)
+            .map_err(|error| format!("cannot read {}: {error}", path.display()))?;
+        let tile = plantgen::pavement::CrackTile::from_json(&text)
+            .map_err(|error| format!("{}: {error}", path.display()))?;
+        let pavement = plantgen::pavement::Pavement::new(&tile)
+            .map_err(|error| format!("{}: {error}", path.display()))?;
+        out!(
+            "pavement {name}: {} cracks, {} holes, {:.1}% open",
+            tile.cracks.len(),
+            tile.holes.len(),
+            pavement.open_share() * 100.0
+        );
+        site_mesh.add_pavement(pavement);
+    }
+    Ok(site_mesh)
+}
+
+/// The pool `plantc cracks` draws on when none is given: the pavement
+/// colonists of the Pacific Northwest the plan names (pavement-cracks
+/// plan, section 6) that the library has, and the weeds of the road's
+/// verges.
+const PAVEMENT_POOL: [&str; 17] = [
+    "poa-annua",
+    "sagina-procumbens",
+    "taraxacum-sect-taraxacum",
+    "plantago-major",
+    "polygonum-aviculare",
+    "erigeron-canadensis",
+    "hypochaeris-radicata",
+    "cirsium-vulgare",
+    "trifolium-repens",
+    "holcus-lanatus",
+    "dactylis-glomerata",
+    "verbascum-thapsus",
+    "rubus-armeniacus",
+    "cytisus-scoparius",
+    "buddleja-davidii",
+    "alnus-rubra",
+    "populus-tristis",
+];
+
+/// A species of the pool for the yearly step: its facts from the library,
+/// and its size by age grown once in open ground.
+fn colonist(id: &str, ages: &[f64]) -> Result<plantgen::succession::Colonist, String> {
+    use plantgen::succession::{Colonist, Size};
+    let spec = load_spec(id)?;
+    let traits = library()
+        .traits_of(&spec.id)
+        .map_err(|error| error.to_string())?;
+    let woody = matches!(
+        traits.get("woodiness").and_then(serde_json::Value::as_str),
+        Some("woody" | "semi")
+    );
+    let (program, params) = spec
+        .program_in(library())
+        .map_err(|error| error.to_string())?;
+    let seed = spec.variants.seeds[0];
+    let params = spec.seeded_params(&program, &params, seed);
+    let soil = plantgen::lsys::tools::SoilNeed::of_program(&program, &params);
+    let years = ages.iter().copied().fold(0.0, f64::max);
+    let settings = GrowthSettings {
+        seed,
+        dt: spec.growth.step,
+        years,
+        keyframes: ages.to_vec(),
+        conditions: Conditions::preset(Environment::Open),
+        limits: Limits::default(),
+        host: None,
+    };
+    let growth = plantgen::grow::grow(&program, &params, &settings)
+        .map_err(|error| format!("{id}: {error}"))?;
+    let sideways = |p: Vec3| p.x.hypot(p.z);
+    let sizes = ages
+        .iter()
+        .zip(&growth.keyframes)
+        .map(|(&age, graph)| Size {
+            age,
+            height: graph.height,
+            crown: graph
+                .segments
+                .iter()
+                .map(|segment| sideways(segment.end))
+                .chain(graph.organs.iter().map(|organ| sideways(organ.position)))
+                .fold(0.0, f64::max),
+        })
+        .collect();
+    Ok(Colonist::new(&spec.id, &traits, woody, soil, sizes))
+}
+
+/// `plantc cracks`: the plants that come up by themselves in a site's
+/// pavements, year by year (pavement-cracks plan K3).
+#[allow(clippy::too_many_lines, clippy::cast_precision_loss)]
+fn cracks_command(args: &[String]) -> Result<(), Failure> {
+    use plantgen::succession::{Settings, microsites, run};
+    let options = Options::parse(
+        args,
+        &[
+            "years",
+            "pool",
+            "traffic",
+            "maintenance",
+            "seed",
+            "out",
+            "render",
+            "view",
+            "size",
+            "day",
+            "quality",
+            "focus",
+            "span",
+            "explain",
+        ],
+    )?;
+    let given = options.one_positional("a site document")?;
+    let text =
+        fs::read_to_string(given).map_err(|error| format!("cannot read {given}: {error}"))?;
+    let document: serde_json::Value =
+        serde_json::from_str(&text).map_err(|error| format!("invalid site: {error}"))?;
+    let folder = Path::new(given).parent().unwrap_or(Path::new("."));
+    let years: Vec<u32> = options
+        .flags
+        .get("years")
+        .map_or("0,2,5,10,20", String::as_str)
+        .split(',')
+        .map(|part| part.trim().parse::<u32>())
+        .collect::<Result<_, _>>()
+        .map_err(|_| "`--years` expects whole years, as 0,2,5,10,20")?;
+    let last = years.iter().copied().max().unwrap_or(0);
+    let mut pool: Vec<String> = match options.flags.get("pool") {
+        Some(list) => list.split(',').map(|id| id.trim().to_owned()).collect(),
+        None => PAVEMENT_POOL.iter().map(|id| (*id).to_owned()).collect(),
+    };
+    // Plants near the site that seed onto it: species, at [x, z], years.
+    let mut sources = Vec::new();
+    for (number, given) in document["seed_sources"]
+        .as_array()
+        .into_iter()
+        .flatten()
+        .enumerate()
+    {
+        let id = given["species"]
+            .as_str()
+            .ok_or_else(|| format!("seed source {number} names no species"))?;
+        let at: Vec<f64> = given["at"]
+            .as_array()
+            .map(|values| {
+                values
+                    .iter()
+                    .filter_map(serde_json::Value::as_f64)
+                    .collect()
+            })
+            .unwrap_or_default();
+        let [x, z] = at[..] else {
+            return Err(format!("seed source {number} ({id}): at must be [x, z]").into());
+        };
+        let age = given["years"]
+            .as_f64()
+            .ok_or_else(|| format!("seed source {number} ({id}) gives no years"))?;
+        let colonist = pool.iter().position(|p| p == id).unwrap_or_else(|| {
+            pool.push(id.to_owned());
+            pool.len() - 1
+        });
+        sources.push(plantgen::succession::Source {
+            colonist,
+            x,
+            z,
+            age,
+        });
+    }
+    let settings = Settings {
+        seed: options.number("seed")?.unwrap_or(1),
+        traffic: options.number("traffic")?.unwrap_or(0.0),
+        maintenance: options.number("maintenance")?.unwrap_or(0.0),
+    };
+    if !(0.0..=1.0).contains(&settings.traffic) || !(0.0..=1.0).contains(&settings.maintenance) {
+        return Err("`--traffic` and `--maintenance` run from 0 to 1".into());
+    }
+    // The site's mesh and pavements, as `plantc site` reads them, with a
+    // plant it can stand on the mesh so the document is complete.
+    let started = Instant::now();
+    let mut ages: Vec<f64> = [1.0, 2.0, 3.0, 5.0, 8.0, 12.0, 20.0, 30.0, 50.0]
+        .into_iter()
+        .filter(|age| *age <= f64::from(last.max(1)) + 1.0)
+        .collect();
+    if ages
+        .last()
+        .is_none_or(|age| *age < f64::from(last.max(1)) + 1.0)
+    {
+        ages.push(f64::from(last.max(1)) + 1.0);
+    }
+    let oldest = sources.iter().map(|s| s.age).fold(0.0, f64::max);
+    if oldest > ages.last().copied().unwrap_or(0.0) {
+        ages.push(oldest);
+    }
+    let colonists: Vec<_> = pool
+        .iter()
+        .map(|id| colonist(id, &ages))
+        .collect::<Result<_, String>>()?;
+    out!(
+        "pool of {} species grown to {} years in {:.1} s",
+        colonists.len(),
+        ages.last().copied().unwrap_or(0.0),
+        started.elapsed().as_secs_f64()
+    );
+    for c in &colonists {
+        let (height, crown) = c.size_at(f64::from(last.max(1)));
+        out!(
+            "  {:<28} {:?}{}, seed by {:?}, seed bank {:?}, trampling {:?}, shade {:?}; at {} years {:.2} m tall, {:.2} m across",
+            c.id,
+            c.life,
+            if c.woody { ", woody" } else { "" },
+            c.dispersal,
+            c.seedbank,
+            c.trampling,
+            c.shade,
+            last.max(1),
+            height,
+            crown * 2.0
+        );
+    }
+    let site = site_mesh_of(&document, folder)?;
+    let started = Instant::now();
+    let cores = std::thread::available_parallelism().map_or(1, std::num::NonZero::get);
+    let places = microsites(&site, cores);
+    out!(
+        "{} microsites ({} m patches) in {:.1} s",
+        places.len(),
+        plantgen::succession::PATCH_M,
+        started.elapsed().as_secs_f64()
+    );
+    if options.flags.contains_key("explain") {
+        // Each species' supply ratio by opening: its mean over the
+        // microsites of each class, a year-old plant and a 5-year-old one.
+        let classes: [(&str, f64, f64); 5] = [
+            ("hairline <4mm", 0.0, 0.004),
+            ("crack 4-8mm", 0.004, 0.008),
+            ("crack 8-15mm", 0.008, 0.015),
+            ("crack >15mm", 0.015, 0.05),
+            ("hole", 0.05, f64::INFINITY),
+        ];
+        out!(
+            "supply ratio rs at 1 and 5 years by opening (microsites, mean soil depth):{}",
+            classes
+                .iter()
+                .map(|(name, low, high)| {
+                    let here: Vec<_> = places
+                        .iter()
+                        .filter(|p| p.width >= *low && p.width < *high)
+                        .collect();
+                    let depth =
+                        here.iter().map(|p| p.soil_depth).sum::<f64>() / here.len().max(1) as f64;
+                    format!(" {name} ({}, {:.0} mm)", here.len(), depth * 1000.0)
+                })
+                .collect::<String>()
+        );
+        for c in &colonists {
+            let row: String = classes
+                .iter()
+                .map(|(_, low, high)| {
+                    let here: Vec<_> = places
+                        .iter()
+                        .filter(|p| p.width >= *low && p.width < *high)
+                        .collect();
+                    let mean = |age: f64| {
+                        here.iter().map(|p| c.supply(p, age, 1.0).0).sum::<f64>()
+                            / here.len().max(1) as f64
+                    };
+                    format!("  {:>4.2} {:>4.2}", mean(1.0), mean(5.0))
+                })
+                .collect();
+            out!("  {:<28}{row}", c.id);
+        }
+    }
+    out!("{} seed sources near the site", sources.len());
+    let snapshots = run(&places, &colonists, &sources, &settings, &years);
+    let out_dir = options.flags.get("out").map(Path::new);
+    if let Some(dir) = out_dir {
+        fs::create_dir_all(dir)
+            .map_err(|error| format!("cannot make {}: {error}", dir.display()))?;
+    }
+    let stem = Path::new(given)
+        .file_stem()
+        .and_then(|s| s.to_str())
+        .unwrap_or("site");
+    for snapshot in &snapshots {
+        let mut count: BTreeMap<&str, (usize, usize, f64)> = BTreeMap::new();
+        for plant in &snapshot.plants {
+            let entry = count
+                .entry(&colonists[plant.colonist].id)
+                .or_insert((0, 0, 0.0));
+            entry.0 += 1;
+            if plant.age >= 2.0 {
+                entry.1 += 1;
+            }
+            entry.2 = entry.2.max(plant.height);
+        }
+        out!(
+            "year {}: {} plants{}",
+            snapshot.year,
+            snapshot.plants.len(),
+            count
+                .iter()
+                .map(|(id, (n, older, tallest))| {
+                    format!("\n  {id:<28} {n:>4} ({older:>3} past their first year), tallest {tallest:.2} m")
+                })
+                .collect::<String>()
+        );
+        for (index, name) in document["pavements"]
+            .as_array()
+            .into_iter()
+            .flatten()
+            .enumerate()
+        {
+            let mut here: BTreeMap<&str, usize> = BTreeMap::new();
+            for plant in snapshot
+                .plants
+                .iter()
+                .filter(|p| places[p.microsite].tile == index)
+            {
+                *here.entry(&colonists[plant.colonist].id).or_default() += 1;
+            }
+            out!(
+                "  on {}: {}",
+                name.as_str().unwrap_or("?"),
+                if here.is_empty() {
+                    "nothing".to_owned()
+                } else {
+                    here.iter()
+                        .map(|(id, n)| format!("{n} {id}"))
+                        .collect::<Vec<_>>()
+                        .join(", ")
+                }
+            );
+        }
+        let Some(dir) = out_dir else {
+            continue;
+        };
+        // The site again, with these plants, for `plantc site`.
+        let mut site_doc = document.clone();
+        let absolute = |name: &serde_json::Value| -> serde_json::Value {
+            name.as_str()
+                .map(|name| {
+                    let path = folder.join(name);
+                    serde_json::Value::String(
+                        fs::canonicalize(&path)
+                            .unwrap_or(path)
+                            .to_string_lossy()
+                            .into_owned(),
+                    )
+                })
+                .unwrap_or(serde_json::Value::Null)
+        };
+        site_doc["mesh"] = absolute(&document["mesh"]);
+        if let Some(list) = document["pavements"].as_array() {
+            site_doc["pavements"] = serde_json::Value::Array(list.iter().map(absolute).collect());
+        }
+        site_doc["plants"] = serde_json::Value::Array(
+            snapshot
+                .plants
+                .iter()
+                .map(|plant| {
+                    let place = &places[plant.microsite];
+                    serde_json::json!({
+                        "species": colonists[plant.colonist].id,
+                        "at": [place.x, place.z],
+                        "seed": plantgen::rng::hash_words(&[settings.seed, plant.microsite as u64, u64::from(plant.born)]) % 1000,
+                        "years": plant.age.max(1.0),
+                        "snap_m": 0.01,
+                    })
+                })
+                .collect(),
+        );
+        site_doc["succession"] = serde_json::json!({
+            "made_by": "plantc cracks",
+            "year": snapshot.year,
+            "seed": settings.seed,
+            "traffic": settings.traffic,
+            "maintenance": settings.maintenance,
+            "generator_revision": plantgen::GENERATOR_REVISION,
+        });
+        let path = dir.join(format!("{stem}-year-{}.json", snapshot.year));
+        fs::write(
+            &path,
+            serde_json::to_string_pretty(&site_doc).map_err(|error| error.to_string())? + "\n",
+        )
+        .map_err(|error| format!("cannot write {}: {error}", path.display()))?;
+        out!("  wrote {}", path.display());
+        if options.flags.contains_key("render") && !snapshot.plants.is_empty() {
+            let png = dir.join(format!("{stem}-year-{}.png", snapshot.year));
+            let mut site_args = vec![
+                path.to_string_lossy().into_owned(),
+                "--out".to_owned(),
+                png.to_string_lossy().into_owned(),
+            ];
+            for name in ["view", "size", "day", "quality", "focus", "span"] {
+                if let Some(value) = options.flags.get(name) {
+                    site_args.push(format!("--{name}"));
+                    site_args.push(value.clone());
+                }
+            }
+            site_command(&site_args)?;
+        }
+    }
+    Ok(())
+}
+
 /// `plantc site`: plants grown on a mesh (`plantgen::site`).
 #[allow(clippy::too_many_lines)]
 /// A site material table's entry `name`: a material's name, or an object
@@ -3149,8 +3647,11 @@ fn site_surface(name: &str, given: &serde_json::Value) -> Result<plantgen::site:
 /// before they are cut back, metres.
 const CLEAR_GAP_M: f64 = 0.05;
 
+/// How far a plant set on sound pavement moves to the nearest crack, metres.
+const PAVEMENT_SNAP_M: f64 = 0.05;
+
 fn site_command(args: &[String]) -> Result<(), Failure> {
-    use plantgen::site::{Cut, SiteMesh, Surface, climbable};
+    use plantgen::site::{Cut, climbable};
     let options = Options::parse(
         args,
         &["out", "view", "size", "day", "quality", "focus", "span"],
@@ -3161,33 +3662,8 @@ fn site_command(args: &[String]) -> Result<(), Failure> {
     let document: serde_json::Value =
         serde_json::from_str(&text).map_err(|error| format!("invalid site: {error}"))?;
     let folder = Path::new(given).parent().unwrap_or(Path::new("."));
-    let mesh_path = folder.join(
-        document["mesh"]
-            .as_str()
-            .ok_or("a site names its mesh, an OBJ file")?,
-    );
-    let mut names: BTreeMap<String, Surface> = BTreeMap::new();
-    if let Some(table) = document["materials"].as_object() {
-        for (name, given) in table {
-            names.insert(name.clone(), site_surface(name, given)?);
-        }
-    }
-    let fallback = names
-        .get("*")
-        .copied()
-        .unwrap_or(Surface::solid(plantgen::substrate::SOIL));
-    let material_of = |name: Option<&str>| -> Result<Surface, String> {
-        Ok(name
-            .and_then(|name| names.get(name))
-            .copied()
-            .unwrap_or(fallback))
-    };
-    let z_up = document["z_up"].as_bool().unwrap_or(false);
-    let obj = fs::read_to_string(&mesh_path)
-        .map_err(|error| format!("cannot read {}: {error}", mesh_path.display()))?;
     let started = Instant::now();
-    let site_mesh = SiteMesh::from_obj(&obj, z_up, &material_of)
-        .map_err(|error| format!("{}: {error}", mesh_path.display()))?;
+    let site_mesh = site_mesh_of(&document, folder)?;
     let site = &site_mesh;
     let default_years = document["years"].as_f64();
     let plants = document["plants"]
@@ -3209,7 +3685,7 @@ fn site_command(args: &[String]) -> Result<(), Failure> {
                     .collect()
             })
             .unwrap_or_default();
-        let (x, z, below) = match at[..] {
+        let (mut x, mut z, below) = match at[..] {
             [x, z] => (x, z, None),
             [x, y, z] => (x, z, Some(y)),
             _ => {
@@ -3218,6 +3694,22 @@ fn site_command(args: &[String]) -> Result<(), Failure> {
                 );
             }
         };
+        // On pavement a plant roots only in a crack or a hole: one set on
+        // sound slab moves to the nearest opening within snap_m, or is
+        // refused.
+        if let Some(tile) = site
+            .pavements()
+            .iter()
+            .find(|tile| tile.covers(x, z) && below.is_none_or(|b| tile.top() <= b))
+        {
+            let snap = plant["snap_m"].as_f64().unwrap_or(PAVEMENT_SNAP_M);
+            let (cx, cz, _) = tile.nearest_open(x, z, snap).ok_or_else(|| {
+                format!(
+                    "plant {number} ({id}): ({x}, {z}) is sound pavement with no crack within {snap} m; nothing roots there"
+                )
+            })?;
+            (x, z) = (cx, cz);
+        }
         let (ground, material) = site.footing(x, z, below).ok_or_else(|| {
             format!("plant {number} ({id}): no upward-facing ground under ({x}, {z})")
         })?;
@@ -3251,6 +3743,8 @@ fn site_command(args: &[String]) -> Result<(), Failure> {
         let substrate = site.substrate_round(foot, cut)?;
         let mut conditions = Conditions::preset(Environment::Open);
         conditions.substrate = Some(substrate);
+        // In a crack, the soil the roots can reach (soil depth design D1).
+        conditions.rooting = site.rooting(foot);
         conditions.validate()?;
         let host = site
             .host_round(foot, cut, &climbable)
@@ -3376,6 +3870,9 @@ fn site_command(args: &[String]) -> Result<(), Failure> {
         Vec3::new(f64::INFINITY, f64::INFINITY, f64::INFINITY),
         Vec3::new(f64::NEG_INFINITY, f64::NEG_INFINITY, f64::NEG_INFINITY),
     );
+    // Plants of one species share its looks, so a site of many plants
+    // stays within the renderer's organ types.
+    let mut looks_at: BTreeMap<&str, usize> = BTreeMap::new();
     for (((spec, foot, _, _, settings), growth), cut) in grown.iter().zip(&growths).zip(&cuts) {
         let (looks, sizes) = looks_of(spec, growth, day);
         let graph = &*drawn(&growth.keyframes[0], &sizes, &looks);
@@ -3390,8 +3887,12 @@ fn site_command(args: &[String]) -> Result<(), Failure> {
         );
         plant.vary_by_plant(&looks, settings.seed);
         moved(&mut plant, *foot + offset);
-        scene = on_host(scene, plant, all_looks.len());
-        all_looks.extend(looks);
+        let first = *looks_at.entry(spec.id.as_str()).or_insert_with(|| {
+            let first = all_looks.len();
+            all_looks.extend(looks);
+            first
+        });
+        scene = on_host(scene, plant, first);
         if bark.is_none() {
             bark = spec.appearance.bark_params();
         }
@@ -4958,10 +5459,27 @@ fn build_command(args: &[String]) -> Result<(), Failure> {
     let options = Options::parse(
         args,
         &[
-            "out", "quality", "threads", "program", "day", "profile", "cards",
+            "out", "quality", "threads", "program", "day", "profile", "cards", "old",
         ],
     )?;
     let spec = load_spec(options.one_positional("a species")?)?;
+    let spec = match options.flags.get("old").map(String::as_str) {
+        None | Some("no") => spec,
+        Some("yes") => {
+            let old = spec.old_ages();
+            if old.is_empty() {
+                out!(
+                    "{} states no lifespan past its oldest keyframe (`age_max_years`): no old ages",
+                    spec.id
+                );
+            } else {
+                let ages: Vec<String> = old.iter().map(f64::to_string).collect();
+                out!("{} old ages: {} years", spec.id, ages.join(", "));
+            }
+            spec.grown_old()
+        }
+        Some(other) => return Err(format!("--old is yes or no, not `{other}`").into()),
+    };
     let out = PathBuf::from(options.flags.get("out").map_or("plants", String::as_str));
     build_package(&spec, &options, &out)?;
     Ok(())

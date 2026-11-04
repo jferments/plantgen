@@ -59,6 +59,12 @@ pub struct Clock {
     pub step: u32,
     pub t: f64,
     pub dt: f64,
+    /// Years of growth the soil has held the plant back by so far
+    /// (`soil@1`, soil depth design D1); a rule reads `tg`, `t` less this.
+    pub lag: f64,
+    /// The plant's soil supply over its demand at the last step; a rule
+    /// reads `rs`.
+    pub rs: f64,
 }
 
 /// Decomposition children use their own half of each ordinal space, so they
@@ -247,6 +253,8 @@ impl<'a> Deriver<'a> {
             step: 0,
             t: 0.0,
             dt,
+            lag: 0.0,
+            rs: 1.0,
         };
         let scope = Scope {
             globals: self.globals,
@@ -254,6 +262,8 @@ impl<'a> Deriver<'a> {
             env: &NO_ENV,
             t: 0.0,
             dt,
+            lag: clock.lag,
+            rs: clock.rs,
             age: 0.0,
             step: 0.0,
             key: hash_words(&[seed, SALT_AXIOM]),
@@ -403,6 +413,8 @@ impl<'a> Deriver<'a> {
                 env: module_env,
                 t: clock.t,
                 dt: clock.dt,
+                lag: clock.lag,
+                rs: clock.rs,
                 age: clock.t - module.born,
                 step: f64::from(clock.step),
                 key: combine(module.lineage.0, u64::from(clock.step)),
@@ -466,6 +478,8 @@ impl<'a> Deriver<'a> {
             env: &NO_ENV,
             t: now,
             dt: clock.dt,
+            lag: clock.lag,
+            rs: clock.rs,
             age: now - born,
             step: f64::from(clock.step),
             key: hash_words(&[lineage.0, u64::from(clock.step), SALT_DECOMPOSE]),
@@ -731,6 +745,8 @@ mod tests {
                 step,
                 t: f64::from(step),
                 dt: 1.0,
+                lag: 0.0,
+                rs: 1.0,
             };
             string = deriver.derive(&string, &[], clock).unwrap();
         }
@@ -850,6 +866,8 @@ mod tests {
                 step,
                 t: f64::from(step),
                 dt: 1.0,
+                lag: 0.0,
+                rs: 1.0,
             };
             let alone = deriver.derive_on(&string, &[], clock, 1).unwrap();
             let shared = deriver.derive_on(&string, &[], clock, 4).unwrap();
@@ -977,6 +995,8 @@ mod tests {
                 step,
                 t: f64::from(step),
                 dt: 1.0,
+                lag: 0.0,
+                rs: 1.0,
             };
             match deriver.derive(&string, &[], clock) {
                 Ok(next) => string = next,

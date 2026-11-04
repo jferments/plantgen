@@ -39,6 +39,7 @@ use std::collections::HashMap;
 use crate::graph::PlantGraph;
 use crate::lsys::tools::{Host, closest_on_triangle};
 use crate::math::Vec3;
+use crate::pavement::Pavement;
 use crate::substrate::{
     AIR, BARK, BUILT, MAX_SUBSTRATE_CELLS, ROCK, SOIL, SUBSTRATE_VERSION, Substrate, WOOD,
     base64_encode,
@@ -92,6 +93,10 @@ impl Surface {
     }
 }
 
+/// The reaches and depths, metres, a site's [`SiteMesh::rooting`] table
+/// gives the rootable soil at.
+pub const ROOTING_REACHES: [f64; 9] = [0.02, 0.05, 0.1, 0.2, 0.4, 0.8, 1.6, 3.2, 6.4];
+
 /// A site's mesh: triangles with a substrate material each.
 #[derive(Debug, Clone)]
 pub struct SiteMesh {
@@ -109,6 +114,9 @@ pub struct SiteMesh {
     edge_normals: HashMap<(u32, u32), Vec3>,
     /// Triangles by the column cells (X, Z) their footprint covers.
     columns: HashMap<(i32, i32), Vec<u32>>,
+    /// Paved tiles with their cracks ([`Self::add_pavement`]), which
+    /// stand in for the mesh at and below their surface.
+    pavements: Vec<Pavement>,
 }
 
 /// The box round a plant that its substrate grid covers.
@@ -285,6 +293,110 @@ impl SiteMesh {
             vertex_normals,
             edge_normals,
             columns,
+            pavements: Vec::new(),
+        })
+    }
+
+    /// Lays a paved tile on the site. Over its rectangle, at and below its
+    /// surface, it stands in for the mesh: its slab, base and the soil
+    /// under them and in its cracks are what a plant there grows in, and a
+    /// plant set on it roots in a crack or not at all. The mesh still
+    /// counts above the surface (a curb, a wall, a post standing on it).
+    pub fn add_pavement(&mut self, pavement: Pavement) {
+        self.pavements.push(pavement);
+    }
+
+    /// The paved tiles laid on the site.
+    #[must_use]
+    pub fn pavements(&self) -> &[Pavement] {
+        &self.pavements
+    }
+
+    /// The soil a plant at `foot` can root in, as a [`Rooting`] table
+    /// (soil depth design D1), when it stands on a paved tile; `None`
+    /// elsewhere, where the soil is as deep as roots go. Over a tile the
+    /// ground counts as [`Pavement::column`] gives it, off it the ground's
+    /// soil counts whole down from its surface, and anything else nothing.
+    ///
+    /// [`Rooting`]: crate::conditions::Rooting
+    #[must_use]
+    #[allow(clippy::cast_possible_truncation, clippy::cast_precision_loss)]
+    pub fn rooting(&self, foot: Vec3) -> Option<crate::conditions::Rooting> {
+        // The tile the foot stands in: in a crack or hole, below its top.
+        let tile = self
+            .pavements
+            .iter()
+            .find(|tile| tile.covers(foot.x, foot.z) && foot.y <= tile.top() + 1.0e-6)?;
+        let radii = ROOTING_REACHES.to_vec();
+        let depths = ROOTING_REACHES.to_vec();
+        let mut ring = vec![0.0; radii.len() * depths.len()];
+        let mut add = |x: f64, z: f64, area: f64| {
+            let distance = (x - foot.x).hypot(z - foot.z);
+            let Some(r) = radii.iter().position(|r| distance <= *r) else {
+                return;
+            };
+            let column = self
+                .pavements
+                .iter()
+                .find_map(|t| t.covers(x, z).then(|| t.column(x, z)).flatten());
+            let column = column.unwrap_or_else(|| match self.ground_at(x, z, Some(foot.y + 1.0)) {
+                Some((y, SOIL)) => vec![(y, f64::NEG_INFINITY, 1.0)],
+                _ => Vec::new(),
+            });
+            for (d, depth) in depths.iter().enumerate() {
+                let low = foot.y - depth;
+                let rootable: f64 = column
+                    .iter()
+                    .map(|&(top, bottom, share)| {
+                        (top.min(foot.y) - bottom.max(low)).max(0.0) * share
+                    })
+                    .sum();
+                ring[r * depths.len() + d] += rootable * area;
+            }
+        };
+        // Near the foot at the tile's own cells, so a crack counts as it
+        // is; farther out on a coarser grid, which is right on average.
+        let near = 0.4;
+        let fine = tile.cell();
+        let n = (near / fine).round() as i64;
+        for k in -n..n {
+            for i in -n..n {
+                let x = foot.x + (i as f64 + 0.5) * fine;
+                let z = foot.z + (k as f64 + 0.5) * fine;
+                add(x, z, fine * fine);
+            }
+        }
+        let coarse = 0.04;
+        let far = radii[radii.len() - 1];
+        let m = (far / coarse).ceil() as i64;
+        for k in -m..m {
+            for i in -m..m {
+                let (dx, dz) = ((i as f64 + 0.5) * coarse, (k as f64 + 0.5) * coarse);
+                if dx.abs() < near && dz.abs() < near {
+                    continue;
+                }
+                add(foot.x + dx, foot.z + dz, coarse * coarse);
+            }
+        }
+        // Cumulative over the reaches.
+        let columns = depths.len();
+        for r in 1..radii.len() {
+            for d in 0..columns {
+                ring[r * columns + d] += ring[(r - 1) * columns + d];
+            }
+        }
+        Some(crate::conditions::Rooting {
+            version: 1,
+            radii_m: radii,
+            depths_m: depths,
+            volume_m3: ring,
+        })
+    }
+
+    /// The tile under (`x`, `z`) whose surface is at or below `below`.
+    fn pavement_at(&self, x: f64, z: f64, below: Option<f64>) -> Option<&Pavement> {
+        self.pavements.iter().find(|tile| {
+            tile.covers(x, z) && below.is_none_or(|limit| tile.top() <= limit + 1.0e-9)
         })
     }
 
@@ -418,6 +530,9 @@ impl SiteMesh {
     /// material.
     #[must_use]
     pub fn ground_at(&self, x: f64, z: f64, below: Option<f64>) -> Option<(f64, u8)> {
+        if let Some(tile) = self.pavement_at(x, z, below) {
+            return tile.footing(x, z);
+        }
         self.crossings(x, z)
             .into_iter()
             .find(|&(y, index)| {
@@ -432,6 +547,9 @@ impl SiteMesh {
     /// there, on the highest upward-facing surface, as [`Self::ground_at`].
     #[must_use]
     pub fn footing(&self, x: f64, z: f64, below: Option<f64>) -> Option<(f64, u8)> {
+        if let Some(tile) = self.pavement_at(x, z, below) {
+            return tile.footing(x, z);
+        }
         let up = |y: f64, index: usize| {
             self.normals[index].y > 0.0 && below.is_none_or(|limit| y <= limit + 1.0e-9)
         };
@@ -623,6 +741,18 @@ impl SiteMesh {
                         signed = slab[at];
                         here = slab_stuff[at];
                     }
+                    // A paved tile stands in for the mesh at and below its
+                    // surface, and joins it above.
+                    let p = centre(x, y, z);
+                    for tile in &self.pavements {
+                        if let Some((paved, stuff)) = tile.classify(p, cell_m) {
+                            if p.y <= tile.top() || paved < signed {
+                                signed = paved;
+                                here = stuff;
+                            }
+                            break;
+                        }
+                    }
                     #[allow(clippy::cast_possible_truncation)]
                     let units = (signed / scale).round().clamp(-127.0, 127.0) as i8;
                     #[allow(clippy::cast_sign_loss)]
@@ -793,6 +923,18 @@ impl SiteMesh {
                 (self.normals[index], [a, b, c]),
                 (-self.normals[index], [a, c, b]),
             ];
+            if self.pavements.iter().any(|tile| {
+                let (l, h) = tile.extent();
+                let centre = (a + b + c) * (1.0 / 3.0);
+                centre.x > l[0]
+                    && centre.x < h[0]
+                    && centre.z > l[1]
+                    && centre.z < h[1]
+                    && centre.y <= tile.top() + 1.0e-6
+            }) {
+                // Under a paved tile, which draws itself.
+                continue;
+            }
             for (normal, corners) in &faces[..if surface.thin() { 2 } else { 1 }] {
                 let normal = normal.to_f32();
                 let first = u32::try_from(mesh.positions.len()).unwrap_or(u32::MAX);
@@ -807,6 +949,9 @@ impl SiteMesh {
                 }
                 mesh.indices.extend([first, first + 1, first + 2]);
             }
+        }
+        for tile in &self.pavements {
+            crate::damage::append(&mut mesh, &tile.drawn(low, high, offset));
         }
         mesh
     }

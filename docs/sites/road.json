@@ -1,0 +1,642 @@
+{
+ "mesh": "road.obj",
+ "materials": {
+  "verge": {
+   "as": "soil",
+   "colour": [
+    0.2,
+    0.28,
+    0.12
+   ]
+  }
+ },
+ "pavements": [
+  "road-2.json",
+  "road-5.json",
+  "road-8.json"
+ ],
+ "plants": [
+  {
+   "species": "holcus-lanatus",
+   "at": [
+    -6.004,
+    -2.0471
+   ],
+   "seed": 1,
+   "years": 3
+  },
+  {
+   "species": "cirsium-vulgare",
+   "at": [
+    -7.3429,
+    -0.7786
+   ],
+   "seed": 2,
+   "years": 3
+  },
+  {
+   "species": "hypochaeris-radicata",
+   "at": [
+    -0.3452,
+    -2.2419
+   ],
+   "seed": 7,
+   "years": 3
+  },
+  {
+   "species": "hypochaeris-radicata",
+   "at": [
+    -0.3139,
+    -2.9124
+   ],
+   "seed": 4,
+   "years": 3
+  },
+  {
+   "species": "cirsium-vulgare",
+   "at": [
+    -1.3736,
+    2.921
+   ],
+   "seed": 7,
+   "years": 3
+  },
+  {
+   "species": "cirsium-vulgare",
+   "at": [
+    -0.0079,
+    -2.651
+   ],
+   "seed": 2,
+   "years": 3
+  },
+  {
+   "species": "verbascum-thapsus",
+   "at": [
+    1.0022,
+    2.3071
+   ],
+   "seed": 1,
+   "years": 3
+  },
+  {
+   "species": "verbascum-thapsus",
+   "at": [
+    4.4014,
+    -0.787
+   ],
+   "seed": 3,
+   "years": 3
+  },
+  {
+   "species": "cirsium-vulgare",
+   "at": [
+    6.1232,
+    -2.2026
+   ],
+   "seed": 4,
+   "years": 3
+  },
+  {
+   "species": "hypochaeris-radicata",
+   "at": [
+    6.7366,
+    2.6547
+   ],
+   "seed": 2,
+   "years": 3
+  },
+  {
+   "species": "hypochaeris-radicata",
+   "at": [
+    6.7903,
+    -2.9477
+   ],
+   "seed": 4,
+   "years": 3
+  },
+  {
+   "species": "verbascum-thapsus",
+   "at": [
+    4.6045,
+    0.1512
+   ],
+   "seed": 7,
+   "years": 3
+  },
+  {
+   "species": "dactylis-glomerata",
+   "at": [
+    5.1753,
+    -0.1509
+   ],
+   "seed": 8,
+   "years": 3
+  },
+  {
+   "species": "holcus-lanatus",
+   "at": [
+    6.8399,
+    2.2166
+   ],
+   "seed": 6,
+   "years": 3
+  },
+  {
+   "species": "trifolium-repens",
+   "at": [
+    6.1344,
+    0.9994
+   ],
+   "seed": 3,
+   "years": 3
+  },
+  {
+   "species": "trifolium-repens",
+   "at": [
+    4.3382,
+    1.7987
+   ],
+   "seed": 2,
+   "years": 3
+  },
+  {
+   "species": "dactylis-glomerata",
+   "at": [
+    6.939,
+    -0.0084
+   ],
+   "seed": 8,
+   "years": 3
+  },
+  {
+   "species": "dactylis-glomerata",
+   "at": [
+    2.9602,
+    2.6
+   ],
+   "seed": 8,
+   "years": 3
+  },
+  {
+   "species": "rubus-armeniacus",
+   "at": [
+    5.006,
+    2.321
+   ],
+   "seed": 1,
+   "years": 4
+  },
+  {
+   "species": "alnus-rubra",
+   "at": [
+    5.033,
+    -0.658
+   ],
+   "seed": 1,
+   "years": 4
+  }
+ ],
+ "seed_sources": [
+  {
+   "species": "polygonum-aviculare",
+   "at": [
+    -8.3,
+    -3.896
+   ],
+   "years": 3
+  },
+  {
+   "species": "cirsium-vulgare",
+   "at": [
+    -7.386,
+    -4.439
+   ],
+   "years": 3
+  },
+  {
+   "species": "holcus-lanatus",
+   "at": [
+    -6.681,
+    -4.119
+   ],
+   "years": 3
+  },
+  {
+   "species": "sagina-procumbens",
+   "at": [
+    -5.799,
+    -3.935
+   ],
+   "years": 3
+  },
+  {
+   "species": "hypochaeris-radicata",
+   "at": [
+    -4.923,
+    -3.305
+   ],
+   "years": 3
+  },
+  {
+   "species": "taraxacum-sect-taraxacum",
+   "at": [
+    -4.438,
+    -4.039
+   ],
+   "years": 3
+  },
+  {
+   "species": "cirsium-vulgare",
+   "at": [
+    -3.681,
+    -3.804
+   ],
+   "years": 3
+  },
+  {
+   "species": "holcus-lanatus",
+   "at": [
+    -2.888,
+    -4.166
+   ],
+   "years": 3
+  },
+  {
+   "species": "plantago-major",
+   "at": [
+    -2.114,
+    -4.522
+   ],
+   "years": 3
+  },
+  {
+   "species": "dactylis-glomerata",
+   "at": [
+    -1.679,
+    -3.464
+   ],
+   "years": 3
+  },
+  {
+   "species": "trifolium-repens",
+   "at": [
+    -0.919,
+    -4.434
+   ],
+   "years": 3
+  },
+  {
+   "species": "polygonum-aviculare",
+   "at": [
+    -0.255,
+    -4.54
+   ],
+   "years": 3
+  },
+  {
+   "species": "taraxacum-sect-taraxacum",
+   "at": [
+    0.286,
+    -3.635
+   ],
+   "years": 3
+  },
+  {
+   "species": "hypochaeris-radicata",
+   "at": [
+    1.083,
+    -3.905
+   ],
+   "years": 3
+  },
+  {
+   "species": "plantago-major",
+   "at": [
+    1.727,
+    -4.06
+   ],
+   "years": 3
+  },
+  {
+   "species": "dactylis-glomerata",
+   "at": [
+    2.552,
+    -3.67
+   ],
+   "years": 3
+  },
+  {
+   "species": "sagina-procumbens",
+   "at": [
+    3.259,
+    -3.199
+   ],
+   "years": 3
+  },
+  {
+   "species": "hypochaeris-radicata",
+   "at": [
+    4.119,
+    -3.811
+   ],
+   "years": 3
+  },
+  {
+   "species": "taraxacum-sect-taraxacum",
+   "at": [
+    4.751,
+    -4.731
+   ],
+   "years": 3
+  },
+  {
+   "species": "taraxacum-sect-taraxacum",
+   "at": [
+    5.279,
+    -4.68
+   ],
+   "years": 3
+  },
+  {
+   "species": "poa-annua",
+   "at": [
+    5.961,
+    -4.768
+   ],
+   "years": 3
+  },
+  {
+   "species": "dactylis-glomerata",
+   "at": [
+    6.613,
+    -4.084
+   ],
+   "years": 3
+  },
+  {
+   "species": "plantago-major",
+   "at": [
+    7.48,
+    -3.595
+   ],
+   "years": 3
+  },
+  {
+   "species": "poa-annua",
+   "at": [
+    8.067,
+    -3.175
+   ],
+   "years": 3
+  },
+  {
+   "species": "dactylis-glomerata",
+   "at": [
+    -8.3,
+    3.345
+   ],
+   "years": 3
+  },
+  {
+   "species": "cirsium-vulgare",
+   "at": [
+    -7.476,
+    3.168
+   ],
+   "years": 3
+  },
+  {
+   "species": "polygonum-aviculare",
+   "at": [
+    -6.598,
+    3.443
+   ],
+   "years": 3
+  },
+  {
+   "species": "holcus-lanatus",
+   "at": [
+    -6.085,
+    3.99
+   ],
+   "years": 3
+  },
+  {
+   "species": "poa-annua",
+   "at": [
+    -5.433,
+    3.783
+   ],
+   "years": 3
+  },
+  {
+   "species": "hypochaeris-radicata",
+   "at": [
+    -4.781,
+    3.501
+   ],
+   "years": 3
+  },
+  {
+   "species": "sagina-procumbens",
+   "at": [
+    -3.862,
+    4.759
+   ],
+   "years": 3
+  },
+  {
+   "species": "dactylis-glomerata",
+   "at": [
+    -3.279,
+    4.61
+   ],
+   "years": 3
+  },
+  {
+   "species": "sagina-procumbens",
+   "at": [
+    -2.767,
+    4.793
+   ],
+   "years": 3
+  },
+  {
+   "species": "holcus-lanatus",
+   "at": [
+    -1.982,
+    3.316
+   ],
+   "years": 3
+  },
+  {
+   "species": "sagina-procumbens",
+   "at": [
+    -1.454,
+    3.576
+   ],
+   "years": 3
+  },
+  {
+   "species": "plantago-major",
+   "at": [
+    -0.857,
+    3.639
+   ],
+   "years": 3
+  },
+  {
+   "species": "dactylis-glomerata",
+   "at": [
+    -0.412,
+    3.494
+   ],
+   "years": 3
+  },
+  {
+   "species": "sagina-procumbens",
+   "at": [
+    -0.003,
+    3.758
+   ],
+   "years": 3
+  },
+  {
+   "species": "cirsium-vulgare",
+   "at": [
+    0.669,
+    4.733
+   ],
+   "years": 3
+  },
+  {
+   "species": "poa-annua",
+   "at": [
+    1.569,
+    3.374
+   ],
+   "years": 3
+  },
+  {
+   "species": "dactylis-glomerata",
+   "at": [
+    2.078,
+    3.404
+   ],
+   "years": 3
+  },
+  {
+   "species": "dactylis-glomerata",
+   "at": [
+    2.969,
+    3.562
+   ],
+   "years": 3
+  },
+  {
+   "species": "polygonum-aviculare",
+   "at": [
+    3.464,
+    4.188
+   ],
+   "years": 3
+  },
+  {
+   "species": "cirsium-vulgare",
+   "at": [
+    3.982,
+    4.718
+   ],
+   "years": 3
+  },
+  {
+   "species": "plantago-major",
+   "at": [
+    4.744,
+    3.845
+   ],
+   "years": 3
+  },
+  {
+   "species": "hypochaeris-radicata",
+   "at": [
+    5.21,
+    3.995
+   ],
+   "years": 3
+  },
+  {
+   "species": "hypochaeris-radicata",
+   "at": [
+    5.753,
+    4.313
+   ],
+   "years": 3
+  },
+  {
+   "species": "cirsium-vulgare",
+   "at": [
+    6.405,
+    4.643
+   ],
+   "years": 3
+  },
+  {
+   "species": "plantago-major",
+   "at": [
+    6.981,
+    3.439
+   ],
+   "years": 3
+  },
+  {
+   "species": "sagina-procumbens",
+   "at": [
+    7.457,
+    3.941
+   ],
+   "years": 3
+  },
+  {
+   "species": "dactylis-glomerata",
+   "at": [
+    8.226,
+    3.612
+   ],
+   "years": 3
+  },
+  {
+   "species": "rubus-armeniacus",
+   "at": [
+    -8.0,
+    -4.2
+   ],
+   "years": 8
+  },
+  {
+   "species": "rubus-armeniacus",
+   "at": [
+    7.8,
+    4.4
+   ],
+   "years": 8
+  },
+  {
+   "species": "cytisus-scoparius",
+   "at": [
+    6.5,
+    -4.5
+   ],
+   "years": 6
+  },
+  {
+   "species": "buddleja-davidii",
+   "at": [
+    0.0,
+    8.0
+   ],
+   "years": 8
+  }
+ ]
+}

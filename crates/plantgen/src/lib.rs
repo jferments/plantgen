@@ -39,6 +39,7 @@ pub mod clusters;
 pub mod conditions;
 pub mod cores;
 pub mod damage;
+pub mod development;
 pub mod divided;
 pub mod drawing;
 pub mod evidence;
@@ -74,6 +75,7 @@ pub mod occlusion;
 pub mod organs;
 pub mod package;
 pub mod parts;
+pub mod pavement;
 pub mod preview;
 pub mod prickles;
 pub mod quality;
@@ -87,7 +89,9 @@ pub mod spec;
 pub mod spikelets;
 pub mod spines;
 pub mod stand;
+pub mod stand_tile;
 pub mod substrate;
+pub mod succession;
 pub mod templates;
 pub mod texture;
 mod tile_scene;
@@ -1485,4 +1489,23 @@ pub mod venation;
 /// whose leaf's card hides them (`crate::billboards`): a fishtail palm's
 /// low cards spent 936 of 1 632 triangles on them, a sago palm's 552 of
 /// 914, with no change in what they show.
-pub const GENERATOR_REVISION: u32 = 190;
+///
+/// 191: pavements in a site (pavement-cracks plan K1 to K3, soil depth
+/// design D1). A site may lay crack tiles (`crate::pavement`): a slab with
+/// its cracks, holes and the grit in them, which a plant roots in only
+/// where it opens. The `soil@1` tool weighs the soil a plant's roots reach
+/// (`Conditions::rooting`, which `SiteMesh::rooting` measures through a
+/// pavement's slab, base and subgrade) against what its crown needs, and
+/// 14 base programs scale growth by the ratio (`rs`, and `tg`, time less
+/// the years soil cost): a tree in a crack stays a sapling, in a pothole
+/// it grows on. Plants that set no rooting table grow byte for byte as
+/// before. `crate::succession` decides which plants come up in a site's
+/// pavements year by year (`plantc cracks`). Seven pavement weeds join the
+/// library, and three ecology traits (seed dispersal, seed bank, trampling
+/// tolerance) are stated for sixteen species.
+///
+/// 192: a tree's or shrub's stem stays a tube on the card tiers up to
+/// where it is half as thick as at its foot (`crate::billboards`): a
+/// 60-year Douglas fir grown in a closed stand drew its crown floating 9 m
+/// over an 11 m stump on its low tier.
+pub const GENERATOR_REVISION: u32 = 192;
