@@ -123,6 +123,7 @@ fn run() -> Result<(), Failure> {
         "scene" => scene::scene_command(&args),
         "site" => site_command(&args),
         "cracks" => cracks_command(&args),
+        "field" => field_command(&args),
         "render" => render_command(&args),
         "sheet" => sheet_command(&args),
         "tiers" => tiers_command(&args),
@@ -327,6 +328,16 @@ Usage:
       by tile; with --explain, each species' soil supply by kind of
       opening. With --out, writes the site with each year's plants
       (SITE-year-N.json, for plantc site), and with --render 1 draws it.
+  plantc field <site.json> --out FIELD.json [--tile X0,Z0,X1,Z1]
+               [--cell METRES] [--margin METRES] [--patch METRES]
+               [--sky-rays N] [--latitude DEGREES]
+      Measure a site once for stands of plants (plantgen::site_field,
+      docs/sites/SITE-FIELD.md): a ground grid (height, slope, aspect,
+      heat load, material, rooting depth, wetness, sky, distance to
+      walls and kept-clear surfaces, under a roof), surface patches on
+      walls, roofs, fences, poles and boulders by host, and the crack
+      sites of its pavements. The tile is the mesh's extent unless
+      --tile names it; the grid reaches --margin (20 m) past it.
   plantc tiers <species>... --out FOLDER [--seed N] [--size PIXELS] [--age YEARS]
                [--columns full,cards,far] [--view VIEW] [--focus F,S]
                [--views side,oblique,close]
@@ -3126,6 +3137,84 @@ fn site_size(spec: &PlantSpec, age: f64) -> (f64, f64) {
     (height, reach.max(height * 0.3))
 }
 
+/// `plantc field`: a site's field, measured once (plantgen::site_field).
+fn field_command(args: &[String]) -> Result<(), Failure> {
+    use plantgen::site_field::{FieldSettings, build};
+    let options = Options::parse(
+        args,
+        &[
+            "out", "tile", "cell", "margin", "patch", "sky-rays", "latitude",
+        ],
+    )?;
+    let given = options.one_positional("a site document")?;
+    let out = options
+        .flags
+        .get("out")
+        .ok_or("`plantc field` writes its field to --out FIELD.json")?;
+    let text =
+        fs::read_to_string(given).map_err(|error| format!("cannot read {given}: {error}"))?;
+    let document: serde_json::Value =
+        serde_json::from_str(&text).map_err(|error| format!("invalid site: {error}"))?;
+    let folder = Path::new(given).parent().unwrap_or(Path::new("."));
+    let mesh = site_mesh_of(&document, folder)?;
+    let mut settings = FieldSettings::default();
+    let number = |name: &str, into: &mut f64| -> Result<(), Failure> {
+        if let Some(value) = options.flags.get(name) {
+            *into = value
+                .parse()
+                .map_err(|_| format!("`--{name}` expects a number, found `{value}`"))?;
+        }
+        Ok(())
+    };
+    number("cell", &mut settings.cell_m)?;
+    number("margin", &mut settings.margin_m)?;
+    number("patch", &mut settings.patch_m)?;
+    number("latitude", &mut settings.latitude_deg)?;
+    if let Some(value) = options.flags.get("sky-rays") {
+        settings.sky_rays = value
+            .parse()
+            .map_err(|_| format!("`--sky-rays` expects a whole number, found `{value}`"))?;
+    }
+    let (low, high) = match options.flags.get("tile") {
+        Some(tile) => {
+            let values: Vec<f64> = tile
+                .split(',')
+                .map(|v| v.trim().parse::<f64>())
+                .collect::<Result<_, _>>()
+                .map_err(|_| "`--tile` expects X0,Z0,X1,Z1")?;
+            let [x0, z0, x1, z1] = values[..] else {
+                return Err("`--tile` expects X0,Z0,X1,Z1".into());
+            };
+            ([x0, z0], [x1, z1])
+        }
+        None => {
+            let (low, high) = mesh.bounds();
+            settings.margin_m = options
+                .flags
+                .get("margin")
+                .and_then(|m| m.parse().ok())
+                .unwrap_or(0.0);
+            ([low.x, low.z], [high.x, high.z])
+        }
+    };
+    let started = std::time::Instant::now();
+    let field = build(&mesh, low, high, &settings)?;
+    let json = field.to_json()?;
+    fs::write(out, &json).map_err(|error| format!("cannot write {out}: {error}"))?;
+    let ground = field.ground.height.iter().filter(|h| h.is_some()).count();
+    out!(
+        "site field of {} x {} cells ({ground} on ground), {} hosts, {} patches, {} crack sites in {:.1} s; wrote {out} ({} KB)",
+        field.columns,
+        field.rows,
+        field.hosts.len(),
+        field.patches.len(),
+        field.cracks.len(),
+        started.elapsed().as_secs_f64(),
+        json.len() / 1024
+    );
+    Ok(())
+}
+
 /// The mesh and pavements of a site document whose files are named from
 /// `folder` (`plantc site`, `plantc cracks`).
 fn site_mesh_of(
@@ -3586,9 +3675,9 @@ fn site_surface(name: &str, given: &serde_json::Value) -> Result<plantgen::site:
         .as_object()
         .ok_or_else(|| format!("site material `{name}` must be a name or an object"))?;
     for key in table.keys() {
-        if !["as", "thin_m", "climb", "clear", "colour"].contains(&key.as_str()) {
+        if !["as", "thin_m", "climb", "clear", "colour", "soil_m"].contains(&key.as_str()) {
             return Err(format!(
-                "site material `{name}`: unknown field `{key}`; use as, thin_m, climb, clear, colour"
+                "site material `{name}`: unknown field `{key}`; use as, thin_m, climb, clear, colour, soil_m"
             ));
         }
     }
@@ -3607,6 +3696,12 @@ fn site_surface(name: &str, given: &serde_json::Value) -> Result<plantgen::site:
         surface.climb = climb
             .as_bool()
             .ok_or_else(|| format!("site material `{name}`: climb must be true or false"))?;
+    }
+    if let Some(soil) = table.get("soil_m") {
+        surface.soil_m = soil
+            .as_f64()
+            .filter(|t| t.is_finite() && *t >= 0.0)
+            .ok_or_else(|| format!("site material `{name}`: soil_m must be metres, 0 or more"))?;
     }
     if let Some(clear) = table.get("clear") {
         surface.clear = clear
@@ -3896,6 +3991,19 @@ fn site_command(args: &[String]) -> Result<(), Failure> {
     }
     if all_looks.len() > 255 {
         return Err("too many organ types to draw at once; draw fewer species".into());
+    }
+    // A view framed with `--focus` draws the site as far round it as it
+    // frames, not only round the plants.
+    if let (Some(text), Ok(Some(span))) = (options.flags.get("focus"), options.number("span")) {
+        let values: Vec<f64> = text
+            .split(',')
+            .filter_map(|v| v.trim().parse().ok())
+            .collect();
+        if let [x, y, z] = values[..] {
+            let half = Vec3::new(span, span, span) * 0.75;
+            low = low.min(Vec3::new(x, y, z) - half);
+            high = high.max(Vec3::new(x, y, z) + half);
+        }
     }
     let ground = site.drawn(low, high, offset);
     let templates = Templates::for_plant(&all_looks, &[]).with_bark(bark);
