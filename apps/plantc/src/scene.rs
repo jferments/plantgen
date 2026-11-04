@@ -9,6 +9,7 @@
 use std::collections::BTreeMap;
 use std::fs;
 
+use plantgen::development::{self, Candidate};
 use plantgen::math::Vec3;
 use plantgen::mesh::{self, PlantMesh};
 use plantgen::niche::Layer;
@@ -16,7 +17,6 @@ use plantgen::preview::{self, PreviewOptions, View};
 use plantgen::raster;
 use plantgen::spec::{Environment, PlantSpec};
 use plantgen::stand_tile;
-use plantgen::succession::{self, Candidate};
 use plantgen::templates::Templates;
 
 use super::{
@@ -356,7 +356,7 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
         });
     }
     // A developing stand: its cohorts from its species' niches and
-    // lifespans at its age (`plantgen::succession`), each a member whose
+    // lifespans at its age (`plantgen::development`), each a member whose
     // layer its grown height decides.
     let mut candidates: Vec<Candidate> = Vec::new();
     // (member, candidate) of each developed member.
@@ -410,21 +410,21 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
                 env_name.to_string(),
                 environment,
                 seeds,
-                succession::light_needed(&niche),
+                development::light_needed(&niche),
             ));
         }
-        let development = succession::develop(&candidates, stand_age);
+        let stand = development::develop(&candidates, stand_age);
         out!(
             "stand of {stand_age} years: {} (pioneers' lifespan {} years), cover canopy {:.2}, subcanopy {:.2}, shrub {:.2}, herb {:.2}",
-            development.stage.name(),
-            development.lifespan,
-            development.cover[0],
-            development.cover[1],
-            development.cover[2],
-            development.cover[3]
+            stand.stage.name(),
+            stand.lifespan,
+            stand.cover[0],
+            stand.cover[1],
+            stand.cover[2],
+            stand.cover[3]
         );
-        cover_default = Some(development.cover);
-        for cohort in &development.cohorts {
+        cover_default = Some(stand.cover);
+        for cohort in &stand.cohorts {
             let (id, env_name, environment, seeds, light) = &entries[cohort.candidate];
             out!(
                 "  cohort {id} {} years, weight {:.3}{}",
@@ -564,7 +564,7 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
             .fold(0.0_f64, f64::max);
         for (member, candidate) in &developed {
             let layer =
-                succession::layer_of(&candidates[*candidate], height(&members[*member]), top);
+                development::layer_of(&candidates[*candidate], height(&members[*member]), top);
             members[*member].2 = layer;
         }
     }
