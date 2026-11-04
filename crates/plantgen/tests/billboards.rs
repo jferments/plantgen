@@ -194,6 +194,32 @@ fn builds_are_deterministic() {
     assert_eq!(first, second);
 }
 
+/// The atlas a tier's pictures pack into keeps the tier's texel budget,
+/// the room the packing leaves between pictures too: a poison hemlock's
+/// low cards packed into 512 x 624 texels of a 512 x 512 budget once its
+/// cut leaves took cards of their own.
+#[test]
+fn a_tiers_packed_atlas_keeps_its_texel_budget() {
+    for id in ["achillea-millefolium", "conium-maculatum", SPECIES[2]] {
+        let (height, _, plants) = carded(id);
+        for (tier, plant) in TIERS.iter().zip(&plants) {
+            let atlas = plant.atlas();
+            let budget = tier.texels(height);
+            println!(
+                "{id} {}: {} x {} of {budget}",
+                tier.name, atlas.width, atlas.height
+            );
+            assert!(
+                atlas.width * atlas.height <= budget,
+                "{id} {}: {} x {} texels of {budget}",
+                tier.name,
+                atlas.width,
+                atlas.height
+            );
+        }
+    }
+}
+
 #[test]
 fn pictures_pack_into_one_atlas() {
     let (_, _, plants) = carded(SPECIES[2]);

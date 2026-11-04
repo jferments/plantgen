@@ -1558,4 +1558,12 @@ pub mod venation;
 /// leaf laid flat, in place of a midrib line and the dots its segments
 /// baked to in the plant's cards (`crate::billboards`): its leaves read
 /// as feathery blades, not lines and dots.
-pub const GENERATOR_REVISION: u32 = 196;
+///
+/// 198: a card tier's texel budget pays for its packed atlas, the room
+/// packing leaves between pictures included, not only for the pictures'
+/// own texels (`crate::billboards`): the pictures are baked at the
+/// densest that packs within it. Pictures pack in rows or along the top
+/// edge of those laid before, whichever is lower. Of 498 card tiers of
+/// 248 species, none grew and together they hold 14% fewer texels; most
+/// low tiers went from 512 by 550 to 620 texels to 512 by 512.
+pub const GENERATOR_REVISION: u32 = 198;
