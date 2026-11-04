@@ -108,14 +108,62 @@ fn append(host: &mut PlantMesh, guest: PlantMesh) {
 /// drew a 250-year Douglas-fir's wood in seven times the triangles.
 const OVERVIEW_LEVEL: usize = 1;
 
-/// The level of detail of an instance in a close-up of `span` metres
-/// round `focus`: full detail within two spans of the focus, where the
-/// close-up's pixels are millimetres; level 2 farther out, where a plant
-/// only casts shade into the frame.
-fn close_level(instance: &Instance, crown: f64, focus: Vec3, span: f64) -> usize {
-    let [east, north] = instance.at_m;
-    let off = ((east - focus.x).powi(2) + (north + focus.z).powi(2)).sqrt() - crown;
-    if off <= 2.0 * span { 0 } else { 2 }
+/// The camera of a close-up from the side, for choosing each instance's
+/// level of detail by what that close-up's pixels can resolve.
+struct CloseUp {
+    eye: Vec3,
+    /// Level, unit, along the view and to its right.
+    forward: [f64; 2],
+    right: [f64; 2],
+    /// Tangent of half the picture's width as seen from the eye.
+    half_width: f64,
+    /// Metres one pixel spans per metre from the eye.
+    pixel_per_metre: f64,
+}
+
+impl CloseUp {
+    fn new(focus: Vec3, span: f64, width: usize, height: usize) -> Self {
+        let (eye, half_height) = preview::close_up_eye(View::Side, focus, span);
+        let (x, z) = (focus.x - eye.x, focus.z - eye.z);
+        let level = x.hypot(z).max(1e-9);
+        #[allow(clippy::cast_precision_loss)]
+        let (width, height) = (width as f64, height as f64);
+        Self {
+            eye,
+            forward: [x / level, z / level],
+            right: [-z / level, x / level],
+            half_width: half_height * width / height,
+            pixel_per_metre: 2.0 * half_height / height,
+        }
+    }
+
+    /// The level of detail of an instance standing at `at_m` (east, north),
+    /// `height` tall with a crown `crown` metres in radius: the coarsest of
+    /// `levels` whose ring vertices and merged foliage cells stand at most
+    /// three pixels apart, and whose thinnest twig is at most a pixel
+    /// across, where the instance comes nearest the eye. One wholly outside
+    /// the picture only casts shade into it and takes level 2.
+    fn level(&self, at_m: [f64; 2], height: f64, crown: f64, levels: &[mesh::LodSpec; 4]) -> usize {
+        let (x, z) = (at_m[0] - self.eye.x, -at_m[1] - self.eye.z);
+        let along = x * self.forward[0] + z * self.forward[1];
+        let across = (x * self.right[0] + z * self.right[1]).abs();
+        // A margin for limbs past the crown's measured radius.
+        let reach = crown.max(0.0) * 1.1 + 0.2;
+        let beside = (across - self.half_width * along) / self.half_width.hypot(1.0);
+        if along + reach <= 0.0 || beside > reach {
+            return 2;
+        }
+        // Depth of its nearest part; nothing nearer than the macro lens.
+        let depth = (along - reach).max(0.15);
+        let pixel = depth * self.pixel_per_metre;
+        (0..levels.len())
+            .rev()
+            .find(|&level| {
+                let spec = levels[level].for_height(height);
+                spec.ring_edge.max(spec.cluster) <= 3.0 * pixel && 2.0 * spec.min_radius <= pixel
+            })
+            .unwrap_or(0)
+    }
 }
 
 /// The scene one view draws: every instance placed, each at the level of
@@ -746,15 +794,19 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
         let scene = match (close, focus) {
             (true, None) => return Err("the close view needs --focus X,Y,Z".into()),
             (true, Some((point, span))) => {
-                let crown = |instance: &Instance| {
-                    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-                    let key = (instance.variant, (instance.age * 1000.0).round() as u64);
-                    sizes_at.get(&key).map_or(0.0, |sizes| sizes[2]) * instance.scale
-                };
+                let camera = CloseUp::new(point, span, shot.width, shot.height);
                 // The overview's scene is rebuilt if a later view needs it.
                 overview = None;
                 close_scene = scene_of(&instances, &mut meshes, &build, &|instance| {
-                    close_level(instance, crown(instance), point, span)
+                    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+                    let key = (instance.variant, (instance.age * 1000.0).round() as u64);
+                    let [height, _, crown, ..] = sizes_at.get(&key).copied().unwrap_or_default();
+                    camera.level(
+                        instance.at_m,
+                        height * instance.scale,
+                        crown * instance.scale,
+                        &quality.lods,
+                    )
                 });
                 &close_scene
             }
