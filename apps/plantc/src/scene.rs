@@ -167,15 +167,14 @@ impl CloseUp {
 }
 
 /// The scene one view draws: every instance placed, each at the level of
-/// detail `level` gives it, its variant's mesh at that level built once
-/// into `meshes` by `build`.
-#[allow(clippy::type_complexity)]
+/// detail `level` gives it, its variant's mesh at that level built once by
+/// `build` and dropped once the scene holds its copies.
 fn scene_of(
     instances: &[Instance],
-    meshes: &mut BTreeMap<(usize, u64, usize), PlantMesh>,
     build: &dyn Fn(usize, f64, usize) -> Option<PlantMesh>,
     level: &dyn Fn(&Instance) -> usize,
 ) -> PlantMesh {
+    let mut meshes: BTreeMap<(usize, u64, usize), PlantMesh> = BTreeMap::new();
     let key = |instance: &Instance| {
         #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
         let age = (instance.age * 1000.0).round() as u64;
@@ -599,11 +598,16 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
     );
     // Each variant's looks, bodies and the shift of its looks in the
     // scene's one list of looks; its meshes are built for each view at the
-    // level of detail that view needs (`scene_at`).
+    // level of detail that view needs (`scene_of`).
     let mut all_looks = Vec::new();
     let mut bark = None;
-    let mut drawing: Vec<(Vec<plantgen::looks::Look>, Vec<f64>, Vec<plantgen::body::BodyLook>, u8)> =
-        Vec::new();
+    #[allow(clippy::type_complexity)]
+    let mut drawing: Vec<(
+        Vec<plantgen::looks::Look>,
+        Vec<f64>,
+        Vec<plantgen::body::BodyLook>,
+        u8,
+    )> = Vec::new();
     // Each variant's size at each age: height, crown base, crown radius,
     // breast-height diameter and leaf area.
     let mut sizes_at: BTreeMap<(usize, u64), [f64; 5]> = BTreeMap::new();
@@ -701,7 +705,6 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
         }
         Some(plant)
     };
-    let mut meshes = BTreeMap::new();
     let templates = Templates::for_plant(&all_looks, &[]).with_bark(bark);
     let reach = instances
         .iter()
@@ -713,8 +716,8 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
     // `--cover HALF`: the share of the square HALF metres round the middle
     // that crowns cover seen straight down.
     if let Some(half) = options.number::<f64>("cover")? {
-        let scene = overview
-            .get_or_insert_with(|| scene_of(&instances, &mut meshes, &build, &|_| OVERVIEW_LEVEL));
+        let scene =
+            overview.get_or_insert_with(|| scene_of(&instances, &build, &|_| OVERVIEW_LEVEL));
         let image = preview::render_on_site(
             scene,
             &[],
@@ -776,7 +779,12 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
         }
         None => None,
     };
-    for name in views.split(',') {
+    // The overview views first: they share one scene, and a close-up's
+    // scene is built only once that one is dropped, so the two are never
+    // held at once.
+    let (closes, overviews): (Vec<&str>, Vec<&str>) =
+        views.split(',').partition(|name| *name == "close");
+    for name in overviews.into_iter().chain(closes) {
         let close = name == "close";
         let view = if close { View::Side } else { view_named(name)? };
         let shot = PreviewOptions {
@@ -795,9 +803,9 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
             (true, None) => return Err("the close view needs --focus X,Y,Z".into()),
             (true, Some((point, span))) => {
                 let camera = CloseUp::new(point, span, shot.width, shot.height);
-                // The overview's scene is rebuilt if a later view needs it.
+                // No overview view comes after a close-up.
                 overview = None;
-                close_scene = scene_of(&instances, &mut meshes, &build, &|instance| {
+                close_scene = scene_of(&instances, &build, &|instance| {
                     #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
                     let key = (instance.variant, (instance.age * 1000.0).round() as u64);
                     let [height, _, crown, ..] = sizes_at.get(&key).copied().unwrap_or_default();
@@ -810,9 +818,9 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
                 });
                 &close_scene
             }
-            (false, _) => &*overview.get_or_insert_with(|| {
-                scene_of(&instances, &mut meshes, &build, &|_| OVERVIEW_LEVEL)
-            }),
+            (false, _) => {
+                &*overview.get_or_insert_with(|| scene_of(&instances, &build, &|_| OVERVIEW_LEVEL))
+            }
         };
         let image = preview::render_with(scene, &[], &templates, &shot);
         let png = raster::encode_png(
