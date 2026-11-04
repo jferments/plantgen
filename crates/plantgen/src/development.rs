@@ -53,7 +53,7 @@ pub const PIONEERS_GONE: f64 = 1050.0 / 500.0;
 /// reverse-J of all-aged stands (de Liocourt 1898; Meyer 1952).
 pub const INGROWTH_DECAY: f64 = 0.25;
 
-/// The canopy cover of a closed stand, Stage::Exclusion's (McIntosh et
+/// The canopy cover of a closed stand, [`Stage::Exclusion`]'s (McIntosh et
 /// al. 2009: rarely more than 85%).
 pub const CLOSED: f64 = 0.85;
 
@@ -508,10 +508,10 @@ mod tests {
         assert!(young.cover[3] > 0.75, "{:?}", young.cover);
         assert!((closed.cover[3] - 0.15).abs() < 1e-9, "{:?}", closed.cover);
         // A woodland where no tree suits the site well lies between.
-        let mut poor = pool.clone();
-        poor[0].suitability = 0.15;
-        poor[1].suitability = 0.15;
-        let woodland = develop(&poor, 500.0).cover[3];
+        let mut sparse = pool.clone();
+        sparse[0].suitability = 0.15;
+        sparse[1].suitability = 0.15;
+        let woodland = develop(&sparse, 500.0).cover[3];
         assert!(woodland > develop(&pool, 500.0).cover[3] && woodland < OPEN_HERB);
     }
 

@@ -5,8 +5,8 @@
 use std::sync::LazyLock;
 
 use plantgen::api::{
-    Community, Environment, Fill, FillSettings, INSTANCE_BYTES, INSTANCE_SCHEMA, Instance, Site,
-    StandCell, StandMap, TileId,
+    Community, Environment, Fill, FillSettings, INSTANCE_BYTES, INSTANCE_SCHEMA, Instance,
+    PrototypeKey, Site, StandCell, StandMap, TileId,
 };
 
 fn forest() -> Community {
@@ -241,7 +241,8 @@ fn every_prototype_is_a_cohort_of_a_stand_in_each_seed() {
         "{keys:?}"
     );
     // The firs at the ages nearest the stands' (their keyframes 15 and
-    // 30 years), the yarrow at its oldest.
+    // 30 years), the closed stand's also as an edge; the yarrow at its
+    // oldest.
     for (index, prototype) in fill.prototypes().iter().enumerate() {
         assert!((f64::from(prototype.key.age_tenths) / 10.0 - prototype.age_years).abs() < 0.05);
         assert!(
@@ -258,9 +259,168 @@ fn every_prototype_is_a_cohort_of_a_stand_in_each_seed() {
     firs.sort_by_key(|fir| fir.1);
     assert_eq!(
         firs,
-        [(Environment::Open, 150), (Environment::Interior, 300)],
+        [
+            (Environment::Open, 150),
+            (Environment::Edge, 300),
+            (Environment::Interior, 300)
+        ],
         "{cohorts:?}"
     );
+}
+
+/// The way a placed plant faces: its east turned by its rotation, as an
+/// angle from east toward north.
+fn facing(instance: &Instance) -> f64 {
+    let [x, y, z, w] = instance.rotation.map(f64::from);
+    // East (1, 0, 0) turned by the quaternion.
+    let east = [1.0 - 2.0 * (y * y + z * z), 2.0 * (x * y + w * z)];
+    east[1].atan2(east[0])
+}
+
+fn bare() -> StandCell {
+    StandCell {
+        community: None,
+        years_since_disturbance: 0.0,
+    }
+}
+
+fn is_edge(fill: &Fill, instance: &Instance) -> bool {
+    fill.prototypes()[instance.prototype as usize]
+        .key
+        .environment
+        == Environment::Edge
+}
+
+#[test]
+fn a_stands_first_row_beside_a_road_grows_as_an_edge_facing_it() {
+    // A closed 40-year stand in three cells of an 80 m tile, a road in
+    // the south-east cell.
+    let fill = fill();
+    let site = Site::flat(TileId { x: 0, y: 0 }, 80.0).expect("site");
+    let mut stands = StandMap::uniform(80.0, 0, 40.0);
+    stands.cells[1] = bare();
+    let plan = fill.tile(&site, &stands, 3).expect("tile");
+    let edges: Vec<&Instance> = plan.instances.iter().filter(|i| is_edge(fill, i)).collect();
+    assert!(!edges.is_empty());
+    assert!(plan.stats.edge_trees_per_ha > 0.0);
+    for edge in &edges {
+        let [x, y, _] = edge.position;
+        // Within the crown's width the stand laid it out with, as grown
+        // inside the stand.
+        let key = PrototypeKey {
+            environment: Environment::Interior,
+            ..fill.prototypes()[edge.prototype as usize].key.clone()
+        };
+        let interior = fill
+            .prototypes()
+            .iter()
+            .position(|p| p.key == key)
+            .expect("its interior twin");
+        let grown = fill.size(interior).expect("measured");
+        let width = 2.0 * grown.crown_radius * f64::from(edge.scale) + 1e-2;
+        // West of the road it faces east; north of it, south.
+        let (gap, toward) = if y < 40.0 {
+            (40.0 - f64::from(x), 0.0)
+        } else {
+            (f64::from(y) - 40.0, -std::f64::consts::FRAC_PI_2)
+        };
+        assert!(
+            x < 40.0 || y >= 40.0,
+            "{:?} stands in the road",
+            edge.position
+        );
+        assert!(
+            gap >= 0.0 && gap < width,
+            "{:?} is not in the first row",
+            edge.position
+        );
+        assert!(
+            (facing(edge) - toward).abs() < 0.5,
+            "{:?} faces {}",
+            edge.position,
+            facing(edge)
+        );
+    }
+    // The cell with no opening beside it, and every shrub and herb, stays
+    // as it was.
+    assert!(
+        plan.instances
+            .iter()
+            .filter(|i| i.position[0] < 40.0 && i.position[1] >= 40.0)
+            .all(|i| !is_edge(fill, i))
+    );
+    // A stand of the same age beside it is no opening.
+    let mut young = stands.clone();
+    young.cells[1] = StandCell {
+        community: Some(0),
+        years_since_disturbance: 40.0,
+    };
+    let closed = fill.tile(&site, &young, 3).expect("tile");
+    assert!(closed.instances.iter().all(|i| !is_edge(fill, i)));
+}
+
+#[test]
+fn a_stand_without_edges_grows_none() {
+    let mut settings = settings();
+    settings.edges = false;
+    let fill = Fill::new(&[forest()], &settings).expect("fill");
+    assert!(
+        fill.prototypes()
+            .iter()
+            .all(|p| p.key.environment != Environment::Edge)
+    );
+}
+
+#[test]
+fn an_edge_on_a_tiles_side_grows_as_it_would_in_one_tile() {
+    // The road of the tile above, seen from the north-east quarter alone:
+    // given the cell past its south side, its first row is the whole
+    // tile's.
+    let fill = fill();
+    let mut stands = StandMap::uniform(80.0, 0, 40.0);
+    stands.cells[1] = bare();
+    let whole = fill
+        .tile(
+            &Site::flat(TileId { x: 0, y: 0 }, 80.0).expect("site"),
+            &stands,
+            7,
+        )
+        .expect("tile");
+    let forest = StandMap::uniform(40.0, 0, 40.0).cells[0];
+    let quarter_site = Site::flat(TileId { x: 1, y: 1 }, 40.0).expect("site");
+    let quarter_stands = StandMap::uniform(40.0, 0, 40.0);
+    let quarter = fill
+        .tile_among(
+            &quarter_site,
+            &quarter_stands,
+            &|col, row| {
+                Some(if (col, row) == (0, -1) {
+                    bare()
+                } else {
+                    forest
+                })
+            },
+            7,
+        )
+        .expect("tile");
+    let in_corner: Vec<Instance> = whole
+        .instances
+        .iter()
+        .filter(|i| i.position[0] >= 40.0 && i.position[1] >= 40.0)
+        .map(|i| Instance {
+            position: [i.position[0] - 40.0, i.position[1] - 40.0, i.position[2]],
+            ..*i
+        })
+        .collect();
+    assert!(in_corner.iter().any(|i| is_edge(fill, i)));
+    assert_eq!(in_corner.len(), quarter.instances.len());
+    for (a, b) in in_corner.iter().zip(&quarter.instances) {
+        assert_eq!(a.prototype, b.prototype);
+        assert_eq!(a.rotation.map(f32::to_bits), b.rotation.map(f32::to_bits));
+    }
+    // Not told what lies past its side, the quarter grows no edge there.
+    let alone = fill.tile(&quarter_site, &quarter_stands, 7).expect("tile");
+    assert!(alone.instances.iter().all(|i| !is_edge(fill, i)));
 }
 
 #[test]
