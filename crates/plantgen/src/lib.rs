@@ -1543,4 +1543,12 @@ pub mod venation;
 /// dandelion's) share its leaves and rise from its middle; a disciform
 /// head is checked as the discoid one it is drawn as (horseweed and
 /// dandelion, from FNA and Flora of China).
-pub const GENERATOR_REVISION: u32 = 194;
+///
+/// 195: the card tiers' midrib lines for cut leaves are lit as their
+/// blades face, not as round stems facing out from the plant's middle (a
+/// yarrow's leaves drew as dark lines), and a solid flower head's cone
+/// reaches as deep as the head's cover from the side says, down at most
+/// to where its stalks meet, lit half way between straight out and its
+/// face as the stands of clusters drawn as cards are. A yarrow's low cards
+/// from the side went from 0.75 to 0.93 as bright as the plant.
+pub const GENERATOR_REVISION: u32 = 195;

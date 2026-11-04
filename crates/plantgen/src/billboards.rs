@@ -3269,6 +3269,7 @@ fn lace_lines(
     let mut pieces: Vec<Vec<(f64, Vec3, f64)>> = vec![Vec::new(); graph.organs.len()];
     let mut widths = vec![0.0_f64; graph.organs.len()];
     let mut colours = vec![([0.0_f64; 3], 0.0_f64); graph.organs.len()];
+    let mut facing = vec![Vec3::ZERO; graph.organs.len()];
     for t in 0..wood.triangle_count() {
         let corners = [0, 1, 2].map(|k| wood.indices[t * 3 + k] as usize);
         if whole[t] || corners.iter().any(|&i| bark_radius(wood, i).is_some()) {
@@ -3295,7 +3296,10 @@ fn lace_lines(
         };
         let (along, off) = place(o);
         widths[o] = widths[o].max(off);
-        pieces[o].push((along, centre, (b - a).cross(c - a).length() * 0.5));
+        let face = (b - a).cross(c - a);
+        pieces[o].push((along, centre, face.length() * 0.5));
+        // Its blade's way up, weighed by area.
+        facing[o] = facing[o] + if face.y < 0.0 { -face } else { face };
         let (sum, count) = &mut colours[o];
         for &i in &corners {
             for k in 0..3 {
@@ -3304,7 +3308,7 @@ fn lace_lines(
             *count += 1.0;
         }
     }
-    let mut lines: Vec<(f64, Vec<(Vec3, f64)>, [f64; 3])> = Vec::new();
+    let mut lines: Vec<(f64, Vec<(Vec3, f64)>, [f64; 3], Vec3)> = Vec::new();
     for (o, leaf) in pieces.iter().enumerate() {
         let reach = leaf.iter().map(|p| p.0).fold(0.0, f64::max);
         if reach < 4.0 * least {
@@ -3340,17 +3344,25 @@ fn lace_lines(
             continue;
         }
         let (sum, count) = colours[o];
-        lines.push((reach, path, sum.map(|c| c / count.max(1.0))));
+        lines.push((
+            reach,
+            path,
+            sum.map(|c| c / count.max(1.0)),
+            facing[o].normalize_or(Vec3::Y),
+        ));
     }
     lines.sort_by(|a, b| b.0.total_cmp(&a.0));
     let mut spent = 0;
-    for (_, path, colour) in lines {
+    // Each line is lit as its blade faces: lit as a round stem, facing
+    // out from the plant's middle, a yarrow's leaves drew as dark lines,
+    // and its low cards 0.75 as bright as the plant from the side.
+    for (_, path, colour, lit) in lines {
         let cost = 4 * (path.len() - 1);
         if spent + cost > budget {
             break;
         }
         spent += cost;
-        strip(out, &path, colour, least);
+        strip(out, &path, colour, least, Some(lit));
     }
 }
 
@@ -3396,13 +3408,14 @@ fn ribbon(
     } else {
         appearance.bark.map(f64::from)
     };
-    strip(out, &picked, colour, least);
+    strip(out, &picked, colour, least, None);
 }
 
 /// Draw the line through `picked` (each point and its radius) as a strip
 /// at least `least` wide in `colour`, facing out from the plant's middle,
-/// both faces, lit as the round axis it stands for ([`RIBBON_ROUND`]).
-fn strip(out: &mut Mesh, picked: &[(Vec3, f64)], colour: [f64; 3], least: f64) {
+/// both faces, lit as the round axis it stands for ([`RIBBON_ROUND`]), or
+/// with the normal `lit` where it stands for a blade.
+fn strip(out: &mut Mesh, picked: &[(Vec3, f64)], colour: [f64; 3], least: f64, lit: Option<Vec3>) {
     // Each face has its own corners, with its own normal: a ribbon drawn
     // from behind with its front's normal was lit as if turned from the
     // sun, and a yarrow's flowering stems on the far side of the plant
@@ -3426,7 +3439,7 @@ fn strip(out: &mut Mesh, picked: &[(Vec3, f64)], colour: [f64; 3], least: f64) {
                 #[allow(clippy::cast_possible_truncation)]
                 out.push(Vertex {
                     position: corner,
-                    normal: (facing + across * lean).normalize_or(facing),
+                    normal: lit.unwrap_or_else(|| (facing + across * lean).normalize_or(facing)),
                     uv: [0.0, 0.0],
                     color: [colour[0] as f32, colour[1] as f32, colour[2] as f32, 1.0],
                     born: 0.0,
@@ -3752,14 +3765,13 @@ pub const HEAD_SIDES: usize = 10;
 const HEAD_SAMPLE: usize = 24;
 
 /// A head of flowers seen face on (a corymb, an umbel, a capitulum) drawn
-/// solid: a low dome over a shallow cone, of the head's own breadth, its
-/// top the colour the head shows from above and its underside the colour
-/// it shows from the side. Baked into a small picture seen from every
-/// side, a yarrow's corymb blurred to a white smudge close up, where the
-/// low cards are the nearest a weak machine draws (Joshi chose solid heads
-/// on 2026-10-30). Its breadth is the head's own, narrowed by the share of
-/// its disc its flowers fill from above, so a lacy umbel covers no more
-/// than its flowers do.
+/// solid: a low dome over a cone, its top the colour the head shows from
+/// above and its underside the colour it shows from the side. Baked into
+/// a small picture seen from every side, a yarrow's corymb blurred to a
+/// white smudge close up, where the low cards are the nearest a weak
+/// machine draws (Joshi chose solid heads on 2026-10-30). It covers what
+/// the head's flowers cover from above, and what the head covers from the
+/// side as far as its stalks reach down.
 fn solid_head(drawn: &Baked, templates: &Templates, sky: &Sky) -> Mesh {
     let mut out = Mesh::default();
     let cards = &drawn.cards;
@@ -3886,71 +3898,94 @@ fn solid_head(drawn: &Baked, templates: &Templates, sky: &Sky) -> Mesh {
     // the side view does (rows run from the bottom), and its underside
     // what it shows from below: a wild carrot's umbel drew as a dark
     // sliver from the side while the plant shows a white band.
-    let (rim_colour, _) = mean(&look(across, axis), &|_, y| y >= HEAD_SAMPLE / 2);
+    let side_picture = look(across, axis);
+    let (rim_colour, _) = mean(&side_picture, &|_, y| y >= HEAD_SAMPLE / 2);
     let rim_colour = rim_colour.unwrap_or(top_colour);
     let (under_colour, _) = mean(&look(-axis, across), &in_disc);
     let under_colour = under_colour.unwrap_or(rim_colour);
+    // As broad as its flowers cover from above, so a lacy umbel covers no
+    // more than they do: a dome broad enough to match a wild carrot's
+    // umbel from the side drew 1.5 times as bright as the plant from 45
+    // degrees (owner's choice, 2026-11-01).
     let radius = breadth * filled.sqrt().clamp(0.35, 1.0);
     let rim = top - (radius * 0.2).min((top - bottom) * 0.5);
-    // Its underside reaches down over its rays, at most as deep as it is
-    // broad: a yarrow's corymb is a cone of branches under its flowers.
+    // As deep as its cover from the side says, down at most to where its
+    // stalks meet: a yarrow's corymb is a cone of branches under its
+    // flowers. As deep as it was broad, a yarrow's heads drew half their
+    // cover from the side.
+    #[allow(clippy::cast_precision_loss)]
+    let beside = side_picture
+        .color
+        .iter()
+        .map(|c| f64::from(c[3]))
+        .sum::<f64>()
+        / (HEAD_SAMPLE * HEAD_SAMPLE) as f64
+        * (2.0 * breadth).powi(2);
     let rays = stalks.map_or(bottom, |stalks| (stalks - centre).dot(axis));
-    let foot = bottom.min(rays).max(rim - radius);
+    let deepest = (rim - bottom.min(rays)).max(0.0);
+    let depth = (beside / radius - (top - rim)).clamp((radius * 0.2).min(deepest), deepest);
+    let foot = rim - depth;
     let side = axis.cross(across);
     let round = |i: usize| {
         #[allow(clippy::cast_precision_loss)]
         let a = std::f64::consts::TAU * i as f64 / HEAD_SIDES as f64;
         across * crate::math::cos(a) + side * crate::math::sin(a)
     };
-    // A fan from `tip` out to the rim `height` up the axis, its normals
-    // leaning out by `lean`, its colours `[tip, rim]`.
-    let mut fan =
-        |tip: Vec3, tip_normal: Vec3, height: f64, lean: f64, colours: [[f64; 3]; 2], up: bool| {
-            #[allow(clippy::cast_possible_truncation)]
-            let colours = colours.map(|c| [c[0] as f32, c[1] as f32, c[2] as f32, 1.0]);
-            let vertex = |position: Vec3, normal: Vec3, color: [f32; 4]| Vertex {
-                position,
-                normal,
-                uv: [0.0, 0.0],
-                color,
-                born: 0.0,
-                shed: None,
-                level: 3,
-                segment: mesh::NO_SEGMENT,
-            };
-            let first = out.push(vertex(tip, tip_normal, colours[0]));
-            for i in 0..HEAD_SIDES {
-                let out_way = round(i);
-                out.push(vertex(
-                    centre + axis * height + out_way * radius,
-                    (tip_normal + out_way * lean).normalize_or(tip_normal),
-                    colours[1],
-                ));
-            }
-            #[allow(clippy::cast_possible_truncation)]
-            let n = HEAD_SIDES as u32;
-            for i in 0..n {
-                let (a, b) = (first + 1 + i, first + 1 + (i + 1) % n);
-                out.indices
-                    .extend_from_slice(&if up { [first, a, b] } else { [first, b, a] });
-            }
-        };
-    fan(
-        centre + axis * top,
-        axis,
-        rim,
-        0.5,
-        [top_colour, rim_colour],
-        true,
-    );
-    fan(
-        centre + axis * foot,
-        -axis,
-        rim,
-        1.5,
-        [under_colour, rim_colour],
-        false,
-    );
+    #[allow(clippy::cast_possible_truncation)]
+    let colour = |c: [f64; 3]| [c[0] as f32, c[1] as f32, c[2] as f32, 1.0];
+    let vertex = |position: Vec3, normal: Vec3, color: [f32; 4]| Vertex {
+        position,
+        normal,
+        uv: [0.0, 0.0],
+        color,
+        born: 0.0,
+        shed: None,
+        level: 3,
+        segment: mesh::NO_SEGMENT,
+    };
+    // Its top: a fan from its tip out to the rim, its normals leaning out
+    // half way.
+    let tip = out.push(vertex(centre + axis * top, axis, colour(top_colour)));
+    for i in 0..HEAD_SIDES {
+        let out_way = round(i);
+        out.push(vertex(
+            centre + axis * rim + out_way * radius,
+            (axis + out_way * 0.5).normalize_or(axis),
+            colour(rim_colour),
+        ));
+    }
+    #[allow(clippy::cast_possible_truncation)]
+    let n = HEAD_SIDES as u32;
+    for i in 0..n {
+        out.indices
+            .extend_from_slice(&[tip, tip + 1 + i, tip + 1 + (i + 1) % n]);
+    }
+    // Its underside: each side its own corners, lit as facing half way
+    // between straight out and its own face, as the stands of clusters
+    // drawn as cards are (`crate::mesh::head_stands`): lit as its face,
+    // with a normal straight down at the foot, a yarrow's heads drew
+    // dark from the side.
+    let lit = |radial: Vec3| (radial * depth - axis * (0.5 * radius)).normalize_or(radial);
+    for i in 0..HEAD_SIDES {
+        let (from, to) = (round(i), round((i + 1) % HEAD_SIDES));
+        let middle = (from + to).normalize_or(from);
+        let a = out.push(vertex(
+            centre + axis * foot,
+            lit(middle),
+            colour(under_colour),
+        ));
+        let b = out.push(vertex(
+            centre + axis * rim + to * radius,
+            lit(to),
+            colour(rim_colour),
+        ));
+        let c = out.push(vertex(
+            centre + axis * rim + from * radius,
+            lit(from),
+            colour(rim_colour),
+        ));
+        out.indices.extend_from_slice(&[a, b, c]);
+    }
     out
 }
 
