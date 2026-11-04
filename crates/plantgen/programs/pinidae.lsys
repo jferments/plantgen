@@ -249,26 +249,31 @@
 # pipe model's girth, so crowns grow and bend as before. With
 # pipe_cambium 0, the default, a plant grows as before.
 #
-# Revision 16 (growth in deep shade): the leader grows light (1 + h) /
-# (light + h) of its full-light shoot, h = (1 - leader_shade) / (2
-# leader_shade) (leader_half), where it grew leader_shade + (1 -
-# leader_shade) light: the same in full and half light, but nothing in
-# the dark, as height growth saturates with light (a Michaelis-Menten
-# response, as fitted to western hemlock regeneration). leader_shade was
-# a floor, so under a closed canopy a hemlock's leader still rose at half
-# its open rate, 15 m in 60 years in 2% light. And an apex starves under
-# shade_death times top, the light of the plant's best-lit module, and
-# under shade_floor (a quarter of shade_death) however shaded the whole
-# plant, where it starved under shade_death alone; limb_light and limb_tip
-# shed limbs by the same threshold, and apical_light weighs a branch's
-# light against top. A shaded shoot on a tree whose others are in the sun
-# starves, as before, but the same shoot on a tree shaded all over lives
-# (correlative inhibition: Sprugel 2002, Tree Physiology 22:1119-1124;
-# Takenaka 2000, Tree Physiology 20:987-991). Under a closed canopy every
-# limb had starved and the tree was a bare pole with a tuft at its top; a
-# hemlock in 8% light is now 3.7 m at 60 years with limbs from 0.8 m, its
-# crown wider than it is tall. Open- and stand-grown trees, whose tops are
-# in the sun, grow within 2% of before.
+# Revision 16 (growth in deep shade): the leader grew leader_shade + (1 -
+# leader_shade) light of its full-light shoot, light its own: its floor,
+# leader_shade, is the growth the rest of the crown feeds it however its
+# own shoot is shaded, so a hemlock under a closed canopy still rose at
+# half its open rate, 15 m in 60 years in 2% light. That floor is now
+# leader_shade times the crown's supply, which falls with top, the light
+# of the plant's best-lit module: in full while top is half the sky's
+# light or more, so a tree whose top is in the sun grows as before
+# however its own limbs shade its leader, and toward nothing in the dark.
+# The supply is chosen so that on a plant shaded all over (light = top)
+# the leader grows light (1 + h) / (light + h) of its full-light shoot, h
+# = (1 - leader_shade) / (2 leader_shade) (leader_half), as height growth
+# saturates with light (a Michaelis-Menten response, as fitted to
+# western hemlock regeneration). And an apex starves under shade_death
+# times top, and under shade_floor (a quarter of shade_death) however
+# shaded the whole plant, where it starved under shade_death alone;
+# limb_light and limb_tip shed limbs by the same threshold, and
+# apical_light weighs a branch's light against top. A shaded shoot on a
+# tree whose others are in the sun starves, as before, but the same shoot
+# on a tree shaded all over lives (correlative inhibition: Sprugel 2002,
+# Tree Physiology 22:1119-1124; Takenaka 2000, Tree Physiology
+# 20:987-991). Under a closed canopy every limb had starved and the tree
+# was a bare pole with a tuft at its top; a hemlock in 8% light is now
+# 4.2 m at 60 years with limbs from 2 m. Open- and stand-grown trees grow
+# as tall as before, with leaf area within 3%.
 #
 # One step is one year. Angles are degrees; lengths are metres.
 
@@ -279,8 +284,8 @@ lsystem pinidae 16;
 param height_max = 70;
 param height_rate = 0.018;
 param height_shape = 1.5;
-param leader_shade = 0.35;     # the leader keeps (1 + leader_shade) / 2 of its full-light growth at half light (revision 16; it was the share kept in full shade)
-param leader_half = (1 - leader_shade) / (2 * max(0.01, leader_shade));  # the leader grows light (1 + leader_half) / (light + leader_half) of its full-light shoot
+param leader_shade = 0.35;     # share of the leader's growth the crown feeds it however its own shoot is shaded, while the plant's best light (top) is half the sky's or more (revision 16: it fades with top below that)
+param leader_half = (1 - leader_shade) / (2 * max(0.01, leader_shade));  # on a plant shaded all over, the leader grows light (1 + leader_half) / (light + leader_half) of its full-light shoot
 param nod = 0;                 # degrees the newest leader shoot nods over
 param nod_years = 2;           # years a leader shoot takes to stand up straight
 
@@ -405,12 +410,12 @@ axiom !(0.003) A B(stems - 1);
 # The leader: this year's height growth with its foliage, then a whorl.
 rule A -> G(0, (richards(t + dt, height_max, height_rate, height_shape)
                 - richards(t, height_max, height_rate, height_shape))
-               * light * (1 + leader_half) / (light + leader_half), needle_years * 2 / (1 + needle_low), 0, 1)
+               * (leader_shade * min(1, (top * (1 + leader_half) / (top + leader_half) - (1 - leader_shade) * top) / max(0.01, leader_shade)) + (1 - leader_shade) * light), needle_years * 2 / (1 + needle_low), 0, 1)
           W((bud_length > 0 ? round(whorl * min(1, (richards(t + dt, height_max, height_rate, height_shape)
                 - richards(t, height_max, height_rate, height_shape))
-               * light * (1 + leader_half) / (light + leader_half) / bud_length)) : whorl), (bud_length > 0 ? round(whorl * min(1, (richards(t + dt, height_max, height_rate, height_shape)
+               * (leader_shade * min(1, (top * (1 + leader_half) / (top + leader_half) - (1 - leader_shade) * top) / max(0.01, leader_shade)) + (1 - leader_shade) * light) / bud_length)) : whorl), (bud_length > 0 ? round(whorl * min(1, (richards(t + dt, height_max, height_rate, height_shape)
                 - richards(t, height_max, height_rate, height_shape))
-               * light * (1 + leader_half) / (light + leader_half) / bud_length)) : whorl)) /(137.5) A;
+               * (leader_shade * min(1, (top * (1 + leader_half) / (top + leader_half) - (1 - leader_shade) * top) / max(0.01, leader_shade)) + (1 - leader_shade) * light) / bud_length)) : whorl)) /(137.5) A;
 
 decompose W(n, m) : n > 0 ->
     [ /(360 * n / m + uniform(-20, 20)) &(branch_angle + uniform(-8, 8))
