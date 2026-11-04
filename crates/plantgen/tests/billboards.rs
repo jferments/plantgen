@@ -596,3 +596,51 @@ fn a_palms_leaflets_draw_no_lines_under_their_fronds_cards() {
         low.wood_triangles
     );
 }
+
+/// The lowest and highest point of node `name`'s mesh in an uncompressed
+/// GLB, metres up.
+fn node_heights(glb: &[u8], name: &str) -> Option<(f64, f64)> {
+    let length = u32::from_le_bytes(glb[12..16].try_into().ok()?) as usize;
+    let json: serde_json::Value = serde_json::from_slice(&glb[20..20 + length]).ok()?;
+    let node = json["nodes"]
+        .as_array()?
+        .iter()
+        .find(|node| node["name"] == name)?;
+    let mesh = &json["meshes"][node["mesh"].as_u64()? as usize];
+    mesh["primitives"]
+        .as_array()?
+        .iter()
+        .map(|primitive| {
+            let accessor =
+                &json["accessors"][primitive["attributes"]["POSITION"].as_u64()? as usize];
+            Some((accessor["min"][1].as_f64()?, accessor["max"][1].as_f64()?))
+        })
+        .collect::<Option<Vec<_>>>()?
+        .into_iter()
+        .reduce(|a, b| (a.0.min(b.0), a.1.max(b.1)))
+}
+
+#[test]
+fn a_stand_grown_firs_low_tier_keeps_its_bole_up_to_its_crown() {
+    // A Douglas fir grown in a closed stand bears its crown high on a
+    // bare bole. Baked into the crown's cards with the thin wood, the
+    // bole above 11 m went with them, and the crown floated 9 m over a
+    // stump.
+    let mut options = plantgen::api::Options::default();
+    options.quality = plantgen::quality::DRAFT;
+    let fir = plantgen::api::Generator::new("pseudotsuga-menziesii", &options).expect("fir");
+    let plant = fir
+        .grow_in(plantgen::api::Environment::Interior, 1, 60.0)
+        .expect("it grows");
+    let mut settings = plantgen::api::Settings::default();
+    settings.budget = plantgen::api::Budget::tiers();
+    let exported = fir.export(&plant, &settings).expect("it exports");
+    let low = exported.levels.last().expect("a low tier");
+    assert!(low.cards.is_some(), "the low tier is the baked cards");
+    let (_, wood_top) = node_heights(&low.glb, "wood").expect("wood");
+    let (crown_foot, _) = node_heights(&low.glb, "cards").expect("cards");
+    assert!(
+        wood_top > crown_foot,
+        "the bole ends at {wood_top:.1} m, under the crown's foot at {crown_foot:.1} m"
+    );
+}

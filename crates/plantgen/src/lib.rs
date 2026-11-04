@@ -39,11 +39,13 @@ pub mod clusters;
 pub mod conditions;
 pub mod cores;
 pub mod damage;
+pub mod development;
 pub mod divided;
 pub mod drawing;
 pub mod evidence;
 pub mod export;
 pub mod felling;
+pub mod fill;
 pub mod flowers;
 pub mod form;
 pub mod formula;
@@ -83,10 +85,12 @@ pub mod roots;
 pub mod shed;
 pub mod shoots;
 pub mod site;
+pub mod site_field;
 pub mod spec;
 pub mod spikelets;
 pub mod spines;
 pub mod stand;
+pub mod stand_tile;
 pub mod substrate;
 pub mod succession;
 pub mod templates;
@@ -1499,6 +1503,12 @@ pub mod venation;
 /// pavements year by year (`plantc cracks`). Seven pavement weeds join the
 /// library, and three ecology traits (seed dispersal, seed bank, trampling
 /// tolerance) are stated for sixteen species.
+///
+/// 192: a tree's or shrub's stem stays a tube on the card tiers up to
+/// where it is half as thick as at its foot (`crate::billboards`): a
+/// 60-year Douglas fir grown in a closed stand drew its crown floating 9 m
+/// over an 11 m stump on its low tier.
+///
 /// 194: a daisy's floret gone to seed is a cypsela as long as its flora
 /// measures (`cypsela`, from `fruit_size_m`); a lone head whose flora
 /// gives no involucre width draws its involucre, pappus and cypselae to
@@ -1507,5 +1517,5 @@ pub mod venation;
 /// its rosette, and scapes that share one rosette (`rosette_scapes`, a
 /// dandelion's) share its leaves and rise from its middle; a disciform
 /// head is checked as the discoid one it is drawn as (horseweed and
-/// dandelion, from FNA and Flora of China; 192 and 193 are #329 and #331).
+/// dandelion, from FNA and Flora of China; 193 is #331).
 pub const GENERATOR_REVISION: u32 = 194;

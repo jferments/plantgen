@@ -79,7 +79,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let campanulids = "(clade campanulids: _ranks/clade/campanulids.json)";
     assert!(
         built_in.starts_with(&format!(
-            "Rules, by their home (1033):\n  appearance.organs.*.inflorescence.branch.kind  {flowering}\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
+            "Rules, by their home (1034):\n  appearance.organs.*.inflorescence.branch.kind  {flowering}\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
         )),
         "{built_in}"
     );
@@ -169,7 +169,7 @@ fn rules_and_traits_say_where_they_come_from() {
         "{built_in}"
     );
     assert!(
-        built_in.contains("General, with no taxonomic home: 153 rules at all plants;"),
+        built_in.contains("General, with no taxonomic home: 154 rules at all plants;"),
         "{built_in}"
     );
     // The maples' program is named for their family, so it is homed.
@@ -200,7 +200,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let library = dir.to_str().unwrap();
     let rules = stdout(&plantc(&["--library", library, "rules"]));
     assert!(
-        rules.starts_with("Rules, by their home (1034):\n"),
+        rules.starts_with("Rules, by their home (1035):\n"),
         "{rules}"
     );
     assert!(
@@ -674,4 +674,68 @@ fn variants_writes_distinct_plants_ready_to_import() {
             .success()
     );
     fs::remove_dir_all(&dir).unwrap();
+}
+
+#[test]
+fn fill_writes_a_tile_and_the_prototypes_it_places() {
+    let dir = scratch("fill");
+    let community = dir.join("meadow.json");
+    fs::write(
+        &community,
+        r#"{"id": "meadow", "members": [
+            {"species": "achillea-millefolium", "layer": "herb", "abundance": 0.15}
+        ]}"#,
+    )
+    .unwrap();
+    let out = dir.join("fill");
+    let args = [
+        "fill",
+        community.to_str().unwrap(),
+        "--tile",
+        "2,-3",
+        "--tile-m",
+        "40",
+        "--seed",
+        "5",
+        "--classes",
+        "2",
+        "--seeds",
+        "1",
+        "--quality",
+        "draft",
+        "--compress",
+        "quantize",
+        "--out",
+        out.to_str().unwrap(),
+    ];
+    let made = stdout(&plantc(&args));
+    assert!(made.contains("filled tile 2,-3"), "{made}");
+    let header: serde_json::Value =
+        serde_json::from_slice(&fs::read(out.join("tiles/2_-3.json")).unwrap()).unwrap();
+    let count = header["instances"].as_u64().unwrap();
+    assert!(count > 0);
+    let bin = fs::read(out.join("tiles/2_-3.bin")).unwrap();
+    assert_eq!(bin.len() as u64, count * 32);
+    let list: serde_json::Value =
+        serde_json::from_slice(&fs::read(out.join("prototypes/prototypes.json")).unwrap()).unwrap();
+    let prototypes = list["prototypes"].as_array().unwrap();
+    // Every instance's prototype is written, with its four levels.
+    for chunk in bin.chunks(32) {
+        let index = u32::from_le_bytes(chunk[..4].try_into().unwrap());
+        let proto = prototypes
+            .iter()
+            .find(|p| p["index"].as_u64() == Some(u64::from(index)))
+            .expect("the tile's prototype is listed");
+        for level in proto["plant"]["levels"].as_array().unwrap() {
+            assert!(
+                out.join("prototypes")
+                    .join(level["file"].as_str().unwrap())
+                    .is_file()
+            );
+        }
+    }
+    // Filling again keeps the prototypes and writes the same tile.
+    let again = stdout(&plantc(&args));
+    assert!(again.contains("wrote"), "{again}");
+    assert_eq!(fs::read(out.join("tiles/2_-3.bin")).unwrap(), bin);
 }

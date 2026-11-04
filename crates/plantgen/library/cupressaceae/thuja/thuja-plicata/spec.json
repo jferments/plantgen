@@ -113,6 +113,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "age_max_years": 1000,
     "height_max_m": {
       "min": 60,
       "max": 70
@@ -138,6 +139,7 @@
     "leaf_margin": "entire"
   },
   "evidence": {
+    "traits.age_max_years": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS species review of western redcedar (Tesky 1992): the largest known trees are thought to be 1,000 years old or more."},
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",
