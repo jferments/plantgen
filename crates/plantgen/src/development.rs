@@ -53,6 +53,20 @@ pub const PIONEERS_GONE: f64 = 1050.0 / 500.0;
 /// reverse-J of all-aged stands (de Liocourt 1898; Meyer 1952).
 pub const INGROWTH_DECAY: f64 = 0.25;
 
+/// The canopy cover of a closed stand, Stage::Exclusion's (McIntosh et
+/// al. 2009: rarely more than 85%).
+pub const CLOSED: f64 = 0.85;
+
+/// Herb cover where no tree shades the ground: a meadow, or a stand just
+/// after its disturbance. Grassland herbs cover most of the ground, and
+/// restored Willamette Valley wet prairies reached more than 100% total
+/// cover (layers counted apart) within three to five years (Conservation
+/// Evidence study 9161); the early-successional stage of a forest site is
+/// herb-rich before its trees close (Swanson et al. 2011, Frontiers in
+/// Ecology and the Environment 9: 117-125). The value itself is this
+/// model's choice.
+pub const OPEN_HERB: f64 = 0.9;
+
 /// A stage of the sere.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Stage {
@@ -119,9 +133,9 @@ impl Stage {
         match self {
             Self::Establishment => {
                 let closing = (age / (CLOSURE * lifespan.max(1.0))).clamp(0.0, 1.0);
-                [0.85 * closing, 0.0, 0.35, 0.5]
+                [CLOSED * closing, 0.0, 0.35, 0.5]
             }
-            Self::Exclusion => [0.85, 0.05, 0.3, 0.15],
+            Self::Exclusion => [CLOSED, 0.05, 0.3, 0.15],
             Self::Maturation => [0.8, 0.15, 0.3, 0.3],
             Self::VerticalDiversification => [0.75, 0.3, 0.3, 0.35],
             Self::HorizontalDiversification | Self::PioneerLoss => [0.7, 0.35, 0.3, 0.4],
@@ -293,6 +307,12 @@ pub fn develop(candidates: &[Candidate], age: f64) -> Development {
     let woodland = smoothstep(0.0, 0.5, best);
     cover[0] *= woodland;
     cover[1] *= woodland;
+    // Herbs take the ground the canopy leaves open, up to a meadow's
+    // cover where no tree shades it, falling in proportion to the canopy's
+    // share of a closed one. A stage's own herb cover is the least it
+    // holds.
+    let open = (1.0 - cover[0] / CLOSED).clamp(0.0, 1.0);
+    cover[3] = cover[3].max(OPEN_HERB * open);
     Development {
         stage,
         lifespan,
@@ -473,6 +493,26 @@ mod tests {
         poor[0].suitability = 0.1;
         poor[1].suitability = 0.1;
         assert!(develop(&poor, 500.0).cover[0] < 0.5 * full.cover[0]);
+    }
+
+    #[test]
+    fn herbs_take_the_ground_the_canopy_leaves_open() {
+        // A meadow: no tree, so herbs cover the ground as a meadow's do.
+        let meadow = develop(&[fern()], 40.0);
+        assert!((meadow.cover[3] - OPEN_HERB).abs() < 1e-9);
+        // Just after a disturbance the stand is herb-rich; once its crowns
+        // close, herbs keep only the closed stand's own share.
+        let pool = [fir(), hemlock(), fern()];
+        let young = develop(&pool, 5.0);
+        let closed = develop(&pool, 60.0);
+        assert!(young.cover[3] > 0.75, "{:?}", young.cover);
+        assert!((closed.cover[3] - 0.15).abs() < 1e-9, "{:?}", closed.cover);
+        // A woodland where no tree suits the site well lies between.
+        let mut poor = pool.clone();
+        poor[0].suitability = 0.15;
+        poor[1].suitability = 0.15;
+        let woodland = develop(&poor, 500.0).cover[3];
+        assert!(woodland > develop(&pool, 500.0).cover[3] && woodland < OPEN_HERB);
     }
 
     #[test]
