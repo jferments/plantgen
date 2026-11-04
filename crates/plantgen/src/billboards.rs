@@ -1700,6 +1700,19 @@ pub fn build_from(
             .and_then(|s| graph.segments.get(s as usize))
             .is_some_and(|s| s.body != 0 && s.order > 0 && s.radius < keep.min(trunk))
     };
+    // A tree's or shrub's stem is kept up to where it is half as thick
+    // as at its foot, however thick `keep` grows: baked into the
+    // crown's cards, the bare bole of a tree grown in a closed stand went
+    // with them, and a 60-year Douglas fir's crown floated 9 m over a
+    // stump 11 m tall.
+    let stem = |mesh: &Mesh, i: usize| {
+        crowned
+            && bark_radius(mesh, i).is_some_and(|r| r >= trunk)
+            && mesh
+                .segment(i)
+                .and_then(|s| graph.segments.get(s as usize))
+                .is_some_and(|s| s.order == 0 && s.body == 0)
+    };
     // The bodies kept however thick `keep` grows.
     let fixed_body = |mesh: &Mesh, i: usize| {
         mesh.segment(i)
@@ -2049,7 +2062,9 @@ pub fn build_from(
             .iter()
             .fold(Vec3::ZERO, |sum, &i| sum + v3(coarse.wood.positions[i]))
             * (1.0 / 3.0);
-        let thick = if corners
+        let thick = if corners.iter().any(|&i| stem(&coarse.wood, i)) {
+            true
+        } else if corners
             .iter()
             .any(|&i| bark_radius(&coarse.wood, i).is_some())
         {

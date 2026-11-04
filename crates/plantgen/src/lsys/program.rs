@@ -281,6 +281,7 @@ pub enum ToolKind {
     Host = 4,
     Substrate = 5,
     Bend = 6,
+    Soil = 7,
 }
 
 pub struct ToolSpec {
@@ -295,7 +296,7 @@ pub struct ToolSpec {
 /// The first random call site of tool settings, far above any rule's.
 pub const TOOL_SITES: u32 = 1 << 24;
 
-pub const TOOLS: [ToolSpec; 12] = [
+pub const TOOLS: [ToolSpec; 13] = [
     ToolSpec {
         kind: ToolKind::Light,
         name: "light",
@@ -471,6 +472,23 @@ pub const TOOLS: [ToolSpec; 12] = [
             ("reaction", 0.0),
         ],
     },
+    // Soil depth design D1: the soil the roots reach against what the
+    // plant's size needs, read as `rs` (0 to 1) and scaling `vigour`.
+    // Roots go down `height` metres for each metre of the plant's height,
+    // to `depth` metres at most, and out to `spread` times the crown's
+    // radius; a crown needs `demand` cubic metres of soil per square metre
+    // it covers (`super::tools`).
+    ToolSpec {
+        kind: ToolKind::Soil,
+        name: "soil",
+        version: 1,
+        keys: &[
+            ("depth", 2.0),
+            ("spread", 2.25),
+            ("demand", 0.6),
+            ("height", 1.53),
+        ],
+    },
 ];
 
 /// A configured tool: one expression per registry key, re-evaluated each step.
@@ -502,7 +520,7 @@ pub struct Program {
     pub productions: Vec<Vec<CompiledRule>>,
     pub decompositions: Vec<Vec<CompiledRule>>,
     pub interpretations: Vec<Vec<CompiledRule>>,
-    pub tools: [Option<ToolConfig>; 7],
+    pub tools: [Option<ToolConfig>; 8],
 }
 
 impl Program {
@@ -659,6 +677,8 @@ impl Program {
                     env: &NO_ENV,
                     t: 0.0,
                     dt: 0.0,
+                    lag: 0.0,
+                    rs: 1.0,
                     age: 0.0,
                     step: 0.0,
                     key: 0,
@@ -756,7 +776,7 @@ struct Compiler {
 }
 
 /// Every module that queries light, vigour or space needs that tool.
-fn check_queries(ast: &ProgramAst, tools: &[Option<ToolConfig>; 7]) -> Result<(), ProgramError> {
+fn check_queries(ast: &ProgramAst, tools: &[Option<ToolConfig>; 8]) -> Result<(), ProgramError> {
     for decl in &ast.modules {
         for (name, span) in &decl.queries {
             let tool = match Query::from_name(name) {
@@ -1093,8 +1113,8 @@ impl Compiler {
     fn configure_tools(
         &mut self,
         ast: &ProgramAst,
-    ) -> Result<[Option<ToolConfig>; 7], ProgramError> {
-        let mut tools: [Option<ToolConfig>; 7] = [None, None, None, None, None, None, None];
+    ) -> Result<[Option<ToolConfig>; 8], ProgramError> {
+        let mut tools: [Option<ToolConfig>; 8] = [None, None, None, None, None, None, None, None];
         let context = Context {
             what: "a tool setting",
             globals: self.params.len(),
@@ -1554,13 +1574,15 @@ impl Compiler {
             "pi" => return Ok(Op::Const(std::f64::consts::PI)),
             "true" => return Ok(Op::Const(1.0)),
             "false" => return Ok(Op::Const(0.0)),
-            "t" | "dt" | "step" => {
+            "t" | "dt" | "step" | "tg" | "rs" => {
                 if !context.time {
                     return err(span, format!("`{name}` cannot be used in {}", context.what));
                 }
                 return Ok(Op::Var(match name {
                     "t" => Var::T,
                     "dt" => Var::Dt,
+                    "tg" => Var::Tg,
+                    "rs" => Var::Rs,
                     _ => Var::Step,
                 }));
             }

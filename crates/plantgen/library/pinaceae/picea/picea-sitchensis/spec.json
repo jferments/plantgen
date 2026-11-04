@@ -94,6 +94,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "age_max_years": 800,
     "bark_colour": [76, 61, 51],
     "height_max_m": {
       "min": 35,
@@ -118,6 +119,7 @@
     "leaf_margin": "entire"
   },
   "evidence": {
+    "traits.age_max_years": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS species review of Sitka spruce (Griffith 1992): a long-lived tree, past 800 years."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.3, 0.24, 0.2], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.height_max_m": {
       "evidence": "SourceInferred",

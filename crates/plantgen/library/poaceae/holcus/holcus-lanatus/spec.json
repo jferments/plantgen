@@ -92,6 +92,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "seed_dispersal": ["wind"],
     "leaf_width_m": {
       "min": 0.004,
       "max": 0.008
@@ -128,6 +129,7 @@
     "fruiting_months": [7, 8, 9]
   },
   "evidence": {
+    "traits.seed_dispersal": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Holcus lanatus: its seed falls easily and the broad spikelets catch the wind; in one field study nine in ten seeds landed within 5.2 m."},
     "traits.leaf_width_m": {
       "evidence": "SourceInferred",
       "source": "hitchcock-1935",
