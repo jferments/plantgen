@@ -13,6 +13,11 @@
     }
   },
   "rules": {
+    "growth.lifespan": {
+      "rule": "min(age_max_years)",
+      "needs": ["age_max_years"],
+      "why": "A plant may stand in a stand as old as its species' oldest plants commonly grow, the low end of the ages they reach (`age_max_years`), and no older: a stand's structure is a matter of its trees' ages over centuries (Franklin et al. 2002), and a Douglas-fir of a 500-year stand commonly lives more than 500 years (FEIS, Hermann and Lavender 1990)."
+    },
     "appearance.organs.leaf.shape.width": {
       "template": ["simple", "sprig", "lobed"],
       "map": {"leaf_shape": {"linear": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.08)"}, "lanceolate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.25)"}, "oblanceolate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.25)"}, "elliptic": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.57)"}, "oblong": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.4)"}, "ovate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.6)"}, "obovate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.6)"}, "orbicular": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.95)"}, "spatulate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.35)"}, "cordate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.8)"}, "reniform": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 1.3)"}, "deltate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.9)"}}},
@@ -525,6 +530,7 @@
     }
   },
   "evidence": {
+    "rules.growth.lifespan": {"evidence": "Authored", "source": "plantgen-authors", "note": "How long a stand may hold a plant, a choice of the model's (stands, 2026-11-03): the low end of the species' stated `age_max_years`, so a stand's oldest trees are as old as its species' old trees commonly grow; the trait itself is sourced in each species."},
     "appearance.defaults": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws an organ its taxa say nothing about, a choice of the model's (visual forms Skill 1, 2026-10-14): each organ kind on the card the generator gives it by default, so that every organ a program grows has a look and every rule on the taxa's characters reaches it."},
     "generator.defaults.dioecious": {
       "evidence": "Authored",

@@ -475,6 +475,8 @@ impl<'a> Interpreter<'a> {
                 env: &NO_ENV,
                 t: clock.t,
                 dt: clock.dt,
+                lag: clock.lag,
+                rs: clock.rs,
                 age: clock.t - owner.born,
                 step: f64::from(clock.step),
                 // No step in the key: a module looks the same every step.
@@ -1078,6 +1080,8 @@ mod tests {
             step: 0,
             t: 0.0,
             dt: 1.0,
+            lag: 0.0,
+            rs: 1.0,
         };
         let interpreter = Interpreter::new(&program, &globals, &limits);
         match ground {
@@ -1219,6 +1223,8 @@ mod tests {
             step: 0,
             t: 0.0,
             dt: 1.0,
+            lag: 0.0,
+            rs: 1.0,
         };
         let mut interpreter = Interpreter::new(&program, &globals, &limits).on_ground(flat);
         let in_order = interpreter.in_order(&string, clock).unwrap();
@@ -1362,6 +1368,8 @@ mod tests {
                     step,
                     t: f64::from(step),
                     dt: 1.0,
+                    lag: 0.0,
+                    rs: 1.0,
                 };
                 string = deriver.derive(&string, &[], clock).unwrap();
             }
@@ -1369,6 +1377,8 @@ mod tests {
                 step: 4,
                 t: 4.0,
                 dt: 1.0,
+                lag: 0.0,
+                rs: 1.0,
             };
             let scene = Interpreter::new(&program, &globals, &limits)
                 .interpret(&string, clock)
@@ -1512,6 +1522,8 @@ mod organ_turn_tests {
                 step,
                 t: f64::from(step),
                 dt: 1.0,
+                lag: 0.0,
+                rs: 1.0,
             };
             string = deriver.derive(&string, &[], clock).unwrap();
         }
@@ -1519,6 +1531,8 @@ mod organ_turn_tests {
             step: 7,
             t: 7.0,
             dt: 1.0,
+            lag: 0.0,
+            rs: 1.0,
         };
         let mut interpreter = Interpreter::new(&program, &globals, &limits);
         let in_order = interpreter.in_order(&string, clock).unwrap();

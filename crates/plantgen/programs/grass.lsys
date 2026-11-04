@@ -57,9 +57,23 @@
 # every program gives it unless a rule says otherwise, a grass grows as
 # before.
 #
+# Revision 10 (soil depth D1): soil@1 weighs the soil the roots reach
+# against what the tussock needs, the ratio rs (0 to 1). Each year's
+# cohort has rs as many tillers, and its blades and culms come in
+# sqrt(rs) as long, so the ground they cover, which sets what they need,
+# shrinks with the soil; and
+# the tussock's growth follows tg, the years it has grown, which falls
+# behind its age t by the share of each year the soil held it back
+# (1 - rs). In a crack or a thin soil it settles at the size its soil
+# carries, and still flowers at adult_age. Roots go down to root_depth at
+# most: 1.14 m, the mean maximum rooting depth of grasses in
+# Tumber-Dávila et al. 2022 (New Phytologist 235: 1032-1056). Without
+# rooting limits in the conditions rs is 1 and tg is t, and a grass grows
+# as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem grass 9;
+lsystem grass 10;
 
 param tillers;                # living tillers in a mature tussock
 param tiller_rate;            # cohort size: tillers * (1 - exp(-tiller_rate * age))
@@ -90,6 +104,7 @@ param leaf_years = 1;         # years a blade stays green: more than 1 for winte
 param thatch_years;           # years dead blades stay on
 param thatch_droop;           # extra degrees a dead blade bends at each joint
 param light_cell;             # light voxel edge: about a blade's spacing
+param root_depth = 1.14;      # deepest the roots reach, metres (soil@1)
 # Leaf area of each organ 1 m long, m². Match each to the area its look
 # draws (`plantc atlas`).
 param blade_area;
@@ -119,6 +134,7 @@ organ panicle_male flower area panicle_area;
 structure leaf leaf;          # one leaf: its blade's pieces, later its thatch
 
 tool light@1 { cell = light_cell, extinction = 0.5 };
+tool soil@1 { depth = root_depth };
 
 axiom Y;
 
@@ -126,8 +142,8 @@ axiom Y;
 # cohort is drawn at.
 rule Y -> Ts(0, -1, 0) Y;
 decompose Ts(k, m, n) : m < 0 ->
-    Ts(0, max(1, round(tillers * (1 - exp(-tiller_rate * t)))),
-          max(1, round(tillers * (1 - exp(-tiller_rate * t)))));
+    Ts(0, max(1, round(tillers * (1 - exp(-tiller_rate * tg)) * rs)),
+          max(1, round(tillers * (1 - exp(-tiller_rate * tg)) * rs)));
 decompose Ts(k, m, n) : m > 1 ->
     Ts(k, floor(m / 2), n) Ts(k + floor(m / 2), m - floor(m / 2), n);
 # One tiller: out along the sunflower spiral, up, and leaning out.
@@ -140,7 +156,7 @@ decompose Ts(k, m, n) -> ;
 
 decompose Lv(j) : j > 0 ->
     [ /(j * divergence + uniform(-roll_spread, roll_spread)) &(leaf_angle * uniform(0.4, 1.6)) $
-      Bl(leaf_length * (1 - exp(-t / maturity)) * uniform(1 - leaf_spread, 1 + leaf_spread),
+      Bl(leaf_length * (1 - exp(-tg / maturity)) * sqrt(rs) * uniform(1 - leaf_spread, 1 + leaf_spread),
          arch * uniform(0.5, 1.5)) ]
     Lv(j - 1);
 decompose Lv(j) -> ;
@@ -155,20 +171,20 @@ interpret Bd(a) -> /(gauss() * twist) &(a + thatch_droop * min(max(age - leaf_ye
 # A flowering tiller's culm: a leaf at each node, the panicle at the top.
 decompose Fl : t >= adult_age && rand() < flowering ->
     [ Cm /(uniform(0, 360)) &(uniform(0, culm_lean)) !(culm_radius)
-      Cu((culm_height * (1 - exp(-t / maturity)) * uniform(0.85, 1.15)
-          - panicle_length * (1 - exp(-t / maturity))) / (culm_leaves + 1),
+      Cu((culm_height * (1 - exp(-tg / maturity)) * sqrt(rs) * uniform(0.85, 1.15)
+          - panicle_length * (1 - exp(-tg / maturity)) * sqrt(rs)) / (culm_leaves + 1),
          culm_leaves) ];
 decompose Fl -> ;
 decompose Cu(s, j) : culm_branches > 0 && j > 0 -> Cn(s, j) Cb(s, j) Cu(s, j - 1);
 decompose Cu(s, j) : j > 0 ->
     F(s) [ /(j * divergence + 0.75 * uniform(-roll_spread, roll_spread)) &(leaf_angle * 1.5) $
-           Bl(leaf_length * (1 - exp(-t / maturity)) * uniform(0.35, 0.6), arch) ]
+           Bl(leaf_length * (1 - exp(-tg / maturity)) * sqrt(rs) * uniform(0.35, 0.6), arch) ]
     Cu(s, j - 1);
 decompose Cu(s, j) : dioecious >= 0.5 && sex < 0.5 ->
     F(s) &(panicle_nod * (0.5 + frac(s * 7.31 + j * 0.618)))
-    panicle_male(panicle_length * (1 - exp(-t / maturity)));
+    panicle_male(panicle_length * (1 - exp(-tg / maturity)) * sqrt(rs));
 decompose Cu(s, j) -> F(s) &(panicle_nod * uniform(0.5, 1.5))
-                      panicle(panicle_length * (1 - exp(-t / maturity)));
+                      panicle(panicle_length * (1 - exp(-tg / maturity)) * sqrt(rs));
 
 # A year on, the cohort is dead: its blades become thatch without their
 # tips, and its culms fall. After thatch_years as thatch it is gone.
@@ -184,7 +200,7 @@ rule Tl : age >= thatch_years + leaf_years - 1 -> %;
 # draws are here at the end, so they never move the sites of those above.
 decompose Cn(s, j) ->
     F(s) [ /(j * divergence + 0.75 * uniform(-roll_spread, roll_spread)) &(leaf_angle * 1.5) $
-           Bl(leaf_length * (1 - exp(-t / maturity)) * uniform(0.35, 0.6), arch) ];
+           Bl(leaf_length * (1 - exp(-tg / maturity)) * sqrt(rs) * uniform(0.35, 0.6), arch) ];
 decompose Cb(s, j) : culm_branches > 0 && j > 1 && rand() < culm_branches ->
     [ /(j * divergence + 180 + uniform(-40, 40)) &(uniform(25, 45)) !(culm_radius * 0.7) Cu(s * 0.8, j - 1) ];
 decompose Cb(s, j) -> ;

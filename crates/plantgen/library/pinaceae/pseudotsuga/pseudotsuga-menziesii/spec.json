@@ -111,6 +111,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "age_max_years": {"min": 500, "max": 1000, "high": 1400},
     "height_max_m": {
       "min": 60,
       "max": 70
@@ -138,6 +139,7 @@
     "leaf_margin": "entire"
   },
   "evidence": {
+    "traits.age_max_years": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS species review of coast Douglas-fir (Uchytil 1991, after Hermann and Lavender 1990): trees commonly pass 500 years and now and then 1,000; the Woody Plant Seed Manual (2008, Pseudotsuga) gives 1,400 years as the oldest recorded."},
     "appearance.bark_look.stages.young.colour": {"evidence": "SourceInferred", "source": "sudworth-1908", "note": "word: 'thin, smooth, gray' (FEIS), 'ashy brown' (Sudworth); sRGB by eye"},
     "appearance.bark_look.stages.mature.fissures.floor_colour": {"evidence": "SourceInferred", "source": "sudworth-1908", "note": "text: 'clear red-brown within' (Sudworth); sRGB by eye"},
     "appearance.bark_look.stages.mature.fissures.ridge_top_colour": {"evidence": "SourceInferred", "source": "sudworth-1908", "note": "text: 'dark brown on the outside' (Sudworth), 'lighter colored with a cork-like texture' (Wikipedia); sRGB by eye"},
