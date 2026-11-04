@@ -129,6 +129,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_shape": {"orbicular": "usually", "cordate": "often"},
     "bark_colour": [89, 97, 56],
     "limb_course": "tortuous",
     "leaf_colour_autumn": [225, 120, 40],
@@ -150,6 +151,7 @@
     "fruit_size_m": {"min": 0.02, "max": 0.04}
   },
   "evidence": {
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "abrams-1951", "note": "Abrams, Illustrated Flora of the Pacific States vol. III (1951), read 2026-11-04, Acer circinatum: \"Leaves short-petioled, 7-12 cm. broad, round-cordate in outline, with a broad and usually shallow sinus, 7-9-lobed\"."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.35, 0.38, 0.22], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.limb_course": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 685): 'forming impenetrable thickets of contorted and interlaced trunks'."},
     "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Acer circinatum (read 2026-10-18): \"the leaves turn bright yellow to orange red\". Colour ours, between the two."},

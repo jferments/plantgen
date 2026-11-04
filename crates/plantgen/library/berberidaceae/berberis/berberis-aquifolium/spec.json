@@ -161,6 +161,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_shape": {"lanceolate": "usually", "ovate": "often"},
     "bark_colour": [82, 69, 43],
     "height_max_m": {
       "min": 0.8,
@@ -180,6 +181,7 @@
     "fruit_size_m": {"min": 0.008, "max": 0.012}
   },
   "evidence": {
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "abrams-1944", "note": "Abrams, Illustrated Flora of the Pacific States vol. II (1944), read 2026-11-04, Mahonia Aquifolium: \"Leaflets 5-9, the lower pair distant from the base of the rachis, ovate-lanceolate, 3-7.5 cm. long\"."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.32, 0.27, 0.17], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.flowering_months": {
       "evidence": "SourceInferred",
