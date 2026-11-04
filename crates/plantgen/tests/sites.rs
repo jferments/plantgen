@@ -954,4 +954,78 @@ mod field {
         };
         assert!(api::site_field(&short, [-6.0, -6.0], [6.0, 6.0], &settings()).is_err());
     }
+
+    /// A fill's tile over the paved lot: 12 m, its south-west corner at
+    /// (-6, 6), since the fill's north is -z.
+    fn lot_tile() -> (std::sync::Arc<SiteField>, api::Site) {
+        let field = std::sync::Arc::new(field_of(&paved_lot()));
+        let tile =
+            api::Site::from_field(api::TileId { x: 0, y: 0 }, 12.0, field.clone(), [-6.0, 6.0])
+                .unwrap();
+        (field, tile)
+    }
+
+    #[test]
+    fn a_fill_plants_on_soil_not_in_a_wall_or_on_sound_pavement_and_a_little_in_a_crack() {
+        let (_, tile) = lot_tile();
+        // (east, north) from the corner is (x + 6, 6 - z).
+        let at = |x: f64, z: f64| tile.plantable_at(x + 6.0, 6.0 - z);
+        // Soil west of the pavement.
+        assert!((at(-5.6, 0.1) - 1.0).abs() < 1.0e-12, "{}", at(-5.6, 0.1));
+        // Inside the wall's footprint nothing stands.
+        assert_eq!(at(0.1, -0.65), 0.0);
+        // Sound asphalt.
+        assert_eq!(at(0.1, 4.1), 0.0);
+        // The crack's cell is a little open.
+        let crack = at(0.1, 2.0);
+        assert!(crack > 0.0 && crack < 0.2, "{crack}");
+        // Beyond the field, nothing.
+        assert_eq!(tile.plantable_at(30.0, 3.0), 0.0);
+        // The ground stands at the field's height, and on a level lot a
+        // cell's factors are level ground's.
+        assert!(tile.height_at(0.5, 6.0).abs() < 1.0e-9);
+        let factors = tile.site_factors_at(0.5, 6.0);
+        // The field keeps three decimals of heat load.
+        assert!(
+            (factors.heat_load - 1.0).abs() < 1.0e-3 && factors.slope_deg < 1.0e-9,
+            "{factors:?}"
+        );
+    }
+
+    #[test]
+    fn a_fill_reads_a_cell_s_wetness_as_its_moisture_and_its_slope_and_sun() {
+        // The south-west slope of stands_read_a_slope_in_a_niche_s_terms.
+        let fall = |x: f64, z: f64| 0.2 * (x - z) / 2.0_f64.sqrt();
+        let corners = [(-7.0, -7.0), (7.0, -7.0), (7.0, 7.0), (-7.0, 7.0)];
+        let positions: Vec<Vec3> = corners
+            .iter()
+            .map(|&(x, z)| Vec3::new(x, fall(x, z), z))
+            .collect();
+        let site = SiteMesh::new(&positions, &[[0, 3, 2], [0, 2, 1]], &[SOIL, SOIL]).unwrap();
+        let field = std::sync::Arc::new(field_of(&site));
+        let tile =
+            api::Site::from_field(api::TileId { x: 0, y: 0 }, 12.0, field.clone(), [-6.0, 6.0])
+                .unwrap()
+                .with_factors(plantgen::niche::SiteFactors {
+                    elevation_m: 300.0,
+                    ..api::Site::flat(api::TileId { x: 0, y: 0 }, 1.0)
+                        .unwrap()
+                        .factors
+                });
+        let (x, z) = (0.1, 0.1);
+        let cell = field.cell_at(x, z).unwrap();
+        let wetness = field.ground.wetness[cell as usize];
+        let expected = field
+            .site_factors(cell, 300.0, api::moisture_from_wetness(wetness))
+            .unwrap();
+        assert_eq!(tile.site_factors_at(x + 6.0, 6.0 - z), expected);
+        assert!(expected.heat_load > 1.05 && (expected.slope_deg - 11.3).abs() < 0.2);
+        assert!((tile.height_at(x + 6.0, 6.0 - z) - fall(x, z)).abs() < 1.0e-3);
+        // The whole sheet is soil.
+        assert!((tile.plantable_at(3.0, 9.0) - 1.0).abs() < 1.0e-12);
+        // Moisture runs from a shedding slope's dry to a channel's wet.
+        assert_eq!(api::moisture_from_wetness(1.0), 0.0);
+        assert!((api::moisture_from_wetness(7.0) - 0.5).abs() < 1.0e-12);
+        assert_eq!(api::moisture_from_wetness(15.0), 1.0);
+    }
 }
