@@ -1507,4 +1507,12 @@ pub mod venation;
 /// where it is half as thick as at its foot (`crate::billboards`): a
 /// 60-year Douglas fir grown in a closed stand drew its crown floating 9 m
 /// over an 11 m stump on its low tier.
-pub const GENERATOR_REVISION: u32 = 192;
+///
+/// 193: six herbs draw their leaves as their floras state them, where
+/// their files drew them otherwise (checked against whole-plant photos
+/// from the side): sheep sorrel's and rusty saxifrage's basal leaves
+/// reach the 8 cm Abrams gives, Arizona lupine's leaf cards its longest
+/// leaflets on their longest petioles, jimsonweed's and the tomato's
+/// longest leaves the floras' longest, and a thread-leaved sundew's leaves
+/// stand erect, as Flora of North America says.
+pub const GENERATOR_REVISION: u32 = 193;
