@@ -177,6 +177,8 @@ Ok(())
   `fill.tile_among(&site, &stands, &outside, seed)` takes them from
   `outside(col, row)` (the neighbouring tiles' maps), and a tile filled
   whole or in quarters then places the same plants.
+
+  ![A 160-year stand either side of a 40 m clearing, edges off and on](images/stands/clearing-edges.jpg)
 - **Site-aware.** Each cell reads the site factors at its middle
   (`Site::site_factors_at`: moisture, heat load, elevation, slope); each
   species' share follows how well its niche suits them, and a site no
