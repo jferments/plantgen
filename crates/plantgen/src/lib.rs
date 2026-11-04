@@ -1560,15 +1560,17 @@ pub mod venation;
 /// as feathery blades, not lines and dots.
 ///
 /// 197: old conifer trunks (`pinidae` revision 15): a conifer's stem lays a
-/// ring every year on the trunk it has, 8e-6 m² of ring for each m² of
-/// foliage above (`pipe_cambium`, the pipe tool's `cambium`), so a trunk
-/// keeps thickening once its crown stops growing. The trunk was the pipe
-/// model's alone: a Douglas-fir grown 480 years in a stand was 74 cm
-/// through, and is now 121 (Ishii and McDowell 2002: 87 to 154 cm, mean
-/// 117, at 450 years at Wind River). Young trees keep the pipe model's
-/// girth, as their pipes outgrow one year's ring (open-grown Douglas-fir
-/// at 60 years 99 cm, where it was 96; UTD 95), and limbs keep theirs, so
-/// crowns grow as before.
+/// ring every year on the trunk it has, 3e-5 m² of ring for each m² of
+/// foliage above times the share of the sky's light it catches
+/// (`pipe_cambium`, the pipe tool's `cambium`), so a trunk keeps
+/// thickening once its crown stops growing. The trunk was the pipe model's
+/// alone: a Douglas-fir grown 480 years in a stand was 74 cm through, and
+/// is now 118 (Ishii and McDowell 2002: 87 to 154 cm, mean 117, at 450
+/// years at Wind River). Young trees keep the pipe model's girth, as their
+/// pipes outgrow one year's ring (open-grown Douglas-fir 96 cm at 60
+/// years, as before; UTD 95), and limbs keep theirs, so crowns grow as
+/// before. Fed by light, a crown packed with shaded foliage (a Rocky
+/// Mountain juniper's) feeds little.
 ///
 /// 198: growth in deep shade (`pinidae` revision 16, the light tool's new
 /// `top`): a conifer's leader grows with its light, saturating, and
