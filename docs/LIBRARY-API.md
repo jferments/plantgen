@@ -257,8 +257,16 @@ and 3.6 MiB). It draws
 the whole tile at one level; a caller that wants detail by distance reads
 the packed instances and the prototype files as above.
 
-Dead wood and climbers are not placed yet: a climber member is skipped
-until the fill gives it a host to climb.
+Dead wood is not placed yet. A climber member (layer `climber`) has one
+prototype per seed grown at the foot of a 6 m brick wall
+(`Generator::grow_ages_on_wall`, the stem's setting `wall`), to the first
+age its spec measures it that tall. On a tile over a site field
+(`Site::from_field`) it stands at the feet of walls and fences: one per
+`CLIMBER_SPACING_M` (3 m) of climbable foot at abundance 1, times the
+open share of the ground it roots in, its face turned onto the wall's,
+and the instance's `extra` its reach clip in decimetres, the host's top
+above its foot. A renderer drops what grows above the clip. On a
+height-field tile there is nothing to climb and none stands.
 
 A community member names a `species` and may give a `layer` (canopy,
 subcanopy, shrub, herb, ground, climber) that keeps it to that layer
