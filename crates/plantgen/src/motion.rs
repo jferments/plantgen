@@ -21,8 +21,12 @@
 //! bears, which sway only by their own cards. Every level binds to the
 //! same bones. Static packages keep their bytes and their key.
 //!
-//! A species that does not state a material value has it from [`GENERIC`],
-//! a middling green wood, and the record names it in `assumed`.
+//! A species that does not state its wood's density, moisture or leaf mass
+//! has it from [`GENERIC`], a middling green wood, and the record names it
+//! in `assumed`. Its stiffness and strength, where unstated, are estimated
+//! from its density by the Wood Handbook's functions for its class of wood
+//! ([`FROM_DENSITY`]), and the record names them in `estimated`. Where it
+//! breaks is [`crate::breakage`]'s.
 
 use serde::Serialize;
 use serde_json::{Map, Value};
@@ -35,7 +39,7 @@ use crate::mesh::{Mesh, PlantMesh};
 
 /// The motion objects' revision: a change to what they hold or how they
 /// are computed moves it, and with it the key of every motion package.
-pub const MECHANICS_REVISION: u32 = 2;
+pub const MECHANICS_REVISION: u32 = 5;
 
 /// The bone a vertex or card the ground bears is bound to.
 pub const GROUND: u32 = 0xFFFF;
@@ -49,13 +53,66 @@ pub const BINDING_MAGIC: [u8; 8] = *b"APBIND1\0";
 /// (not a computed median), and about what a broad leaf weighs fresh a
 /// square metre. They stand in so every plant sways; a record lists each
 /// one used.
-pub const GENERIC: [(&str, f64); 5] = [
+pub const GENERIC: [(&str, f64); 3] = [
     ("wood_density_basic_kg_m3", 450.0),
     ("wood_moisture_green_share", 0.8),
-    ("wood_modulus_green_mpa", 8_000.0),
-    ("wood_rupture_green_mpa", 45.0),
     ("leaf_mass_fresh_kg_m2", 0.2),
 ];
+
+/// The Wood Handbook's (FPL-GTR-282, 2021, table 5-11a) functions from
+/// clear green wood's specific gravity `G` (oven-dry mass over green
+/// volume, the basic density over 1000 kg/m³) to its static-bending
+/// modulus of rupture, `a G^b` kPa, and modulus of elasticity, `c G^d`
+/// megapascals, fitted to all the species of its table 5-3, for each class of
+/// wood (`wood_class`): `[a, b, c, d]`.
+pub const FROM_DENSITY: [(&str, [f64; 4]); 2] = [
+    ("softwood", [109_700.0, 1.02, 16_100.0, 0.76]),
+    ("hardwood", [118_800.0, 1.16, 13_900.0, 0.72]),
+];
+
+/// How much one tree's green modulus of rupture varies about its species'
+/// mean: the coefficient of variation the Wood Handbook (FPL-GTR-282,
+/// 2021, table 5-6) gives for clear wood, 16 %. A host drawing a strength
+/// for each plant it stands draws within this.
+pub const RUPTURE_SPREAD: f64 = 0.16;
+
+/// A species' class of wood (`wood_class`), hardwood where unstated.
+pub(crate) fn wood_class(traits: &Map<String, Value>) -> &'static str {
+    let softwood = match traits.get("wood_class") {
+        Some(Value::String(class)) => class == "softwood",
+        Some(Value::Object(states)) => {
+            let usual = |key: &str| {
+                states
+                    .get(key)
+                    .and_then(Value::as_str)
+                    .map_or(0, |word| match word {
+                        "usually" | "always" => 2,
+                        "often" => 1,
+                        _ => 0,
+                    })
+            };
+            usual("softwood") > usual("hardwood")
+        }
+        _ => false,
+    };
+    if softwood { "softwood" } else { "hardwood" }
+}
+
+/// Green modulus of rupture and of elasticity, in megapascals, that the Wood
+/// Handbook's functions ([`FROM_DENSITY`]) give wood of class `class` and
+/// basic density `basic`, kg/m³.
+#[must_use]
+pub fn from_density(class: &str, basic: f64) -> (f64, f64) {
+    let [rupture, rupture_power, modulus, modulus_power] = FROM_DENSITY
+        .iter()
+        .find(|(name, _)| *name == class)
+        .map_or(FROM_DENSITY[1].1, |(_, coefficients)| *coefficients);
+    let gravity = basic / 1000.0;
+    (
+        rupture * libm::pow(gravity, rupture_power) / 1000.0,
+        modulus * libm::pow(gravity, modulus_power),
+    )
+}
 
 /// A bone's damping ratio, of its critical damping: wood's own and the
 /// air's together, about what swaying branches and young trees show
@@ -68,10 +125,10 @@ pub const TWIG: f64 = 0.02;
 pub const BRUSH: f64 = 0.005;
 
 /// The turning moment that overturns a plant, N m per kg of its stem's
-/// wood (assumed): a middling value of the straight-line fits that
-/// tree-pulling studies give for the critical turning moment against stem
-/// mass (for example Nicoll et al. 2006, Canadian Journal of Forest
-/// Research 36), until species and soils state their own.
+/// green wood, where its species does not state its own
+/// (`anchorage_per_stem_kg`, `ForestGALES`'s `C_reg` from tree-pulling
+/// studies, 86 to 254 over its species and soils): a middling value
+/// (assumed).
 pub const ANCHORAGE_PER_KG: f64 = 150.0;
 
 /// How far the stem's foot turns, radians, as its roots give way at the
@@ -91,7 +148,26 @@ pub struct Motion {
     pub material: Material,
     /// The characters taken from [`GENERIC`] (and `damping`, always).
     pub assumed: Vec<&'static str>,
+    /// The characters estimated from the wood's density ([`FROM_DENSITY`]).
+    pub estimated: Vec<&'static str>,
     pub settings: Settings,
+    /// The overturning moment per kg of stem, N m/kg.
+    pub anchorage: f64,
+    /// The wind and drag its break sites are found with.
+    pub drag: crate::breakage::Drag,
+    /// Its stems' root flare, `amount` and `height` m, as drawn
+    /// ([`Motion::with_flare`]); none until given.
+    pub flare: Option<(f64, f64)>,
+}
+
+/// A number `traits` states for `key`: its typical value, or the middle of
+/// its range.
+fn stated(traits: &Map<String, Value>, key: &str) -> Option<f64> {
+    crate::checks::Stated::of(traits.get(key).unwrap_or(&Value::Null)).map(|stated| {
+        stated
+            .typical
+            .unwrap_or(f64::midpoint(stated.min, stated.max))
+    })
 }
 
 impl Motion {
@@ -111,16 +187,72 @@ impl Motion {
                 assumed.push(key);
             }
         }
+        let basic = crate::checks::Stated::of(&filled["wood_density_basic_kg_m3"]).map_or(
+            GENERIC[0].1,
+            |stated| {
+                stated
+                    .typical
+                    .unwrap_or(f64::midpoint(stated.min, stated.max))
+            },
+        );
+        let (rupture, modulus) = from_density(wood_class(traits), basic);
+        let mut estimated = Vec::new();
+        for (key, value) in [
+            ("wood_modulus_green_mpa", modulus),
+            ("wood_rupture_green_mpa", rupture),
+        ] {
+            if crate::checks::Stated::of(traits.get(key).unwrap_or(&Value::Null)).is_none() {
+                filled.insert(key.to_string(), Value::from(value));
+                estimated.push(key);
+            }
+        }
         assumed.push("damping");
-        assumed.push("anchorage");
+        let anchorage = stated(traits, "anchorage_per_stem_kg").unwrap_or_else(|| {
+            assumed.push("anchorage");
+            ANCHORAGE_PER_KG
+        });
+        let crown = if let (Some(at_rest), Some(streamlining), Some(tested_to)) = (
+            stated(traits, "crown_drag_at_rest"),
+            stated(traits, "crown_drag_streamlining"),
+            stated(traits, "crown_drag_tested_to_ms"),
+        ) {
+            crate::breakage::Crown {
+                at_rest,
+                streamlining,
+                tested_to,
+            }
+        } else {
+            assumed.push("crown_drag");
+            crate::breakage::Crown::BROADLEAF
+        };
         let material = Material::of(&filled).expect("every needed value is filled");
         Self {
             material,
             assumed,
+            estimated,
             settings: Settings {
                 modes: 0,
                 ..Settings::default()
             },
+            anchorage,
+            drag: crate::breakage::Drag {
+                crown,
+                ..crate::breakage::Drag::default()
+            },
+            flare: None,
+        }
+    }
+
+    /// The same, with the root flare `appearance` draws its stems with, so
+    /// a stem is as strong near the ground as it is drawn thick.
+    #[must_use]
+    pub fn with_flare(self, appearance: &crate::spec::Appearance) -> Self {
+        Self {
+            flare: appearance
+                .flare
+                .as_ref()
+                .map(|flare| (flare.amount, flare.height)),
+            ..self
         }
     }
 
@@ -131,17 +263,21 @@ impl Motion {
         let m = &self.material;
         let s = &self.settings;
         format!(
-            "{MECHANICS_REVISION} {:?} {:?} {:?} {:?} {:?} {:?} {} {:?} {:?} {}",
+            "{MECHANICS_REVISION} {:?} {:?} {:?} {:?} {:?} {:?} {:?} {} {:?} {:?} {} {:?} {:?} {:?}",
             m.wood_density,
             m.modulus,
             m.rupture,
             m.leaf_mass,
             self.assumed,
+            self.estimated,
             s.shear,
             s.bones,
             s.piece,
             s.bend_share,
-            s.exact
+            s.exact,
+            self.anchorage,
+            self.drag,
+            self.flare
         )
         .into_bytes()
     }
@@ -167,10 +303,13 @@ pub struct Record {
     pub perches: Vec<Perch>,
     /// Wood passing through other wood, as grown.
     pub crossings: Crossings,
+    /// How it fails in wind as a whole: the stem snapping or the roots
+    /// turning over ([`crate::breakage`]).
+    pub failure: crate::breakage::Failure,
 }
 
-/// What holds the plant up at its foot (assumed per kg of stem; see
-/// [`ANCHORAGE_PER_KG`] and [`ROOT_TURN`]).
+/// What holds the plant up at its foot (per kg of stem, as its species
+/// states or [`ANCHORAGE_PER_KG`]; see [`ROOT_TURN`]).
 #[derive(Debug, Clone, Copy, PartialEq, Serialize)]
 pub struct Anchorage {
     /// The turning moment at the stem's foot that overturns it, N m.
@@ -222,6 +361,11 @@ pub struct MaterialRecord {
     pub leaf_mass: Option<f64>,
     pub damping: f64,
     pub assumed: Vec<String>,
+    /// The characters estimated from the wood's density.
+    pub estimated: Vec<String>,
+    /// The coefficient of variation of one tree's rupture about the
+    /// species' ([`RUPTURE_SPREAD`]).
+    pub rupture_spread: f64,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize)]
@@ -263,6 +407,9 @@ pub struct BoneRecord {
     pub snow_area: SnowArea,
     /// Crossings ([`Crossings`]) its segments are in.
     pub crossings: u32,
+    /// Where it breaks: its foot, and the section along it that breaks at
+    /// a slower wind where there is one ([`crate::breakage::Site`]).
+    pub sites: Vec<crate::breakage::Site>,
 }
 
 /// Areas for drag, m²: its wood's frontal area (twice radius times
@@ -335,6 +482,8 @@ pub fn record(
 ) -> Record {
     let material = &found.material;
     let around = Surroundings::of(graph, types, found);
+    let holds = anchorage(found, motion.anchorage);
+    let mut broken = crate::breakage::breakage(found, holds.moment, &motion.drag, motion.flare);
     let bones = found
         .bones
         .iter()
@@ -370,6 +519,7 @@ pub fn record(
             reach: around.reach[index],
             snow_area: around.snow[index],
             crossings: around.bone_crossings[index],
+            sites: std::mem::take(&mut broken.sites[index]),
         })
         .collect();
     let branches = found
@@ -404,15 +554,24 @@ pub fn record(
             assumed: motion
                 .assumed
                 .iter()
+                .copied()
+                .chain(crate::breakage::Drag::assumed())
+                .map(str::to_string)
+                .collect(),
+            estimated: motion
+                .estimated
+                .iter()
                 .map(|key| (*key).to_string())
                 .collect(),
+            rupture_spread: RUPTURE_SPREAD,
         },
         mass: found.mass(),
         bones,
         branches,
-        anchorage: anchorage(found),
+        anchorage: holds,
         perches: perches(found, motion.settings.bend_share),
         crossings: around.crossings,
+        failure: broken.failure,
     }
 }
 
@@ -695,16 +854,16 @@ impl Surroundings {
     }
 }
 
-/// What holds the plant up at its foot: [`ANCHORAGE_PER_KG`] per kg of its
-/// stems' wood, and the stiffness that gives way at [`ROOT_TURN`].
-fn anchorage(found: &Mechanics) -> Anchorage {
+/// What holds the plant up at its foot: `per_kg` N m per kg of its stems'
+/// wood, and the stiffness that gives way at [`ROOT_TURN`].
+fn anchorage(found: &Mechanics, per_kg: f64) -> Anchorage {
     let stem: f64 = found
         .bones
         .iter()
         .filter(|bone| bone.depth == 0)
         .map(|bone| (bone.mass - bone.leaf_mass).max(0.0))
         .sum();
-    let moment = ANCHORAGE_PER_KG * stem;
+    let moment = per_kg * stem;
     Anchorage {
         moment,
         stiffness: moment / ROOT_TURN,
@@ -1109,14 +1268,56 @@ mod tests {
     }
 
     #[test]
+    fn stated_anchorage_and_crown_drag_are_taken_and_unstated_ones_named() {
+        let traits: Map<String, Value> = serde_json::from_str(
+            r#"{"anchorage_per_stem_kg": 153, "crown_drag_at_rest": 2.4,
+                "crown_drag_streamlining": 0.7, "crown_drag_tested_to_ms": 25}"#,
+        )
+        .unwrap();
+        let motion = Motion::of(&traits);
+        assert!((motion.anchorage - 153.0).abs() < 1.0e-12);
+        assert!((motion.drag.crown.at_rest - 2.4).abs() < 1.0e-12);
+        assert!((motion.drag.crown.tested_to - 25.0).abs() < 1.0e-12);
+        assert!(!motion.assumed.contains(&"anchorage"));
+        assert!(!motion.assumed.contains(&"crown_drag"));
+        let bare = Motion::of(&Map::new());
+        assert!(bare.assumed.contains(&"anchorage") && bare.assumed.contains(&"crown_drag"));
+        assert_eq!(bare.drag.crown, crate::breakage::Crown::BROADLEAF);
+        assert_ne!(motion.key_bytes(), bare.key_bytes());
+    }
+
+    #[test]
     fn unstated_materials_are_generic_and_named() {
         let traits: Map<String, Value> =
             serde_json::from_str(r#"{"wood_density_basic_kg_m3": 600}"#).unwrap();
         let motion = Motion::of(&traits);
         assert!(!motion.assumed.contains(&"wood_density_basic_kg_m3"));
-        assert!(motion.assumed.contains(&"wood_modulus_green_mpa"));
+        assert!(motion.estimated.contains(&"wood_modulus_green_mpa"));
+        assert!(motion.estimated.contains(&"wood_rupture_green_mpa"));
         assert!(motion.assumed.contains(&"damping"));
         assert!((motion.material.wood_density - 600.0 * 1.8).abs() < 1.0e-9);
-        assert!(motion.material.rupture.is_some());
+        // A hardwood of specific gravity 0.6: 118,800 G^1.16 kPa.
+        let rupture = 118.8 * libm::pow(0.6, 1.16) * 1.0e6;
+        assert!((motion.material.rupture.unwrap() - rupture).abs() < 1.0);
+    }
+
+    #[test]
+    fn softwoods_take_their_own_functions() {
+        let traits: Map<String, Value> =
+            serde_json::from_str(r#"{"wood_density_basic_kg_m3": 450, "wood_class": "softwood"}"#)
+                .unwrap();
+        let motion = Motion::of(&traits);
+        let (rupture, modulus) = from_density("softwood", 450.0);
+        assert!((rupture - 109.7 * libm::pow(0.45, 1.02)).abs() < 1.0e-9);
+        assert!((motion.material.rupture.unwrap() - rupture * 1.0e6).abs() < 1.0);
+        assert!(
+            (motion.material.modulus - modulus * 1.0e6 * mechanics::SHEAR_CORRECTION).abs() < 1.0
+        );
+        // A stated value is kept.
+        let traits: Map<String, Value> =
+            serde_json::from_str(r#"{"wood_rupture_green_mpa": 52}"#).unwrap();
+        let motion = Motion::of(&traits);
+        assert!(!motion.estimated.contains(&"wood_rupture_green_mpa"));
+        assert!((motion.material.rupture.unwrap() - 52.0e6).abs() < 1.0);
     }
 }

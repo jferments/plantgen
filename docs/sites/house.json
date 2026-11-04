@@ -1,0 +1,19 @@
+{
+  "mesh": "house.obj",
+  "materials": {
+    "lawn": "soil",
+    "render": {"as": "built", "colour": [0.82, 0.76, 0.64]},
+    "roof": {"as": "built", "colour": [0.24, 0.25, 0.28]},
+    "glass": {"as": "built", "thin_m": 0.02, "clear": true, "colour": [0.35, 0.45, 0.52]},
+    "door": {"as": "wood", "thin_m": 0.04, "clear": true, "colour": [0.30, 0.18, 0.12]},
+    "fence": {"as": "wood", "colour": [0.90, 0.89, 0.85]},
+    "post": "wood",
+    "wire": {"as": "built", "thin_m": 0.004, "colour": [0.55, 0.56, 0.58]}
+  },
+  "plants": [
+    {"species": "hedera-helix", "at": [-2.0, -0.8], "seed": 1, "years": 10},
+    {"species": "hedera-helix", "at": [-4.5, 2.2], "seed": 2, "years": 6},
+    {"species": "lonicera-ciliosa", "at": [1.9, 2.2], "seed": 1, "years": 6},
+    {"species": "vitis-californica", "at": [4.6, 2.2], "seed": 1, "years": 6}
+  ]
+}

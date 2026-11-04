@@ -370,7 +370,14 @@ impl Cluster {
                 0.1
             },
         );
-        let size = spec.size.unwrap_or(if bearing { 0.4 } else { 0.15 });
+        let spread = spec.spread.unwrap_or(35.0);
+        let size = spec.size.unwrap_or_else(|| match (&branch, kind) {
+            (Some(branch), ClusterKind::CompoundUmbel) => {
+                Self::packed_umbellet(branches, spread, peduncle, branch)
+            }
+            (Some(_), _) => 0.4,
+            (None, _) => 0.15,
+        });
         let along = !bearing && kind.along_its_axis();
         let flowers = set_flowers.unwrap_or_else(|| {
             if along {
@@ -387,7 +394,7 @@ impl Cluster {
             branch,
             per_node,
             divergence: spec.divergence.unwrap_or(GOLDEN_DEGREES),
-            spread: spec.spread.unwrap_or(35.0),
+            spread,
             pedicel: spec.pedicel.unwrap_or(if bearing {
                 0.0
             } else if along && kind == ClusterKind::Raceme {
@@ -420,6 +427,26 @@ impl Cluster {
             involucre_form: spec.involucre_form.unwrap_or_default(),
             floral_bract: spec.floral_bract.unwrap_or(0.0),
         }
+    }
+
+    /// The length of each umbellet of a compound umbel whose taxa leave it
+    /// unset, as a share of the umbel's: as long as makes its `n` umbellets
+    /// fill the umbel's top, edge to edge, as the umbellets of carrots,
+    /// hemlocks and cow parsnips stand in one dome or plate of flowers
+    /// rather than as separate tufts on bare rays. The rays, leaning out to
+    /// the umbel's `spread`, reach a top of radius
+    /// $`R = (1 - y_0)\tan\sigma`$ ($`\sigma`$ at most 70 degrees); each
+    /// umbellet is $`2(1 - y_b)\tan\sigma_b`$ wide over its length (its own
+    /// rays' spread $`\sigma_b`$ and peduncle $`y_b`$, at least 0.2); and
+    /// $`n`$ discs fill a disc of radius $`R`$ at 0.82 of its area, so each
+    /// is $`2R\sqrt{0.82/n}`$ wide. Between 0.05 and 0.6 of the umbel.
+    fn packed_umbellet(n: u32, spread: f64, peduncle: f64, umbellet: &Self) -> f64 {
+        let tan = |degrees: f64| math::tan(math::radians(degrees.clamp(0.0, 70.0)));
+        let top = (1.0 - peduncle.clamp(0.0, 0.95)) * tan(spread);
+        let wide =
+            (2.0 * (1.0 - umbellet.peduncle.clamp(0.0, 0.95)) * tan(umbellet.spread)).max(0.2);
+        let across = 2.0 * top * math::sqrt(0.82 / f64::from(n.max(1)));
+        (across / wide).clamp(0.05, 0.6)
     }
 
     /// The units of a cluster laid along its axis whose taxa do not count
@@ -966,6 +993,13 @@ pub struct CardFrame {
     pub aspect: f64,
     /// The crossing card's width, relative: 1 for a standing card.
     pub cross: Option<f64>,
+    /// For a facing card on pedicels or rays (an umbel, a compound umbel
+    /// or a corymb), along the organ where its lowest pedicel or ray
+    /// leaves the axis: the levels that draw it as its card stand the card
+    /// on a cone from there to its rim (`crate::mesh`), as the pedicels
+    /// spread under its flowers. Lying alone, a yarrow's corymb card was a
+    /// line from the side, floating over its stem.
+    pub stand: Option<f64>,
 }
 
 impl CardFrame {
@@ -995,12 +1029,19 @@ impl CardFrame {
                     math::sqrt(p.base.x * p.base.x + p.base.z * p.base.z) + 0.5 * p.length * largest
                 })
                 .fold(0.0, f64::max);
+            let foot = if top.is_finite() { top } else { 1.0 };
+            let lowest = laid.lowest();
+            let stalked = matches!(
+                cluster.kind,
+                ClusterKind::Umbel | ClusterKind::CompoundUmbel | ClusterKind::Corymb
+            );
             return Self {
                 mount: Mount::Facing,
-                foot: if top.is_finite() { top } else { 1.0 },
+                foot,
                 length: (2.0 * reach * 1.04).clamp(0.1, 4.0),
                 aspect: 1.0,
                 cross: None,
+                stand: (stalked && lowest.is_finite() && lowest < foot).then_some(lowest.max(0.0)),
             };
         }
         let width = unit.across();
@@ -1043,6 +1084,7 @@ impl CardFrame {
             length,
             aspect: (2.0 * reach * 1.04 / length).clamp(0.1, 2.0),
             cross: Some(1.0),
+            stand: None,
         }
     }
 }
@@ -2900,6 +2942,36 @@ mod tests {
             ..Inflorescence::default()
         });
         assert_eq!(umbel.flowers, 12);
+    }
+
+    /// A compound umbel whose taxa leave its umbellets unsized packs them
+    /// into one plate: wider rays and fewer umbellets make each larger,
+    /// and a size the taxa give stands.
+    #[test]
+    fn compound_umbels_pack_their_umbellets() {
+        let umbel = |branches: u32, spread: f64, size: Option<f64>| {
+            Cluster::of(&Inflorescence {
+                kind: Some(ClusterKind::CompoundUmbel),
+                branches: Some(branches),
+                spread: Some(spread),
+                peduncle: Some(0.05),
+                size,
+                branch: Some(Box::new(Inflorescence {
+                    spread: Some(50.0),
+                    peduncle: Some(0.5),
+                    ..Inflorescence::default()
+                })),
+                ..Inflorescence::default()
+            })
+            .size
+        };
+        // 12 rays at 50 degrees: 2 x 0.95 tan 50 x sqrt(0.82 / 12) over
+        // 2 x 0.5 tan 50 wide umbellets.
+        let expected = 2.0 * 0.95 * math::sqrt(0.82 / 12.0);
+        assert!((umbel(12, 50.0, None) - expected).abs() < 1e-9);
+        assert!(umbel(30, 50.0, None) < umbel(12, 50.0, None));
+        assert!(umbel(12, 30.0, None) < umbel(12, 50.0, None));
+        assert_eq!(umbel(12, 50.0, Some(0.2)), 0.2);
     }
     use crate::looks::{Flower, Fruit, FruitKind, Head};
 

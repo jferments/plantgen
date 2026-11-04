@@ -31,16 +31,19 @@ pub mod bend;
 pub mod billboards;
 pub mod blooms;
 pub mod body;
+pub mod breakage;
 pub mod budget;
 pub mod capitula;
 pub mod checks;
 pub mod clusters;
 pub mod conditions;
 pub mod cores;
+pub mod damage;
 pub mod divided;
 pub mod drawing;
 pub mod evidence;
 pub mod export;
+pub mod felling;
 pub mod flowers;
 pub mod form;
 pub mod formula;
@@ -78,6 +81,7 @@ pub mod rng;
 pub mod roots;
 pub mod shed;
 pub mod shoots;
+pub mod site;
 pub mod spec;
 pub mod spikelets;
 pub mod spines;
@@ -1392,4 +1396,91 @@ pub mod venation;
 /// as bright as the plant, a pincushion's 1.6). A cut leaf's midrib is
 /// drawn on the cards as a thin line along its blade, in its colour (a
 /// yarrow's, a carrot's and a fennel's leaves baked to scattered dots).
-pub const GENERATOR_REVISION: u32 = 179;
+///
+/// 180: a compound umbel whose taxa leave the umbellet size unset packs
+/// its umbellets edge to edge across the umbel's top, from its ray count,
+/// ray spread and the umbellets' own spread (`Cluster::packed_umbellet`);
+/// six carrot-family species drop their hand-typed umbellet sizes for it
+/// (a poison hemlock's umbel had drawn as separate small tufts). Six
+/// forbs state their flowering side branches from floras (Abrams;
+/// Britton and Brown 1913).
+///
+/// 181: an export drawn to a budget comes down between two levels: the
+/// organs of a type solid on one level and cards on the next (cut leaves,
+/// solid leaves, flowers and fruit) go over to their cards a share at a
+/// time over the second half of the way, and a part mesh past its
+/// coarsest step keeps that step while fewer of its organs stay solid,
+/// instead of each falling in one step (a yarrow drew 200 000 triangles or
+/// 576, nothing between); the search halves every other step; and an
+/// export may draw its levels as tiers (`export::Budget::tiers`).
+/// Packages draw as before.
+/// 182: an export's low tier is the plant's baked low-cards tier where
+/// that takes fewer triangles than mid and at most 5 000
+/// (`export::Level::cards`): each card that turns to the eye stands fixed
+/// as a star of three, and one baked from above lies level, over one
+/// atlas of at most 1 024 texels a side. A beargrass's low tier covered
+/// 8% of its outline, now 95%; a yarrow's 33%, now 66%.
+/// 183: a fleshy body's far levels coarsen it to a budget as the near
+/// levels do (30 000 and 6 000 triangles of skin), down to five-sided
+/// rings a few apart with one ring over a dome: a pencil cholla's skin
+/// drew 242 000 triangles on the third level and 95 000 on the farthest,
+/// now 34 000 and 16 000; a Christmas cactus's farthest 8 700, now 5 600.
+/// An export's low tier keeps a plant of bodies solid while it is within
+/// twice the tier's most, as baked cards draw its joints as scraps.
+///
+/// 184: plants grow on a mesh you hand over (`site`); `host@1` holds a
+/// site's fixed triangles. Climber 9: a stem rests on the substrate, so
+/// ivy's stems lie on a wall's face. Climber 10: a clinging shoot's
+/// leaves, renewed ones too, face away from its host (`leaf_face`, 0.8
+/// for Hedera, a root climber; 0 for twiners and tendril climbers), and
+/// its internodes wander (`wander`, 30 for Hedera); a paired-leaf vine
+/// renews a pair. Deciduous vines renew their leaves on old wood every
+/// year (an orange honeysuckle and a California grape had set renew 0,
+/// bare but for a tuft at the top). Ivy's internode is 0.045 m, measured
+/// on a photo, with its yearly length, branching, bend and renewal per
+/// metre kept.
+///
+/// 185: a site's surfaces say what each face is: a thin part (a fence
+/// board, a wire, a pane) stands as a slab of its own thickness, a face may
+/// refuse climbers, and a face kept clear (a window, a door) cuts back a
+/// climber's tip that comes within `clear_gap` of it (climber 11, `gc`).
+/// A plant set under the eaves stands on the soil, not the roof. Stock
+/// hosts have no clear surface, so plants off a site grow as before.
+///
+/// 186: going from a level that draws a card per organ to one that
+/// clusters them, an export's clusters grow from an eighth of the coarser
+/// level's size (`budget::CLUSTER_START`) instead of from nothing, so the
+/// tiers between such levels land on other dials. With the drawings a
+/// search has already made kept for its last step, and a plant's leaf
+/// clusters laid out on idle cores, a 30-year Douglas fir's tiers take
+/// 52 s instead of 160 s. Packages draw as before.
+///
+/// 187: a facing card of a cluster on pedicels or rays (an umbel, a
+/// compound umbel, a corymb) stands on its peduncle and a cone of six
+/// sides up to it, as broad as its flowers fill it, on the levels that
+/// draw it as a card and do not merge it with its neighbours
+/// (`clusters::CardFrame::stand`, `mesh::STAND_SIDES`): a yarrow's
+/// corymbs were lines floating over their stems from the side. Eight of
+/// 180 species change on their high and mid tiers, and ten on the
+/// card tiers baked from those levels.
+///
+/// 188: a level clump of the card tiers turns to the eye where that
+/// draws its cover closer to its parts' than a fixed card, as an upright
+/// one already did, and a level card is lifted to its parts' top only
+/// where they lie in a thin layer (`crate::billboards`): a beargrass's
+/// wedges of blades were plates lifted to the blades' tips and the
+/// flower stalk's top, floating over the plant. Its low cards hid 1.35
+/// times the plant's sky from the side, now 1.06; its minimal cards 0.53,
+/// now 0.75.
+///
+/// 189: on the card tiers, a rosette plant's flowering stalk kept as a
+/// tube up to where it narrows is a ribbon from there on, and a ribbon's
+/// head takes its thin branches with its flowers (`crate::billboards`):
+/// a beargrass's stalk top and panicle branches were baked onto the
+/// blades' cards and drew as specks up to 20 cm off the stalk.
+///
+/// 190: the card tiers draw no midrib lines for leaflets within a leaf,
+/// whose leaf's card hides them (`crate::billboards`): a fishtail palm's
+/// low cards spent 936 of 1 632 triangles on them, a sago palm's 552 of
+/// 914, with no change in what they show.
+pub const GENERATOR_REVISION: u32 = 190;

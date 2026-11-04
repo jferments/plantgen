@@ -1005,9 +1005,11 @@ impl Inputs {
 
     /// The same inputs with motion objects built beside the meshes
     /// (`crate::motion`): the key gains the motion's revision, material
-    /// and settings, so a static package keeps its key.
+    /// and settings, so a static package keeps its key. Its stems' root
+    /// flare is the spec's, as drawn ([`crate::motion::Motion::with_flare`]).
     #[must_use]
     pub fn with_motion(mut self, motion: crate::motion::Motion) -> Self {
+        let motion = motion.with_flare(&self.spec.appearance);
         let mut hasher = Sha256::new();
         for (label, bytes) in [
             ("static", self.key.as_bytes().to_vec()),
@@ -1085,7 +1087,7 @@ impl Package {
     }
 }
 
-fn png(width: usize, height: usize, rgba: &[u8]) -> Result<Vec<u8>, PackageError> {
+pub(crate) fn png(width: usize, height: usize, rgba: &[u8]) -> Result<Vec<u8>, PackageError> {
     raster::encode_png(width, height, rgba)
         .map_err(|error| format_error(format!("cannot encode PNG: {error}")))
 }
@@ -3330,7 +3332,7 @@ pub fn decode_card_mesh(bytes: &[u8]) -> Result<Mesh, PackageError> {
 
 /// A tier's pictures packed by `atlas` as the `card-albedo`, `card-normal`
 /// and `card-sun` layers, RGBA8 rows from the top (see the module).
-fn card_atlas(
+pub(crate) fn card_atlas(
     plant: &crate::billboards::CardPlant,
     atlas: &crate::billboards::Atlas,
 ) -> [Vec<u8>; 3] {

@@ -30,8 +30,7 @@
       "fruiting": 0.15,
       "pipe_tip": 0.0015,
       "pipe_organ": 0.003,
-      "pipe_rings": 4e-06,
-      "renew": 0
+      "pipe_rings": 4e-06
     }
   },
   "growth": {
@@ -152,7 +151,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "English ivy's climbing values (internode, shoot growth, clinging, seeking, draping, branching), with three stems from the foot for a twining vine. Changed from ivy: adult_rise 0 and adult_light 2, so no shoot takes ivy's upright adult habit (the honeysuckle has no such phase; it fruits on its free shoots once adult, as the climber did before revision 3); renew 0, as the deciduous grape's, so old nodes do not leaf again; max_shoot 2 for ivy's 3 and grown 8 years for ivy's 15, so the vine climbs to the 2 to 6 m (to 9 m) the model record gives rather than ivy's 16 m. Leaf card size, leaf life and fruit size now come from the traits by the vine form's rules; leaf_area and fruit_area are left to the form's defaults until the shading test gives this look's. Not fitted to measurements."
+      "note": "English ivy's climbing values (internode, shoot growth, clinging, seeking, draping, branching), with three stems from the foot for a twining vine. Changed from ivy: adult_rise 0 and adult_light 2, so no shoot takes ivy's upright adult habit (the honeysuckle has no such phase; it fruits on its free shoots once adult, as the climber did before revision 3); max_shoot 2 for ivy's 3 and grown 8 years for ivy's 15, so the vine climbs to the 2 to 6 m (to 9 m) the model record gives rather than ivy's 16 m. Leaf card size, leaf life, how often an old node leafs again (renew, from the leaf habit: renew 0 left its old stems bare, 2026-11-01) and fruit size now come from the traits by the vine form's rules; leaf_area and fruit_area are left to the form's defaults until the shading test gives this look's. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",
