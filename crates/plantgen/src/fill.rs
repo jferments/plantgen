@@ -1994,6 +1994,7 @@ mod tests {
     }
 
     #[test]
+    #[allow(clippy::float_cmp)]
     fn a_quarter_turn_keeps_a_point_in_its_square_and_turns_its_lean_alike() {
         let side = 40.0;
         for turns in 0..4 {

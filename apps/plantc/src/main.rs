@@ -494,7 +494,8 @@ Usage:
   plantc fill <community.json>... --tile X,Y --tile-m N [--seed N]
               [--years N] [--stands stands.json] [--out DIR]
               [--prototypes none|used|all] [--ages N,N,...] [--seeds N]
-              [--herbs yes|no] [--threads N] [--quality draft|standard]
+              [--herbs yes|no] [--site M,H,E,S] [--threads N]
+              [--quality draft|standard]
               [--day N] [--shade attribute|baked]
               [--compress none|quantize|meshopt]
               [--attributes all|wind|none] [--triangles N[,N,N,N]]
@@ -513,7 +514,9 @@ Usage:
       again. --prototypes used (the default) also exports, into
       DIR/prototypes with prototypes.json, each prototype the tile places
       that is not there yet; all exports every prototype; none only the
-      tile. --herbs no leaves herbs to the ground cover. The plan is the
+      tile. --herbs no leaves herbs to the ground cover. --site gives the
+      flat tile's moisture, heat load, elevation (m) and slope (degrees)
+      for the species' niches (default 0.5,1,0,0). The plan is the
       same on every machine and thread count, and a tile meets its
       neighbours without a seam.
   plantc inspect <package.afterplant>
@@ -6056,6 +6059,7 @@ fn variants_command(args: &[String]) -> Result<(), Failure> {
     Ok(())
 }
 
+#[allow(clippy::too_many_lines)]
 fn fill_command(args: &[String]) -> Result<(), Failure> {
     let options = Options::parse(
         args,
@@ -6069,6 +6073,7 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
             "prototypes",
             "ages",
             "herbs",
+            "site",
             "seeds",
             "threads",
             "quality",
@@ -6144,7 +6149,25 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
         started.elapsed().as_secs_f64()
     );
     let started = Instant::now();
-    let site = api::Site::flat(tile, tile_m).map_err(|error| error.to_string())?;
+    let mut site = api::Site::flat(tile, tile_m).map_err(|error| error.to_string())?;
+    if let Some(given) = options.flags.get("site") {
+        let numbers = given
+            .split(',')
+            .map(|part| part.trim().parse::<f64>())
+            .collect::<Result<Vec<_>, _>>();
+        let Ok([moisture, heat_load, elevation_m, slope_deg]) = numbers.as_deref() else {
+            return Err(format!(
+                "--site takes moisture,heat_load,elevation_m,slope_deg, found `{given}`"
+            )
+            .into());
+        };
+        site = site.with_factors(plantgen::niche::SiteFactors {
+            moisture: *moisture,
+            heat_load: *heat_load,
+            elevation_m: *elevation_m,
+            slope_deg: *slope_deg,
+        });
+    }
     let stands = match options.flags.get("stands") {
         Some(path) => {
             let text =
@@ -6169,6 +6192,44 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
         started.elapsed().as_secs_f64(),
         written.display()
     );
+    let stats = &plan.stats;
+    out!(
+        "  stems/ha {:.0}, trees/ha (5 cm or more at breast height) {:.0}, basal area {:.1} m²/ha, canopy cover {:.0}%, leaf area index {:.2}",
+        stats.stems_per_ha,
+        stats.trees_per_ha,
+        stats.basal_area_m2_per_ha,
+        100.0 * stats.canopy_cover,
+        stats.leaf_area_index
+    );
+    // By species: trees 5 cm or more at breast height, their mean and
+    // tallest height, and every plant.
+    let area_ha = tile_m * tile_m / 10_000.0;
+    let mut by_species: BTreeMap<&str, (usize, f64, f64, usize)> = BTreeMap::new();
+    for instance in &plan.instances {
+        let index = instance.prototype as usize;
+        let species = fill.prototypes()[index].key.species.as_str();
+        let entry = by_species.entry(species).or_insert((0, 0.0, 0.0, 0));
+        entry.3 += 1;
+        if let Some(size) = fill.size(index) {
+            let scale = f64::from(instance.scale);
+            if size.dbh.unwrap_or(0.0) * scale >= 0.05 {
+                entry.0 += 1;
+                entry.1 += size.height * scale;
+                entry.2 = entry.2.max(size.height * scale);
+            }
+        }
+    }
+    for (species, (trees, heights, tallest, all)) in &by_species {
+        #[allow(clippy::cast_precision_loss)]
+        let (per_ha, mean, every) = (
+            *trees as f64 / area_ha,
+            heights / (*trees).max(1) as f64,
+            *all as f64 / area_ha,
+        );
+        out!(
+            "  {species}: {per_ha:.0} trees/ha (mean height {mean:.1} m, tallest {tallest:.1} m), {every:.0} plants/ha in all"
+        );
+    }
     let which = match options.flags.get("prototypes").map(String::as_str) {
         Some("none") => return Ok(()),
         None | Some("used") => plan.prototypes_used(),
