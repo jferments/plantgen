@@ -66,11 +66,6 @@
       6,
       7
     ],
-    "ray_colour": [
-      240,
-      205,
-      40
-    ],
     "inflorescence": "solitary",
     "inflorescence_length_m": {
       "min": 0.03,
@@ -198,11 +193,6 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high, record L2916959), as no source read gives it."
-    },
-    "traits.ray_colour": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L2916959), as no source read gives it, sRGB from the colour word."
     },
     "traits.inflorescence": {
       "evidence": "SourceInferred",
