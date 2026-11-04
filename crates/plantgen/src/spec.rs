@@ -502,7 +502,7 @@ impl Environment {
             // as in the interior, and the dominants' crowns 30% taller
             // over it, a layer of shade 0.1 a metre (generator revision
             // 198). A dense medium from the ground to 30 m, it was, left
-            // a seedling 0.1% of the sky's light: conifers grew leafless
+            // a seedling 0.2% of the sky's light: conifers grew leafless
             // poles, and broadleaves died.
             Self::Suppressed => Neighbourhood {
                 density: 0.1,

@@ -1580,7 +1580,7 @@ pub mod venation;
 /// of its open rate in any shade; a shoot starves by its light against
 /// `top` (correlative inhibition), and under a floor of a quarter of
 /// `shade_death` however shaded the whole plant. Under a closed canopy a
-/// hemlock was a bare pole rising at half its open rate; in 8% light it
+/// hemlock was a bare pole rising at half its open rate; in 5% light it
 /// is now 4.2 m at 60 years with limbs from 2 m. And the `suppressed`
 /// setting is a tree overtopped in its own stand (its like's crowns
 /// around it as `interior`'s, and crowns 30% taller over it), where it
