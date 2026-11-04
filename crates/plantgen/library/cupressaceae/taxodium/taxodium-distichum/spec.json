@@ -18,7 +18,7 @@
       "cone_pitch": 100,
       "cone_years": 1,
       "cone_area": 1.176,
-      "height_rate": 0.025,
+      "height_rate": 0.023,
       "height_shape": 1.3,
       "leader_shade": 0.5,
       "nod": 0,
@@ -153,6 +153,11 @@
       "evidence": "SourceInferred",
       "source": "silvics-1990-conifers",
       "note": "Silvics vol. 1 (1990), Baldcypress chapter: the largest trees of the virgin forests were 43 to 46 m (140 to 150 ft) tall; the 1982 champion was only 25 m. Sargent (1922) and Britton and Brown (1913) both give about 150 ft as the maximum."
+    },
+    "generator.params.height_rate": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Pinidae revision 17 (a leader's growth potential follows its height, not its age): 0.023, where it was 0.025, so the 80-year open-grown trees stay inside their reference (25 m): seed 2 stood at +41% before revision 17 and +46% after."
     },
     "generator.params.bend_set": {
       "evidence": "Authored",

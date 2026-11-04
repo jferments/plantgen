@@ -275,9 +275,23 @@
 # 4.2 m at 60 years with limbs from 2 m. Open- and stand-grown trees grow
 # as tall as before, with leaf area within 3%.
 #
+# Revision 17 (growth potential follows size): the leader's yearly shoot
+# was the Chapman-Richards curve's rise from this year's age to the next,
+# so a tree held small in shade for a century had an old tree's tiny
+# potential left and stalled: a hemlock under an old-growth canopy was
+# 1.9 m at 120 years and 2.0 m at 240. Its potential is now the curve's
+# rise from the age at which an open tree stands as tall as it does
+# (the curve's inverse at its height, at most its age), as height growth
+# models in forestry run from a tree's height, not its age; the leader
+# queries position for it. A tree that keeps pace with the curve grows as
+# before; under that canopy the hemlock is 4.7 m at 240 years and 7.5 m
+# at 320, and still growing. Subalpine fir, bald cypress and Rocky
+# Mountain juniper, already at the top of their reference sizes, are
+# retuned.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem pinidae 16;
+lsystem pinidae 17;
 
 # Height of the leader over time: a Chapman-Richards curve,
 # height = height_max * (1 - exp(-height_rate * age))^height_shape.
@@ -368,7 +382,7 @@ param straighten = 0.02;       # share of its kept bend the wood straightens eac
 param stem_bend = 0;           # share of its sag the stem takes: reaction wood holds it up
 param reaction = 0.1;          # how far a year's ring turns a limb back up (bend@1)
 
-module A queries light;                 # the leader's apex
+module A queries light, position;       # the leader's apex
 module N;                               # nods a young leader shoot over
 module C(order, vigour, starved, wood, held, years) queries light, position, substrate;  # a branch apex, wood metres from the stem, holding held metres grown over years years not yet laid down (seg_min)
 module S queries light, vigour, substrate, position;  # the base of a living branch
@@ -408,13 +422,13 @@ axiom !(0.003) A B(stems - 1);
 
 
 # The leader: this year's height growth with its foliage, then a whorl.
-rule A -> G(0, (richards(t + dt, height_max, height_rate, height_shape)
-                - richards(t, height_max, height_rate, height_shape))
+rule A -> G(0, (richards(min(t, -ln(max(1e-9, 1 - pow(min(0.999, height / height_max), 1 / height_shape))) / height_rate) + dt, height_max, height_rate, height_shape)
+                - richards(min(t, -ln(max(1e-9, 1 - pow(min(0.999, height / height_max), 1 / height_shape))) / height_rate), height_max, height_rate, height_shape))
                * (leader_shade * min(1, (top * (1 + leader_half) / (top + leader_half) - (1 - leader_shade) * top) / max(0.01, leader_shade)) + (1 - leader_shade) * light), needle_years * 2 / (1 + needle_low), 0, 1)
-          W((bud_length > 0 ? round(whorl * min(1, (richards(t + dt, height_max, height_rate, height_shape)
-                - richards(t, height_max, height_rate, height_shape))
-               * (leader_shade * min(1, (top * (1 + leader_half) / (top + leader_half) - (1 - leader_shade) * top) / max(0.01, leader_shade)) + (1 - leader_shade) * light) / bud_length)) : whorl), (bud_length > 0 ? round(whorl * min(1, (richards(t + dt, height_max, height_rate, height_shape)
-                - richards(t, height_max, height_rate, height_shape))
+          W((bud_length > 0 ? round(whorl * min(1, (richards(min(t, -ln(max(1e-9, 1 - pow(min(0.999, height / height_max), 1 / height_shape))) / height_rate) + dt, height_max, height_rate, height_shape)
+                - richards(min(t, -ln(max(1e-9, 1 - pow(min(0.999, height / height_max), 1 / height_shape))) / height_rate), height_max, height_rate, height_shape))
+               * (leader_shade * min(1, (top * (1 + leader_half) / (top + leader_half) - (1 - leader_shade) * top) / max(0.01, leader_shade)) + (1 - leader_shade) * light) / bud_length)) : whorl), (bud_length > 0 ? round(whorl * min(1, (richards(min(t, -ln(max(1e-9, 1 - pow(min(0.999, height / height_max), 1 / height_shape))) / height_rate) + dt, height_max, height_rate, height_shape)
+                - richards(min(t, -ln(max(1e-9, 1 - pow(min(0.999, height / height_max), 1 / height_shape))) / height_rate), height_max, height_rate, height_shape))
                * (leader_shade * min(1, (top * (1 + leader_half) / (top + leader_half) - (1 - leader_shade) * top) / max(0.01, leader_shade)) + (1 - leader_shade) * light) / bud_length)) : whorl)) /(137.5) A;
 
 decompose W(n, m) : n > 0 ->

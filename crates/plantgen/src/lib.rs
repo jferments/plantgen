@@ -1588,4 +1588,12 @@ pub mod venation;
 /// leafless pole and a broadleaf died: a suppressed Douglas-fir is 30 m
 /// at 120 years with a living crown. Open- and stand-grown trees grow as
 /// tall as before, with leaf area within 3%.
-pub const GENERATOR_REVISION: u32 = 198;
+///
+/// 199: growth potential follows size (`pinidae` revision 17): a conifer
+/// leader's yearly potential is the Chapman-Richards rise from the age at
+/// which an open tree is as tall as it is, not from its own age, so a tree
+/// held small in shade keeps growing: a hemlock under an old-growth
+/// canopy is 7.5 m at 320 years, where it stalled near 2 m. Subalpine fir,
+/// bald cypress and Rocky Mountain juniper are retuned to stay inside
+/// their reference sizes.
+pub const GENERATOR_REVISION: u32 = 199;

@@ -15,7 +15,7 @@
       "apical": 0.6,
       "cone_chance": 0.12,
       "cone_length": 0.08,
-      "height_rate": 0.03,
+      "height_rate": 0.027,
       "height_shape": 1.5,
       "whorl": 5,
       "interwhorl": 2,
@@ -200,6 +200,11 @@
       "evidence": "SourceInferred",
       "source": "abrams-1923",
       "note": "Abrams vol. 1 (1923) p. 66, Abies lasiocarpa: \"cones oblong- cylindric, 6-10 cm. long, dark purple\"."
+    },
+    "generator.params.height_rate": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Pinidae revision 17 (a leader's growth potential follows its height, not its age): 0.027, where it was 0.03, so the 60-year tree grown in a stand stays inside its reference (12 m), as the leader no longer loses the years its own shade held it back. It stood at +39% at 0.03 before revision 17 and +45% after."
     },
     "generator.params.apical": {
       "evidence": "SourceInferred",

@@ -33,7 +33,7 @@
       "shade_years": 6,
       "min_shoot": 0.025,
       "dead_years": 8,
-      "pipe_organ": 0.004,
+      "pipe_organ": 0.0034,
       "spray_area": 0.24,
       "branch_reach": 3.2
     }
@@ -134,6 +134,11 @@
       "evidence": "SourceInferred",
       "source": "abrams-1923",
       "note": "Abrams vol. 1 (1923), as Sabina scopulorum: a tree often 7 m to 15 m tall. Silvics vol. 1 agrees roughly: 6 to 15 m in the Southwest, 3 to 4 m usual in Canada, largest specimen only 11 m tall."
+    },
+    "generator.params.pipe_organ": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Pinidae revision 17 (a leader's growth potential follows its height, not its age): 0.0034, where it was 0.004, so the 60-year open-grown trunk stays inside its reference (dbh 25 cm): it stood at +40% before revision 17 and +41% after."
     },
     "generator.params.bend_set": {
       "evidence": "Authored",
