@@ -439,6 +439,7 @@ pub const TOOLS: [ToolSpec; 13] = [
             ("organ", 0.002),
             ("rings", 0.0),
             ("heartwood", 0.0),
+            ("cambium", 0.0),
         ],
     },
     ToolSpec {
