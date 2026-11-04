@@ -33,6 +33,7 @@ use crate::development::{self, Candidate, Stage};
 use crate::niche::{self, Niche, SiteFactors};
 use crate::package::Measurements;
 use crate::rng;
+use crate::site_field::SiteField;
 use crate::spec::Environment;
 use crate::stand_tile;
 
@@ -261,9 +262,11 @@ struct PrototypeList<'a> {
     prototypes: &'a [PrototypeFiles],
 }
 
-/// One tile's ground, as the fill reads it. The sites thread grows this
-/// into the agreed site field (slope, soil depth, cracks, surface
-/// patches); a flat or height-field site is the simple case.
+/// One tile's ground, as the fill reads it: a flat or height-field site,
+/// or a tile of a measured site field ([`Site::from_field`]), which says
+/// where buildings, boulders and sound pavement leave no room for plants,
+/// how much of a cracked pavement is open, and the slope, sun and wetness
+/// of each cell.
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive]
 pub struct Site {
@@ -278,6 +281,39 @@ pub struct Site {
     /// and heat load as they are, elevation added to the ground height,
     /// slope taken from the ground. [`Site::with_factors`] sets them.
     pub factors: SiteFactors,
+    /// The measured site this tile is part of, and where the tile's
+    /// south-west corner lies in it; `None` for a height-field site.
+    pub field: Option<FieldTile>,
+}
+
+/// A tile's place in a measured site field ([`crate::site_field`]).
+///
+/// The field's frame is the site mesh's: +X east, +Y up, and north toward
+/// -Z, so a point `(east, north)` metres from the tile's south-west corner
+/// is at `x = corner[0] + east`, `z = corner[1] - north`.
+#[derive(Debug, Clone, PartialEq)]
+pub struct FieldTile {
+    pub field: std::sync::Arc<SiteField>,
+    /// The tile's south-west corner, (x, z) in the field's frame.
+    pub corner: [f64; 2],
+}
+
+impl FieldTile {
+    /// The field's cell under `(east, north)`, if the field covers it.
+    fn cell(&self, east: f64, north: f64) -> Option<u32> {
+        self.field
+            .cell_at(self.corner[0] + east, self.corner[1] - north)
+    }
+}
+
+/// A cell's wetness index ([`crate::site_field::Ground::wetness`]) as a
+/// niche's moisture, 0 dry to 1 saturated: level open ground, whose index
+/// is about 7 on a 1 m grid, is the middling 0.5 a height-field site has;
+/// a steep slope that sheds its water (index 2 or below) is dry, and a
+/// hollow or a channel that gathers a hillside's (12 or above) saturated.
+#[must_use]
+pub fn moisture_from_wetness(wetness: f64) -> f64 {
+    ((wetness - 2.0) / 10.0).clamp(0.0, 1.0)
 }
 
 /// A height-field site's factors until a caller says: middling moisture,
@@ -329,7 +365,60 @@ impl Site {
             heights_m,
             cols,
             factors: DEFAULT_FACTORS,
+            field: None,
         })
+    }
+
+    /// A tile of a measured site field: `tile_m` on a side, its
+    /// south-west corner at `corner` (x, z) in the field's frame (north is
+    /// -z). Its heights are the field's ground, sampled on the field's
+    /// cells (where a cell has no ground, inside a building or a boulder,
+    /// the nearest ground's height in its row, or 0 if the row has none);
+    /// its plantable share, moisture, heat load and slope are the field's
+    /// own, cell by cell. `factors` keeps the default moisture and heat
+    /// load for points the field does not cover, and its elevation is the
+    /// height above sea level of the field's y = 0.
+    ///
+    /// # Errors
+    ///
+    /// When the side is not above 0 or the corner is not finite.
+    pub fn from_field(
+        tile: TileId,
+        tile_m: f64,
+        field: std::sync::Arc<SiteField>,
+        corner: [f64; 2],
+    ) -> Result<Self, Error> {
+        if !(tile_m.is_finite() && tile_m > 0.0) {
+            return Err(Error(format!("site: tile side {tile_m} m must be above 0")));
+        }
+        if !(corner[0].is_finite() && corner[1].is_finite()) {
+            return Err(Error("site: the tile's corner must be finite".into()));
+        }
+        let cell_m = field.settings.cell_m;
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let cols = ((tile_m / cell_m).round() as usize).clamp(1, 4096) + 1;
+        #[allow(clippy::cast_precision_loss)]
+        let step = tile_m / (cols - 1) as f64;
+        let mut heights_m = Vec::with_capacity(cols * cols);
+        for j in 0..cols {
+            #[allow(clippy::cast_precision_loss)]
+            let row: Vec<Option<f64>> = (0..cols)
+                .map(|i| field.height_at(corner[0] + i as f64 * step, corner[1] - j as f64 * step))
+                .collect();
+            for i in 0..cols {
+                let near = row[i].or_else(|| {
+                    (1..cols).find_map(|d| {
+                        let left = i.checked_sub(d).and_then(|k| row[k]);
+                        left.or_else(|| row.get(i + d).copied().flatten())
+                    })
+                });
+                #[allow(clippy::cast_possible_truncation)]
+                heights_m.push(near.unwrap_or(0.0) as f32);
+            }
+        }
+        let mut site = Self::from_heightfield(tile, tile_m, heights_m, cols)?;
+        site.field = Some(FieldTile { field, corner });
+        Ok(site)
     }
 
     /// This site with `factors` as its own (see [`Site::factors`]).
@@ -342,20 +431,51 @@ impl Site {
     /// The share of plants that may stand at `(east, north)` metres from
     /// the tile's south-west corner, 0 to 1: 0 inside a building or on
     /// sound pavement, a crack's open share on broken pavement, 1 on soil.
-    /// A height-field site is soil everywhere.
+    /// A height-field site is soil everywhere. On a field's tile it is the
+    /// cell's open share ([`crate::site_field::Ground::open_share`]): 0
+    /// where the cell has no ground (a building's or a boulder's
+    /// footprint), on rock and on sound pavement, the share of its surface
+    /// its cracks and holes open on broken pavement, 1 on soil; beyond the
+    /// field, nothing.
     #[must_use]
     pub fn plantable_at(&self, east: f64, north: f64) -> f64 {
-        let _ = (east, north);
-        1.0
+        let Some(tile) = &self.field else {
+            return 1.0;
+        };
+        tile.cell(east, north).map_or(0.0, |cell| {
+            let ground = &tile.field.ground;
+            let index = cell as usize;
+            if ground.height[index].is_none() {
+                0.0
+            } else {
+                ground.open_share[index].clamp(0.0, 1.0)
+            }
+        })
     }
 
     /// The site factors at `(east, north)`, which set how well each
     /// species of a community suits the ground there
     /// ([`crate::niche::Niche::site_response`]). A height-field site has
     /// its [`Site::factors`], its elevation raised by the ground's height
-    /// and its slope the ground's.
+    /// and its slope the ground's. On a field's tile, the cell's own
+    /// ([`crate::site_field::SiteField::site_factors`]): its heat load
+    /// relative to level ground, its slope, its elevation above the
+    /// factors' datum, and its moisture from its wetness index
+    /// ([`moisture_from_wetness`]); where the cell has no ground or the
+    /// field does not reach, as on a height field.
     #[must_use]
     pub fn site_factors_at(&self, east: f64, north: f64) -> SiteFactors {
+        if let Some(tile) = &self.field
+            && let Some(cell) = tile.cell(east, north)
+        {
+            let moisture = moisture_from_wetness(tile.field.ground.wetness[cell as usize]);
+            if let Some(factors) = tile
+                .field
+                .site_factors(cell, self.factors.elevation_m, moisture)
+            {
+                return factors;
+            }
+        }
         #[allow(clippy::cast_precision_loss)]
         let step = self.tile_m / (self.cols - 1) as f64;
         let d = 0.5 * step;
@@ -370,9 +490,18 @@ impl Site {
     }
 
     /// The ground height at `(east, north)` metres from the tile's
-    /// south-west corner, bilinear.
+    /// south-west corner, bilinear (on a field's tile, between the field's
+    /// cells, [`crate::site_field::SiteField::height_at`], or the sampled
+    /// heights where no cell round it has ground).
     #[must_use]
     pub fn height_at(&self, east: f64, north: f64) -> f64 {
+        if let Some(tile) = &self.field
+            && let Some(height) = tile
+                .field
+                .height_at(tile.corner[0] + east, tile.corner[1] - north)
+        {
+            return height;
+        }
         #[allow(clippy::cast_precision_loss)]
         let last = (self.cols - 1) as f64;
         let u = (east / self.tile_m).clamp(0.0, 1.0) * last;

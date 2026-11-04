@@ -56,9 +56,10 @@ pub use crate::export::{
     crown_regions,
 };
 pub use crate::fill::{
-    CanopyCell, Community, Cover, CoverKind, Fill, FillSettings, INSTANCE_BYTES, INSTANCE_SCHEMA,
-    Instance, Layer, Member, PROTOTYPES_FILE, Prototype, PrototypeFiles, PrototypeKey,
-    STAND_CELL_M, Site, StandCell, StandMap, TileId, TilePlan, TileStats,
+    CanopyCell, Community, Cover, CoverKind, FieldTile, Fill, FillSettings, INSTANCE_BYTES,
+    INSTANCE_SCHEMA, Instance, Layer, Member, PROTOTYPES_FILE, Prototype, PrototypeFiles,
+    PrototypeKey, STAND_CELL_M, Site, StandCell, StandMap, TileId, TilePlan, TileStats,
+    moisture_from_wetness,
 };
 pub use crate::quality::Quality;
 pub use crate::spec::{Environment, PlantSpec};
