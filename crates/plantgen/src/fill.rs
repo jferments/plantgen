@@ -781,7 +781,11 @@ pub struct CanopyCell {
     pub height_m: f32,
     /// Share of the cell under crowns, 0 to 1.
     pub cover: f32,
-    /// Linear RGB of the canopy seen from above.
+    /// Linear RGB of the canopy seen from above: its canopy and
+    /// subcanopy trees' foliage in full light (each species'
+    /// `appearance.foliage`), weighed by their crowns' area, so a maple
+    /// stand reads lighter than a fir one from afar; a dark conifer green
+    /// where the cell has no tree crowns, black where it has no stand.
     pub colour: [f32; 3],
 }
 
@@ -1066,6 +1070,10 @@ struct Layout {
     canopy_cover: f64,
     /// Mean height of its canopy layer, metres.
     canopy_height: f64,
+    /// Its tree crowns' colour seen from above, linear RGB: each canopy
+    /// and subcanopy tree's species' foliage in full light, weighed by
+    /// its crown's area ([`CANOPY_COLOUR`] where it has none).
+    canopy_colour: [f32; 3],
     /// Share of the ground under herbs.
     herb_cover: f64,
 }
@@ -1815,7 +1823,7 @@ impl Fill {
             canopy.push(CanopyCell {
                 height_m: layout.canopy_height as f32,
                 cover: canopy_cover as f32,
-                colour: CANOPY_COLOUR,
+                colour: layout.canopy_colour,
             });
         }
         let area_m2 = site.tile_m * site.tile_m;
@@ -1922,10 +1930,10 @@ impl Fill {
             .map(|(.., size, _)| size.height)
             .fold(0.0_f64, f64::max);
         let mut has_herbs = false;
-        let members: Vec<stand_tile::Member> = chosen
+        let (members, foliage): (Vec<stand_tile::Member>, Vec<[f32; 3]>) = chosen
             .iter()
-            .map(
-                |(index, candidate, share, size, species)| stand_tile::Member {
+            .map(|(index, candidate, share, size, species)| {
+                let member = stand_tile::Member {
                     id: *index,
                     layer: development::layer_of(&candidates[*candidate], size.height, top),
                     share: *share,
@@ -1933,14 +1941,15 @@ impl Fill {
                     crown_base_m: size.crown_base.unwrap_or(0.0),
                     crown_radius_m: size.crown_radius,
                     light_needed: self.species[*species].light_needed,
-                },
-            )
-            .filter(|member| {
+                };
+                (member, self.species[*species].generator.spec().appearance.foliage)
+            })
+            .filter(|(member, _)| {
                 let herb = member.layer == niche::Layer::Herb;
                 has_herbs |= herb;
                 self.settings.herbs || !herb
             })
-            .collect();
+            .unzip();
         let tile_m = f64::from_bits(key.cell_bits);
         let rules = stand_tile::Rules {
             tile_m,
@@ -1973,6 +1982,7 @@ impl Fill {
             stand.cover[3]
         };
         let (mut heights, mut count) = (0.0, 0.0);
+        let (mut colour, mut crowns) = ([0.0_f64; 3], 0.0);
         let plants = placed
             .iter()
             .map(|plant| {
@@ -1991,6 +2001,13 @@ impl Fill {
                     [0.0, 0.0]
                 };
                 let radius = member.crown_radius_m * plant.scale;
+                if matches!(member.layer, niche::Layer::Canopy | niche::Layer::Subcanopy) {
+                    let area = radius * radius;
+                    for (sum, part) in colour.iter_mut().zip(foliage[plant.member]) {
+                        *sum += area * f64::from(part);
+                    }
+                    crowns += area;
+                }
                 Laid {
                     prototype: member.id,
                     at: plant.at_m,
@@ -2006,13 +2023,19 @@ impl Fill {
             plants,
             canopy_cover,
             canopy_height: if count > 0.0 { heights / count } else { 0.0 },
+            #[allow(clippy::cast_possible_truncation)]
+            canopy_colour: if crowns > 0.0 {
+                colour.map(|sum| (sum / crowns) as f32)
+            } else {
+                CANOPY_COLOUR
+            },
             herb_cover,
         })
     }
 }
 
-/// The far canopy's colour seen from above, linear RGB: a dark conifer
-/// green until each species gives its own.
+/// The far canopy's colour seen from above where a stand cell has no
+/// tree crowns, linear RGB: a dark conifer green.
 const CANOPY_COLOUR: [f32; 3] = [0.08, 0.12, 0.06];
 
 /// The record a written prototype keeps beside its files.

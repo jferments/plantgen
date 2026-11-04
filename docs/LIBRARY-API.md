@@ -230,6 +230,9 @@ Ok(())
 - **Ground cover and far canopy** come per stand cell in the plan
   (`cover`: kind and fraction; `canopy`: height, cover, colour), for
   hosts that draw ground cover and far forest with their own systems.
+  The canopy's colour is its trees' foliage in full light, linear RGB,
+  each species' weighed by its crowns' area, so a maple stand reads
+  lighter than a fir one from afar.
 
 From the command line, `plantc fill` does the same (`--ages` chooses the
 stand ages, `--herbs no` leaves herbs to the ground cover, `--edges no`

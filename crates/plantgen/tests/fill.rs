@@ -5,8 +5,8 @@
 use std::sync::LazyLock;
 
 use plantgen::api::{
-    Community, Environment, Fill, FillSettings, INSTANCE_BYTES, INSTANCE_SCHEMA, Instance,
-    PrototypeKey, Site, StandCell, StandMap, TileId,
+    Community, Environment, Fill, FillSettings, Generator, INSTANCE_BYTES, INSTANCE_SCHEMA,
+    Instance, Options, PrototypeKey, Site, StandCell, StandMap, TileId,
 };
 
 fn forest() -> Community {
@@ -136,6 +136,18 @@ fn one_tile_holds_many_communities_and_bare_cells() {
         let key = &fill.prototypes()[i.prototype as usize].key;
         key.species == "achillea-millefolium" && key.environment == Environment::Open
     }));
+    // The forest's far canopy wears its Douglas-firs' foliage, the
+    // meadow's (no crowns) another green, the bare cell's none.
+    let fir = Generator::new("pseudotsuga-menziesii", &Options::default())
+        .expect("fir")
+        .spec()
+        .appearance
+        .foliage;
+    let close = |a: [f32; 3], b: [f32; 3]| a.iter().zip(b).all(|(a, b)| (a - b).abs() < 1e-5);
+    assert!(plan.canopy[0].cover > 0.5);
+    assert!(close(plan.canopy[0].colour, fir), "{:?}", plan.canopy[0].colour);
+    assert!(plan.canopy[1].cover < 1e-6 && !close(plan.canopy[1].colour, fir));
+    assert!(close(plan.canopy[2].colour, [0.0; 3]));
     let mut bad = stands.clone();
     bad.cells[0].community = Some(2);
     assert!(fill.tile(&site, &bad, 1).is_err());
