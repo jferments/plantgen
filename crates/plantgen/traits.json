@@ -2168,6 +2168,15 @@
       "when": {"rosette": ["basal"]},
       "why": "the leaves of one basal rosette in leaf at once, round the foot of its flowering stem, where floras count them: a sundew's handful; a cushion of many rosettes, a thrift's, counts each"
     },
+    "rosette_scapes": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "count",
+      "range": [1, 200],
+      "optional": true,
+      "when": {"rosette": ["basal"]},
+      "why": "the flowering stems one basal rosette sends up from its middle in a year, where they share it: a dandelion's several scapes from its one rosette on a taproot; a thrift's or a sundew's rosettes each send up one"
+    },
     "flowering_stems": {
       "group": "flowers",
       "organ": "stem",
