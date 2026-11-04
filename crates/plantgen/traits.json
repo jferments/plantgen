@@ -3801,6 +3801,30 @@
       "values": ["intolerant", "intermediate", "tolerant"],
       "why": "how much shade it can grow in, as silvics classes a tree: an intolerant one needs full light and loses what grows in shade"
     },
+    "seed_dispersal": {
+      "group": "ecology",
+      "organ": "plant",
+      "type": "enums",
+      "values": ["wind", "water", "animal", "unassisted"],
+      "optional": true,
+      "why": "what carries its seed away from the parent, every way a source names: wind (a pappus, wings or hairs), water, animals (eaten, cached or carried on fur and feet) or nothing (it falls near the parent)"
+    },
+    "seedbank": {
+      "group": "ecology",
+      "organ": "plant",
+      "type": "enum",
+      "values": ["transient", "short_term", "long_term"],
+      "optional": true,
+      "why": "how long its seed lives in the soil, in Thompson, Bakker and Bekker's classes: transient (under a year), short-term persistent (one to five years) or long-term persistent (five years or more)"
+    },
+    "trampling_tolerance": {
+      "group": "ecology",
+      "organ": "plant",
+      "type": "enum",
+      "values": ["intolerant", "intermediate", "tolerant"],
+      "optional": true,
+      "why": "how well it lives where it is trodden or driven over: tolerant plants are the weeds of paths, lawns and pavement cracks"
+    },
     "architectural_model": {
       "group": "architecture",
       "organ": "plant",

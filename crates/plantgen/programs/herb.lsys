@@ -172,9 +172,21 @@
 # draws and modules keep their sites; with thorns 0, as every lineage
 # gives it unless its words arm it, a herb grows as before.
 #
+# Revision 21 (soil depth D1): soil@1 weighs the soil the roots reach
+# against what the plant needs, the ratio rs (0 to 1). Each year it sends
+# up rs as many stems, and they and its leaves come in sqrt(rs) as long,
+# so the ground they cover, which sets what they need, shrinks with the
+# soil; and its growth follows tg, the years it has grown, which falls
+# behind its age t by the share of each year the soil held it back
+# (1 - rs). In a crack or a thin soil it settles at the size its soil
+# carries, and still flowers at adult_age. Roots go down to root_depth at
+# most: 1.02 m, the mean maximum rooting depth of forbs in Tumber-Dávila
+# et al. 2022 (New Phytologist 235: 1032-1056). Without rooting limits in
+# the conditions rs is 1 and tg is t, and a herb grows as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem herb 20;
+lsystem herb 21;
 
 # The clump.
 param stems;                  # stems in a mature clump
@@ -263,6 +275,7 @@ param flower_area;
 param bud_area;
 param fruit_area;
 param light_cell;             # light voxel edge
+param root_depth = 1.02;      # deepest the roots reach, metres (soil@1)
 param lie = 0;                # share of a stem's leafy nodes lying along the ground; 0: none
 param axil_racemes = 0;       # 1: a side branch's last-order leaf nodes each bear a raceme in their axil, crowding its top with them
 param alternate_above = 0;    # share of a stem's leafy nodes, from the top, bearing one leaf where those below bear leaves_per_node
@@ -317,6 +330,7 @@ organ thorn leaf as spine area thorn_area;
 structure basal_leaf leaf;    # one basal leaf: its pieces and tip
 
 tool light@1 { cell = light_cell, extinction = 0.5 };
+tool soil@1 { depth = root_depth };
 
 axiom Y;
 
@@ -324,8 +338,8 @@ axiom Y;
 # cohort is drawn at.
 rule Y -> Ss(0, -1, 0) Y;
 decompose Ss(k, m, n) : m < 0 ->
-    Ss(0, max(1, round(stems * (1 - exp(-stem_rate * t)))),
-          max(1, round(stems * (1 - exp(-stem_rate * t)))));
+    Ss(0, max(1, round(stems * (1 - exp(-stem_rate * tg)) * rs)),
+          max(1, round(stems * (1 - exp(-stem_rate * tg)) * rs)));
 decompose Ss(k, m, n) : m > 1 ->
     Ss(k, floor(m / 2), n) Ss(k + floor(m / 2), m - floor(m / 2), n);
 # One stem: out along the sunflower spiral, up, and leaning out.
@@ -334,7 +348,7 @@ decompose Ss(k, m, n) : m == 1 ->
       f(clump_radius * sqrt(n / stems) * sqrt((k + uniform(0.2, 0.8)) / n)) ^(90)
       &((lie > 0 ? 88.5 : stem_lean * sqrt((k + 0.5) / n)) + uniform(0, 3) * (lie > 0 ? 0.5 : 1))
       Bs(basal_leaves)
-      St(stem_height * (1 - exp(-t / maturity)) * uniform(1 - height_spread, 1 + height_spread)
+      St(stem_height * (1 - exp(-tg / maturity)) * sqrt(rs) * uniform(1 - height_spread, 1 + height_spread)
          * (t < adult_age ? young_height
             : floor((k + 1) * flowering_share) > floor(k * flowering_share) ? 1 : 1 - raceme),
          t >= adult_age && floor((k + 1) * flowering_share) > floor(k * flowering_share) ? raceme : 0) ];
@@ -343,7 +357,7 @@ decompose Ss(k, m, n) -> ;
 # Basal leaves, spread round the stem's foot.
 decompose Bs(j) : j > 0 ->
     [ /(j * divergence + uniform(-30, 30)) &(basal_angle * uniform(0.6, 1.4)) $
-      Bl(basal_length * (1 - exp(-t / maturity)) * uniform(0.75, 1.25),
+      Bl(basal_length * (1 - exp(-tg / maturity)) * sqrt(rs) * uniform(0.75, 1.25),
          basal_arch * uniform(0.6, 1.4)) ]
     Bs(j - 1);
 decompose Bs(j) -> ;
@@ -392,12 +406,12 @@ decompose Nd(i, m, h, r) : m == 1 && lie_branch == 0 ->
     !(stem_radius * (1 - 0.5 * ((h * (1 - r) * bare + (i + 1) * h * (1 - r) * (1 - bare) / nodes) / h)))
     F(h * (1 - r) * (1 - bare) / nodes)
     /(lie > 0 && i < round(lie * nodes) ? (i - 2 * floor(i / 2) < 0.5 ? 1 : -1) * (180 - divergence / 2) : 0)
-    Ly(lie > 0 && i < round(lie * nodes) ? 1 : (alternate_above > 0 && i >= nodes - round(alternate_above * nodes) ? -1 : 0), leaf_length * (1 - exp(-t / maturity))
+    Ly(lie > 0 && i < round(lie * nodes) ? 1 : (alternate_above > 0 && i >= nodes - round(alternate_above * nodes) ? -1 : 0), leaf_length * (1 - exp(-tg / maturity)) * sqrt(rs)
        * ((i + 0.5) / nodes < leaf_peak
           ? lerp(leaf_base, 1, (i + 0.5) / nodes / leaf_peak)
           : lerp(1, leaf_top, ((i + 0.5) / nodes - leaf_peak) / (1 - leaf_peak))))
     Bx(i, h, r,
-       leaf_length * (1 - exp(-t / maturity))
+       leaf_length * (1 - exp(-tg / maturity)) * sqrt(rs)
        * ((i + 0.5) / nodes < leaf_peak
           ? lerp(leaf_base, 1, (i + 0.5) / nodes / leaf_peak)
           : lerp(1, leaf_top, ((i + 0.5) / nodes - leaf_peak) / (1 - leaf_peak))))
@@ -536,7 +550,7 @@ decompose Ic(wd) -> ;
 # are along its leafy part. A geminate leaf is the next node's leaf on the
 # spiral, carried up to stand g above the larger one (concaulescence).
 decompose Lq(q, g) ->
-    Lz(leaf_length * (1 - exp(-t / maturity))
+    Lz(leaf_length * (1 - exp(-tg / maturity)) * sqrt(rs)
        * (q < leaf_peak ? lerp(leaf_base, 1, q / leaf_peak)
                         : lerp(1, leaf_top, clamp((q - leaf_peak) / (1 - leaf_peak), 0, 1))), g);
 decompose Lz(s, g) : g > 0 -> Lf(s) F(g) /(divergence + uniform(-15, 15)) Lf(s * geminate);
@@ -577,12 +591,12 @@ decompose Nn(i, h, r) ->
     !(stem_radius * (1 - 0.5 * ((h * (1 - r) * bare + (i + 1) * h * (1 - r) * (1 - bare) / nodes) / h)))
     F(h * (1 - r) * (1 - bare) / nodes)
     /(lie > 0 && i < round(lie * nodes) ? (i - 2 * floor(i / 2) < 0.5 ? 1 : -1) * (180 - divergence / 2) : 0)
-    Ly(lie > 0 && i < round(lie * nodes) ? 1 : (alternate_above > 0 && i >= nodes - round(alternate_above * nodes) ? -1 : 0), leaf_length * (1 - exp(-t / maturity))
+    Ly(lie > 0 && i < round(lie * nodes) ? 1 : (alternate_above > 0 && i >= nodes - round(alternate_above * nodes) ? -1 : 0), leaf_length * (1 - exp(-tg / maturity)) * sqrt(rs)
        * ((i + 0.5) / nodes < leaf_peak
           ? lerp(leaf_base, 1, (i + 0.5) / nodes / leaf_peak)
           : lerp(1, leaf_top, ((i + 0.5) / nodes - leaf_peak) / (1 - leaf_peak))))
     Bx(i, h, r,
-       leaf_length * (1 - exp(-t / maturity))
+       leaf_length * (1 - exp(-tg / maturity)) * sqrt(rs)
        * ((i + 0.5) / nodes < leaf_peak
           ? lerp(leaf_base, 1, (i + 0.5) / nodes / leaf_peak)
           : lerp(1, leaf_top, ((i + 0.5) / nodes - leaf_peak) / (1 - leaf_peak))))
