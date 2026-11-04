@@ -85,6 +85,7 @@ pub mod roots;
 pub mod shed;
 pub mod shoots;
 pub mod site;
+pub mod site_field;
 pub mod spec;
 pub mod spikelets;
 pub mod spines;
@@ -1508,11 +1509,36 @@ pub mod venation;
 /// 60-year Douglas fir grown in a closed stand drew its crown floating 9 m
 /// over an 11 m stump on its low tier.
 ///
-/// 193: six herbs draw their leaves as their floras state them, where
+/// 193: old conifer crowns (`pinidae` revision 14): a living tip of a fir,
+/// spruce, hemlock, larch, pine or Douglas-fir shades its neighbours less
+/// as the tree's rise slows, down to a fifth of a fast-rising tip's shade
+/// (`bud_keep`); a lit limb of a fir, spruce, hemlock, larch or Douglas-fir
+/// keeps lengthening up to 15 cm a year once the leader slows
+/// (`branch_floor`, 0.06 before), a floor that now comes in over the top
+/// `floor_ramp` of the height as the side shoots' did; and a fir's,
+/// spruce's, hemlock's or Douglas-fir's dormant buds sprout in a tenth of
+/// the open sky's light, not three tenths (`epi_light`, Ishii & Ford 2001).
+/// A Douglas-fir grown 250 years in a stand held 163 m² of foliage on a
+/// trunk 66 cm through, 29% of what Sillett et al.'s (2018) leaf area
+/// equation gives for its crown; it now holds 288 m² (44%, its crown 26 m
+/// deep where it was 21) on 70 cm, and a western hemlock 253 m² where it
+/// held 177, on 83 cm where it was 79. Every Pinaceae species' young sizes
+/// grow within a few percent of before; the other conifer families grow as
+/// before. And once a Pinaceae tree's leader slows, the least yearly growth
+/// of its limbs fades past a tenth of its height out from the trunk
+/// (`floor_reach` 0.1, which only columnar crowns took before), so an old
+/// crown stops spreading and turns cylindrical, as Ishii and McDowell
+/// (2002) find old Douglas-firs' crowns: without it, a Douglas-fir grown
+/// 480 years in a stand drew a dome 21 m across over bare limbs, 9% of its
+/// foliage in the lower half of the foliated crown; with it, a deep, lobed
+/// crown 18 m across with 35% there (355 m² of foliage on 74 cm, where the
+/// dome held 414 m² on 86).
+///
+/// 194: six herbs draw their leaves as their floras state them, where
 /// their files drew them otherwise (checked against whole-plant photos
 /// from the side): sheep sorrel's and rusty saxifrage's basal leaves
 /// reach the 8 cm Abrams gives, Arizona lupine's leaf cards its longest
 /// leaflets on their longest petioles, jimsonweed's and the tomato's
 /// longest leaves the floras' longest, and a thread-leaved sundew's leaves
 /// stand erect, as Flora of North America says.
-pub const GENERATOR_REVISION: u32 = 193;
+pub const GENERATOR_REVISION: u32 = 194;
