@@ -227,6 +227,11 @@ cached by key, so the next tile only grows and draws the ones it adds):
 # city/tiles/2_3.json, city/tiles/2_3.bin, city/prototypes/prototypes.json and GLBs
 ```
 
+`docs/examples/communities/wind-river.json` is the old-growth
+Douglas-fir and western hemlock forest of the Wind River plot (Shaw et al.
+2004): fill it at `--years 500 --site 0.5,1,370,5` to check a stand
+against the plot.
+
 `docs/examples/fill-viewer.html` is an example caller with no PlantGen
 code: copy it into the `--out` folder, serve that folder
 (`python3 -m http.server`) and open `fill-viewer.html?tile=2_3`. It draws
