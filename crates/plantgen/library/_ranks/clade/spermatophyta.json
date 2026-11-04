@@ -16,6 +16,11 @@
       "rule": "1 / pow(space_kill, 3)",
       "why": "One point of free space for each cube the shoot spacing spans, so the spacing, not a lack of free space, decides how finely the crown branches."
     },
+    "generator.params.root_depth": {
+      "needs": ["root_depth_max_m"],
+      "rule": "root_depth_max_m",
+      "why": "A plant's roots reach no deeper than its sources say they go, so soil that deep or deeper never slows it (soil depth design D1)."
+    },
     "generator.params.adult_age": {
       "rule": "juvenile_period_years",
       "why": "A plant flowers, or bears cones, from the end of its juvenile period."
@@ -201,6 +206,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "A choice of the model's: free space sampled as finely as shoots may be spaced (space colonization, Runions, Lane and Prusinkiewicz 2007)."
+    },
+    "rules.generator.params.root_depth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The deepest roots reach (root_depth_max_m) is how deep soil@1 lets them go when it weighs the soil they reach against what the plant needs."
     },
     "rules.generator.params.adult_age": {
       "evidence": "SourceInferred",

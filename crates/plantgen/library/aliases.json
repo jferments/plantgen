@@ -12,6 +12,7 @@
     "opuntia-santa-rita": "opuntia-gosseliniana",
     "pinus-contorta": "pinus-contorta-var-contorta",
     "populus-trichocarpa": "populus-tristis",
+    "taraxacum-officinale": "taraxacum-sect-taraxacum",
     "prosopis-velutina": "neltuma-velutina",
     "struthiopteris-spicant": "blechnum-spicant"
   },
@@ -70,6 +71,11 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "Populus trichocarpa, the name the spec's authors wrote, is a synonym of Populus tristis in WCVP v16."
+    },
+    "aliases.taraxacum-officinale": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "The common dandelion, Taraxacum officinale, is the apomictic aggregate WCVP v16 accepts as Taraxacum sect. Taraxacum."
     },
     "aliases.prosopis-velutina": {
       "evidence": "SourceInferred",

@@ -388,6 +388,14 @@ impl SubstrateField {
         self.distance(point) < 0.0
     }
 
+    /// Whether `point` lies inside the solid by more than the grid's
+    /// precision (one step of its quantised distances): a bud set on the
+    /// surface, which the grid may read a hair inside, is not buried.
+    #[must_use]
+    pub fn buried(&self, point: Vec3) -> bool {
+        self.distance(point) < -self.scale
+    }
+
     /// The material of the surface nearest `point`: the cell a little
     /// inside the surface, below the point along the normal; [`AIR`] when
     /// the surface is beyond the field's narrow band.
