@@ -1491,4 +1491,10 @@ pub mod venation;
 /// to where its stalks meet, lit half way between straight out and its
 /// face as the stands of clusters drawn as cards are. A yarrow's low cards
 /// from the side went from 0.75 to 0.93 as bright as the plant.
-pub const GENERATOR_REVISION: u32 = 191;
+///
+/// 192: on the card tiers, a cut leaf (a yarrow's, a hemlock's) is a pair
+/// of crossed cards of its own, wearing a picture of its look's longest
+/// leaf laid flat, in place of a midrib line and the dots its segments
+/// baked to in the plant's cards (`crate::billboards`): its leaves read
+/// as feathery blades, not lines and dots.
+pub const GENERATOR_REVISION: u32 = 192;
