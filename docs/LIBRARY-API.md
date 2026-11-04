@@ -199,6 +199,18 @@ stands the eye under or among the crowns). On a 40 m tile of 60-year
 Douglas-firs, parts drew 1.48 M triangles from the ground where whole
 plants drew 2.50 M, and 1.67 M where 2.33 M from crown height.
 
+**A tile as one glTF file.** For a host that only reads glTF (Blender,
+Godot, Unity's glTFast, a three.js `GLTFLoader`), `plantc fill ... --glb 3`
+(or `TilePlan::glb(&prototypes, dir, level, meshopt)`) also writes
+`tiles/X_Y.glb`: each prototype the tile places, at one level for the
+whole tile, stored once, and a node per prototype mesh that draws every
+plant using it with `EXT_mesh_gpu_instancing`. Its root node sits at the
+tile's south-west corner (+X east, +Y up, -Z north), so tiles laid side by
+side meet. A 40 m tile of 528 Douglas-firs and yarrows is 1.1 MiB at the
+low tier and 1.4 MiB at the mid tier with `--compress meshopt`. It draws
+the whole tile at one level; a caller that wants detail by distance reads
+the packed instances and the prototype files as above.
+
 The types are settled; what a fill computes (density, layers, closure,
 allometry, dead wood, climbers) is still being built, and until then
 `Fill::tile` scatters each member at a fixed density for its layer, times

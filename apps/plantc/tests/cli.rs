@@ -734,8 +734,13 @@ fn fill_writes_a_tile_and_the_prototypes_it_places() {
             );
         }
     }
-    // Filling again keeps the prototypes and writes the same tile.
-    let again = stdout(&plantc(&args));
-    assert!(again.contains("wrote"), "{again}");
+    // Filling again keeps the prototypes and writes the same tile, and
+    // --glb writes it as one glTF file too.
+    let mut with_glb = args.to_vec();
+    with_glb.extend(["--glb", "3"]);
+    let again = stdout(&plantc(&with_glb));
+    assert!(again.contains("wrote the tile as one glTF file"), "{again}");
     assert_eq!(fs::read(out.join("tiles/2_-3.bin")).unwrap(), bin);
+    let glb = fs::read(out.join("tiles/2_-3.glb")).unwrap();
+    assert_eq!(&glb[..4], b"glTF");
 }

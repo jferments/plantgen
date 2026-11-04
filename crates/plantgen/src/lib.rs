@@ -90,6 +90,7 @@ pub mod stand;
 pub mod substrate;
 pub mod templates;
 pub mod texture;
+mod tile_scene;
 pub mod traits;
 pub mod venation;
 

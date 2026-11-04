@@ -434,9 +434,10 @@ Usage:
               [--threads N] [--quality draft|standard] [--day N]
               [--shade attribute|baked] [--compress none|quantize|meshopt]
               [--attributes all|wind|none] [--triangles N[,N,N,N]]
-              [--max-mib N] [--levels tiers|package]
+              [--max-mib N] [--levels tiers|package] [--glb LEVEL]
       Fill one map tile with plant communities (each a JSON file: an id
-      and members, each a species, a layer and stems per hectare) as the
+      and members, each a species and optionally a layer, the settings
+      it grows in and an abundance) as the
       library API's Fill does, and write DIR/tiles/X_Y.json (header,
       ground cover and far canopy per stand cell) and DIR/tiles/X_Y.bin
       (32-byte instances; docs/LIBRARY-API.md). Without --stands (a
@@ -446,7 +447,11 @@ Usage:
       prototypes.json, each prototype the tile places that is not there
       yet; all exports every prototype; none only the tile. The plan is
       the same on every machine and thread count, and a tile meets its
-      neighbours without a seam.
+      neighbours without a seam. --glb LEVEL (0 nearest to 3 farthest)
+      also writes DIR/tiles/X_Y.glb: the whole tile as one glTF file,
+      each prototype's level LEVEL once and every plant an instance of it
+      (EXT_mesh_gpu_instancing), which Blender, Godot, Unity and three.js
+      open as they are.
   plantc inspect <package.afterplant>
       Check every object of a package and summarise it.
   plantc export <species|spec.json|package.afterplant> [--out DIR]
@@ -5424,6 +5429,7 @@ fn variants_command(args: &[String]) -> Result<(), Failure> {
     Ok(())
 }
 
+#[allow(clippy::too_many_lines)]
 fn fill_command(args: &[String]) -> Result<(), Failure> {
     let options = Options::parse(
         args,
@@ -5446,6 +5452,7 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
             "triangles",
             "max-mib",
             "levels",
+            "glb",
         ],
     )?;
     if options.positional.is_empty() {
@@ -5547,6 +5554,27 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
         started.elapsed().as_secs_f64(),
         out.join("prototypes").join(api::PROTOTYPES_FILE).display()
     );
+    if let Some(level) = options.number::<usize>("glb")? {
+        if level >= export::LEVELS {
+            return Err(format!("--glb takes a level from 0 to {}", export::LEVELS - 1).into());
+        }
+        let glb = plan
+            .glb(
+                &prototypes,
+                &out.join("prototypes"),
+                level,
+                compression == export::Compression::Meshopt,
+            )
+            .map_err(|error| error.to_string())?;
+        let path = out.join("tiles").join(format!("{}_{}.glb", tile.x, tile.y));
+        fs::write(&path, &glb).map_err(|error| format!("{}: {error}", path.display()))?;
+        #[allow(clippy::cast_precision_loss)]
+        let mib = glb.len() as f64 / 1_048_576.0;
+        out!(
+            "wrote the tile as one glTF file at level {level}, {mib:.1} MiB: {}",
+            path.display()
+        );
+    }
     Ok(())
 }
 
