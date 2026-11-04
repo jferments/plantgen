@@ -66,6 +66,8 @@ def add_fetch(sub) -> None:
     common(p)
     p.add_argument("--basis", help="e.g. PRESERVED_SPECIMEN or HUMAN_OBSERVATION")
     p.add_argument("--country", help="two-letter country code")
+    p.add_argument("--organ", choices=sorted(gbif.ORGANS),
+                   help="only Pl@ntNet photos its observer tagged with this organ (habit: the whole plant)")
 
     p = srcs.add_parser("commons", help="Wikimedia Commons category")
     common(p, taxon_required=False)

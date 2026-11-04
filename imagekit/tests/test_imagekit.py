@@ -162,6 +162,45 @@ class InatFetch(Base):
         self.assertEqual(Store(self.store_dir).stats()["images"], 0)
 
 
+class GbifOrgan(Base):
+    """`fetch gbif --organ habit`: only Pl@ntNet photos tagged as the whole plant."""
+    def setUp(self):
+        super().setUp()
+        self.queries, self.downloads = [], []
+        organs = ["flower", "habit", "leaf", "habit", "fruit", "habit"]
+        self.occs = [{"key": 900 + i, "license": "http://creativecommons.org/licenses/by-sa/4.0/",
+                      "media": [{"type": "StillImage", "title": f"Daucus carota L.: {o}",
+                                 "license": f"obs{i} (cc-by-sa)", "creator": f"obs{i}",
+                                 "identifier": f"https://bs.plantnet.org/image/o/photos/{900 + i}/x"}]}
+                     for i, o in enumerate(organs)]
+
+        def get_json(url, params=None):
+            self.queries.append(dict(params or {}))
+            off = int((params or {}).get("offset", 0))
+            return {"results": self.occs[off:off + 300], "endOfRecords": True}
+
+        def get_bytes(url, **_):
+            self.downloads.append(url)
+            return picture(int(url.split("/photos/")[1].split("/")[0]))
+        net.get_json, net.get_bytes = get_json, get_bytes
+
+    def test_only_habit_photos_from_plantnet(self):
+        from imagekit.fetch import gbif
+        self.run_cli("fetch", "gbif", "--taxon", "Daucus carota", "--n", "5", "--organ", "habit", "--batch", "b")
+        rows = self.rows("b")
+        self.assertEqual(len(rows), 3, "three of the six photos are tagged habit")
+        self.assertEqual(self.queries[0]["datasetKey"], gbif.PLANTNET)
+        self.assertTrue(all("habit" in r["source"]["why"] for r in rows))
+        self.assertEqual({r["source"]["licence"] for r in rows}, {"cc-by-sa"}, "the licence in brackets is read")
+
+    def test_organ_from_title(self):
+        from imagekit.fetch import gbif
+        self.assertEqual(gbif.organ_of({"title": "Heracleum maximum W.Bartram: leaf"}), "leaf")
+        self.assertEqual(gbif.organ_of({"title": "Quercus robur L.: Habit "}), "habit")
+        self.assertIsNone(gbif.organ_of({"title": "a photo"}))
+        self.assertIsNone(gbif.organ_of({}))
+
+
 class InatDump(Base):
     def test_dump_spreads_and_caps(self):
         d = self.tmp / "dump"
