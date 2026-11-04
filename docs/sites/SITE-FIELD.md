@@ -139,3 +139,6 @@ A site's `materials` gives each `usemtl` name a material (`soil`, `rock`,
 `docs/sites/block.json` (made by `docs/sites/make_block.py`) is a mixed
 test block with each kind of host, and `docs/sites/field_view.py` draws a
 field so that `plantc site` can render it.
+
+How the field is built, how to add a host kind or a ground value, and
+what keeps it fast and byte-stable: [DEVELOPERS.md](DEVELOPERS.md).
