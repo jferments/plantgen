@@ -3135,7 +3135,10 @@ fn head_counts(head: &crate::looks::Head, (organ, part): (u64, u32), tally: &mut
         match head.kind {
             // A radiate head drawn without rays is a disc alone.
             HeadKind::Radiate if head.rays > 0 => "radiate",
-            HeadKind::Radiate | HeadKind::Discoid => "discoid",
+            // A disciform head is drawn as a discoid one, its threadlike
+            // outer florets too small to show (the family's rule), so a
+            // disc alone reads as either.
+            HeadKind::Radiate | HeadKind::Discoid => "discoid|disciform",
             HeadKind::Ligulate => "liguliflorous",
         },
     );
