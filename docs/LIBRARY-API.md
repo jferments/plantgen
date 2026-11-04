@@ -124,19 +124,27 @@ bytes; `duplicates` names any seed drawn exactly as an earlier one.
 ## Stands over a whole map: `Fill` (draft)
 
 For city- or region-sized scenes, never grow a plant per place. A `Fill`
-picks *prototypes* once for a set of plant communities (a species, seed,
-setting and age class each: dominants to saplings, interior, edge, open
-and suppressed) and lays out each tile as packed *instances* of them that
-any engine draws with GPU instancing.
+develops each community's stand once at a few stand ages (which cohorts
+of which species a stand of that age holds, and how much of the ground
+each layer covers: `plantgen::development`, after Franklin et al. 2002),
+keeps each cohort as *prototypes* (a species, seed, setting and age
+each), measures them by growing each species once per seed and setting,
+and lays out each tile as packed *instances* of them that any engine
+draws with GPU instancing.
 
 ```rust
 use plantgen::api::{Community, Fill, FillSettings, Site, StandMap, TileId};
 
 fn main() -> Result<(), plantgen::api::Error> {
 let forest = Community::from_json(r#"{"id": "fir-forest", "members": [
-    {"species": "pseudotsuga-menziesii", "layer": "canopy"}
+    {"species": "pseudotsuga-menziesii", "layer": "canopy"},
+    {"species": "gaultheria-shallon"},
+    {"species": "polystichum-munitum"}
 ]}"#)?;
 let fill = Fill::new(&[forest], &FillSettings::default())?;
+// Grow each prototype once (minutes for old trees), its size kept in
+// "city/prototypes" so the next run grows none.
+fill.measure(&[], 8, Some("city/prototypes".as_ref()))?;
 
 // Per tile: the ground, and which community grows in each ~40 m cell.
 let site = Site::flat(TileId { x: 12, y: 40 }, 240.0)?;
@@ -147,6 +155,31 @@ Ok(())
 }
 ```
 
+- **Stands that develop.** A stand cell is drawn at the stand age
+  (`FillSettings::stand_ages`, 10 to 640 years unless chosen) nearest its
+  years since disturbance. A young stand's trees are one cohort grown as
+  in the open; once its crowns close (35 years for Douglas-fir's 500-year
+  lifespan) they grow as in a closed stand and the canopy covers 85% of
+  the ground, falling to 70% in old growth's gaps; from a fifth of the
+  pioneers' lifespan shade-tolerant trees establish under them, fewer of
+  the older. Shrubs and herbs fill their layers' cover where enough light
+  reaches them. How many stems a cell holds follows from the crowns, so
+  a stand of narrow crowns holds more than one of wide ones.
+- **Site-aware.** Each cell reads the site factors at its middle
+  (`Site::site_factors_at`: moisture, heat load, elevation, slope); each
+  species' share follows how well its niche suits them, and a site no
+  tree suits opens toward woodland. Each plant stands only where
+  `Site::plantable_at` lets it (none in a building or on sound pavement,
+  a crack's share on broken pavement). `Site::from_field` reads both from
+  a site field (`docs/sites/SITE-FIELD.md`).
+- **Fast over a city.** Each community, stand age, site class and cell
+  size is laid out once as a wrapping stand tile and stamped over every
+  cell that shares it, turned and shifted by the cell's place in the
+  world, from four layouts each. `TilePlan::stats` gives the stand
+  numbers to check against plots: stems and trees (5 cm or more at
+  breast height) per hectare, basal area, canopy cover and leaf area
+  index. `FillSettings::herbs = false` leaves herbs to the ground cover
+  raster for hosts that draw ground cover their own way.
 - **Pure and local.** A tile's plan depends only on the fill's
   communities, the site, the stand map, the seed and
   `GENERATOR_REVISION`. Its draws are keyed by each stand cell's place in
@@ -156,8 +189,12 @@ Ok(())
   community (or none: pavement, building, water) and the years since it
   was disturbed or abandoned.
 - **Prototypes** (`fill.prototypes()`) are keyed by species, seed,
-  setting and age class; `fill.grow_prototype(i)` grows one to export
-  with its species' `Generator`. A city shares one prototype set.
+  setting and age (`PrototypeKey::age_tenths`, its files named
+  `<species>-<setting>-<seed>-<age>y`). `fill.measure(which, threads,
+  cache)` sizes them before `fill.tile` (which says so when one is not);
+  `fill.write_prototypes` exports them and measures what it writes;
+  `fill.grow_prototype(i)` grows one to export with its species'
+  `Generator`. A city shares one prototype set.
 - **Parts of tall plants.** A prototype 6 m or taller is also written in
   parts (`FillSettings::parts`, on by default): its bole under the crown
   and its crown in up to four bands sized by its own height, each limb
@@ -179,15 +216,21 @@ Ok(())
   (`cover`: kind and fraction; `canopy`: height, cover, colour), for
   hosts that draw ground cover and far forest with their own systems.
 
-From the command line, `plantc fill` does the same and also grows and
-exports each prototype the tile places (cached by key, so the next tile
-only draws the ones it adds):
+From the command line, `plantc fill` does the same (`--ages` chooses the
+stand ages, `--herbs no` leaves herbs to the ground cover) and also
+measures every prototype and exports each one the tile places (both
+cached by key, so the next tile only grows and draws the ones it adds):
 
 ```bash
 ./target/release/plantc fill meadow.json --tile 2,3 --tile-m 240 --seed 5 \
     --compress meshopt --out city
 # city/tiles/2_3.json, city/tiles/2_3.bin, city/prototypes/prototypes.json and GLBs
 ```
+
+`docs/examples/communities/wind-river.json` is the old-growth
+Douglas-fir and western hemlock forest of the Wind River plot (Shaw et al.
+2004): fill it at `--years 500 --site 0.5,1,370,5` to check a stand
+against the plot.
 
 `docs/examples/fill-viewer.html` is an example caller with no PlantGen
 code: copy it into the `--out` folder, serve that folder
@@ -199,17 +242,21 @@ stands the eye under or among the crowns). On a 40 m tile of 60-year
 Douglas-firs, parts drew 1.48 M triangles from the ground where whole
 plants drew 2.50 M, and 1.67 M where 2.33 M from crown height.
 
-The types are settled; what a fill computes (density, layers, closure,
-allometry, dead wood, climbers) is still being built, and until then
-`Fill::tile` scatters each member at a fixed density for its layer, times
-its `abundance`.
+Dead wood and climbers are not placed yet: a climber member is skipped
+until the fill gives it a host to climb.
 
 A community member names a `species` and may give a `layer` (canopy,
-subcanopy, shrub, herb, ground, climber), the `environments` it grows in
-(interior, edge, open, suppressed; all four when left out) and an
-`abundance` (a share against the others, 1 when left out). It gives no
-density: how many stems a cell holds comes from the fill, from the site
-and the stand's age, not from the caller.
+subcanopy, shrub, herb, ground, climber) that keeps it to that layer
+in place of its niche's, the `environments` it grows in (interior, edge,
+open, suppressed; all four when left out) and an `abundance` (a share
+against the others, 1 when left out). A species without a niche needs
+its layer. It gives no density: how many stems a cell holds comes from
+the fill, from the site and the stand's age, not from the caller.
+
+Any plant can be grown past its spec's years to its old ages (doubling
+past its last keyframe up to its lifespan; `PlantSpec::old_ages`), and
+`Generator::grow_ages_in(environment, seed, &ages)` keeps several ages
+from one growth, as a stand's cohorts of one species and seed are.
 
 Each instance's `rotation` carries its yaw and its lean together.
 `Instance::lean(yaw, [east, north])` builds it, with the lean in metres

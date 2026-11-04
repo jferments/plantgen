@@ -39,6 +39,27 @@ lists itself:
   slope, and elevation as the height above `datum_m`. The field does not
   turn its wetness index into a niche's moisture; the host gives it.
 
+A fill over a measured site reads the field through
+`api::Site::from_field(tile, tile_m, field, corner)`, `corner` being the
+tile's south-west corner (x, z) in the field's frame. Then:
+
+- `plantable_at(east, north)` is the cell's `open_share`: 0 where the cell
+  has no ground (inside a building or a boulder), on rock and on sound
+  pavement; the cracks' and holes' share on broken pavement; 1 on soil; 0
+  beyond the field.
+- `site_factors_at(east, north)` is `site_factors(cell, datum, moisture)`,
+  the datum the site's `factors.elevation_m` and the moisture
+  `api::moisture_from_wetness(wetness)`, `(wetness - 2) / 10` clamped to 0
+  to 1: level ground on a 1 m grid (index about 7) is the middling 0.5 a
+  height-field site has, a slope that sheds its water is dry, a hollow or
+  channel (12 and above) saturated.
+- `height_at(east, north)` is the field's `height_at`. The tile also keeps
+  the heights sampled on the field's cells, the nearest ground's in the
+  row where a cell has none.
+
+`east` and `north` are metres from the corner, so `x = corner[0] + east`
+and `z = corner[1] - north`.
+
 Frame: metres, +Y up, +X east, -Z north (growth's frame). With `z_up`,
 the input's +Z is up and its +Y north.
 
