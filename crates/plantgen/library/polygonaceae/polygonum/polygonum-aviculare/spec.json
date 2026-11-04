@@ -9,6 +9,7 @@
     "common_name": "prostrate knotweed"
   },
   "growth_form": "forb",
+  "allometry": [{"age": 2, "environment": "open", "height": 0.075, "tolerance": 0.4}],
   "tier": "procedural_proxy",
   "traits": {
     "trampling_tolerance": "tolerant",
@@ -94,6 +95,7 @@
     }
   },
   "evidence": {
+    "allometry": {"evidence": "Authored", "source": "plantgen-authors", "note": "0.075 m: a mat of prostrate stems (Flora of North America: stems prostrate to erect, 5-200 cm), tall only by its ascending tips; between the low end of the stated 5-40 cm (a model estimate) and twice it. Not measured."},
     "traits.trampling_tolerance": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Polygonum aviculare: it bears trampling and is common on trodden, compacted soil."},
     "traits.seedbank": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Polygonum aviculare: its seed persists in the soil; for how long is not given, so the shorter persistent class."},
     "traits.seed_dispersal": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Polygonum aviculare: birds, mammals and water carry its seed, and vehicles too."},

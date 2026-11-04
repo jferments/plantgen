@@ -9,6 +9,7 @@
     "common_name": "procumbent pearlwort"
   },
   "growth_form": "forb",
+  "allometry": [{"age": 2, "environment": "open", "height": 0.03, "tolerance": 0.4}],
   "tier": "procedural_proxy",
   "traits": {
     "seed_dispersal": ["animal"],
@@ -76,6 +77,7 @@
     "leaf_hairs": "glabrous"
   },
   "evidence": {
+    "allometry": {"evidence": "Authored", "source": "plantgen-authors", "note": "0.03 m: the low end of the stated 3-10 cm, as Flora of North America's stems are more often procumbent, rooting at the nodes, so the mat stands about as tall as its ascending tips and pedicels. Not measured."},
     "traits.seed_dispersal": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Sagina procumbens (read 2026-11-02): it reached Gough Island as seed on visitors' boots or clothes, so feet carry it."},
     "traits.trampling_tolerance": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America, Sagina procumbens: grows on gravel and sand by roads, in pavement cracks and at the edges of paths and lawns."},
     "taxon": {

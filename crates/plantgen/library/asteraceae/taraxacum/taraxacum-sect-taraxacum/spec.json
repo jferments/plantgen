@@ -9,6 +9,7 @@
     "common_name": "common dandelion"
   },
   "growth_form": "forb",
+  "allometry": [{"age": 2, "environment": "open", "height": 0.22, "tolerance": 0.4}],
   "tier": "procedural_proxy",
   "traits": {
     "seedbank": "long_term",
@@ -84,6 +85,7 @@
     "cauline_leaves": "none"
   },
   "evidence": {
+    "allometry": {"evidence": "Authored", "source": "plantgen-authors", "note": "0.22 m in flower in its second year in the open: the middle of Flora of North America's plants (1-)5-40(-60) cm, its scapes standing over the rosette. Not measured."},
     "traits.seedbank": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Taraxacum officinale: its seed lives long in the soil."},
     "traits.seed_dispersal": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Taraxacum officinale: it makes a great deal of seed that the wind carries."},
     "taxon": {

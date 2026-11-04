@@ -9,6 +9,7 @@
     "common_name": "annual meadow-grass"
   },
   "growth_form": "graminoid",
+  "allometry": [{"age": 2, "environment": "open", "height": 0.18, "tolerance": 0.4}],
   "tier": "procedural_proxy",
   "traits": {
     "trampling_tolerance": "tolerant",
@@ -89,6 +90,7 @@
     }
   },
   "evidence": {
+    "allometry": {"evidence": "Authored", "source": "plantgen-authors", "note": "0.18 m in flower: the middle of Flora of China's culms 6-30(-45) cm. Not measured."},
     "traits.trampling_tolerance": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China, Poa annua: a weed of disturbed ground, whose plants may put out rooting stolons where trodden; Wikipedia (read 2026-11-02) adds that it makes many golf greens and grows on footpaths."},
     "taxon": {
       "evidence": "Authored",
