@@ -100,6 +100,67 @@ fn append(host: &mut PlantMesh, guest: PlantMesh) {
     host.tufts.extend(guest.tufts);
 }
 
+/// The level of detail a scene's overview views (side, 45 degrees, from
+/// the top, and the cover count) draw every plant at. Framing a stand
+/// tile tens of metres across in a thousand or two pixels, a pixel spans
+/// 3-6 cm, and level 1's 10 cm between a stem's ring vertices and 4 mm
+/// thinnest twig (standard quality) lose nothing it can show; level 0
+/// drew a 250-year Douglas-fir's wood in seven times the triangles.
+const OVERVIEW_LEVEL: usize = 1;
+
+/// The level of detail of an instance in a close-up of `span` metres
+/// round `focus`: full detail within two spans of the focus, where the
+/// close-up's pixels are millimetres; level 2 farther out, where a plant
+/// only casts shade into the frame.
+fn close_level(instance: &Instance, crown: f64, focus: Vec3, span: f64) -> usize {
+    let [east, north] = instance.at_m;
+    let off = ((east - focus.x).powi(2) + (north + focus.z).powi(2)).sqrt() - crown;
+    if off <= 2.0 * span { 0 } else { 2 }
+}
+
+/// The scene one view draws: every instance placed, each at the level of
+/// detail `level` gives it, its variant's mesh at that level built once
+/// into `meshes` by `build`.
+#[allow(clippy::type_complexity)]
+fn scene_of(
+    instances: &[Instance],
+    meshes: &mut BTreeMap<(usize, u64, usize), PlantMesh>,
+    build: &dyn Fn(usize, f64, usize) -> Option<PlantMesh>,
+    level: &dyn Fn(&Instance) -> usize,
+) -> PlantMesh {
+    let key = |instance: &Instance| {
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let age = (instance.age * 1000.0).round() as u64;
+        (instance.variant, age, level(instance))
+    };
+    for instance in instances {
+        let key = key(instance);
+        if !meshes.contains_key(&key)
+            && let Some(plant) = build(instance.variant, instance.age, key.2)
+        {
+            meshes.insert(key, plant);
+        }
+    }
+    let mut scene = PlantMesh::default();
+    for instance in instances {
+        let Some(plant) = meshes.get(&key(instance)) else {
+            continue;
+        };
+        let [east, north] = instance.at_m;
+        append(
+            &mut scene,
+            placed(
+                plant,
+                instance.yaw_deg,
+                instance.scale,
+                instance.lean,
+                Vec3::new(east, 0.0, -north),
+            ),
+        );
+    }
+    scene
+}
+
 /// Lay the stand of `members` out on a tile by `laid`'s rules
 /// (`plantgen::stand_tile`), drawn `repeat` tiles each way about the
 /// middle, and print its stems, basal area, leaf area and cover.
@@ -457,7 +518,6 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
     }
     let day = options.day()?;
     let quality = options.quality()?;
-    let lod = &quality.lods[0];
     // Grow each variant once, every variant on its own thread.
     let started = std::time::Instant::now();
     for variant in &mut variants {
@@ -489,11 +549,13 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
         started.elapsed().as_secs_f64(),
         instances.len()
     );
-    // One mesh per variant and age, its cards drawing from one list of
-    // looks for the whole scene.
+    // Each variant's looks, bodies and the shift of its looks in the
+    // scene's one list of looks; its meshes are built for each view at the
+    // level of detail that view needs (`scene_at`).
     let mut all_looks = Vec::new();
     let mut bark = None;
-    let mut meshes: BTreeMap<(usize, u64), PlantMesh> = BTreeMap::new();
+    let mut drawing: Vec<(Vec<plantgen::looks::Look>, Vec<f64>, Vec<plantgen::body::BodyLook>, u8)> =
+        Vec::new();
     // Each variant's size at each age: height, crown base, crown radius,
     // breast-height diameter and leaf area.
     let mut sizes_at: BTreeMap<(usize, u64), [f64; 5]> = BTreeMap::new();
@@ -507,19 +569,6 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
             let Some(graph) = growth.keyframes.get(keyframe) else {
                 continue;
             };
-            let graph = &*drawn(graph, &sizes, &looks);
-            let mut plant = mesh::build(
-                graph,
-                &looks,
-                &bodies,
-                &spec.appearance,
-                &lod.for_height(graph.height),
-                0,
-            );
-            plant.vary_by_plant(&looks, *seed);
-            for card in &mut plant.cards {
-                card.template = card.template.saturating_add(shift);
-            }
             out!(
                 "  {} {} seed {seed}: {}",
                 spec.id,
@@ -528,7 +577,6 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
             );
             #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
             let key = (index, (age * 1000.0).round() as u64);
-            meshes.insert(key, plant);
             sizes_at.insert(
                 key,
                 [
@@ -540,7 +588,8 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
                 ],
             );
         }
-        all_looks.extend(looks);
+        all_looks.extend(looks.iter().cloned());
+        drawing.push((looks, sizes, bodies, shift));
         if bark.is_none() {
             bark = spec.appearance.bark_params();
         }
@@ -580,36 +629,46 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
             &mut instances,
         )?;
     }
-    let mut scene = PlantMesh::default();
-    for instance in &instances {
-        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-        let key = (instance.variant, (instance.age * 1000.0).round() as u64);
-        let Some(plant) = meshes.get(&key) else {
-            continue;
-        };
-        let [east, north] = instance.at_m;
-        append(
-            &mut scene,
-            placed(
-                plant,
-                instance.yaw_deg,
-                instance.scale,
-                instance.lean,
-                Vec3::new(east, 0.0, -north),
-            ),
-        );
+    if !options.flags.contains_key("out") && !options.flags.contains_key("cover") {
+        return Ok(());
     }
+    // One variant's mesh at one age and level of detail.
+    let build = |index: usize, age: f64, level: usize| -> Option<PlantMesh> {
+        let (spec, _, seed, ages) = &variants[index];
+        let keyframe = ages.iter().position(|known| (known - age).abs() < 1e-9)?;
+        let graph = growths[index].keyframes.get(keyframe)?;
+        let (looks, sizes, bodies, shift) = &drawing[index];
+        let graph = &*drawn(graph, sizes, looks);
+        let mut plant = mesh::build(
+            graph,
+            looks,
+            bodies,
+            &spec.appearance,
+            &quality.lods[level].for_height(graph.height),
+            level,
+        );
+        plant.vary_by_plant(looks, *seed);
+        for card in &mut plant.cards {
+            card.template = card.template.saturating_add(*shift);
+        }
+        Some(plant)
+    };
+    let mut meshes = BTreeMap::new();
     let templates = Templates::for_plant(&all_looks, &[]).with_bark(bark);
     let reach = instances
         .iter()
         .map(|i| i.at_m[0].abs().max(i.at_m[1].abs()))
         .fold(1.0, f64::max);
     let pixels: usize = options.number("size")?.unwrap_or(1200);
+    // The overview views share one scene, built when one first needs it.
+    let mut overview: Option<PlantMesh> = None;
     // `--cover HALF`: the share of the square HALF metres round the middle
     // that crowns cover seen straight down.
     if let Some(half) = options.number::<f64>("cover")? {
+        let scene = overview
+            .get_or_insert_with(|| scene_of(&instances, &mut meshes, &build, &|_| OVERVIEW_LEVEL));
         let image = preview::render_on_site(
-            &scene,
+            scene,
             &[],
             &templates,
             &PreviewOptions {
@@ -683,10 +742,27 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
             focus: if close { focus } else { None },
             fit_plant: false,
         };
-        if close && focus.is_none() {
-            return Err("the close view needs --focus X,Y,Z".into());
-        }
-        let image = preview::render_with(&scene, &[], &templates, &shot);
+        let close_scene;
+        let scene = match (close, focus) {
+            (true, None) => return Err("the close view needs --focus X,Y,Z".into()),
+            (true, Some((point, span))) => {
+                let crown = |instance: &Instance| {
+                    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+                    let key = (instance.variant, (instance.age * 1000.0).round() as u64);
+                    sizes_at.get(&key).map_or(0.0, |sizes| sizes[2]) * instance.scale
+                };
+                // The overview's scene is rebuilt if a later view needs it.
+                overview = None;
+                close_scene = scene_of(&instances, &mut meshes, &build, &|instance| {
+                    close_level(instance, crown(instance), point, span)
+                });
+                &close_scene
+            }
+            (false, _) => &*overview.get_or_insert_with(|| {
+                scene_of(&instances, &mut meshes, &build, &|_| OVERVIEW_LEVEL)
+            }),
+        };
+        let image = preview::render_with(scene, &[], &templates, &shot);
         let png = raster::encode_png(
             image.width,
             image.height,
