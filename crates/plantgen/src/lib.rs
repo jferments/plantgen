@@ -1533,4 +1533,15 @@ pub mod venation;
 /// foliage in the lower half of the foliated crown; with it, a deep, lobed
 /// crown 18 m across with 35% there (355 m² of foliage on 74 cm, where the
 /// dome held 414 m² on 86).
-pub const GENERATOR_REVISION: u32 = 193;
+///
+/// 197: old conifer trunks (`pinidae` revision 15): a conifer's stem lays a
+/// ring every year on the trunk it has, 8e-6 m² of ring for each m² of
+/// foliage above (`pipe_cambium`, the pipe tool's `cambium`), so a trunk
+/// keeps thickening once its crown stops growing. The trunk was the pipe
+/// model's alone: a Douglas-fir grown 480 years in a stand was 74 cm
+/// through, and is now 121 (Ishii and McDowell 2002: 87 to 154 cm, mean
+/// 117, at 450 years at Wind River). Young trees keep the pipe model's
+/// girth, as their pipes outgrow one year's ring (open-grown Douglas-fir
+/// at 60 years 99 cm, where it was 96; UTD 95), and limbs keep theirs, so
+/// crowns grow as before.
+pub const GENERATOR_REVISION: u32 = 197;

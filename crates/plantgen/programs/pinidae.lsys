@@ -235,9 +235,23 @@
 # hemlock grew a flat top as broad as its crown, an umbrella over bare
 # limbs. With floor_ramp 0 a plant grows as before.
 #
+# Revision 15 (old trunks): the stem's cambium lays a ring every year on
+# the trunk it has, pipe_cambium m² of ring for each m² of foliage above
+# times the light it catches (the pipe tool's cambium), so it is fed by
+# what the foliage makes: a crown packed with foliage in deep shade, as a
+# Rocky Mountain juniper's, feeds little. The trunk was the pipe model's alone, so
+# once an old crown stopped growing it all but stopped thickening: a
+# Douglas-fir grown 480 years in a stand was 74 cm through, where Ishii
+# and McDowell's (2002) 450-year Wind River Douglas-firs are 87 to 154 cm
+# (mean 117). While the crown grows, the pipes outgrow one year's ring and
+# the trunk stays the pipe model's, so open-grown young trees keep their
+# reference sizes; once the pipes stall, the rings add up. Limbs keep the
+# pipe model's girth, so crowns grow and bend as before. With
+# pipe_cambium 0, the default, a plant grows as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem pinidae 14;
+lsystem pinidae 15;
 
 # Height of the leader over time: a Chapman-Richards curve,
 # height = height_max * (1 - exp(-height_rate * age))^height_shape.
@@ -308,6 +322,7 @@ param pipe_organ = 0.012;      # pipe radius per metre of spray bearing 0.25 m²
 param pipe_rings = 0.000016;   # ring area laid down per m² of foliage a year
 param ring_share = 0;          # once the leader passes this share of height_max, each m² of foliage lays down less ring area, as (ring_share × height_max / height)^ring_power (taller trees grow less stem per leaf); 0: off
 param ring_power = 2;
+param pipe_cambium = 0;        # ring area the cambium lays each year on the girth a stem segment has, per m² of foliage above it times its light, so a trunk keeps thickening once its crown stops growing (revision 15); 0: off
 param adult_age = 20;          # the first year it is adult and bears cones
 param cone_chance = 0.1;       # chance a year a well-lit branch apex bears one
 param cone_light = 0.4;        # least light at an apex that bears
@@ -348,7 +363,7 @@ organ cone cone area cone_area;
 
 tool light@1 { cell = 0.4, extinction = 0.35, bud = bud_area * max(bud_keep, min(1, (richards(t + 1, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape)) / (height_max * height_rate * (height_shape > 1 ? pow(1 - 1 / height_shape, height_shape - 1) : 1)))) };
 tool vigour@1 { lambda = 0.7, alpha = 2 };
-tool pipe@1 { exponent = pipe_exponent, tip = pipe_tip, organ = pipe_organ * pow(spray_area / 0.25, 1 / pipe_exponent), rings = pipe_rings * (ring_share > 0 ? min(1, pow(ring_share * height_max / max(0.1, richards(t, height_max, height_rate, height_shape)), ring_power)) : 1) };
+tool pipe@1 { exponent = pipe_exponent, tip = pipe_tip, organ = pipe_organ * pow(spray_area / 0.25, 1 / pipe_exponent), rings = pipe_rings * (ring_share > 0 ? min(1, pow(ring_share * height_max / max(0.1, richards(t, height_max, height_rate, height_shape)), ring_power)) : 1), cambium = pipe_cambium };
 tool substrate@1 {};
 tool bend@1 {
     density = wood_density,
