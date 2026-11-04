@@ -451,7 +451,8 @@ Usage:
       also writes DIR/tiles/X_Y.glb: the whole tile as one glTF file,
       each prototype's level LEVEL once and every plant an instance of it
       (EXT_mesh_gpu_instancing), which Blender, Godot, Unity and three.js
-      open as they are.
+      open as they are (Blender and Godot need --compress quantize or
+      none: they do not read meshopt).
   plantc inspect <package.afterplant>
       Check every object of a package and summarise it.
   plantc export <species|spec.json|package.afterplant> [--out DIR]

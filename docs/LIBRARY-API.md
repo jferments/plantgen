@@ -207,7 +207,9 @@ whole tile, stored once, and a node per prototype mesh that draws every
 plant using it with `EXT_mesh_gpu_instancing`. Its root node sits at the
 tile's south-west corner (+X east, +Y up, -Z north), so tiles laid side by
 side meet. A 40 m tile of 528 Douglas-firs and yarrows is 1.1 MiB at the
-low tier and 1.4 MiB at the mid tier with `--compress meshopt`. It draws
+low tier and 1.4 MiB at the mid tier with `--compress meshopt`, which
+three.js and glTFast read; Blender and Godot do not read meshopt, so for
+them write `--compress quantize` (1.4 and 4.3 MiB). It draws
 the whole tile at one level; a caller that wants detail by distance reads
 the packed instances and the prototype files as above.
 
