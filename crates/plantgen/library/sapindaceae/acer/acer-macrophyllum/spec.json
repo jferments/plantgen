@@ -175,6 +175,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "age_max_years": {"min": 50, "max": 200},
     "crown_see_through": 0.02,
     "stem_clump": "few",
     "leader": "lost",
@@ -204,6 +205,7 @@
     "fruit_size_m": {"min": 0.035, "max": 0.06}
   },
   "evidence": {
+    "traits.age_max_years": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS species review of bigleaf maple (Fryer 2011): it lives about 50 to 200 years."},
     "traits.crown_see_through": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Imagekit woody-forms photo measures (2026-10-19, plantgen-claude project-files/image-data/woody-forms-2026-10-19/CROWNS.md): median sky inside the crown outline of 5 side-view photographs of leafy open-grown trees, plantc measure-mask: 0.02."},
     "traits.stem_clump": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Imagekit woody-forms photo tally (2026-10-19, plantgen-claude project-files/image-data/woody-forms-2026-10-19/TALLY.md): two or more stems from at or near the ground (multiple) in 6 of 8 photo votes, lost 1, kept 1."},
     "traits.leader": {"evidence": "SourceInferred", "source": "silvics-1990-hardwoods", "note": "Silvics of North America vol. 2 (1990), Acer macrophyllum (Minore and Zasada), Introduction: its leaves are 'borne on rounded crowns supported by short, branching boles if open-grown', where trees in dense stands are clear for half to two-thirds of their height: an open-grown trunk divides low into its limbs, as its open-grown photos show (plantgen-claude project-files/tree-shape/gallery-2026-10-24, photos 58 and 113)."},

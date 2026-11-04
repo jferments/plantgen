@@ -39,11 +39,13 @@ pub mod clusters;
 pub mod conditions;
 pub mod cores;
 pub mod damage;
+pub mod development;
 pub mod divided;
 pub mod drawing;
 pub mod evidence;
 pub mod export;
 pub mod felling;
+pub mod fill;
 pub mod flowers;
 pub mod form;
 pub mod formula;
@@ -88,6 +90,7 @@ pub mod spec;
 pub mod spikelets;
 pub mod spines;
 pub mod stand;
+pub mod stand_tile;
 pub mod substrate;
 pub mod succession;
 pub mod templates;
@@ -1500,4 +1503,9 @@ pub mod venation;
 /// pavements year by year (`plantc cracks`). Seven pavement weeds join the
 /// library, and three ecology traits (seed dispersal, seed bank, trampling
 /// tolerance) are stated for sixteen species.
-pub const GENERATOR_REVISION: u32 = 191;
+///
+/// 192: a tree's or shrub's stem stays a tube on the card tiers up to
+/// where it is half as thick as at its foot (`crate::billboards`): a
+/// 60-year Douglas fir grown in a closed stand drew its crown floating 9 m
+/// over an 11 m stump on its low tier.
+pub const GENERATOR_REVISION: u32 = 192;

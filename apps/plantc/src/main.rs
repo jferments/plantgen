@@ -75,6 +75,8 @@ macro_rules! out {
     };
 }
 
+mod scene;
+
 fn main() -> ExitCode {
     match run() {
         Ok(()) | Err(Failure::OutputClosed) => ExitCode::SUCCESS,
@@ -118,6 +120,7 @@ fn run() -> Result<(), Failure> {
         "audit" => audit_command(&args),
         "grow" => grow_command(&args),
         "stand" => stand_command(&args),
+        "scene" => scene::scene_command(&args),
         "site" => site_command(&args),
         "cracks" => cracks_command(&args),
         "field" => field_command(&args),
@@ -139,6 +142,7 @@ fn run() -> Result<(), Failure> {
         "build" => build_command(&args),
         "export" => export_command(&args),
         "variants" => variants_command(&args),
+        "fill" => fill_command(&args),
         "inspect" => inspect_command(&args),
         "sources" => sources_command(&args),
         "help" | "--help" | "-h" => print_usage(),
@@ -254,6 +258,24 @@ Usage:
       and north: the stand is a tile that wraps at its edges) and
       conditions (a place every plant grows in). Seeds default to each
       spec's first.
+  plantc scene <scene.json> [--out PREFIX] [--views side,oblique,top,close]
+               [--size PIXELS] [--day N] [--quality draft|standard]
+               [--focus X,Y,Z [--span METRES]] [--cover HALF]
+      Lay grown variants out as instances and draw them together, as a
+      host's renderer draws a forest (stands plan, step 1). The document
+      gives instances: each one's species, env (open, edge, interior or
+      suppressed; open when left out), seed, age (years), at (metres east
+      and north), yaw (degrees, anticlockwise from above) and scale. Each
+      species, environment and seed grows once, to its oldest age; nothing
+      grows together. --out writes PREFIX-VIEW.png for each view (close
+      frames --focus, SPAN metres across, default 4). --cover prints the
+      share of the square HALF metres each way from the middle that crowns
+      cover seen straight down. A `lay_out` block lays members out on a
+      tile by their crowns (plantgen::stand_tile); a `develop` block
+      builds the stand from its stand_age and species pool (species, env,
+      seeds), each species' niche and lifespan, and a site's moisture,
+      heat_load, elevation_m and slope_deg (plantgen::development), with
+      tile_m, seed, repeat, cover, scale, overlap and herb_radius_m.
   plantc site <site.json> [--out FILE.png] [--view VIEW] [--size PIXELS]
               [--day N] [--quality draft|standard]
               [--focus X,Y,Z [--span METRES]]
@@ -441,13 +463,18 @@ Usage:
       sheet with each stage's tile lit and a trunk wearing it.
   plantc build <species|spec.json> [--out DIR] [--quality draft|standard]
                [--threads N] [--profile static|motion] [--cards yes|no]
+               [--old yes|no]
       Build a .afterplant package in DIR (default `plants`) and print its
       key. A package that is already built is not built again. With
       --profile motion it also holds each keyframe's bones and branches
       and each level's binding to them (plant motion S2), under a key of
       its own; the static package is unchanged. With --cards yes it also
       holds each keyframe's baked-card tiers (low and minimal cards, the
-      far impostor; see `plantc tiers`), under a key of its own.
+      far impostor; see `plantc tiers`), under a key of its own. With
+      --old yes it also grows the species' old ages, for stands: each
+      twice the one before past its oldest keyframe, up to the age its old
+      plants commonly reach (`age_max_years`; Douglas-fir 120, 240 and 480
+      years), under a key of its own.
   plantc variants <species|spec.json> --count N [--out DIR] [--first-seed N]
                  [--env ENV] [--age N] [--day N] [--quality draft|standard]
                  [--threads N] [--shade attribute|baked]
@@ -464,6 +491,25 @@ Usage:
       keyframe. --threads plants grow at once (every core unless given);
       the files do not depend on it. Levels are tiers (max, high, mid,
       low) unless --levels package; the export flags are plantc export's.
+  plantc fill <community.json>... --tile X,Y --tile-m N [--seed N]
+              [--years N] [--stands stands.json] [--out DIR]
+              [--prototypes none|used|all] [--classes N] [--seeds N]
+              [--threads N] [--quality draft|standard] [--day N]
+              [--shade attribute|baked] [--compress none|quantize|meshopt]
+              [--attributes all|wind|none] [--triangles N[,N,N,N]]
+              [--max-mib N] [--levels tiers|package]
+      Fill one map tile with plant communities (each a JSON file: an id
+      and members, each a species, a layer and stems per hectare) as the
+      library API's Fill does, and write DIR/tiles/X_Y.json (header,
+      ground cover and far canopy per stand cell) and DIR/tiles/X_Y.bin
+      (32-byte instances; docs/LIBRARY-API.md). Without --stands (a
+      StandMap: cell_m, cols and cells), the first community covers the
+      tile at --years since disturbance (default 100). --prototypes used
+      (the default) also grows and exports, into DIR/prototypes with
+      prototypes.json, each prototype the tile places that is not there
+      yet; all exports every prototype; none only the tile. The plan is
+      the same on every machine and thread count, and a tile meets its
+      neighbours without a seam.
   plantc inspect <package.afterplant>
       Check every object of a package and summarise it.
   plantc export <species|spec.json|package.afterplant> [--out DIR]
@@ -2439,12 +2485,14 @@ fn grow_command(args: &[String]) -> Result<(), Failure> {
     let environment = options.environment(&spec)?;
     let seed = options.number("seed")?.unwrap_or(spec.variants.seeds[0]);
     let years = options.number("years")?.unwrap_or(spec.growth.years);
-    // The spec's ages, the ages it gives reference sizes for, and the end.
+    // The spec's ages, its old ages, the ages it gives reference sizes
+    // for, and the end.
     let mut keyframes: Vec<f64> = spec
         .growth
         .keyframes
         .iter()
         .copied()
+        .chain(spec.old_ages())
         .chain(
             spec.allometry
                 .iter()
@@ -5513,10 +5561,27 @@ fn build_command(args: &[String]) -> Result<(), Failure> {
     let options = Options::parse(
         args,
         &[
-            "out", "quality", "threads", "program", "day", "profile", "cards",
+            "out", "quality", "threads", "program", "day", "profile", "cards", "old",
         ],
     )?;
     let spec = load_spec(options.one_positional("a species")?)?;
+    let spec = match options.flags.get("old").map(String::as_str) {
+        None | Some("no") => spec,
+        Some("yes") => {
+            let old = spec.old_ages();
+            if old.is_empty() {
+                out!(
+                    "{} states no lifespan past its oldest keyframe (`age_max_years`): no old ages",
+                    spec.id
+                );
+            } else {
+                let ages: Vec<String> = old.iter().map(f64::to_string).collect();
+                out!("{} old ages: {} years", spec.id, ages.join(", "));
+            }
+            spec.grown_old()
+        }
+        Some(other) => return Err(format!("--old is yes or no, not `{other}`").into()),
+    };
     let out = PathBuf::from(options.flags.get("out").map_or("plants", String::as_str));
     build_package(&spec, &options, &out)?;
     Ok(())
@@ -5982,6 +6047,132 @@ fn variants_command(args: &[String]) -> Result<(), Failure> {
             seeds.join(", ")
         );
     }
+    Ok(())
+}
+
+fn fill_command(args: &[String]) -> Result<(), Failure> {
+    let options = Options::parse(
+        args,
+        &[
+            "tile",
+            "tile-m",
+            "seed",
+            "years",
+            "stands",
+            "out",
+            "prototypes",
+            "classes",
+            "seeds",
+            "threads",
+            "quality",
+            "day",
+            "shade",
+            "compress",
+            "attributes",
+            "triangles",
+            "max-mib",
+            "levels",
+        ],
+    )?;
+    if options.positional.is_empty() {
+        return Err("`plantc fill` needs at least one community JSON file".into());
+    }
+    let communities = options
+        .positional
+        .iter()
+        .map(|path| {
+            let text =
+                fs::read_to_string(path).map_err(|error| format!("cannot read {path}: {error}"))?;
+            api::Community::from_json(&text).map_err(|error| format!("{path}: {error}"))
+        })
+        .collect::<Result<Vec<_>, String>>()?;
+    let tile = options
+        .flags
+        .get("tile")
+        .ok_or("`plantc fill` needs `--tile X,Y`, the tile's place in the grid")?;
+    let tile = match tile
+        .split(',')
+        .map(|part| part.trim().parse::<i32>())
+        .collect::<Result<Vec<_>, _>>()
+        .as_deref()
+    {
+        Ok([x, y]) => api::TileId { x: *x, y: *y },
+        _ => return Err(format!("--tile takes X,Y as two whole numbers, found `{tile}`").into()),
+    };
+    let tile_m: f64 = options
+        .number("tile-m")?
+        .ok_or("`plantc fill` needs `--tile-m N`, the tile's side in metres")?;
+    let seed: u64 = options.number("seed")?.unwrap_or(1);
+    let years: f32 = options.number("years")?.unwrap_or(100.0);
+    let mut settings = api::FillSettings::default();
+    if let Some(classes) = options.number::<u16>("classes")? {
+        settings.age_classes = classes;
+    }
+    if let Some(seeds) = options.number::<u16>("seeds")? {
+        settings.seeds = seeds;
+    }
+    settings.options.quality = options.quality()?;
+    settings.options.day = options.day()?;
+    let threads = options.number::<usize>("threads")?.unwrap_or_else(|| {
+        std::thread::available_parallelism().map_or(1, std::num::NonZeroUsize::get)
+    });
+    let out = PathBuf::from(options.flags.get("out").map_or("fill", String::as_str));
+    let started = Instant::now();
+    let fill = api::Fill::new(&communities, &settings).map_err(|error| error.to_string())?;
+    let site = api::Site::flat(tile, tile_m).map_err(|error| error.to_string())?;
+    let stands = match options.flags.get("stands") {
+        Some(path) => {
+            let text =
+                fs::read_to_string(path).map_err(|error| format!("cannot read {path}: {error}"))?;
+            serde_json::from_str::<api::StandMap>(&text)
+                .map_err(|error| format!("{path}: {error}"))?
+        }
+        None => api::StandMap::uniform(tile_m, 0, years),
+    };
+    let plan = fill
+        .tile(&site, &stands, seed)
+        .map_err(|error| error.to_string())?;
+    let written = plan
+        .write(&out.join("tiles"))
+        .map_err(|error| error.to_string())?;
+    out!(
+        "filled tile {},{} ({tile_m} m) with {} plants of {} prototypes in {:.2} s: {}",
+        tile.x,
+        tile.y,
+        plan.instances.len(),
+        plan.prototypes_used().len(),
+        started.elapsed().as_secs_f64(),
+        written.display()
+    );
+    let which = match options.flags.get("prototypes").map(String::as_str) {
+        Some("none") => return Ok(()),
+        None | Some("used") => plan.prototypes_used(),
+        Some("all") => Vec::new(),
+        Some(other) => {
+            return Err(format!("unknown prototypes `{other}`; use none, used or all").into());
+        }
+    };
+    if plan.instances.is_empty() {
+        return Ok(());
+    }
+    let (shade, compression, attributes, budget) = export_options(&options, true)?;
+    let export_settings = export::Settings {
+        shade,
+        compression,
+        attributes,
+        budget,
+        bark: None,
+    };
+    let started = Instant::now();
+    let prototypes = fill
+        .write_prototypes(&which, &export_settings, threads, &out.join("prototypes"))
+        .map_err(|error| error.to_string())?;
+    out!(
+        "wrote {} prototypes in {:.1} s: {}",
+        prototypes.len(),
+        started.elapsed().as_secs_f64(),
+        out.join("prototypes").join(api::PROTOTYPES_FILE).display()
+    );
     Ok(())
 }
 
