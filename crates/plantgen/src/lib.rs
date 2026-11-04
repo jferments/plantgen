@@ -1502,4 +1502,9 @@ pub mod venation;
 /// pavements year by year (`plantc cracks`). Seven pavement weeds join the
 /// library, and three ecology traits (seed dispersal, seed bank, trampling
 /// tolerance) are stated for sixteen species.
-pub const GENERATOR_REVISION: u32 = 191;
+///
+/// 192: a tree's or shrub's stem stays a tube on the card tiers up to
+/// where it is half as thick as at its foot (`crate::billboards`): a
+/// 60-year Douglas fir grown in a closed stand drew its crown floating 9 m
+/// over an 11 m stump on its low tier.
+pub const GENERATOR_REVISION: u32 = 192;
