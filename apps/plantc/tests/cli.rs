@@ -366,13 +366,18 @@ fn a_library_folder_replaces_built_in_species() {
 
 #[test]
 fn grow_says_when_a_plant_has_died() {
-    // Under a 30 m canopy the bigleaf maple sheds everything within five
-    // years; the sizes would otherwise read as a row of zeros.
+    // Under a dense 30 m canopy (the suppressed setting's before generator
+    // revision 198, 0.1% of the sky's light at the ground) the bigleaf
+    // maple sheds everything within five years; the sizes would otherwise
+    // read as a row of zeros.
     let grown = stdout(&plantc(&[
         "grow",
         "acer-macrophyllum",
         "--env",
         "suppressed",
+        "--conditions",
+        r#"{"schema": 1, "neighbours": {"version": 1, "density": 0.15,
+            "relative_height": 1, "canopy": 30, "spacing": 5, "one_sided": false}}"#,
         "--years",
         "5",
     ]));
