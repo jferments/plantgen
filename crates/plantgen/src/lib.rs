@@ -1483,4 +1483,11 @@ pub mod venation;
 /// whose leaf's card hides them (`crate::billboards`): a fishtail palm's
 /// low cards spent 936 of 1 632 triangles on them, a sago palm's 552 of
 /// 914, with no change in what they show.
-pub const GENERATOR_REVISION: u32 = 190;
+///
+/// 192: seventeen shrubs whose specs gave no leaf shape state it from
+/// Abrams' and Britton and Brown's floras (`leaf_shape`), so the shape
+/// rule (the kingdom's `outline`) draws their blades and leaflets: a
+/// trailing blackberry's and a Cascade Oregon grape's leaflets were the
+/// shape the compound template guesses. Where a spec sets a blade's
+/// `widest`, `base` or `tip` by hand, the hand outline still wins.
+pub const GENERATOR_REVISION: u32 = 192;
