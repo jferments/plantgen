@@ -494,8 +494,8 @@ Usage:
   plantc fill <community.json>... --tile X,Y --tile-m N [--seed N]
               [--years N] [--stands stands.json] [--out DIR]
               [--prototypes none|used|all] [--ages N,N,...] [--seeds N]
-              [--herbs yes|no] [--site M,H,E,S] [--threads N]
-              [--quality draft|standard]
+              [--herbs yes|no] [--edges yes|no] [--site M,H,E,S]
+              [--threads N] [--quality draft|standard]
               [--day N] [--shade attribute|baked]
               [--compress none|quantize|meshopt]
               [--attributes all|wind|none] [--triangles N[,N,N,N]]
@@ -517,7 +517,9 @@ Usage:
       again. --prototypes used (the default) also exports, into
       DIR/prototypes with prototypes.json, each prototype the tile places
       that is not there yet; all exports every prototype; none only the
-      tile. --herbs no leaves herbs to the ground cover. --site gives the
+      tile. --herbs no leaves herbs to the ground cover. --edges no grows
+      a stand's first row beside a road or clearing as inside the stand,
+      not as an edge facing the opening. --site gives the
       flat tile's moisture, heat load, elevation (m) and slope (degrees)
       for the species' niches (default 0.5,1,0,0). The plan is the
       same on every machine and thread count, and a tile meets its
@@ -6089,6 +6091,7 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
             "prototypes",
             "ages",
             "herbs",
+            "edges",
             "site",
             "seeds",
             "threads",
@@ -6154,6 +6157,11 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
         None | Some("yes") => true,
         Some("no") => false,
         Some(other) => return Err(format!("--herbs takes yes or no, found `{other}`").into()),
+    };
+    settings.edges = match options.flags.get("edges").map(String::as_str) {
+        None | Some("yes") => true,
+        Some("no") => false,
+        Some(other) => return Err(format!("--edges takes yes or no, found `{other}`").into()),
     };
     if let Some(seeds) = options.number::<u16>("seeds")? {
         settings.seeds = seeds;
@@ -6227,12 +6235,13 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
     );
     let stats = &plan.stats;
     out!(
-        "  stems/ha {:.0}, trees/ha (5 cm or more at breast height) {:.0}, basal area {:.1} m²/ha, canopy cover {:.0}%, leaf area index {:.2}",
+        "  stems/ha {:.0}, trees/ha (5 cm or more at breast height) {:.0}, basal area {:.1} m²/ha, canopy cover {:.0}%, leaf area index {:.2}, edge trees/ha {:.0}",
         stats.stems_per_ha,
         stats.trees_per_ha,
         stats.basal_area_m2_per_ha,
         100.0 * stats.canopy_cover,
-        stats.leaf_area_index
+        stats.leaf_area_index,
+        stats.edge_trees_per_ha
     );
     // By species: trees 5 cm or more at breast height, their mean and
     // tallest height, and every plant.
