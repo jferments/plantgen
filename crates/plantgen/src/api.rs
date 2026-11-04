@@ -290,6 +290,35 @@ impl Generator {
         Ok(export::grow_on_wall(&self.inputs, seed, ages, wall_m)?)
     }
 
+    /// `plant` drawn at level `level` of its quality's levels of detail
+    /// (0 the finest; past the last, the last), on the generator's day,
+    /// as a package draws it; and the looks its cards' templates index.
+    /// For a renderer that draws many plants at once
+    /// ([`crate::preview::render_on_site`]): it gathers each species'
+    /// looks once and shifts its cards' templates past the looks before.
+    #[must_use]
+    pub fn draw(
+        &self,
+        plant: &Plant,
+        level: usize,
+    ) -> (crate::mesh::PlantMesh, &[crate::looks::Look]) {
+        let inputs = &self.inputs;
+        let lods = &inputs.quality.lods;
+        let level = level.min(lods.len().saturating_sub(1));
+        let staged = crate::looks::staged(&plant.graph, &inputs.sizes, &inputs.looks);
+        let drawn = staged.as_ref().unwrap_or(&plant.graph);
+        let (mesh, _) = package::level_mesh(
+            drawn,
+            inputs,
+            plant.seed,
+            &lods[level].for_height(plant.graph.height),
+            (level, 0.0),
+            None,
+            false,
+        );
+        (mesh, &inputs.looks)
+    }
+
     /// A grown plant as glTF binary files, one per level of detail, and
     /// the JSON index naming them; [`export::write`] writes them.
     ///

@@ -191,6 +191,23 @@ python3 docs/sites/field_view.py /tmp/block-field.json /tmp/block-view --ground 
   --view oblique --size 1400 --quality draft --focus 0,0,0 --span 44
 ```
 
+To fill the block with stands and draw it (about two minutes on four
+cores at draft quality; the communities and stand map are written by
+`make_block_fill.py`):
+
+```bash
+python3 docs/sites/make_block_fill.py
+./target/release/plantc fill docs/sites/block-fill/woodland.json \
+  docs/sites/block-fill/yard.json --tile 0,0 --tile-m 40 --corner -20,18 \
+  --field docs/sites/block.json --stands docs/sites/block-fill/stands.json \
+  --ages 8,60 --seeds 2 --cracks 10 --prototypes none --out /tmp/block-fill \
+  --render /tmp/block-fill.png --size 1600
+```
+
+Add `--focus X,Y,Z --span M --level 0` for a close view: the house is
+about `-8,2.5,12` (span 14), the most broken stretch of street
+`-2.5,0,0` (span 7).
+
 The sheet at the top of this guide is made from these same commands by
 `skills/sites-work/make_field_sheet.py` in the project's private agent
 notes (`jferments/plantgen-claude`).
