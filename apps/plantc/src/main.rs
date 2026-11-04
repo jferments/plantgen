@@ -493,23 +493,48 @@ Usage:
       low) unless --levels package; the export flags are plantc export's.
   plantc fill <community.json>... --tile X,Y --tile-m N [--seed N]
               [--years N] [--stands stands.json] [--out DIR]
-              [--prototypes none|used|all] [--classes N] [--seeds N]
-              [--threads N] [--quality draft|standard] [--day N]
-              [--shade attribute|baked] [--compress none|quantize|meshopt]
+              [--prototypes none|used|all] [--ages N,N,...] [--seeds N]
+              [--herbs yes|no] [--site M,H,E,S] [--threads N]
+              [--quality draft|standard]
+              [--day N] [--shade attribute|baked]
+              [--compress none|quantize|meshopt]
               [--attributes all|wind|none] [--triangles N[,N,N,N]]
-              [--max-mib N] [--levels tiers|package]
+              [--max-mib N] [--levels tiers|package] [--glb LEVEL]
+              [--field SITE.json [--corner X,Z] [--cracks YEARS]
+               [--render PNG [--view V] [--size N] [--level N]
+                [--focus X,Y,Z --span M]]]
       Fill one map tile with plant communities (each a JSON file: an id
-      and members, each a species, a layer and stems per hectare) as the
-      library API's Fill does, and write DIR/tiles/X_Y.json (header,
-      ground cover and far canopy per stand cell) and DIR/tiles/X_Y.bin
-      (32-byte instances; docs/LIBRARY-API.md). Without --stands (a
-      StandMap: cell_m, cols and cells), the first community covers the
-      tile at --years since disturbance (default 100). --prototypes used
-      (the default) also grows and exports, into DIR/prototypes with
-      prototypes.json, each prototype the tile places that is not there
-      yet; all exports every prototype; none only the tile. The plan is
-      the same on every machine and thread count, and a tile meets its
-      neighbours without a seam.
+      and members, each a species, optionally the layer it keeps to and
+      its abundance) as the library API's Fill does, and write
+      DIR/tiles/X_Y.json (header, ground cover and far canopy per stand
+      cell, stand numbers) and DIR/tiles/X_Y.bin (32-byte instances;
+      docs/LIBRARY-API.md). Each community's stand is developed at each of
+      --ages years since disturbance (default 10,20,40,80,160,320,640);
+      a stand cell takes the nearest. Without --stands (a StandMap:
+      cell_m, cols and cells), the first community covers the tile at
+      --years since disturbance (default 100). Every prototype is measured
+      first, its size kept in DIR/prototypes so a later fill grows none
+      again. --prototypes used (the default) also exports, into
+      DIR/prototypes with prototypes.json, each prototype the tile places
+      that is not there yet; all exports every prototype; none only the
+      tile. --herbs no leaves herbs to the ground cover. --site gives the
+      flat tile's moisture, heat load, elevation (m) and slope (degrees)
+      for the species' niches (default 0.5,1,0,0). The plan is the
+      same on every machine and thread count, and a tile meets its
+      neighbours without a seam. --field fills the tile over a site
+      document's mesh (as plantc site reads it), its south-west corner at
+      --corner (the mesh's low x and high z unless given), measured into a
+      site field first: plants stand where its ground lets them, smaller
+      on shallow soil, herbs on roofs that hold soil, climbers at the feet
+      of walls and fences. --cracks YEARS adds what comes up in its
+      pavements in those years among the fill's species of the pavement
+      pool. --render draws the filled tile on its mesh, each prototype at
+      --level (1 unless given). --glb LEVEL (0 nearest to 3 farthest)
+      also writes DIR/tiles/X_Y.glb: the whole tile as one glTF file,
+      each prototype's level LEVEL once and every plant an instance of it
+      (EXT_mesh_gpu_instancing), which Blender, Godot, Unity and three.js
+      open as they are (Blender and Godot need --compress quantize or
+      none: they do not read meshopt).
   plantc inspect <package.afterplant>
       Check every object of a package and summarise it.
   plantc export <species|spec.json|package.afterplant> [--out DIR]
@@ -6050,6 +6075,7 @@ fn variants_command(args: &[String]) -> Result<(), Failure> {
     Ok(())
 }
 
+#[allow(clippy::too_many_lines)]
 fn fill_command(args: &[String]) -> Result<(), Failure> {
     let options = Options::parse(
         args,
@@ -6061,7 +6087,9 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
             "stands",
             "out",
             "prototypes",
-            "classes",
+            "ages",
+            "herbs",
+            "site",
             "seeds",
             "threads",
             "quality",
@@ -6072,6 +6100,16 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
             "triangles",
             "max-mib",
             "levels",
+            "field",
+            "corner",
+            "cracks",
+            "render",
+            "view",
+            "size",
+            "level",
+            "focus",
+            "span",
+            "glb",
         ],
     )?;
     if options.positional.is_empty() {
@@ -6105,9 +6143,18 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
     let seed: u64 = options.number("seed")?.unwrap_or(1);
     let years: f32 = options.number("years")?.unwrap_or(100.0);
     let mut settings = api::FillSettings::default();
-    if let Some(classes) = options.number::<u16>("classes")? {
-        settings.age_classes = classes;
+    if let Some(ages) = options.flags.get("ages") {
+        settings.stand_ages = ages
+            .split(',')
+            .map(|age| age.trim().parse::<f64>())
+            .collect::<Result<Vec<_>, _>>()
+            .map_err(|_| format!("--ages takes years separated by commas, found `{ages}`"))?;
     }
+    settings.herbs = match options.flags.get("herbs").map(String::as_str) {
+        None | Some("yes") => true,
+        Some("no") => false,
+        Some(other) => return Err(format!("--herbs takes yes or no, found `{other}`").into()),
+    };
     if let Some(seeds) = options.number::<u16>("seeds")? {
         settings.seeds = seeds;
     }
@@ -6119,7 +6166,41 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
     let out = PathBuf::from(options.flags.get("out").map_or("fill", String::as_str));
     let started = Instant::now();
     let fill = api::Fill::new(&communities, &settings).map_err(|error| error.to_string())?;
-    let site = api::Site::flat(tile, tile_m).map_err(|error| error.to_string())?;
+    let grown = fill
+        .measure(&[], threads, Some(&out.join("prototypes")))
+        .map_err(|error| error.to_string())?;
+    out!(
+        "measured {} prototypes ({grown} grown, the rest kept) in {:.1} s",
+        fill.prototypes().len(),
+        started.elapsed().as_secs_f64()
+    );
+    let started = Instant::now();
+    let field_site = match options.flags.get("field") {
+        Some(given) => Some(field_site(&options, given, &fill, tile, tile_m)?),
+        None => None,
+    };
+    let mut site = match &field_site {
+        Some(field) => field.site.clone(),
+        None => api::Site::flat(tile, tile_m).map_err(|error| error.to_string())?,
+    };
+    if let Some(given) = options.flags.get("site") {
+        let numbers = given
+            .split(',')
+            .map(|part| part.trim().parse::<f64>())
+            .collect::<Result<Vec<_>, _>>();
+        let Ok([moisture, heat_load, elevation_m, slope_deg]) = numbers.as_deref() else {
+            return Err(format!(
+                "--site takes moisture,heat_load,elevation_m,slope_deg, found `{given}`"
+            )
+            .into());
+        };
+        site = site.with_factors(plantgen::niche::SiteFactors {
+            moisture: *moisture,
+            heat_load: *heat_load,
+            elevation_m: *elevation_m,
+            slope_deg: *slope_deg,
+        });
+    }
     let stands = match options.flags.get("stands") {
         Some(path) => {
             let text =
@@ -6144,6 +6225,50 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
         started.elapsed().as_secs_f64(),
         written.display()
     );
+    let stats = &plan.stats;
+    out!(
+        "  stems/ha {:.0}, trees/ha (5 cm or more at breast height) {:.0}, basal area {:.1} m²/ha, canopy cover {:.0}%, leaf area index {:.2}",
+        stats.stems_per_ha,
+        stats.trees_per_ha,
+        stats.basal_area_m2_per_ha,
+        100.0 * stats.canopy_cover,
+        stats.leaf_area_index
+    );
+    // By species: trees 5 cm or more at breast height, their mean and
+    // tallest height, and every plant.
+    let area_ha = tile_m * tile_m / 10_000.0;
+    let mut by_species: BTreeMap<&str, (usize, f64, f64, usize)> = BTreeMap::new();
+    for instance in &plan.instances {
+        let index = instance.prototype as usize;
+        let species = fill.prototypes()[index].key.species.as_str();
+        let entry = by_species.entry(species).or_insert((0, 0.0, 0.0, 0));
+        entry.3 += 1;
+        if let Some(size) = fill.size(index) {
+            let scale = f64::from(instance.scale);
+            if size.dbh.unwrap_or(0.0) * scale >= 0.05 {
+                entry.0 += 1;
+                entry.1 += size.height * scale;
+                entry.2 = entry.2.max(size.height * scale);
+            }
+        }
+    }
+    for (species, (trees, heights, tallest, all)) in &by_species {
+        #[allow(clippy::cast_precision_loss)]
+        let (per_ha, mean, every) = (
+            *trees as f64 / area_ha,
+            heights / (*trees).max(1) as f64,
+            *all as f64 / area_ha,
+        );
+        out!(
+            "  {species}: {per_ha:.0} trees/ha (mean height {mean:.1} m, tallest {tallest:.1} m), {every:.0} plants/ha in all"
+        );
+    }
+    if let Some(png) = options.flags.get("render") {
+        let field = field_site
+            .as_ref()
+            .ok_or("`--render` draws a tile over a site: give `--field SITE.json`")?;
+        render_fill(&options, png, &fill, &plan, field)?;
+    }
     let which = match options.flags.get("prototypes").map(String::as_str) {
         Some("none") => return Ok(()),
         None | Some("used") => plan.prototypes_used(),
@@ -6172,6 +6297,346 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
         prototypes.len(),
         started.elapsed().as_secs_f64(),
         out.join("prototypes").join(api::PROTOTYPES_FILE).display()
+    );
+    if let Some(level) = options.number::<usize>("glb")? {
+        if level >= export::LEVELS {
+            return Err(format!("--glb takes a level from 0 to {}", export::LEVELS - 1).into());
+        }
+        let glb = plan
+            .glb(
+                &prototypes,
+                &out.join("prototypes"),
+                level,
+                compression == export::Compression::Meshopt,
+            )
+            .map_err(|error| error.to_string())?;
+        let path = out.join("tiles").join(format!("{}_{}.glb", tile.x, tile.y));
+        fs::write(&path, &glb).map_err(|error| format!("{}: {error}", path.display()))?;
+        #[allow(clippy::cast_precision_loss)]
+        let mib = glb.len() as f64 / 1_048_576.0;
+        out!(
+            "wrote the tile as one glTF file at level {level}, {mib:.1} MiB: {}",
+            path.display()
+        );
+    }
+    Ok(())
+}
+
+/// A fill's tile over a site document's mesh (`plantc fill --field`).
+struct FieldSite {
+    mesh: plantgen::site::SiteMesh,
+    site: api::Site,
+    /// The tile's south-west corner, (x, z) in the mesh's frame.
+    corner: [f64; 2],
+}
+
+/// The site field of the document `given` over the tile whose south-west
+/// corner is `--corner X,Z` (the mesh's low x and high z unless given),
+/// and with `--cracks YEARS` the plants of the fill's species among the
+/// pavement pool that come up in its pavements in those years.
+fn field_site(
+    options: &Options,
+    given: &str,
+    fill: &api::Fill,
+    tile: api::TileId,
+    tile_m: f64,
+) -> Result<FieldSite, Failure> {
+    use plantgen::site_field::{FieldSettings, build};
+    use plantgen::succession::{Settings, microsites};
+    let text =
+        fs::read_to_string(given).map_err(|error| format!("cannot read {given}: {error}"))?;
+    let document: serde_json::Value =
+        serde_json::from_str(&text).map_err(|error| format!("invalid site: {error}"))?;
+    let folder = Path::new(given).parent().unwrap_or(Path::new("."));
+    let mesh = site_mesh_of(&document, folder)?;
+    let corner = if let Some(text) = options.flags.get("corner") {
+        let values: Vec<f64> = text
+            .split(',')
+            .map(|v| v.trim().parse::<f64>())
+            .collect::<Result<_, _>>()
+            .map_err(|_| "`--corner` expects X,Z")?;
+        let [x, z] = values[..] else {
+            return Err("`--corner` expects X,Z".into());
+        };
+        [x, z]
+    } else {
+        let (low, high) = mesh.bounds();
+        [low.x, high.z]
+    };
+    let started = Instant::now();
+    let settings = FieldSettings {
+        margin_m: 0.0,
+        ..FieldSettings::default()
+    };
+    let field = build(
+        &mesh,
+        [corner[0], corner[1] - tile_m],
+        [corner[0] + tile_m, corner[1]],
+        &settings,
+    )?;
+    out!(
+        "site field of {} x {} cells, {} patches in {:.1} s",
+        field.columns,
+        field.rows,
+        field.patches.len(),
+        started.elapsed().as_secs_f64()
+    );
+    let mut site = api::Site::from_field(tile, tile_m, std::sync::Arc::new(field), corner)
+        .map_err(|error| error.to_string())?;
+    if let Some(years) = options.number::<u32>("cracks")? {
+        let held: BTreeSet<&str> = fill
+            .prototypes()
+            .iter()
+            .filter(|prototype| !prototype.key.on_wall)
+            .map(|prototype| prototype.key.species.as_str())
+            .collect();
+        let pool: Vec<&str> = PAVEMENT_POOL
+            .iter()
+            .copied()
+            .filter(|id| held.contains(id))
+            .collect();
+        if pool.is_empty() {
+            return Err(
+                "`--cracks`: the fill holds none of the pavement pool; add a community of them"
+                    .into(),
+            );
+        }
+        let started = Instant::now();
+        let ages: Vec<f64> = [1.0, 2.0, 3.0, 5.0, 8.0, 12.0, 20.0, 30.0, 50.0]
+            .into_iter()
+            .filter(|age| *age <= f64::from(years) + 1.0)
+            .chain(std::iter::once(f64::from(years) + 1.5))
+            .collect();
+        let colonists = pool
+            .iter()
+            .map(|id| colonist(id, &ages))
+            .collect::<Result<Vec<_>, String>>()?;
+        let cores = std::thread::available_parallelism().map_or(1, std::num::NonZero::get);
+        let places = microsites(&mesh, cores);
+        let settings = Settings {
+            seed: options.number("seed")?.unwrap_or(1),
+            traffic: 0.0,
+            maintenance: 0.0,
+        };
+        site = site
+            .with_colonists(&places, &colonists, &[], &settings, years)
+            .map_err(|error| error.to_string())?;
+        out!(
+            "{} plants came up in the pavements in {years} years ({} species of the pool, {} microsites) in {:.1} s",
+            site.colonists.len(),
+            pool.len(),
+            places.len(),
+            started.elapsed().as_secs_f64()
+        );
+    }
+    Ok(FieldSite { mesh, site, corner })
+}
+
+/// `plant` (in growth's frame: +Y up, -Z north) placed as `instance` says
+/// on a tile whose south-west corner is `corner` in the mesh's frame,
+/// moved by `offset`: turned by its rotation (z up, x east, y north),
+/// scaled, and its foot set at its position; a climber's wood and cards
+/// above its reach clip (`extra`, decimetres) left out.
+fn placed_instance(
+    plant: &PlantMesh,
+    instance: &api::Instance,
+    climber: bool,
+    corner: [f64; 2],
+    offset: Vec3,
+) -> PlantMesh {
+    let [qx, qy, qz, qw] = instance.rotation;
+    // Growth's frame to the instance's and back.
+    let turn = |v: [f32; 3]| {
+        let u = [v[0], -v[2], v[1]];
+        let t = [
+            2.0 * (qy * u[2] - qz * u[1]),
+            2.0 * (qz * u[0] - qx * u[2]),
+            2.0 * (qx * u[1] - qy * u[0]),
+        ];
+        let r = [
+            u[0] + qw * t[0] + (qy * t[2] - qz * t[1]),
+            u[1] + qw * t[1] + (qz * t[0] - qx * t[2]),
+            u[2] + qw * t[2] + (qx * t[1] - qy * t[0]),
+        ];
+        [r[0], r[2], -r[1]]
+    };
+    #[allow(clippy::cast_possible_truncation)]
+    let foot = [
+        (corner[0] + f64::from(instance.position[0]) + offset.x) as f32,
+        (f64::from(instance.position[2]) + offset.y) as f32,
+        (corner[1] - f64::from(instance.position[1]) + offset.z) as f32,
+    ];
+    let scale = instance.scale;
+    let point = |v: [f32; 3]| {
+        let t = turn(v);
+        [
+            t[0] * scale + foot[0],
+            t[1] * scale + foot[1],
+            t[2] * scale + foot[2],
+        ]
+    };
+    let clip = if climber && instance.extra > 0 {
+        f32::from(instance.extra) / 10.0
+    } else {
+        f32::INFINITY
+    };
+    let mut out = plant.clone();
+    if clip.is_finite() {
+        let positions = &plant.wood.positions;
+        let mut kept = Vec::with_capacity(out.wood.indices.len());
+        for triangle in plant.wood.indices.as_chunks::<3>().0 {
+            if triangle
+                .iter()
+                .all(|index| positions[*index as usize][1] <= clip)
+            {
+                kept.extend_from_slice(triangle);
+            }
+        }
+        out.wood.indices = kept;
+        out.cards.retain(|card| card.base[1] <= clip);
+        out.tufts.retain(|tuft| tuft.position[1] <= clip);
+    }
+    out.wood.positions.iter_mut().for_each(|p| *p = point(*p));
+    out.wood.normals.iter_mut().for_each(|n| *n = turn(*n));
+    for colour in &mut out.wood.colors {
+        if colour[3] < 0.0 {
+            colour[3] *= scale;
+        }
+    }
+    for card in &mut out.cards {
+        card.base = point(card.base);
+        card.heading = turn(card.heading);
+        card.left = turn(card.left);
+        card.length *= scale;
+        card.width *= scale;
+    }
+    for tuft in &mut out.tufts {
+        tuft.position = point(tuft.position);
+    }
+    out.hair_tubes.clear();
+    out
+}
+
+/// Draw a filled tile on its site (`plantc fill --render PNG`): the
+/// site's mesh and every instance as its prototype at `--level` (1 unless
+/// given), seen from `--view` (oblique unless given).
+#[allow(clippy::too_many_lines)]
+fn render_fill(
+    options: &Options,
+    png: &str,
+    fill: &api::Fill,
+    plan: &api::TilePlan,
+    field: &FieldSite,
+) -> Result<(), Failure> {
+    let started = Instant::now();
+    let level: usize = options.number("level")?.unwrap_or(1);
+    let used = plan.prototypes_used();
+    let tile_m = plan.tile_m;
+    let middle_ground = field.site.height_at(0.5 * tile_m, 0.5 * tile_m);
+    let offset = Vec3::new(
+        -(field.corner[0] + 0.5 * tile_m),
+        -middle_ground,
+        -(field.corner[1] - 0.5 * tile_m),
+    );
+    // Each prototype drawn once, its cards' templates past the looks of
+    // the species before it.
+    let mut all_looks: Vec<Look> = Vec::new();
+    let mut looks_at: BTreeMap<String, usize> = BTreeMap::new();
+    let mut bark = None;
+    let mut drawn: BTreeMap<u32, PlantMesh> = BTreeMap::new();
+    for index in used {
+        let (generator, plant) = fill
+            .grow_prototype(index as usize)
+            .map_err(|error| error.to_string())?;
+        let (mut mesh, looks) = generator.draw(&plant, level);
+        let species = generator.spec().id.clone();
+        let first = *looks_at.entry(species).or_insert_with(|| {
+            let first = all_looks.len();
+            all_looks.extend_from_slice(looks);
+            first
+        });
+        let shift = u8::try_from(first).unwrap_or(u8::MAX);
+        for card in &mut mesh.cards {
+            card.template = card.template.saturating_add(shift);
+        }
+        if bark.is_none() {
+            bark = generator.spec().appearance.bark_params();
+        }
+        drawn.insert(index, mesh);
+    }
+    if all_looks.len() > 255 {
+        return Err("too many organ types to draw at once; fill with fewer species".into());
+    }
+    out!(
+        "drew {} prototypes at level {level} in {:.1} s",
+        drawn.len(),
+        started.elapsed().as_secs_f64()
+    );
+    let mut scene = PlantMesh::default();
+    for instance in &plan.instances {
+        let Some(plant) = drawn.get(&instance.prototype) else {
+            continue;
+        };
+        let climber = fill.prototypes()[instance.prototype as usize].key.on_wall;
+        let placed = placed_instance(plant, instance, climber, field.corner, offset);
+        scene = on_host(scene, placed, 0);
+    }
+    let half = 0.5 * tile_m;
+    let ground = field.mesh.drawn(
+        Vec3::new(field.corner[0], -1.0e9, field.corner[1] - tile_m),
+        Vec3::new(field.corner[0] + tile_m, 1.0e9, field.corner[1]),
+        offset,
+    );
+    let templates = Templates::for_plant(&all_looks, &[]).with_bark(bark);
+    let view = match options.flags.get("view") {
+        Some(name) => View::from_name(name).ok_or_else(|| format!("unknown view `{name}`"))?,
+        None => View::ThreeQuarter,
+    };
+    let pixels: usize = options.number("size")?.unwrap_or(1600);
+    // `--focus X,Y,Z` in the mesh's frame, framing `--span` metres.
+    let focus = match options.flags.get("focus") {
+        Some(text) => {
+            let point: Vec<f64> = text
+                .split(',')
+                .map(|part| part.trim().parse::<f64>())
+                .collect::<Result<_, _>>()
+                .map_err(|_| format!("`--focus` expects X,Y,Z in metres, found `{text}`"))?;
+            let [x, y, z] = point[..] else {
+                return Err(format!("`--focus` expects X,Y,Z in metres, found `{text}`").into());
+            };
+            let span: f64 = options.number("span")?.unwrap_or(4.0);
+            Some((Vec3::new(x, y, z) + offset, span))
+        }
+        None => None,
+    };
+    let image = preview::render_on_site(
+        &scene,
+        &[(&ground, raster::Material::Opaque)],
+        &templates,
+        &PreviewOptions {
+            width: pixels,
+            height: pixels * 3 / 4,
+            view,
+            supersample: 2,
+            figure: false,
+            frame_height: None,
+            frame_reach: Some(half * 1.05),
+            focus,
+            fit_plant: false,
+        },
+    );
+    let bytes = raster::encode_png(
+        image.width,
+        image.height,
+        &image.to_srgb8(Some(preview::SKY)),
+    )
+    .map_err(|error| format!("cannot encode PNG: {error}"))?;
+    fs::write(png, bytes).map_err(|error| format!("cannot write {png}: {error}"))?;
+    out!(
+        "wrote {png}: {} triangles of plants, {} of site, in {:.1} s",
+        scene.triangle_count(),
+        ground.triangle_count(),
+        started.elapsed().as_secs_f64()
     );
     Ok(())
 }

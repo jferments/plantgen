@@ -754,7 +754,9 @@ pub fn grow(inputs: &Inputs, variant: usize, age: f64) -> Result<Plant, PackageE
             variants.len()
         ))
     })?;
-    grow_chosen(inputs, variant, chosen, age)
+    grow_chosen(inputs, variant, chosen, &[age])?
+        .pop()
+        .ok_or_else(|| format_error("the growth kept no keyframe"))
 }
 
 /// Grow the inputs' spec in `environment` from any `seed`, over all its
@@ -767,14 +769,33 @@ pub fn grow(inputs: &Inputs, variant: usize, age: f64) -> Result<Plant, PackageE
 ///
 /// # Errors
 ///
-/// When the age is not within the spec's years, or the plant does not
-/// grow.
+/// When the age is not within the spec's years or its old ages
+/// ([`PlantSpec::old_ages`](crate::spec::PlantSpec::old_ages)), or the
+/// plant does not grow.
 pub fn grow_seed(
     inputs: &Inputs,
     environment: Environment,
     seed: u64,
     age: f64,
 ) -> Result<Plant, PackageError> {
+    grow_seed_ages(inputs, environment, seed, &[age])?
+        .pop()
+        .ok_or_else(|| format_error("the growth kept no keyframe"))
+}
+
+/// [`grow_seed`] at each of `ages` (ascending), from one growth: the
+/// plant as it stands at each age, as a stand's cohorts of one species
+/// and seed are.
+///
+/// # Errors
+///
+/// As [`grow_seed`], for any of the ages.
+pub fn grow_seed_ages(
+    inputs: &Inputs,
+    environment: Environment,
+    seed: u64,
+    ages: &[f64],
+) -> Result<Vec<Plant>, PackageError> {
     let spec = &inputs.spec;
     let variants = spec.variant_list();
     let listed = variants.iter().position(|variant| {
@@ -797,38 +818,181 @@ pub fn grow_seed(
     };
     // A seed the package does not keep gets an index past its variants,
     // so no package check takes it for one it keeps.
-    grow_chosen(inputs, listed.unwrap_or(variants.len()), &chosen, age)
+    grow_chosen(inputs, listed.unwrap_or(variants.len()), &chosen, ages)
+}
+
+/// How high the wall a climber's fill prototype climbs stands, metres
+/// ([`grow_on_wall`]): two storeys. A fill draws it clipped to the height
+/// of the wall or fence it stands at.
+pub const WALL_M: f64 = 6.0;
+
+/// [`grow_seed_ages`] for a climber at the foot of a wall: its `seed`
+/// grown in the open, 0.3 m south of the south face of a brick wall
+/// `wall_m` high and 8 m long on level soil, holding to the wall as it
+/// would to one in a site's mesh ([`crate::site::SiteMesh::host_round`]),
+/// and kept at each of `ages`. In the plant's frame the wall's face is
+/// the plane z = -0.3, facing +z. The spec's own host is not grown.
+///
+/// # Errors
+///
+/// As [`grow_seed_ages`], and when `wall_m` is not above 0.
+pub fn grow_on_wall(
+    inputs: &Inputs,
+    seed: u64,
+    ages: &[f64],
+    wall_m: f64,
+) -> Result<Vec<Plant>, PackageError> {
+    use crate::site::{Cut, SiteMesh, climbable};
+    use crate::substrate::{BUILT, SOIL};
+    let spec = &inputs.spec;
+    if !(wall_m.is_finite() && wall_m > 0.0) {
+        return Err(format_error(format!(
+            "{}: a wall must be above 0 m high, found {wall_m}",
+            spec.id
+        )));
+    }
+    let oldest = spec
+        .old_ages()
+        .last()
+        .copied()
+        .unwrap_or(spec.growth.years)
+        .max(spec.growth.years);
+    if ages.is_empty()
+        || ages.iter().any(|age| !(*age > 0.0 && *age <= oldest))
+        || ages.windows(2).any(|pair| pair[1] <= pair[0])
+    {
+        return Err(format_error(format!(
+            "{} grows for {oldest} years; ages must be above 0, at most that and rise, found {ages:?}",
+            spec.id
+        )));
+    }
+    let mut positions = Vec::new();
+    let mut triangles = Vec::new();
+    let mut materials = Vec::new();
+    let mut cuboid = |low: Vec3, high: Vec3, material: u8| {
+        let first = u32::try_from(positions.len()).unwrap_or(u32::MAX);
+        for i in 0..8 {
+            positions.push(Vec3::new(
+                if i & 1 == 0 { low.x } else { high.x },
+                if i & 2 == 0 { low.y } else { high.y },
+                if i & 4 == 0 { low.z } else { high.z },
+            ));
+        }
+        for [a, b, c, d] in [
+            [0, 4, 6, 2],
+            [1, 3, 7, 5],
+            [0, 1, 5, 4],
+            [2, 6, 7, 3],
+            [0, 2, 3, 1],
+            [4, 5, 7, 6],
+        ] {
+            triangles.push([first + a, first + b, first + c]);
+            triangles.push([first + a, first + c, first + d]);
+            materials.extend([material, material]);
+        }
+    };
+    cuboid(Vec3::new(-6.0, -2.0, -6.0), Vec3::new(6.0, 0.0, 6.0), SOIL);
+    cuboid(
+        Vec3::new(-4.0, -0.3, -0.6),
+        Vec3::new(4.0, wall_m, -0.3),
+        BUILT,
+    );
+    let site = SiteMesh::new(&positions, &triangles, &materials).map_err(format_error)?;
+    let foot = Vec3::ZERO;
+    let cut = Cut::for_plant(wall_m + 0.5, 3.0);
+    let mut conditions = crate::conditions::Conditions::preset(Environment::Open);
+    conditions.substrate = Some(site.substrate_round(foot, cut).map_err(format_error)?);
+    let host = site
+        .host_round(foot, cut, &climbable)
+        .map(std::sync::Arc::new);
+    let (program, params) = spec.program_from(&inputs.program_source)?;
+    let growth = crate::grow::grow(
+        &program,
+        &spec.seeded_params(&program, &params, seed),
+        &crate::grow::GrowthSettings {
+            seed,
+            dt: spec.growth.step,
+            years: ages.last().copied().unwrap_or(spec.growth.years),
+            keyframes: ages.to_vec(),
+            conditions,
+            limits: crate::lsys::Limits::default(),
+            host,
+        },
+    )
+    .map_err(|error| PackageError::Growth {
+        variant: format!("{} on a wall, seed {seed}", spec.id),
+        message: error.to_string(),
+    })?;
+    if growth.keyframes.len() != ages.len() {
+        return Err(format_error("the growth kept no keyframe"));
+    }
+    let organ_types = growth.organ_types;
+    let variant = spec.variant_list().len();
+    Ok(growth
+        .keyframes
+        .into_iter()
+        .map(|graph| Plant {
+            variant,
+            environment: Environment::Open,
+            seed,
+            class: None,
+            size: Measurements::of(&graph, &organ_types),
+            graph,
+            organ_types: organ_types.clone(),
+        })
+        .collect())
 }
 
 fn grow_chosen(
     inputs: &Inputs,
     variant: usize,
     chosen: &crate::spec::Variant,
-    age: f64,
-) -> Result<Plant, PackageError> {
-    if !(age > 0.0 && age <= inputs.spec.growth.years) {
+    ages: &[f64],
+) -> Result<Vec<Plant>, PackageError> {
+    // Past its years, a plant grows on to its old ages as a grown-old
+    // spec does (`PlantSpec::grown_old`).
+    let years = inputs.spec.growth.years;
+    let oldest = inputs
+        .spec
+        .old_ages()
+        .last()
+        .copied()
+        .unwrap_or(years)
+        .max(years);
+    if let Some(age) = ages.iter().find(|age| !(**age > 0.0 && **age <= oldest)) {
         return Err(format_error(format!(
-            "{} grows for {} years; an age must be above 0 and at most that, found {age}",
-            inputs.spec.id, inputs.spec.growth.years
+            "{} grows for {oldest} years; an age must be above 0 and at most that, found {age}",
+            inputs.spec.id
         )));
     }
-    let growth = package::grow_one(inputs, chosen, &[age])?;
+    if ages.windows(2).any(|pair| pair[1] <= pair[0]) {
+        return Err(format_error(format!(
+            "{}: ages must rise, found {ages:?}",
+            inputs.spec.id
+        )));
+    }
+    let until = ages.last().copied().unwrap_or(years).max(years);
+    let growth = package::grow_until(inputs, chosen, ages, until)?;
     let organ_types = growth.organ_types;
-    let graph = growth
+    if growth.keyframes.len() != ages.len() {
+        return Err(format_error("the growth kept no keyframe"));
+    }
+    Ok(growth
         .keyframes
         .into_iter()
-        .next()
-        .ok_or_else(|| format_error("the growth kept no keyframe"))?;
-    let size = Measurements::of(&graph, &organ_types);
-    Ok(Plant {
-        variant,
-        environment: chosen.environment,
-        seed: chosen.seed,
-        class: chosen.class.map(|class| class.to_string()),
-        graph,
-        organ_types,
-        size,
-    })
+        .map(|graph| {
+            let size = Measurements::of(&graph, &organ_types);
+            Plant {
+                variant,
+                environment: chosen.environment,
+                seed: chosen.seed,
+                class: chosen.class.map(|class| class.to_string()),
+                graph,
+                organ_types: organ_types.clone(),
+                size,
+            }
+        })
+        .collect())
 }
 
 /// Export `plant` of `inputs` as `settings` say; with `built`, the package

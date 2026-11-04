@@ -183,6 +183,18 @@ impl Raster {
                 out.push(wy * self.side + wx);
             }
         }
+        // A crown narrower than a cell still takes the cell it stands in,
+        // so a layer of small plants fills as it grows.
+        if out.is_empty() {
+            #[allow(clippy::cast_possible_truncation)]
+            let (x, y) = (cx.floor() as i64, cy.floor() as i64);
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            let (wx, wy) = (
+                x.rem_euclid(side as i64) as usize,
+                y.rem_euclid(side as i64) as usize,
+            );
+            out.push(wy * self.side + wx);
+        }
         out
     }
 
@@ -408,6 +420,23 @@ mod tests {
         assert!((0.7..0.9).contains(&cb), "wide crowns cover {cb}");
         // Crown area a quarter as large: about four times the stems.
         assert!(a.len() > b.len() * 3, "{} against {}", a.len(), b.len());
+    }
+
+    #[test]
+    fn a_layer_of_plants_narrower_than_a_cell_fills_and_stops() {
+        // Under a closed canopy, herbs that need light find no room; each
+        // still takes its cell, so the layout ends.
+        let mut herb = tree(1, Layer::Herb, 0.4, 0.05);
+        herb.light_needed = 0.5;
+        let members = [tree(0, Layer::Canopy, 40.0, 4.0), herb];
+        let rules = Rules {
+            cover: [0.95, 0.0, 0.0, 0.5],
+            ..Rules::default()
+        };
+        let placed = lay_out(&members, &rules, 1);
+        let herbs = placed.iter().filter(|p| p.member == 1).count();
+        // A 40 m tile has 6400 cells of 0.5 m: half of them at most.
+        assert!(herbs > 0 && herbs <= 3_200, "{herbs} herbs");
     }
 
     #[test]
