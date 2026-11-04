@@ -835,3 +835,29 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
     }
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn a_close_up_draws_full_detail_only_where_its_pixels_can_show_it() {
+        // A 10 m close-up of a point 1.2 m up in the middle, 1600 by 1200
+        // pixels: its eye stands about 19 m south of the point, looking
+        // north, and a pixel at the point spans about 8 mm.
+        let camera = CloseUp::new(Vec3::new(0.0, 1.2, 0.0), 10.0, 1600, 1200);
+        let lods = &plantgen::quality::STANDARD.lods;
+        // A 40 m tree with a crown 4 m in radius, at east and north metres.
+        let level = |at_m| camera.level(at_m, 40.0, 4.0, lods);
+        assert_eq!(level([0.0, 0.0]), 0, "at the focus");
+        assert_eq!(level([0.0, 40.0]), 0, "40 m beyond it, pixels 2.5 cm");
+        assert_eq!(level([0.0, 200.0]), 1, "200 m beyond it, pixels 10 cm");
+        assert_eq!(level([0.0, 1000.0]), 2, "a kilometre beyond it");
+        assert_eq!(level([30.0, 0.0]), 2, "off the side of the picture");
+        assert_eq!(level([0.0, -40.0]), 2, "behind the camera");
+        // A sapling 2 m tall takes each level's lengths scaled to its
+        // height (`LodSpec::for_height`), so it goes coarse nearer.
+        assert_eq!(camera.level([0.0, 40.0], 2.0, 0.5, lods), 1);
+        assert_eq!(camera.level([0.0, 100.0], 2.0, 0.5, lods), 2);
+    }
+}
