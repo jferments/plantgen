@@ -9,6 +9,7 @@
     "common_name": "Canadian horseweed"
   },
   "growth_form": "forb",
+  "allometry": [{"age": 2, "environment": "open", "height": 1.25, "tolerance": 0.4}],
   "tier": "procedural_proxy",
   "traits": {
     "seed_dispersal": ["wind"],
@@ -74,6 +75,7 @@
     "cauline_leaves": "reduced"
   },
   "evidence": {
+    "allometry": {"evidence": "Authored", "source": "plantgen-authors", "note": "1.25 m in flower: the middle of Flora of North America's plants (3-)50-200(-350+) cm. Not measured."},
     "traits.seed_dispersal": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America, Conyza canadensis: cypselae 1-1.5 mm with a pappus of 15-25 white bristles 2-3 mm, a wind-borne seed (inferred from the pappus)."},
     "taxon": {
       "evidence": "Authored",

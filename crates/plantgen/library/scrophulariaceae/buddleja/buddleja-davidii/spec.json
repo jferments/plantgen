@@ -9,6 +9,7 @@
     "common_name": "butterfly bush"
   },
   "growth_form": "shrub",
+  "allometry": [{"age": 12, "environment": "open", "height": 2.75, "tolerance": 0.4}],
   "tier": "procedural_proxy",
   "traits": {
     "seed_dispersal": ["wind"],
@@ -85,6 +86,7 @@
     ]
   },
   "evidence": {
+    "allometry": {"evidence": "Authored", "source": "plantgen-authors", "note": "2.75 m at 12 years in the open: the middle of Flora of China's shrubs 0.5-5 m. Not measured."},
     "traits.seed_dispersal": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Buddleja davidii (read 2026-11-02): its tiny seed travels on the wind."},
     "taxon": {
       "evidence": "Authored",

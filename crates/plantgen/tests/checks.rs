@@ -87,6 +87,16 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its photographs show no sky through its crown; drawn four times over (form::MOST_DRAWN) it still shows about 9% between its shoots",
     ),
     (
+        "erigeron-canadensis",
+        "fruit_size_m",
+        "the Asteraceae draw a cypsela as eight tenths of its head's floret spacing (capitula::Capitulum::cypsela), so a horseweed's tiny heads (involucres 3 to 4 mm, FNA) packed with florets draw 0.1 mm fruit against the stated 1 to 1.5 mm, until a rule draws the cypsela from its stated size",
+    ),
+    (
+        "erigeron-canadensis",
+        "inflorescence_length_m",
+        "its panicle is drawn about 5 cm long against the stated 10 to 40 cm, a model estimate (FNA gives its heads in paniculiform arrays with no length); seen since the pavement weeds joined (pavement-cracks K2)",
+    ),
+    (
         "fraxinus-latifolia",
         "crown_see_through",
         "its photographs show about 6% sky; drawn four times over (form::MOST_DRAWN) its crown still shows about 13% from the side, between limbs that run bare to their leafy tips",
@@ -352,6 +362,16 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a short shoot of an alternate-leaved plant unfolds its two leaves a year at one point (broadleaf's Q), so where short shoots bear most of the leaves, as on beach rose's crowded laterals, the measure counts two leaves at most nodes and reads them opposite",
     ),
     (
+        "sagina-procumbens",
+        "flowering_months",
+        "its program does not open its flowers one after another over its months (the family's flowers have no fruit_below share, which inherit's stage_seasons needs), so its flowers close as its first capsules ripen, in July, against the stated May to September (a model estimate)",
+    ),
+    (
+        "sagina-procumbens",
+        "fruiting_months",
+        "for the same reason its capsules are drawn from the program's own fruit day, August, to October, against the stated June to October (a model estimate)",
+    ),
+    (
         "sarcandra-glabra",
         "flower_symmetry",
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
@@ -380,6 +400,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "sedum-divergens",
         "leaf_habit",
         "its leafy stems end in cymes, and the herb program keeps a stem's leaves through winter only on a stem bearing leaves alone, so spreading stonecrop's evergreen leaves are drawn as deciduous until a flowering stem can keep its leaves",
+    ),
+    (
+        "taraxacum-sect-taraxacum",
+        "fruit_size_m",
+        "the Asteraceae draw a cypsela as eight tenths of its head's floret spacing (capitula::Capitulum::cypsela), so a dandelion's head of many florets draws 1.3 to 1.5 mm fruit against the stated 3 to 4 mm (a model estimate), until a rule draws the cypsela from its stated size",
     ),
     (
         "tellima-grandiflora",

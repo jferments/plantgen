@@ -9,6 +9,7 @@
     "common_name": "broadleaf plantain"
   },
   "growth_form": "forb",
+  "allometry": [{"age": 2, "environment": "open", "height": 0.25, "tolerance": 0.4}],
   "tier": "procedural_proxy",
   "traits": {
     "trampling_tolerance": "tolerant",
@@ -85,6 +86,7 @@
     "cauline_leaves": "none"
   },
   "evidence": {
+    "allometry": {"evidence": "Authored", "source": "plantgen-authors", "note": "0.25 m in flower in its second year in the open, its spikes standing over the rosette: the middle of the stated 10-40 cm, itself a model estimate. Not measured."},
     "traits.trampling_tolerance": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Plantago major (read 2026-11-02): it survives being trodden on often and takes hold in compacted soil."},
     "taxon": {
       "evidence": "Authored",
