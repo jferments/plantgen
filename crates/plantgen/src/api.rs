@@ -51,7 +51,15 @@ use crate::library::Library;
 use crate::package::{self, Inputs, Measurements};
 use crate::quality;
 
-pub use crate::export::{Attributes, Budget, Compression, Export, Level, Plant, Settings, Shade};
+pub use crate::export::{
+    Attributes, Budget, Compression, Export, Level, LevelPart, Plant, Region, Settings, Shade,
+    crown_regions,
+};
+pub use crate::fill::{
+    CanopyCell, Community, Cover, CoverKind, Fill, FillSettings, INSTANCE_BYTES, INSTANCE_SCHEMA,
+    Instance, Layer, Member, PROTOTYPES_FILE, Prototype, PrototypeFiles, PrototypeKey,
+    STAND_CELL_M, Site, StandCell, StandMap, TileId, TilePlan, TileStats,
+};
 pub use crate::quality::Quality;
 pub use crate::spec::{Environment, PlantSpec};
 
@@ -60,8 +68,10 @@ pub use crate::spec::{Environment, PlantSpec};
 /// beside them leave it as it is. 2: [`Budget`] gained `tiers` and is
 /// made with [`Budget::new`] or [`Budget::tiers`], so fields added later
 /// break nothing; [`Variants`] draws tiers unless chosen. 3: [`Level`]
-/// gained `cards`, the baked-card tier a level is drawn as.
-pub const API_VERSION: u32 = 3;
+/// gained `cards`, the baked-card tier a level is drawn as. 4: [`Level`]
+/// gained `parts`, its share in each region of
+/// [`Generator::export_parts`].
+pub const API_VERSION: u32 = 4;
 
 /// The name of the file listing a set of variants ([`VariantSet`]).
 pub const VARIANTS_FILE: &str = "variants.json";
@@ -232,6 +242,31 @@ impl Generator {
         Ok(export::export(&self.inputs, plant, settings, None)?)
     }
 
+    /// [`Self::export`], each level also cut into `regions` (each level's
+    /// [`Level::parts`], written beside it as `STEM-<region>-lodN.glb`), so
+    /// a renderer can draw each part of a tall plant at the detail its own
+    /// distance asks for. [`crown_regions`] gives a tree's: its bole and
+    /// its crown in bands, each limb whole in the part where it leaves the
+    /// stem.
+    ///
+    /// # Errors
+    ///
+    /// As [`Self::export`], and when the plant moves (a motion package's
+    /// bones span the parts).
+    pub fn export_parts(
+        &self,
+        plant: &Plant,
+        settings: &Settings,
+        regions: &[Region],
+    ) -> Result<Export, Error> {
+        Ok(export::export_parts(
+            &self.inputs,
+            plant,
+            settings,
+            regions,
+        )?)
+    }
+
     /// Build the species' package (every variant its spec lists, at every
     /// keyframe, with levels, impostors and textures) into `out`, unless
     /// it is there already; its directory.
@@ -351,7 +386,7 @@ impl Generator {
         Ok(set)
     }
 
-    fn write_one(
+    pub(crate) fn write_one(
         &self,
         environment: Environment,
         seed: u64,
@@ -359,14 +394,54 @@ impl Generator {
         settings: &Settings,
         out: &Path,
     ) -> Result<VariantRecord, Error> {
+        self.write_one_in(environment, seed, age, settings, out, false)
+            .map(|(record, _)| record)
+    }
+
+    /// [`Self::write_one`], and with `parts` each level cut into the
+    /// plant's [`crown_regions`]: the regions and each one's files.
+    pub(crate) fn write_one_in(
+        &self,
+        environment: Environment,
+        seed: u64,
+        age: f64,
+        settings: &Settings,
+        out: &Path,
+        parts: bool,
+    ) -> Result<(VariantRecord, Vec<PartRecord>), Error> {
         let plant = self.grow_in(environment, seed, age)?;
-        let exported = self.export(&plant, settings)?;
+        let regions = if parts {
+            crown_regions(&plant.size)
+        } else {
+            Vec::new()
+        };
+        let exported = self.export_parts(&plant, settings, &regions)?;
         let written = export::write(&exported, out)?;
+        let part_records = regions
+            .iter()
+            .enumerate()
+            .map(|(index, region)| PartRecord {
+                region: region.clone(),
+                levels: exported
+                    .levels
+                    .iter()
+                    .enumerate()
+                    .filter_map(|(level_index, level)| {
+                        level.parts.get(index).map(|part| LevelFile {
+                            level: level_index,
+                            file: part.file.clone(),
+                            bytes: part.glb.len(),
+                            triangles: part.summary.triangles,
+                        })
+                    })
+                    .collect(),
+            })
+            .collect();
         let name = |path: &PathBuf| {
             path.file_name()
                 .map_or_else(String::new, |name| name.to_string_lossy().into_owned())
         };
-        Ok(VariantRecord {
+        let record = VariantRecord {
             seed,
             stem: exported.stem.clone(),
             packaged: plant.variant < self.inputs.spec.variant_list().len(),
@@ -384,7 +459,8 @@ impl Generator {
                 .collect(),
             index: written.last().map(name).unwrap_or_default(),
             fingerprint: fingerprint(&exported),
-        })
+        };
+        Ok((record, part_records))
     }
 }
 
@@ -509,6 +585,14 @@ pub struct VariantRecord {
     pub fingerprint: String,
 }
 
+/// One region of a plant cut into parts ([`Generator::export_parts`]):
+/// its box and its files, a level each.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct PartRecord {
+    pub region: Region,
+    pub levels: Vec<LevelFile>,
+}
+
 /// One level's GLB file, 0 the nearest.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct LevelFile {
@@ -517,3 +601,103 @@ pub struct LevelFile {
     pub bytes: usize,
     pub triangles: usize,
 }
+
+/// A site a host hands over: a plain triangle mesh, a material per
+/// triangle as an index into a table of [`Surface`]s, and the paved
+/// tiles laid on it, with no files and no OBJ. Positions are metres,
+/// +Y up and -Z north unless `z_up` (then +Z up and +Y north, as CAD and
+/// GIS tools often have it); triangles wind counter-clockwise seen from
+/// outside.
+#[derive(Debug, Clone, Copy)]
+pub struct SiteInput<'a> {
+    pub positions: &'a [[f64; 3]],
+    pub triangles: &'a [[u32; 3]],
+    /// One per triangle: an index into `table`.
+    pub materials: &'a [u32],
+    pub table: &'a [Surface],
+    pub pavements: &'a [CrackTile],
+    pub z_up: bool,
+}
+
+/// The site mesh of `input`, as growth reads it.
+///
+/// # Errors
+///
+/// On a material index past the table, or as
+/// [`crate::site::SiteMesh::with_surfaces`] and [`crate::pavement::Pavement::new`].
+pub fn site_mesh(input: &SiteInput<'_>) -> Result<crate::site::SiteMesh, Error> {
+    if input.materials.len() != input.triangles.len() {
+        return Err(Error(format!(
+            "a site of {} triangles has {} materials",
+            input.triangles.len(),
+            input.materials.len()
+        )));
+    }
+    let surfaces = input
+        .materials
+        .iter()
+        .map(|&m| {
+            input.table.get(m as usize).copied().ok_or_else(|| {
+                Error(format!(
+                    "site material {m} is past the table of {}",
+                    input.table.len()
+                ))
+            })
+        })
+        .collect::<Result<Vec<_>, _>>()?;
+    let positions: Vec<crate::math::Vec3> = input
+        .positions
+        .iter()
+        .map(|&[x, y, z]| {
+            if input.z_up {
+                crate::math::Vec3::new(x, z, -y)
+            } else {
+                crate::math::Vec3::new(x, y, z)
+            }
+        })
+        .collect();
+    let mut mesh = crate::site::SiteMesh::with_surfaces(&positions, input.triangles, &surfaces)
+        .map_err(Error)?;
+    for tile in input.pavements {
+        mesh.add_pavement(crate::pavement::Pavement::new(tile).map_err(Error)?);
+    }
+    Ok(mesh)
+}
+
+/// The site field ([`SiteField`]) of the tile from `low` to `high` (X and
+/// Z, metres, in the frame growth uses: +Y up, -Z north) of the site
+/// `input`, measured as `settings` say. Build it once per tile and keep
+/// it: the same inputs give the same field, and its JSON
+/// ([`SiteField::to_json`]) is versioned ([`SITE_FIELD_VERSION`]) and
+/// documented in `docs/sites/SITE-FIELD.md`. Hand the mesh round the tile
+/// too, as far as `settings.margin_m` reaches, so neighbouring tiles
+/// measure their shared edge alike.
+///
+/// # Errors
+///
+/// As [`site_mesh`] and [`crate::site_field::build`].
+pub fn site_field(
+    input: &SiteInput<'_>,
+    low: [f64; 2],
+    high: [f64; 2],
+    settings: &FieldSettings,
+) -> Result<SiteField, Error> {
+    let mesh = site_mesh(input)?;
+    crate::site_field::build(&mesh, low, high, settings).map_err(Error)
+}
+
+/// A site material by its name: `soil`, `rock`, `bark`, `wood` or
+/// `built`, for a [`Surface`].
+///
+/// # Errors
+///
+/// On any other name.
+pub fn site_material(name: &str) -> Result<u8, Error> {
+    crate::site::material_named(name).map_err(Error)
+}
+
+pub use crate::pavement::CrackTile;
+pub use crate::site::Surface;
+pub use crate::site_field::{
+    CrackSite, FieldSettings, Ground, Host, HostKind, Patch, SITE_FIELD_VERSION, SiteField,
+};

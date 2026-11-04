@@ -1,0 +1,155 @@
+{
+ "mesh": "block.obj",
+ "materials": {
+  "ground": {
+   "as": "soil",
+   "colour": [
+    0.22,
+    0.27,
+    0.12
+   ]
+  },
+  "woodland": {
+   "as": "soil",
+   "colour": [
+    0.14,
+    0.11,
+    0.07
+   ]
+  },
+  "curb": {
+   "as": "built",
+   "colour": [
+    0.45,
+    0.44,
+    0.41
+   ]
+  },
+  "render": {
+   "as": "built",
+   "colour": [
+    0.62,
+    0.57,
+    0.48
+   ]
+  },
+  "roof": {
+   "as": "built",
+   "colour": [
+    0.22,
+    0.22,
+    0.24
+   ]
+  },
+  "roof-moss": {
+   "as": "built",
+   "soil_m": 0.04,
+   "colour": [
+    0.2,
+    0.24,
+    0.12
+   ]
+  },
+  "glass": {
+   "as": "built",
+   "thin_m": 0.02,
+   "clear": true,
+   "colour": [
+    0.3,
+    0.38,
+    0.42
+   ]
+  },
+  "door": {
+   "as": "wood",
+   "thin_m": 0.04,
+   "clear": true,
+   "colour": [
+    0.28,
+    0.17,
+    0.11
+   ]
+  },
+  "fence": {
+   "as": "wood",
+   "colour": [
+    0.7,
+    0.68,
+    0.62
+   ]
+  },
+  "pole": {
+   "as": "wood",
+   "colour": [
+    0.26,
+    0.19,
+    0.12
+   ]
+  },
+  "wire": {
+   "as": "built",
+   "thin_m": 0.012,
+   "colour": [
+    0.1,
+    0.1,
+    0.1
+   ]
+  },
+  "rock": {
+   "as": "rock",
+   "colour": [
+    0.34,
+    0.33,
+    0.31
+   ]
+  },
+  "log": {
+   "as": "bark",
+   "colour": [
+    0.18,
+    0.13,
+    0.09
+   ]
+  }
+ },
+ "pavements": [
+  "block-road-0.json",
+  "block-road-1.json",
+  "block-road-2.json",
+  "block-road-3.json",
+  "block-road-4.json",
+  "block-road-5.json",
+  "block-road-6.json",
+  "block-road-7.json",
+  "block-walk.json"
+ ],
+ "plants": [
+  {
+   "species": "hedera-helix",
+   "at": [
+    -10.5,
+    8.7
+   ],
+   "seed": 1,
+   "years": 8
+  },
+  {
+   "species": "lonicera-ciliosa",
+   "at": [
+    -15.0,
+    5.85
+   ],
+   "seed": 1,
+   "years": 6
+  },
+  {
+   "species": "alnus-rubra",
+   "at": [
+    -4.0,
+    -9.0
+   ],
+   "seed": 1,
+   "years": 12
+  }
+ ]
+}
