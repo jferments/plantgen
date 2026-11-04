@@ -75,6 +75,8 @@ macro_rules! out {
     };
 }
 
+mod scene;
+
 fn main() -> ExitCode {
     match run() {
         Ok(()) | Err(Failure::OutputClosed) => ExitCode::SUCCESS,
@@ -118,6 +120,7 @@ fn run() -> Result<(), Failure> {
         "audit" => audit_command(&args),
         "grow" => grow_command(&args),
         "stand" => stand_command(&args),
+        "scene" => scene::scene_command(&args),
         "site" => site_command(&args),
         "cracks" => cracks_command(&args),
         "render" => render_command(&args),
@@ -253,6 +256,24 @@ Usage:
       and north: the stand is a tile that wraps at its edges) and
       conditions (a place every plant grows in). Seeds default to each
       spec's first.
+  plantc scene <scene.json> [--out PREFIX] [--views side,oblique,top,close]
+               [--size PIXELS] [--day N] [--quality draft|standard]
+               [--focus X,Y,Z [--span METRES]] [--cover HALF]
+      Lay grown variants out as instances and draw them together, as a
+      host's renderer draws a forest (stands plan, step 1). The document
+      gives instances: each one's species, env (open, edge, interior or
+      suppressed; open when left out), seed, age (years), at (metres east
+      and north), yaw (degrees, anticlockwise from above) and scale. Each
+      species, environment and seed grows once, to its oldest age; nothing
+      grows together. --out writes PREFIX-VIEW.png for each view (close
+      frames --focus, SPAN metres across, default 4). --cover prints the
+      share of the square HALF metres each way from the middle that crowns
+      cover seen straight down. A `lay_out` block lays members out on a
+      tile by their crowns (plantgen::stand_tile); a `develop` block
+      builds the stand from its stand_age and species pool (species, env,
+      seeds), each species' niche and lifespan, and a site's moisture,
+      heat_load, elevation_m and slope_deg (plantgen::development), with
+      tile_m, seed, repeat, cover, scale, overlap and herb_radius_m.
   plantc site <site.json> [--out FILE.png] [--view VIEW] [--size PIXELS]
               [--day N] [--quality draft|standard]
               [--focus X,Y,Z [--span METRES]]
@@ -430,13 +451,18 @@ Usage:
       sheet with each stage's tile lit and a trunk wearing it.
   plantc build <species|spec.json> [--out DIR] [--quality draft|standard]
                [--threads N] [--profile static|motion] [--cards yes|no]
+               [--old yes|no]
       Build a .afterplant package in DIR (default `plants`) and print its
       key. A package that is already built is not built again. With
       --profile motion it also holds each keyframe's bones and branches
       and each level's binding to them (plant motion S2), under a key of
       its own; the static package is unchanged. With --cards yes it also
       holds each keyframe's baked-card tiers (low and minimal cards, the
-      far impostor; see `plantc tiers`), under a key of its own.
+      far impostor; see `plantc tiers`), under a key of its own. With
+      --old yes it also grows the species' old ages, for stands: each
+      twice the one before past its oldest keyframe, up to the age its old
+      plants commonly reach (`age_max_years`; Douglas-fir 120, 240 and 480
+      years), under a key of its own.
   plantc variants <species|spec.json> --count N [--out DIR] [--first-seed N]
                  [--env ENV] [--age N] [--day N] [--quality draft|standard]
                  [--threads N] [--shade attribute|baked]
@@ -2428,12 +2454,14 @@ fn grow_command(args: &[String]) -> Result<(), Failure> {
     let environment = options.environment(&spec)?;
     let seed = options.number("seed")?.unwrap_or(spec.variants.seeds[0]);
     let years = options.number("years")?.unwrap_or(spec.growth.years);
-    // The spec's ages, the ages it gives reference sizes for, and the end.
+    // The spec's ages, its old ages, the ages it gives reference sizes
+    // for, and the end.
     let mut keyframes: Vec<f64> = spec
         .growth
         .keyframes
         .iter()
         .copied()
+        .chain(spec.old_ages())
         .chain(
             spec.allometry
                 .iter()
@@ -5405,10 +5433,27 @@ fn build_command(args: &[String]) -> Result<(), Failure> {
     let options = Options::parse(
         args,
         &[
-            "out", "quality", "threads", "program", "day", "profile", "cards",
+            "out", "quality", "threads", "program", "day", "profile", "cards", "old",
         ],
     )?;
     let spec = load_spec(options.one_positional("a species")?)?;
+    let spec = match options.flags.get("old").map(String::as_str) {
+        None | Some("no") => spec,
+        Some("yes") => {
+            let old = spec.old_ages();
+            if old.is_empty() {
+                out!(
+                    "{} states no lifespan past its oldest keyframe (`age_max_years`): no old ages",
+                    spec.id
+                );
+            } else {
+                let ages: Vec<String> = old.iter().map(f64::to_string).collect();
+                out!("{} old ages: {} years", spec.id, ages.join(", "));
+            }
+            spec.grown_old()
+        }
+        Some(other) => return Err(format!("--old is yes or no, not `{other}`").into()),
+    };
     let out = PathBuf::from(options.flags.get("out").map_or("plants", String::as_str));
     build_package(&spec, &options, &out)?;
     Ok(())
