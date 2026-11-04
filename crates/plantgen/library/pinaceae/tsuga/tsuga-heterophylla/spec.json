@@ -104,6 +104,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "age_max_years": {"min": 400, "max": 500, "high": 700},
     "height_max_m": {
       "min": 50,
       "max": 61
@@ -125,6 +126,7 @@
     "leaf_margin": "entire"
   },
   "evidence": {
+    "traits.age_max_years": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS species review of western hemlock (Tesky 1992, after Packee 1990): its oldest trees are usually between 400 and 500 years old, and the oldest recorded passed 700."},
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "silvics-1990-conifers",

@@ -379,7 +379,20 @@ pub struct GrowthPlan {
     pub step: f64,
     /// Ages to keep, in years. These become the package's age classes.
     pub keyframes: Vec<f64>,
+    /// The age the species' oldest plants commonly reach, in years: set by
+    /// the kingdom's rule from the trait `age_max_years` (its `min`, the
+    /// low end of the ages old plants commonly reach) wherever a species
+    /// states it. It does not change what the plant grows to by default;
+    /// it bounds the old ages a stand may ask for ([`PlantSpec::old_ages`]).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub lifespan: Option<f64>,
 }
+
+/// The oldest age [`PlantSpec::old_ages`] offers, in years, whatever a
+/// species' lifespan: an old-growth Douglas-fir stand's oldest cohort is
+/// lost at 800 to 1300 years (Franklin et al. 2002), and growing one plant
+/// to 1000 years takes some minutes.
+pub const OLDEST_AGE: f64 = 1_000.0;
 
 /// How far apart the stems of a stand of the same age stand, as a share of
 /// their height (the stand's relative spacing, Hart's index), so the stand
@@ -1456,6 +1469,15 @@ impl PlantSpec {
         {
             return fail("growth.keyframes must list ages between 0 and growth.years".into());
         }
+        if growth
+            .lifespan
+            .is_some_and(|years| !(years > 0.0 && years <= 10_000.0))
+        {
+            return fail(format!(
+                "growth.lifespan must be above 0 and at most 10000 years, found {:?}",
+                growth.lifespan
+            ));
+        }
         if self.variants.environments.is_empty() || self.variants.seeds.is_empty() {
             return fail("variants need at least one environment and one seed".into());
         }
@@ -1751,6 +1773,50 @@ impl PlantSpec {
             },
             _ => neighbourhood,
         }
+    }
+
+    /// The old ages a stand may hold this plant at, past its keyframes:
+    /// each twice the one before, from twice its oldest keyframe, while
+    /// its lifespan (`growth.lifespan`) and [`OLDEST_AGE`] allow. None for
+    /// a species whose lifespan is not stated. A forest's structure changes
+    /// over centuries, not decades (Franklin et al. 2002: in the
+    /// Douglas-fir sere the stem exclusion stage runs to 80-100 years,
+    /// maturation to 150-250, vertical diversification to 350, horizontal
+    /// diversification beyond), so ages doubling from the default 60
+    /// (120, 240, 480) give a Douglas-fir at each of them.
+    #[must_use]
+    pub fn old_ages(&self) -> Vec<f64> {
+        let Some(lifespan) = self.growth.lifespan else {
+            return Vec::new();
+        };
+        let oldest = lifespan.min(OLDEST_AGE);
+        let last = self
+            .growth
+            .keyframes
+            .iter()
+            .copied()
+            .fold(0.0_f64, f64::max);
+        let mut ages = Vec::new();
+        let mut age = libm::round(2.0 * last);
+        while last > 0.0 && age <= oldest {
+            ages.push(age);
+            age = libm::round(2.0 * age);
+        }
+        ages
+    }
+
+    /// This spec with its old ages ([`PlantSpec::old_ages`]) added to its
+    /// keyframes and grown to the oldest of them, for a stand or package
+    /// that asks for old plants. Unchanged where it has none.
+    #[must_use]
+    pub fn grown_old(&self) -> Self {
+        let mut spec = self.clone();
+        let old = self.old_ages();
+        if let Some(&oldest) = old.last() {
+            spec.growth.keyframes.extend(old);
+            spec.growth.years = spec.growth.years.max(oldest);
+        }
+        spec
     }
 
     /// Every variant the plan asks for, environments first.
@@ -2132,5 +2198,30 @@ mod tests {
             },
             "roots prop must be between 0 and 256, found 1000",
         );
+    }
+
+    #[test]
+    fn a_stated_lifespan_gives_old_ages_doubling_up_to_it() {
+        // Douglas-fir commonly lives more than 500 years (FEIS).
+        let fir = PlantSpec::builtin("pseudotsuga-menziesii").unwrap();
+        assert_eq!(fir.growth.lifespan, Some(500.0));
+        assert_eq!(fir.old_ages(), vec![120.0, 240.0, 480.0]);
+        let old = fir.grown_old();
+        assert_eq!(old.growth.years, 480.0);
+        assert_eq!(
+            old.growth.keyframes,
+            vec![5.0, 15.0, 30.0, 60.0, 120.0, 240.0, 480.0]
+        );
+        assert!(old.validate().is_ok());
+        // What it grows to by default is unchanged.
+        assert_eq!(fir.growth.years, 60.0);
+        // Redcedar's 1000 years stops at the oldest age offered.
+        let cedar = PlantSpec::builtin("thuja-plicata").unwrap();
+        assert_eq!(cedar.old_ages(), vec![120.0, 240.0, 480.0, 960.0]);
+        // A bigleaf maple already grown past its lifespan gets none.
+        let maple = PlantSpec::builtin("acer-macrophyllum").unwrap();
+        assert_eq!(maple.growth.lifespan, Some(50.0));
+        assert!(maple.old_ages().is_empty());
+        assert_eq!(maple.grown_old(), maple);
     }
 }

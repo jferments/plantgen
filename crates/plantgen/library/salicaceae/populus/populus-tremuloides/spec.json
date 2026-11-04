@@ -113,6 +113,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "age_max_years": {"min": 50, "max": 150},
     "crown_see_through": 0.05,
     "leader": "persistent",
     "bark_colour": [158, 158, 140],
@@ -146,6 +147,7 @@
     "leaf_apex": {"acuminate": "usually", "acute": "often"}
   },
   "evidence": {
+    "traits.age_max_years": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS species review of quaking aspen (Howard 1996): stems live 50 to 60 years at most in the Great Lakes States and up to 150 in the West."},
     "traits.crown_see_through": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Imagekit woody-forms photo measures (2026-10-19, plantgen-claude project-files/image-data/woody-forms-2026-10-19/CROWNS.md): median sky inside the crown outline of 4 side-view photographs of leafy open-grown trees, plantc measure-mask: 0.05."},
     "traits.leader": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Imagekit woody-forms photo tally (2026-10-19, plantgen-claude project-files/image-data/woody-forms-2026-10-19/TALLY.md): leader kept in 8 of 14 photo votes (lost 4, multiple 2); Sargent's Manual (sargent-1922, p. 121): 'a narrow symmetrical round-topped head'."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.62, 0.62, 0.55], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
