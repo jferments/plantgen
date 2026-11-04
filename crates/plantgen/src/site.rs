@@ -73,6 +73,11 @@ pub struct Surface {
     pub clear: bool,
     /// Linear RGB to draw it in; the material's colour when `None`.
     pub colour: Option<[f32; 3]>,
+    /// Depth of soil lying on it where it faces up, metres: what has
+    /// gathered on a ledge, in a gutter or on a decayed roof, as the host
+    /// states it. 0 for a clean surface. The site field
+    /// ([`crate::site_field`]) gives it to the patches it covers.
+    pub soil_m: f64,
 }
 
 impl Surface {
@@ -85,10 +90,11 @@ impl Surface {
             climb: true,
             clear: false,
             colour: None,
+            soil_m: 0.0,
         }
     }
 
-    fn thin(&self) -> bool {
+    pub(crate) fn thin(&self) -> bool {
         self.thin_m > 0.0
     }
 }
@@ -114,6 +120,8 @@ pub struct SiteMesh {
     edge_normals: HashMap<(u32, u32), Vec3>,
     /// Triangles by the column cells (X, Z) their footprint covers.
     columns: HashMap<(i32, i32), Vec<u32>>,
+    /// The same, thin parts' triangles included.
+    columns_all: HashMap<(i32, i32), Vec<u32>>,
     /// Paved tiles with their cracks ([`Self::add_pavement`]), which
     /// stand in for the mesh at and below their surface.
     pavements: Vec<Pavement>,
@@ -258,6 +266,18 @@ impl SiteMesh {
         let mut vertex_normals = vec![Vec3::ZERO; welded.len()];
         let mut edge_normals: HashMap<(u32, u32), Vec3> = HashMap::new();
         let mut columns: HashMap<(i32, i32), Vec<u32>> = HashMap::new();
+        let mut columns_all: HashMap<(i32, i32), Vec<u32>> = HashMap::new();
+        for (index, corners) in kept.iter().enumerate() {
+            let [a, b, c] = corners.map(|i| welded[i as usize]);
+            let (low, high) = (a.min(b).min(c), a.max(b).max(c));
+            let (low, high) = (column_of(low.x, low.z), column_of(high.x, high.z));
+            for x in low.0..=high.0 {
+                for z in low.1..=high.1 {
+                    #[allow(clippy::cast_possible_truncation)]
+                    columns_all.entry((x, z)).or_default().push(index as u32);
+                }
+            }
+        }
         for (index, (corners, normal)) in kept.iter().zip(&normals).enumerate() {
             if kept_surfaces[index].thin() {
                 continue;
@@ -293,6 +313,7 @@ impl SiteMesh {
             vertex_normals,
             edge_normals,
             columns,
+            columns_all,
             pavements: Vec::new(),
         })
     }
@@ -491,14 +512,40 @@ impl SiteMesh {
         self.triangles.len()
     }
 
-    fn corners(&self, index: usize) -> [Vec3; 3] {
+    /// Triangle `index`'s corners, as welded.
+    pub(crate) fn triangle_corners(&self, index: usize) -> [u32; 3] {
+        self.triangles[index]
+    }
+
+    /// Triangle `index`'s unit normal.
+    pub(crate) fn normal(&self, index: usize) -> Vec3 {
+        self.normals[index]
+    }
+
+    /// Triangle `index`'s surface.
+    pub(crate) fn surface(&self, index: usize) -> Surface {
+        self.surfaces[index]
+    }
+
+    /// The triangles whose footprint covers the column cell of (`x`, `z`),
+    /// thin parts' included.
+    pub(crate) fn column_triangles(&self, x: f64, z: f64) -> &[u32] {
+        self.columns_all
+            .get(&column_of(x, z))
+            .map_or(&[], Vec::as_slice)
+    }
+
+    /// Edge of a column cell, metres.
+    pub(crate) const COLUMN_M: f64 = COLUMN_CELL;
+
+    pub(crate) fn corners(&self, index: usize) -> [Vec3; 3] {
         self.triangles[index].map(|i| self.positions[i as usize])
     }
 
     /// Where a vertical line through (`x`, `z`) meets the mesh: each
     /// crossing's height and triangle, highest first.
     #[allow(clippy::many_single_char_names)]
-    fn crossings(&self, x: f64, z: f64) -> Vec<(f64, usize)> {
+    pub(crate) fn crossings(&self, x: f64, z: f64) -> Vec<(f64, usize)> {
         // Nudged off the lines a modelling tool's grid snaps corners to, so
         // a line meets the faces that share an edge or corner once.
         let (x, z) = (x + 1.234_567e-7, z + 2.718_281e-7);
