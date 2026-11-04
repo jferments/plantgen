@@ -412,15 +412,15 @@ impl Site {
     /// field does not reach, as on a height field.
     #[must_use]
     pub fn site_factors_at(&self, east: f64, north: f64) -> SiteFactors {
-        if let Some(tile) = &self.field {
-            if let Some(cell) = tile.cell(east, north) {
-                let moisture = moisture_from_wetness(tile.field.ground.wetness[cell as usize]);
-                if let Some(factors) =
-                    tile.field
-                        .site_factors(cell, self.factors.elevation_m, moisture)
-                {
-                    return factors;
-                }
+        if let Some(tile) = &self.field
+            && let Some(cell) = tile.cell(east, north)
+        {
+            let moisture = moisture_from_wetness(tile.field.ground.wetness[cell as usize]);
+            if let Some(factors) = tile
+                .field
+                .site_factors(cell, self.factors.elevation_m, moisture)
+            {
+                return factors;
             }
         }
         #[allow(clippy::cast_precision_loss)]
@@ -442,13 +442,12 @@ impl Site {
     /// heights where no cell round it has ground).
     #[must_use]
     pub fn height_at(&self, east: f64, north: f64) -> f64 {
-        if let Some(tile) = &self.field {
-            if let Some(height) = tile
+        if let Some(tile) = &self.field
+            && let Some(height) = tile
                 .field
                 .height_at(tile.corner[0] + east, tile.corner[1] - north)
-            {
-                return height;
-            }
+        {
+            return height;
         }
         #[allow(clippy::cast_precision_loss)]
         let last = (self.cols - 1) as f64;
