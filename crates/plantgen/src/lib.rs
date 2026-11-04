@@ -1507,4 +1507,21 @@ pub mod venation;
 /// where it is half as thick as at its foot (`crate::billboards`): a
 /// 60-year Douglas fir grown in a closed stand drew its crown floating 9 m
 /// over an 11 m stump on its low tier.
-pub const GENERATOR_REVISION: u32 = 192;
+///
+/// 193: old conifer crowns (`pinidae` revision 14): a living tip of a
+/// fir, spruce, hemlock, larch, pine or Douglas-fir shades its neighbours
+/// less as the tree's rise slows, down to a fifth of a fast-rising tip's
+/// shade (`bud_keep`); a lit limb of a fir, spruce, hemlock, larch or
+/// Douglas-fir keeps lengthening up to 15 cm a year once the leader slows
+/// (`branch_floor`, 0.06 before), a
+/// floor that now comes in over the top `floor_ramp` of the height as the
+/// side shoots' did; and a fir's, spruce's, hemlock's or Douglas-fir's
+/// dormant buds sprout in a tenth of the open sky's light, not three
+/// tenths (`epi_light`, Ishii & Ford 2001). A Douglas-fir grown 250 years
+/// in a stand held 163 m² of foliage on a trunk 66 cm through, 29% of
+/// what Sillett et al.'s (2018) leaf area equation gives for its crown;
+/// it now holds 308 m² (53%) on 76 cm, and a western hemlock 292 m²
+/// where it held 177, on 87 cm where it was 79. Every Pinaceae species'
+/// young sizes grow within a few percent of before; the other conifer
+/// families grow as before.
+pub const GENERATOR_REVISION: u32 = 193;

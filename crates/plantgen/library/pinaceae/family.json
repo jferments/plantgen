@@ -35,13 +35,21 @@
       "rule": "300",
       "why": "A limb's dormant buds wait as long as the limb lives and resprout it where light reaches them: old Douglas-fir crowns keep their foliage by such epicormic shoots (Ishii & Ford 2001), as old firs, spruces and hemlocks reiterate theirs. Living 80 years, the buds were spent before the crown aged, and old crowns lost three quarters of their foliage between 150 and 300 years."
     },
+    "generator.params.epi_light": {
+      "rule": "0.1",
+      "why": "A limb's dormant buds sprout where a little light reaches them, in the shaded lower crown as well as the lit top: Ishii & Ford (2001) find epicormic shoots in every part of old Douglas-fir crowns, and on some lower-crown limbs nearly half the shoots and foliage epicormic. Needing 0.3 of the open sky's light, a bud sprouted only near the top, where few limbs are bare."
+    },
     "generator.params.epi_order": {
       "rule": "1",
       "why": "The dormant buds that resprout an old limb wait along its main axis, where its epicormic shoots stand (Ishii & Ford 2001); buds kept on every side shoot as well filled the program's module limit before 300 years."
     },
     "generator.params.branch_floor": {
-      "rule": "0.06",
-      "why": "Once the leader slows, a lit limb still lengthens a few centimetres a year, so the old crown keeps its spread instead of stopping where the leader did."
+      "rule": "0.15",
+      "why": "Once the leader slows, a lit limb still lengthens, by up to 15 cm a year near the stem in full light and less with its reach and its shade, so an old crown keeps widening and renewing its foliage where it is lit instead of stopping where the leader did. The floor comes in over the top floor_ramp share of the height, so the top whorls stay short and the top pointed."
+    },
+    "generator.params.bud_keep": {
+      "rule": "0.2",
+      "why": "A tip's new shoot shortens as the tree's rise slows, so an old crown's tips shade one another less than a sapling's vigorous ones: each keeps a fifth of a fast-rising tip's shade once the leader has stopped. Shading as much as a sapling's, an old crown starved inside."
     },
     "generator.params.apical_light": {
       "rule": "0.5",
@@ -88,7 +96,7 @@
     "rules": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Old conifers (pinidae revision 13): apical control as Wilson (2000) describes it, the leader holding its branches' growth below its own. A branch's yearly shoot is a share of the leader's, so a whorl's branches lengthen as the leader above them rises and the crown is a cone. With a fixed yearly length instead, the crowns stood as tubes whose top halves were twice as wide as photographed open-grown trees' (inaturalist-crowns-2026-10); 0.5 is the middle of the six species fitted to those photographs, 0.36 to 0.6. bend_set 0.15 (the same revision): at the Pinidae's 0.5, grand fir and western hemlock grown 150 years carried their limbs hanging against the trunk; at 0.15 grand fir's old crown stays conical. Ramifying old crowns (the same revision): side_order 2 with twigs that live twig_years 10 and dormant buds that live epi_years 80 keep old limbs leafy, as Strieby's (2017) Sitka spruce plate and the old trees photographed show, within the module limit to 300 years (twigs carry one spray of the three's area). branch_floor 0.06 and top_ramp 2 (Cannell et al. 1976) fitted with each species' apical and branch_reach to the same photographs at 15, 60, 150 and 300 years."
+      "note": "Old conifers (pinidae revision 13): apical control as Wilson (2000) describes it, the leader holding its branches' growth below its own. A branch's yearly shoot is a share of the leader's, so a whorl's branches lengthen as the leader above them rises and the crown is a cone. With a fixed yearly length instead, the crowns stood as tubes whose top halves were twice as wide as photographed open-grown trees' (inaturalist-crowns-2026-10); 0.5 is the middle of the six species fitted to those photographs, 0.36 to 0.6. bend_set 0.15 (the same revision): at the Pinidae's 0.5, grand fir and western hemlock grown 150 years carried their limbs hanging against the trunk; at 0.15 grand fir's old crown stays conical. Ramifying old crowns (the same revision): side_order 2 with twigs that live twig_years 10 and dormant buds that live epi_years 80 keep old limbs leafy, as Strieby's (2017) Sitka spruce plate and the old trees photographed show, within the module limit to 300 years (twigs carry one spray of the three's area). branch_floor 0.06 and top_ramp 2 (Cannell et al. 1976) fitted with each species' apical and branch_reach to the same photographs at 15, 60, 150 and 300 years. Old crowns (pinidae revision 14): bud_keep 0.2, branch_floor 0.15 coming in over floor_ramp, and epi_light 0.1, fitted together so a Douglas-fir grown 250 years in a stand holds about half the leaf area Sillett et al.'s (2018) equation gives for its crown volume and diameter (308 m², 53%, where it held 163 m², 29%), and a western hemlock grown alike 292 m² (177 before; 59% of the Douglas-fir equation), while every species of the family keeps its reference sizes at 30 to 60 years. With branch_floor 0.15 in full to the treetop, both grew flat tops as broad as their crowns over bare limbs."
     },
     "traits": {
       "evidence": "SourceInferred",
