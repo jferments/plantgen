@@ -296,6 +296,59 @@ fn a_tall_plants_parts_draw_each_level_between_them() {
     assert!(plantgen::api::crown_regions(&small.size).is_empty());
 }
 
+#[test]
+fn a_tile_as_one_gltf_file_draws_every_plant_as_an_instance() {
+    use plantgen::api::{Compression, Settings};
+    let meadow = Community::from_json(
+        r#"{"id": "test-meadow", "members": [
+            {"species": "achillea-millefolium", "layer": "herb", "abundance": 0.1}
+        ]}"#,
+    )
+    .expect("community");
+    let mut settings = FillSettings::default();
+    settings.stand_ages = vec![20.0];
+    settings.seeds = 1;
+    settings.options.quality = plantgen::quality::DRAFT;
+    let fill = Fill::new(&[meadow], &settings).expect("fill");
+    fill.measure(&[], 2, None).expect("measured");
+    let site = Site::flat(TileId { x: 1, y: 2 }, 20.0).expect("site");
+    let plan = fill
+        .tile(&site, &StandMap::uniform(20.0, 0, 30.0), 4)
+        .expect("tile");
+    assert!(!plan.instances.is_empty());
+    let dir = std::env::temp_dir().join(format!("plantgen-tile-glb-{}", std::process::id()));
+    let export = Settings {
+        compression: Compression::Meshopt,
+        ..Settings::default()
+    };
+    let prototypes = fill
+        .write_prototypes(&plan.prototypes_used(), &export, 2, &dir)
+        .expect("prototypes");
+    for meshopt in [false, true] {
+        let glb = plan.glb(&prototypes, &dir, 3, meshopt).expect("tile glb");
+        let summary = plantgen::gltf::check(&glb).expect("a valid file");
+        // Each mesh node of a prototype draws once per plant placing it.
+        let mut expected = 0;
+        let mut triangles = 0;
+        for record in &prototypes {
+            let placed = plan
+                .instances
+                .iter()
+                .filter(|i| i.prototype == record.index)
+                .count();
+            let low = &record.plant.levels[3];
+            let one = plantgen::gltf::check(&std::fs::read(dir.join(&low.file)).unwrap())
+                .expect("prototype file");
+            expected += placed * one.instances;
+            triangles += placed * low.triangles;
+        }
+        assert!(summary.instances >= plan.instances.len());
+        assert_eq!(summary.instances, expected, "meshopt {meshopt}");
+        assert_eq!(summary.triangles, triangles, "meshopt {meshopt}");
+    }
+    let _ = std::fs::remove_dir_all(&dir);
+}
+
 /// A fill over a measured site: plants on shallow soil stay small, and
 /// plants that came up by themselves in a pavement's cracks are drawn.
 mod on_a_site_field {

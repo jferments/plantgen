@@ -404,6 +404,61 @@ impl Document {
         self.meshes.len() - 1
     }
 
+    /// Copy buffer view `index` of `from` into this document, its bytes as
+    /// decompressed, keeping its target and stride and, when this document
+    /// is compressed, compressing it as `from` did.
+    ///
+    /// # Errors
+    ///
+    /// When `from` has no such view or it is outside its buffer.
+    pub(crate) fn copy_view(&mut self, from: &Glb<'_>, index: usize) -> Result<Index, String> {
+        let view = from
+            .json
+            .pointer(&format!("/bufferViews/{index}"))
+            .ok_or(format!("there is no buffer view {index}"))?;
+        let start = field(view, "byteOffset").unwrap_or(0);
+        let length = field(view, "byteLength").unwrap_or(0);
+        let bytes = from
+            .buffer(field(view, "buffer").unwrap_or(0))
+            .and_then(|buffer| buffer.get(start..start + length))
+            .ok_or(format!("buffer view {index} is outside its buffer"))?;
+        let stride = field(view, "byteStride");
+        let target = field(view, "target").and_then(|target| u32::try_from(target).ok());
+        let compressed = view.pointer("/extensions/EXT_meshopt_compression");
+        let codec = match (
+            compressed
+                .and_then(|c| c.get("mode"))
+                .and_then(Value::as_str),
+            compressed.and_then(|c| field(c, "byteStride")),
+        ) {
+            (Some("ATTRIBUTES"), Some(stride)) => Codec::Attributes(stride),
+            (Some("TRIANGLES"), Some(size)) => Codec::Triangles(size),
+            _ => Codec::None,
+        };
+        Ok(self.strided_view(bytes, target, stride, codec))
+    }
+
+    /// Append `value` to the document's array `array` (accessors, images,
+    /// samplers, textures, materials, meshes or nodes) as it is.
+    ///
+    /// # Panics
+    ///
+    /// When `array` is not one of those.
+    pub(crate) fn push(&mut self, array: &str, value: Value) -> Index {
+        let list = match array {
+            "accessors" => &mut self.accessors,
+            "images" => &mut self.images,
+            "samplers" => &mut self.samplers,
+            "textures" => &mut self.textures,
+            "materials" => &mut self.materials,
+            "meshes" => &mut self.meshes,
+            "nodes" => &mut self.nodes,
+            _ => panic!("a document has no array {array}"),
+        };
+        list.push(value);
+        list.len() - 1
+    }
+
     pub fn node(&mut self, node: Value) -> Index {
         self.nodes.push(node);
         self.nodes.len() - 1

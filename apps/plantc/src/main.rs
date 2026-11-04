@@ -499,7 +499,7 @@ Usage:
               [--day N] [--shade attribute|baked]
               [--compress none|quantize|meshopt]
               [--attributes all|wind|none] [--triangles N[,N,N,N]]
-              [--max-mib N] [--levels tiers|package]
+              [--max-mib N] [--levels tiers|package] [--glb LEVEL]
               [--field SITE.json [--corner X,Z] [--cracks YEARS]
                [--render PNG [--view V] [--size N] [--level N]
                 [--focus X,Y,Z --span M]]]
@@ -529,7 +529,12 @@ Usage:
       of walls and fences. --cracks YEARS adds what comes up in its
       pavements in those years among the fill's species of the pavement
       pool. --render draws the filled tile on its mesh, each prototype at
-      --level (1 unless given).
+      --level (1 unless given). --glb LEVEL (0 nearest to 3 farthest)
+      also writes DIR/tiles/X_Y.glb: the whole tile as one glTF file,
+      each prototype's level LEVEL once and every plant an instance of it
+      (EXT_mesh_gpu_instancing), which Blender, Godot, Unity and three.js
+      open as they are (Blender and Godot need --compress quantize or
+      none: they do not read meshopt).
   plantc inspect <package.afterplant>
       Check every object of a package and summarise it.
   plantc export <species|spec.json|package.afterplant> [--out DIR]
@@ -6104,6 +6109,7 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
             "level",
             "focus",
             "span",
+            "glb",
         ],
     )?;
     if options.positional.is_empty() {
@@ -6292,6 +6298,27 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
         started.elapsed().as_secs_f64(),
         out.join("prototypes").join(api::PROTOTYPES_FILE).display()
     );
+    if let Some(level) = options.number::<usize>("glb")? {
+        if level >= export::LEVELS {
+            return Err(format!("--glb takes a level from 0 to {}", export::LEVELS - 1).into());
+        }
+        let glb = plan
+            .glb(
+                &prototypes,
+                &out.join("prototypes"),
+                level,
+                compression == export::Compression::Meshopt,
+            )
+            .map_err(|error| error.to_string())?;
+        let path = out.join("tiles").join(format!("{}_{}.glb", tile.x, tile.y));
+        fs::write(&path, &glb).map_err(|error| format!("{}: {error}", path.display()))?;
+        #[allow(clippy::cast_precision_loss)]
+        let mib = glb.len() as f64 / 1_048_576.0;
+        out!(
+            "wrote the tile as one glTF file at level {level}, {mib:.1} MiB: {}",
+            path.display()
+        );
+    }
     Ok(())
 }
 

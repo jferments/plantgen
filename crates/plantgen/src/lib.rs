@@ -95,6 +95,7 @@ pub mod substrate;
 pub mod succession;
 pub mod templates;
 pub mod texture;
+mod tile_scene;
 pub mod traits;
 pub mod venation;
 

@@ -100,6 +100,114 @@ fn append(host: &mut PlantMesh, guest: PlantMesh) {
     host.tufts.extend(guest.tufts);
 }
 
+/// The level of detail a scene's overview views (side, 45 degrees, from
+/// the top, and the cover count) draw every plant at. Framing a stand
+/// tile tens of metres across in a thousand or two pixels, a pixel spans
+/// 3-6 cm, and level 1's 10 cm between a stem's ring vertices and 4 mm
+/// thinnest twig (standard quality) lose nothing it can show; level 0
+/// drew a 250-year Douglas-fir's wood in seven times the triangles.
+const OVERVIEW_LEVEL: usize = 1;
+
+/// The camera of a close-up from the side, for choosing each instance's
+/// level of detail by what that close-up's pixels can resolve.
+struct CloseUp {
+    eye: Vec3,
+    /// Level, unit, along the view and to its right.
+    forward: [f64; 2],
+    right: [f64; 2],
+    /// Tangent of half the picture's width as seen from the eye.
+    half_width: f64,
+    /// Metres one pixel spans per metre from the eye.
+    pixel_per_metre: f64,
+}
+
+impl CloseUp {
+    fn new(focus: Vec3, span: f64, width: usize, height: usize) -> Self {
+        let (eye, half_height) = preview::close_up_eye(View::Side, focus, span);
+        let (x, z) = (focus.x - eye.x, focus.z - eye.z);
+        let level = x.hypot(z).max(1e-9);
+        #[allow(clippy::cast_precision_loss)]
+        let (width, height) = (width as f64, height as f64);
+        Self {
+            eye,
+            forward: [x / level, z / level],
+            right: [-z / level, x / level],
+            half_width: half_height * width / height,
+            pixel_per_metre: 2.0 * half_height / height,
+        }
+    }
+
+    /// The level of detail of an instance standing at `at_m` (east, north),
+    /// `height` tall with a crown `crown` metres in radius: the coarsest of
+    /// `levels` whose ring vertices and merged foliage cells stand at most
+    /// three pixels apart, and whose thinnest twig is at most a pixel
+    /// across, where the instance comes nearest the eye. One wholly outside
+    /// the picture only casts shade into it and takes level 2.
+    fn level(&self, at_m: [f64; 2], height: f64, crown: f64, levels: &[mesh::LodSpec; 4]) -> usize {
+        let (x, z) = (at_m[0] - self.eye.x, -at_m[1] - self.eye.z);
+        let along = x * self.forward[0] + z * self.forward[1];
+        let across = (x * self.right[0] + z * self.right[1]).abs();
+        // A margin for limbs past the crown's measured radius.
+        let reach = crown.max(0.0) * 1.1 + 0.2;
+        let beside = (across - self.half_width * along) / self.half_width.hypot(1.0);
+        if along + reach <= 0.0 || beside > reach {
+            return 2;
+        }
+        // Depth of its nearest part; nothing nearer than the macro lens.
+        let depth = (along - reach).max(0.15);
+        let pixel = depth * self.pixel_per_metre;
+        (0..levels.len())
+            .rev()
+            .find(|&level| {
+                let spec = levels[level].for_height(height);
+                spec.ring_edge.max(spec.cluster) <= 3.0 * pixel && 2.0 * spec.min_radius <= pixel
+            })
+            .unwrap_or(0)
+    }
+}
+
+/// The scene one view draws: every instance placed, each at the level of
+/// detail `level` gives it, its variant's mesh at that level built once by
+/// `build` and dropped once the scene holds its copies.
+fn scene_of(
+    instances: &[Instance],
+    build: &dyn Fn(usize, f64, usize) -> Option<PlantMesh>,
+    level: &dyn Fn(&Instance) -> usize,
+) -> PlantMesh {
+    let mut meshes: BTreeMap<(usize, u64, usize), PlantMesh> = BTreeMap::new();
+    let key = |instance: &Instance| {
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let age = (instance.age * 1000.0).round() as u64;
+        (instance.variant, age, level(instance))
+    };
+    for instance in instances {
+        let key = key(instance);
+        if !meshes.contains_key(&key)
+            && let Some(plant) = build(instance.variant, instance.age, key.2)
+        {
+            meshes.insert(key, plant);
+        }
+    }
+    let mut scene = PlantMesh::default();
+    for instance in instances {
+        let Some(plant) = meshes.get(&key(instance)) else {
+            continue;
+        };
+        let [east, north] = instance.at_m;
+        append(
+            &mut scene,
+            placed(
+                plant,
+                instance.yaw_deg,
+                instance.scale,
+                instance.lean,
+                Vec3::new(east, 0.0, -north),
+            ),
+        );
+    }
+    scene
+}
+
 /// Lay the stand of `members` out on a tile by `laid`'s rules
 /// (`plantgen::stand_tile`), drawn `repeat` tiles each way about the
 /// middle, and print its stems, basal area, leaf area and cover.
@@ -457,7 +565,6 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
     }
     let day = options.day()?;
     let quality = options.quality()?;
-    let lod = &quality.lods[0];
     // Grow each variant once, every variant on its own thread.
     let started = std::time::Instant::now();
     for variant in &mut variants {
@@ -489,11 +596,18 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
         started.elapsed().as_secs_f64(),
         instances.len()
     );
-    // One mesh per variant and age, its cards drawing from one list of
-    // looks for the whole scene.
+    // Each variant's looks, bodies and the shift of its looks in the
+    // scene's one list of looks; its meshes are built for each view at the
+    // level of detail that view needs (`scene_of`).
     let mut all_looks = Vec::new();
     let mut bark = None;
-    let mut meshes: BTreeMap<(usize, u64), PlantMesh> = BTreeMap::new();
+    #[allow(clippy::type_complexity)]
+    let mut drawing: Vec<(
+        Vec<plantgen::looks::Look>,
+        Vec<f64>,
+        Vec<plantgen::body::BodyLook>,
+        u8,
+    )> = Vec::new();
     // Each variant's size at each age: height, crown base, crown radius,
     // breast-height diameter and leaf area.
     let mut sizes_at: BTreeMap<(usize, u64), [f64; 5]> = BTreeMap::new();
@@ -507,19 +621,6 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
             let Some(graph) = growth.keyframes.get(keyframe) else {
                 continue;
             };
-            let graph = &*drawn(graph, &sizes, &looks);
-            let mut plant = mesh::build(
-                graph,
-                &looks,
-                &bodies,
-                &spec.appearance,
-                &lod.for_height(graph.height),
-                0,
-            );
-            plant.vary_by_plant(&looks, *seed);
-            for card in &mut plant.cards {
-                card.template = card.template.saturating_add(shift);
-            }
             out!(
                 "  {} {} seed {seed}: {}",
                 spec.id,
@@ -528,7 +629,6 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
             );
             #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
             let key = (index, (age * 1000.0).round() as u64);
-            meshes.insert(key, plant);
             sizes_at.insert(
                 key,
                 [
@@ -540,7 +640,8 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
                 ],
             );
         }
-        all_looks.extend(looks);
+        all_looks.extend(looks.iter().cloned());
+        drawing.push((looks, sizes, bodies, shift));
         if bark.is_none() {
             bark = spec.appearance.bark_params();
         }
@@ -580,36 +681,45 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
             &mut instances,
         )?;
     }
-    let mut scene = PlantMesh::default();
-    for instance in &instances {
-        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-        let key = (instance.variant, (instance.age * 1000.0).round() as u64);
-        let Some(plant) = meshes.get(&key) else {
-            continue;
-        };
-        let [east, north] = instance.at_m;
-        append(
-            &mut scene,
-            placed(
-                plant,
-                instance.yaw_deg,
-                instance.scale,
-                instance.lean,
-                Vec3::new(east, 0.0, -north),
-            ),
-        );
+    if !options.flags.contains_key("out") && !options.flags.contains_key("cover") {
+        return Ok(());
     }
+    // One variant's mesh at one age and level of detail.
+    let build = |index: usize, age: f64, level: usize| -> Option<PlantMesh> {
+        let (spec, _, seed, ages) = &variants[index];
+        let keyframe = ages.iter().position(|known| (known - age).abs() < 1e-9)?;
+        let graph = growths[index].keyframes.get(keyframe)?;
+        let (looks, sizes, bodies, shift) = &drawing[index];
+        let graph = &*drawn(graph, sizes, looks);
+        let mut plant = mesh::build(
+            graph,
+            looks,
+            bodies,
+            &spec.appearance,
+            &quality.lods[level].for_height(graph.height),
+            level,
+        );
+        plant.vary_by_plant(looks, *seed);
+        for card in &mut plant.cards {
+            card.template = card.template.saturating_add(*shift);
+        }
+        Some(plant)
+    };
     let templates = Templates::for_plant(&all_looks, &[]).with_bark(bark);
     let reach = instances
         .iter()
         .map(|i| i.at_m[0].abs().max(i.at_m[1].abs()))
         .fold(1.0, f64::max);
     let pixels: usize = options.number("size")?.unwrap_or(1200);
+    // The overview views share one scene, built when one first needs it.
+    let mut overview: Option<PlantMesh> = None;
     // `--cover HALF`: the share of the square HALF metres round the middle
     // that crowns cover seen straight down.
     if let Some(half) = options.number::<f64>("cover")? {
+        let scene =
+            overview.get_or_insert_with(|| scene_of(&instances, &build, &|_| OVERVIEW_LEVEL));
         let image = preview::render_on_site(
-            &scene,
+            scene,
             &[],
             &templates,
             &PreviewOptions {
@@ -669,7 +779,12 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
         }
         None => None,
     };
-    for name in views.split(',') {
+    // The overview views first: they share one scene, and a close-up's
+    // scene is built only once that one is dropped, so the two are never
+    // held at once.
+    let (closes, overviews): (Vec<&str>, Vec<&str>) =
+        views.split(',').partition(|name| *name == "close");
+    for name in overviews.into_iter().chain(closes) {
         let close = name == "close";
         let view = if close { View::Side } else { view_named(name)? };
         let shot = PreviewOptions {
@@ -683,10 +798,31 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
             focus: if close { focus } else { None },
             fit_plant: false,
         };
-        if close && focus.is_none() {
-            return Err("the close view needs --focus X,Y,Z".into());
-        }
-        let image = preview::render_with(&scene, &[], &templates, &shot);
+        let close_scene;
+        let scene = match (close, focus) {
+            (true, None) => return Err("the close view needs --focus X,Y,Z".into()),
+            (true, Some((point, span))) => {
+                let camera = CloseUp::new(point, span, shot.width, shot.height);
+                // No overview view comes after a close-up.
+                overview = None;
+                close_scene = scene_of(&instances, &build, &|instance| {
+                    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+                    let key = (instance.variant, (instance.age * 1000.0).round() as u64);
+                    let [height, _, crown, ..] = sizes_at.get(&key).copied().unwrap_or_default();
+                    camera.level(
+                        instance.at_m,
+                        height * instance.scale,
+                        crown * instance.scale,
+                        &quality.lods,
+                    )
+                });
+                &close_scene
+            }
+            (false, _) => {
+                &*overview.get_or_insert_with(|| scene_of(&instances, &build, &|_| OVERVIEW_LEVEL))
+            }
+        };
+        let image = preview::render_with(scene, &[], &templates, &shot);
         let png = raster::encode_png(
             image.width,
             image.height,
@@ -698,4 +834,30 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
         out!("wrote {path}: {} triangles", scene.triangle_count());
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn a_close_up_draws_full_detail_only_where_its_pixels_can_show_it() {
+        // A 10 m close-up of a point 1.2 m up in the middle, 1600 by 1200
+        // pixels: its eye stands about 19 m south of the point, looking
+        // north, and a pixel at the point spans about 8 mm.
+        let camera = CloseUp::new(Vec3::new(0.0, 1.2, 0.0), 10.0, 1600, 1200);
+        let lods = &plantgen::quality::STANDARD.lods;
+        // A 40 m tree with a crown 4 m in radius, at east and north metres.
+        let level = |at_m| camera.level(at_m, 40.0, 4.0, lods);
+        assert_eq!(level([0.0, 0.0]), 0, "at the focus");
+        assert_eq!(level([0.0, 40.0]), 0, "40 m beyond it, pixels 2.5 cm");
+        assert_eq!(level([0.0, 200.0]), 1, "200 m beyond it, pixels 10 cm");
+        assert_eq!(level([0.0, 1000.0]), 2, "a kilometre beyond it");
+        assert_eq!(level([30.0, 0.0]), 2, "off the side of the picture");
+        assert_eq!(level([0.0, -40.0]), 2, "behind the camera");
+        // A sapling 2 m tall takes each level's lengths scaled to its
+        // height (`LodSpec::for_height`), so it goes coarse nearer.
+        assert_eq!(camera.level([0.0, 40.0], 2.0, 0.5, lods), 1);
+        assert_eq!(camera.level([0.0, 100.0], 2.0, 0.5, lods), 2);
+    }
 }

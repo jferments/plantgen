@@ -1120,6 +1120,29 @@ impl TilePlan {
         std::fs::write(&path, json).map_err(fail)?;
         Ok(path)
     }
+
+    /// The tile as one GLB that any glTF viewer opens: each prototype the
+    /// tile places, at `level` (0 nearest to 3 farthest), copied once
+    /// from its files in `dir` (as [`Fill::write_prototypes`] listed them
+    /// in `prototypes`), and a node per prototype mesh drawing every plant
+    /// that uses it with `EXT_mesh_gpu_instancing`. The root node sits at
+    /// the tile's south-west corner (+X east, +Y up, -Z north). With
+    /// `meshopt`, its arrays are compressed with `EXT_meshopt_compression`.
+    ///
+    /// # Errors
+    ///
+    /// When a placed prototype is not in `prototypes`, has no such level,
+    /// or its file cannot be read or holds what instances cannot carry (a
+    /// rig, a node placed by a matrix or scaled unevenly).
+    pub fn glb(
+        &self,
+        prototypes: &[PrototypeFiles],
+        dir: &Path,
+        level: usize,
+        meshopt: bool,
+    ) -> Result<Vec<u8>, Error> {
+        crate::tile_scene::tile_glb(self, prototypes, dir, level, meshopt)
+    }
 }
 
 /// A set of communities, their stands developed and prototypes chosen
