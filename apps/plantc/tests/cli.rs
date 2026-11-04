@@ -79,7 +79,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let campanulids = "(clade campanulids: _ranks/clade/campanulids.json)";
     assert!(
         built_in.starts_with(&format!(
-            "Rules, by their home (1036):\n  appearance.organs.*.inflorescence.branch.kind  {flowering}\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
+            "Rules, by their home (1038):\n  appearance.organs.*.inflorescence.branch.kind  {flowering}\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
         )),
         "{built_in}"
     );
@@ -200,7 +200,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let library = dir.to_str().unwrap();
     let rules = stdout(&plantc(&["--library", library, "rules"]));
     assert!(
-        rules.starts_with("Rules, by their home (1037):\n"),
+        rules.starts_with("Rules, by their home (1039):\n"),
         "{rules}"
     );
     assert!(
@@ -697,8 +697,8 @@ fn fill_writes_a_tile_and_the_prototypes_it_places() {
         "40",
         "--seed",
         "5",
-        "--classes",
-        "2",
+        "--ages",
+        "20,40",
         "--seeds",
         "1",
         "--quality",
@@ -734,11 +734,13 @@ fn fill_writes_a_tile_and_the_prototypes_it_places() {
             );
         }
     }
-    // Filling again keeps the prototypes and writes the same tile, and
-    // --glb writes it as one glTF file too.
+    assert!(made.contains("measured 1 prototypes (1 grown"), "{made}");
+    // Filling again keeps the prototypes, measures none and writes the
+    // same tile, and --glb writes it as one glTF file too.
     let mut with_glb = args.to_vec();
     with_glb.extend(["--glb", "3"]);
     let again = stdout(&plantc(&with_glb));
+    assert!(again.contains("(0 grown"), "{again}");
     assert!(again.contains("wrote the tile as one glTF file"), "{again}");
     assert_eq!(fs::read(out.join("tiles/2_-3.bin")).unwrap(), bin);
     let glb = fs::read(out.join("tiles/2_-3.glb")).unwrap();

@@ -493,23 +493,31 @@ Usage:
       low) unless --levels package; the export flags are plantc export's.
   plantc fill <community.json>... --tile X,Y --tile-m N [--seed N]
               [--years N] [--stands stands.json] [--out DIR]
-              [--prototypes none|used|all] [--classes N] [--seeds N]
-              [--threads N] [--quality draft|standard] [--day N]
-              [--shade attribute|baked] [--compress none|quantize|meshopt]
+              [--prototypes none|used|all] [--ages N,N,...] [--seeds N]
+              [--herbs yes|no] [--site M,H,E,S] [--threads N]
+              [--quality draft|standard]
+              [--day N] [--shade attribute|baked]
+              [--compress none|quantize|meshopt]
               [--attributes all|wind|none] [--triangles N[,N,N,N]]
               [--max-mib N] [--levels tiers|package] [--glb LEVEL]
       Fill one map tile with plant communities (each a JSON file: an id
-      and members, each a species and optionally a layer, the settings
-      it grows in and an abundance) as the
-      library API's Fill does, and write DIR/tiles/X_Y.json (header,
-      ground cover and far canopy per stand cell) and DIR/tiles/X_Y.bin
-      (32-byte instances; docs/LIBRARY-API.md). Without --stands (a
-      StandMap: cell_m, cols and cells), the first community covers the
-      tile at --years since disturbance (default 100). --prototypes used
-      (the default) also grows and exports, into DIR/prototypes with
-      prototypes.json, each prototype the tile places that is not there
-      yet; all exports every prototype; none only the tile. The plan is
-      the same on every machine and thread count, and a tile meets its
+      and members, each a species, optionally the layer it keeps to and
+      its abundance) as the library API's Fill does, and write
+      DIR/tiles/X_Y.json (header, ground cover and far canopy per stand
+      cell, stand numbers) and DIR/tiles/X_Y.bin (32-byte instances;
+      docs/LIBRARY-API.md). Each community's stand is developed at each of
+      --ages years since disturbance (default 10,20,40,80,160,320,640);
+      a stand cell takes the nearest. Without --stands (a StandMap:
+      cell_m, cols and cells), the first community covers the tile at
+      --years since disturbance (default 100). Every prototype is measured
+      first, its size kept in DIR/prototypes so a later fill grows none
+      again. --prototypes used (the default) also exports, into
+      DIR/prototypes with prototypes.json, each prototype the tile places
+      that is not there yet; all exports every prototype; none only the
+      tile. --herbs no leaves herbs to the ground cover. --site gives the
+      flat tile's moisture, heat load, elevation (m) and slope (degrees)
+      for the species' niches (default 0.5,1,0,0). The plan is the
+      same on every machine and thread count, and a tile meets its
       neighbours without a seam. --glb LEVEL (0 nearest to 3 farthest)
       also writes DIR/tiles/X_Y.glb: the whole tile as one glTF file,
       each prototype's level LEVEL once and every plant an instance of it
@@ -6068,7 +6076,9 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
             "stands",
             "out",
             "prototypes",
-            "classes",
+            "ages",
+            "herbs",
+            "site",
             "seeds",
             "threads",
             "quality",
@@ -6113,9 +6123,18 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
     let seed: u64 = options.number("seed")?.unwrap_or(1);
     let years: f32 = options.number("years")?.unwrap_or(100.0);
     let mut settings = api::FillSettings::default();
-    if let Some(classes) = options.number::<u16>("classes")? {
-        settings.age_classes = classes;
+    if let Some(ages) = options.flags.get("ages") {
+        settings.stand_ages = ages
+            .split(',')
+            .map(|age| age.trim().parse::<f64>())
+            .collect::<Result<Vec<_>, _>>()
+            .map_err(|_| format!("--ages takes years separated by commas, found `{ages}`"))?;
     }
+    settings.herbs = match options.flags.get("herbs").map(String::as_str) {
+        None | Some("yes") => true,
+        Some("no") => false,
+        Some(other) => return Err(format!("--herbs takes yes or no, found `{other}`").into()),
+    };
     if let Some(seeds) = options.number::<u16>("seeds")? {
         settings.seeds = seeds;
     }
@@ -6127,7 +6146,34 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
     let out = PathBuf::from(options.flags.get("out").map_or("fill", String::as_str));
     let started = Instant::now();
     let fill = api::Fill::new(&communities, &settings).map_err(|error| error.to_string())?;
-    let site = api::Site::flat(tile, tile_m).map_err(|error| error.to_string())?;
+    let grown = fill
+        .measure(&[], threads, Some(&out.join("prototypes")))
+        .map_err(|error| error.to_string())?;
+    out!(
+        "measured {} prototypes ({grown} grown, the rest kept) in {:.1} s",
+        fill.prototypes().len(),
+        started.elapsed().as_secs_f64()
+    );
+    let started = Instant::now();
+    let mut site = api::Site::flat(tile, tile_m).map_err(|error| error.to_string())?;
+    if let Some(given) = options.flags.get("site") {
+        let numbers = given
+            .split(',')
+            .map(|part| part.trim().parse::<f64>())
+            .collect::<Result<Vec<_>, _>>();
+        let Ok([moisture, heat_load, elevation_m, slope_deg]) = numbers.as_deref() else {
+            return Err(format!(
+                "--site takes moisture,heat_load,elevation_m,slope_deg, found `{given}`"
+            )
+            .into());
+        };
+        site = site.with_factors(plantgen::niche::SiteFactors {
+            moisture: *moisture,
+            heat_load: *heat_load,
+            elevation_m: *elevation_m,
+            slope_deg: *slope_deg,
+        });
+    }
     let stands = match options.flags.get("stands") {
         Some(path) => {
             let text =
@@ -6152,6 +6198,44 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
         started.elapsed().as_secs_f64(),
         written.display()
     );
+    let stats = &plan.stats;
+    out!(
+        "  stems/ha {:.0}, trees/ha (5 cm or more at breast height) {:.0}, basal area {:.1} m²/ha, canopy cover {:.0}%, leaf area index {:.2}",
+        stats.stems_per_ha,
+        stats.trees_per_ha,
+        stats.basal_area_m2_per_ha,
+        100.0 * stats.canopy_cover,
+        stats.leaf_area_index
+    );
+    // By species: trees 5 cm or more at breast height, their mean and
+    // tallest height, and every plant.
+    let area_ha = tile_m * tile_m / 10_000.0;
+    let mut by_species: BTreeMap<&str, (usize, f64, f64, usize)> = BTreeMap::new();
+    for instance in &plan.instances {
+        let index = instance.prototype as usize;
+        let species = fill.prototypes()[index].key.species.as_str();
+        let entry = by_species.entry(species).or_insert((0, 0.0, 0.0, 0));
+        entry.3 += 1;
+        if let Some(size) = fill.size(index) {
+            let scale = f64::from(instance.scale);
+            if size.dbh.unwrap_or(0.0) * scale >= 0.05 {
+                entry.0 += 1;
+                entry.1 += size.height * scale;
+                entry.2 = entry.2.max(size.height * scale);
+            }
+        }
+    }
+    for (species, (trees, heights, tallest, all)) in &by_species {
+        #[allow(clippy::cast_precision_loss)]
+        let (per_ha, mean, every) = (
+            *trees as f64 / area_ha,
+            heights / (*trees).max(1) as f64,
+            *all as f64 / area_ha,
+        );
+        out!(
+            "  {species}: {per_ha:.0} trees/ha (mean height {mean:.1} m, tallest {tallest:.1} m), {every:.0} plants/ha in all"
+        );
+    }
     let which = match options.flags.get("prototypes").map(String::as_str) {
         Some("none") => return Ok(()),
         None | Some("used") => plan.prototypes_used(),
