@@ -7,6 +7,15 @@ whoever changes this code. The file formats are in
 [SITE-FIELD.md](SITE-FIELD.md) (the site field) and in `plantc help`
 (the site document).
 
+![The test block and its site field drawn eight ways](../images/sites/site-field-sheet.jpg)
+
+The test block (`docs/sites/make_block.py`) and its field: the block as
+built and close up with a few plants; hosts by kind from 45° and from the
+side (wall tan, roof red, pole yellow, fence orange, wire black, boulder
+grey, log brown, kept clear blue; ground soil green, paved grey, cracked
+orange); sky seen; the house close, with the mossy roof's patches that
+carry soil green; wetness and heat load from above.
+
 ## What lives where
 
 | Piece | Where | What it does |
@@ -179,6 +188,10 @@ python3 docs/sites/field_view.py /tmp/block-field.json /tmp/block-view --ground 
 ./target/release/plantc site /tmp/block-view/view.json --out /tmp/block-field.png \
   --view oblique --size 1400 --quality draft --focus 0,0,0 --span 44
 ```
+
+The sheet at the top of this guide is made from these same commands by
+`skills/sites-work/make_field_sheet.py` in the project's private agent
+notes (`jferments/plantgen-claude`).
 
 `field_view.py` colours the ground by `sky`, `wetness`, `heat`, `rooting`
 or `material`, and the patches by `kind`, `sky` or `soil`. To test speed,
