@@ -271,6 +271,79 @@ impl SiteField {
         ]
     }
 
+    /// Height of the ground at (`x`, `z`), blended between the centres of
+    /// the four cells round it by distance (bilinear). Where some of them
+    /// have no ground (a wall's foot, a boulder), it blends the others;
+    /// where none has, it is `None`.
+    #[must_use]
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+    pub fn height_at(&self, x: f64, z: f64) -> Option<f64> {
+        let cell = self.settings.cell_m;
+        let fx = (x - self.origin[0]) / cell - 0.5;
+        let fz = (z - self.origin[1]) / cell - 0.5;
+        if !(fx.is_finite() && fz.is_finite()) {
+            return None;
+        }
+        let (c0, r0) = (fx.floor(), fz.floor());
+        let (tx, tz) = (fx - c0, fz - r0);
+        let (mut sum, mut weight) = (0.0, 0.0);
+        for (dc, dr, w) in [
+            (0.0, 0.0, (1.0 - tx) * (1.0 - tz)),
+            (1.0, 0.0, tx * (1.0 - tz)),
+            (0.0, 1.0, (1.0 - tx) * tz),
+            (1.0, 1.0, tx * tz),
+        ] {
+            let (c, r) = (c0 + dc, r0 + dr);
+            if c < 0.0 || r < 0.0 || c >= f64::from(self.columns) || r >= f64::from(self.rows) {
+                continue;
+            }
+            let index = r as usize * self.columns as usize + c as usize;
+            if let Some(Some(h)) = self.ground.height.get(index) {
+                sum += h * w;
+                weight += w;
+            }
+        }
+        // A point on a cell's centre takes that cell alone, even beside
+        // cells with no ground.
+        (weight > 1.0e-12).then(|| sum / weight)
+    }
+
+    /// Heat load of a cell relative to level ground at the field's
+    /// latitude: 1 on level ground, above 1 facing the south-west (the
+    /// north-west south of the equator). It is the scale a niche's
+    /// `heat_load` range is written in ([`crate::niche::SiteFactors`]).
+    #[must_use]
+    pub fn relative_heat_load(&self, cell: u32) -> Option<f64> {
+        let index = cell as usize;
+        self.ground.height.get(index).copied().flatten()?;
+        let level = heat_load_index(self.settings.latitude_deg, 0.0, 0.0);
+        Some(self.ground.heat_load[index] / level)
+    }
+
+    /// What a species' niche reads of a cell
+    /// ([`crate::niche::Niche::site_response`]): its heat load relative to
+    /// level ground, its slope, and its elevation as its height above
+    /// `datum_m` (the height above sea level of the field's y = 0). The
+    /// field does not say how wet the ground is in a niche's terms, so the
+    /// host gives `moisture`, 0 to 1; the cell's `wetness` index says
+    /// where water gathers. `None` where the cell has no ground.
+    #[must_use]
+    pub fn site_factors(
+        &self,
+        cell: u32,
+        datum_m: f64,
+        moisture: f64,
+    ) -> Option<crate::niche::SiteFactors> {
+        let index = cell as usize;
+        let height = self.ground.height.get(index).copied().flatten()?;
+        Some(crate::niche::SiteFactors {
+            moisture,
+            heat_load: self.relative_heat_load(cell)?,
+            elevation_m: datum_m + height,
+            slope_deg: self.ground.slope_deg[index],
+        })
+    }
+
     /// The field as JSON.
     ///
     /// # Errors
@@ -529,15 +602,20 @@ pub fn build(
             .map(|&(below, _)| y - below);
     }
 
-    // Sky and distance to walls.
-    let mut sky = vec![0.0; count];
-    let mut wall_m = vec![settings.wall_reach_m; count];
-    let mut clear_m = vec![settings.wall_reach_m; count];
+    // Sky and distance to walls, over every core.
+    let reach = settings.sky_reach_m.max(settings.wall_reach_m);
+    let tracer = Tracer::new(
+        site,
+        origin,
+        [
+            origin[0] + f64::from(columns) * cell,
+            origin[1] + f64::from(rows) * cell,
+        ],
+        reach,
+    );
     let directions = hemisphere(settings.sky_rays);
-    for index in 0..count {
-        let Some(y) = height[index] else {
-            continue;
-        };
+    let measured = spread(count, &|index| {
+        let y = height[index]?;
         let (x, z) = centre(index);
         // In a crack or a pothole, from the pavement's surface: the mesh
         // under a tile does not shade it.
@@ -547,10 +625,19 @@ pub fn build(
             .find(|t| t.covers(x, z))
             .map_or(y, |t| y.max(t.top()));
         let foot = Vec3::new(x, top + 0.05, z);
-        sky[index] = sky_seen(site, foot, Vec3::Y, &directions, settings.sky_reach_m);
-        let (wall, clear) = nearest_upright(site, foot, settings.wall_reach_m);
-        wall_m[index] = wall;
-        clear_m[index] = clear;
+        let sky = tracer.sky_seen(foot, Vec3::Y, &directions, settings.sky_reach_m);
+        let (wall, clear) = tracer.nearest_upright(foot, settings.wall_reach_m);
+        Some((sky, wall, clear))
+    });
+    let mut sky = vec![0.0; count];
+    let mut wall_m = vec![settings.wall_reach_m; count];
+    let mut clear_m = vec![settings.wall_reach_m; count];
+    for (index, found) in measured.into_iter().enumerate() {
+        if let Some((s, w, c)) = found {
+            sky[index] = s;
+            wall_m[index] = w;
+            clear_m[index] = c;
+        }
     }
 
     // Crack sites.
@@ -578,7 +665,7 @@ pub fn build(
 
     // Hosts and patches.
     let (hosts, patches) = surfaces(
-        site, origin, cell, columns, rows, &height, &terrain, settings,
+        site, &tracer, origin, cell, columns, rows, &height, &terrain, settings,
     );
 
     let round = |v: f64| (v * 1000.0).round() / 1000.0;
@@ -693,20 +780,271 @@ fn hemisphere(count: u32) -> Vec<Vec3> {
         .collect()
 }
 
-/// Share of `directions` (about +Y) turned to `normal` that leave `from`
-/// without meeting the site within `reach`.
-#[allow(clippy::cast_precision_loss)]
-fn sky_seen(site: &SiteMesh, from: Vec3, normal: Vec3, directions: &[Vec3], reach: f64) -> f64 {
-    let (tangent, bitangent) = frame(normal);
-    let open = directions
-        .iter()
-        .filter(|d| {
-            let ray = (tangent * d.x + normal * d.y + bitangent * d.z).normalize_or(normal);
-            // A ray into the ground below the horizon is not sky.
-            ray.y > -0.02 && !ray_blocked(site, from, ray, reach)
-        })
-        .count();
-    open as f64 / directions.len().max(1) as f64
+/// The site's triangles by column cell over the ground a field's rays and
+/// wall searches reach, with each column's top, so that a ray passes over
+/// the columns it clears without testing their triangles. Built once per
+/// field and shared by every thread.
+struct Tracer<'a> {
+    site: &'a SiteMesh,
+    /// The lowest column's index, as (x, z).
+    low: [i64; 2],
+    size: [usize; 2],
+    /// Each column's triangles: `items[start[i]..start[i + 1]]`.
+    start: Vec<u32>,
+    items: Vec<u32>,
+    /// The highest point of any triangle in each column.
+    top: Vec<f64>,
+    /// Each column's faces a wall search finds: upright faces that are
+    /// not soil, thin parts, and faces kept clear.
+    wall_start: Vec<u32>,
+    walls: Vec<u32>,
+    min_y: f64,
+    max_y: f64,
+}
+
+impl<'a> Tracer<'a> {
+    /// Columns from `low` to `high` (x, z), and `reach` round them.
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+    fn new(site: &'a SiteMesh, low: [f64; 2], high: [f64; 2], reach: f64) -> Self {
+        let column = SiteMesh::COLUMN_M;
+        let index = |v: f64| (v / column).floor() as i64;
+        let first = [index(low[0] - reach) - 1, index(low[1] - reach) - 1];
+        let last = [index(high[0] + reach) + 1, index(high[1] + reach) + 1];
+        let size = [
+            (last[0] - first[0] + 1).max(1) as usize,
+            (last[1] - first[1] + 1).max(1) as usize,
+        ];
+        let count = size[0] * size[1];
+        let (mut start, mut items, mut top) = (
+            Vec::with_capacity(count + 1),
+            Vec::new(),
+            vec![f64::NEG_INFINITY; count],
+        );
+        let (mut wall_start, mut walls) = (Vec::with_capacity(count + 1), Vec::new());
+        start.push(0);
+        wall_start.push(0);
+        for k in 0..size[1] {
+            for i in 0..size[0] {
+                let x = (first[0] + i as i64) as f64 * column + 0.5 * column;
+                let z = (first[1] + k as i64) as f64 * column + 0.5 * column;
+                for &triangle in site.column_triangles(x, z) {
+                    items.push(triangle);
+                    let [a, b, c] = site.corners(triangle as usize);
+                    let at = k * size[0] + i;
+                    top[at] = top[at].max(a.y).max(b.y).max(c.y);
+                    let surface = site.surface(triangle as usize);
+                    let upright =
+                        site.normal(triangle as usize).y.abs() < UPRIGHT_Y || surface.thin();
+                    if surface.material != SOIL && (upright || surface.clear) {
+                        walls.push(triangle);
+                    }
+                }
+                start.push(u32::try_from(items.len()).unwrap_or(u32::MAX));
+                wall_start.push(u32::try_from(walls.len()).unwrap_or(u32::MAX));
+            }
+        }
+        let (bottom, summit) = site.bounds();
+        Self {
+            site,
+            low: first,
+            size,
+            start,
+            items,
+            top,
+            wall_start,
+            walls,
+            min_y: bottom.y,
+            max_y: summit.y,
+        }
+    }
+
+    /// A column's slot in the grid, if it lies in it.
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+    fn slot(&self, column: [i64; 2]) -> Option<usize> {
+        let (i, k) = (column[0] - self.low[0], column[1] - self.low[1]);
+        (i >= 0 && k >= 0 && (i as usize) < self.size[0] && (k as usize) < self.size[1])
+            .then(|| k as usize * self.size[0] + i as usize)
+    }
+
+    /// A column's triangles and top. Outside the grid, the site's own
+    /// index, with no top to pass over.
+    #[allow(clippy::cast_precision_loss)]
+    fn column(&self, column: [i64; 2]) -> (&[u32], f64) {
+        match self.slot(column) {
+            Some(at) => (
+                &self.items[self.start[at] as usize..self.start[at + 1] as usize],
+                self.top[at],
+            ),
+            None => {
+                let size = SiteMesh::COLUMN_M;
+                (
+                    self.site.column_triangles(
+                        (column[0] as f64 + 0.5) * size,
+                        (column[1] as f64 + 0.5) * size,
+                    ),
+                    f64::INFINITY,
+                )
+            }
+        }
+    }
+
+    /// A column's faces for a wall search.
+    #[allow(clippy::cast_precision_loss)]
+    fn wall_faces(&self, column: [i64; 2]) -> std::borrow::Cow<'_, [u32]> {
+        match self.slot(column) {
+            Some(at) => std::borrow::Cow::Borrowed(
+                &self.walls[self.wall_start[at] as usize..self.wall_start[at + 1] as usize],
+            ),
+            None => {
+                let size = SiteMesh::COLUMN_M;
+                self.site
+                    .column_triangles(
+                        (column[0] as f64 + 0.5) * size,
+                        (column[1] as f64 + 0.5) * size,
+                    )
+                    .iter()
+                    .copied()
+                    .filter(|&t| {
+                        let surface = self.site.surface(t as usize);
+                        let upright =
+                            self.site.normal(t as usize).y.abs() < UPRIGHT_Y || surface.thin();
+                        surface.material != SOIL && (upright || surface.clear)
+                    })
+                    .collect::<Vec<u32>>()
+                    .into()
+            }
+        }
+    }
+
+    /// Whether the ray from `from` along unit `ray` meets a triangle of
+    /// the site within `reach`. It walks the column cells the ray crosses
+    /// in order (Amanatides and Woo 1987), each once, and tests a column's
+    /// triangles only where the ray is not yet above the column's top.
+    #[allow(clippy::cast_possible_truncation)]
+    fn blocked(&self, from: Vec3, ray: Vec3, reach: f64) -> bool {
+        let size = SiteMesh::COLUMN_M;
+        let mut column = [
+            (from.x / size).floor() as i64,
+            (from.z / size).floor() as i64,
+        ];
+        // Distance along the ray to the next column edge, and between edges.
+        #[allow(clippy::cast_precision_loss)]
+        let edge = |p: f64, d: f64, at: i64| -> (f64, f64, i64) {
+            if d > 1.0e-12 {
+                (((at + 1) as f64 * size - p) / d, size / d, 1)
+            } else if d < -1.0e-12 {
+                ((at as f64 * size - p) / d, -size / d, -1)
+            } else {
+                (f64::INFINITY, f64::INFINITY, 0)
+            }
+        };
+        let (mut next_x, step_x, dx) = edge(from.x, ray.x, column[0]);
+        let (mut next_z, step_z, dz) = edge(from.z, ray.z, column[1]);
+        let mut enter = 0.0_f64;
+        loop {
+            let leave = next_x.min(next_z).min(reach);
+            let (y_enter, y_leave) = (from.y + ray.y * enter, from.y + ray.y * leave);
+            if (ray.y > 0.0 && y_enter > self.max_y) || (ray.y < 0.0 && y_enter < self.min_y) {
+                return false;
+            }
+            let (triangles, top) = self.column(column);
+            if y_enter.min(y_leave) <= top + 1.0e-9 {
+                for &index in triangles {
+                    let [a, b, c] = self.site.corners(index as usize);
+                    if let Some(hit) = ray_triangle(from, ray, a, b, c)
+                        && hit > 1.0e-4
+                        && hit <= reach
+                    {
+                        return true;
+                    }
+                }
+            }
+            if leave >= reach {
+                return false;
+            }
+            enter = leave;
+            if next_x < next_z {
+                column[0] += dx;
+                next_x += step_x;
+            } else {
+                column[1] += dz;
+                next_z += step_z;
+            }
+        }
+    }
+
+    /// Share of `directions` (about +Y) turned to `normal` that leave
+    /// `from` without meeting the site within `reach`.
+    #[allow(clippy::cast_precision_loss)]
+    fn sky_seen(&self, from: Vec3, normal: Vec3, directions: &[Vec3], reach: f64) -> f64 {
+        let (tangent, bitangent) = frame(normal);
+        let open = directions
+            .iter()
+            .filter(|d| {
+                let ray = (tangent * d.x + normal * d.y + bitangent * d.z).normalize_or(normal);
+                // A ray into the ground below the horizon is not sky.
+                ray.y > -0.02 && !self.blocked(from, ray, reach)
+            })
+            .count();
+        open as f64 / directions.len().max(1) as f64
+    }
+
+    /// Distance from `foot` to the nearest upright face that is not soil,
+    /// and to the nearest face kept clear, each at most `reach`. It
+    /// searches the columns round `foot` ring by ring and stops once a
+    /// ring lies farther than both.
+    #[allow(clippy::cast_possible_truncation, clippy::cast_precision_loss)]
+    fn nearest_upright(&self, foot: Vec3, reach: f64) -> (f64, f64) {
+        let size = SiteMesh::COLUMN_M;
+        let n = (reach / size).ceil() as i64;
+        let centre = [
+            (foot.x / size).floor() as i64,
+            (foot.z / size).floor() as i64,
+        ];
+        let (mut wall, mut clear) = (reach, reach);
+        for ring in 0..=n {
+            if ring >= 1 && (ring - 1) as f64 * size >= wall.max(clear) {
+                break;
+            }
+            for k in -ring..=ring {
+                for i in -ring..=ring {
+                    if i.abs().max(k.abs()) != ring {
+                        continue;
+                    }
+                    for &index in self.wall_faces([centre[0] + i, centre[1] + k]).iter() {
+                        let surface = self.site.surface(index as usize);
+                        let upright =
+                            self.site.normal(index as usize).y.abs() < UPRIGHT_Y || surface.thin();
+                        let [a, b, c] = self.site.corners(index as usize);
+                        let d = (closest_on_triangle(foot, a, b, c) - foot).length();
+                        if upright {
+                            wall = wall.min(d);
+                        }
+                        if surface.clear {
+                            clear = clear.min(d);
+                        }
+                    }
+                }
+            }
+        }
+        (wall, clear)
+    }
+}
+
+/// `work` on every index below `count`, over the machine's idle cores,
+/// in the indices' order: no result depends on how many threads ran.
+fn spread<R: Send>(count: usize, work: &(dyn Fn(usize) -> R + Sync)) -> Vec<R> {
+    const CHUNK: usize = 256;
+    let chunks: Vec<usize> = (0..count.div_ceil(CHUNK)).collect();
+    let lease = crate::cores::Lease::take(crate::cores::available());
+    crate::cores::map(chunks, lease.threads(), &|chunk: usize| {
+        (chunk * CHUNK..((chunk + 1) * CHUNK).min(count))
+            .map(work)
+            .collect::<Vec<R>>()
+    })
+    .into_iter()
+    .flatten()
+    .collect()
 }
 
 fn frame(normal: Vec3) -> (Vec3, Vec3) {
@@ -717,51 +1055,6 @@ fn frame(normal: Vec3) -> (Vec3, Vec3) {
     };
     let tangent = helper.cross(normal).normalize_or(Vec3::X);
     (tangent, normal.cross(tangent))
-}
-
-/// Whether the ray from `from` along unit `ray` meets a triangle of the
-/// site within `reach`, walking the column cells it crosses.
-#[allow(clippy::cast_possible_truncation, clippy::cast_precision_loss)]
-fn ray_blocked(site: &SiteMesh, from: Vec3, ray: Vec3, reach: f64) -> bool {
-    let column = SiteMesh::COLUMN_M;
-    let flat = ray.x.hypot(ray.z);
-    // Steps along the ray, at most a column apart in plan.
-    let steps = if flat < 1.0e-9 {
-        1
-    } else {
-        ((reach * flat / (0.5 * column)).ceil() as usize).max(1)
-    };
-    let (min_y, max_y) = site_y_range(site);
-    let mut seen: Vec<u32> = Vec::new();
-    for k in 0..=steps {
-        let t = reach * k as f64 / steps as f64;
-        let p = from + ray * t;
-        if (ray.y > 0.0 && p.y > max_y) || (ray.y < 0.0 && p.y < min_y) {
-            break;
-        }
-        for &index in site.column_triangles(p.x, p.z) {
-            if seen.contains(&index) {
-                continue;
-            }
-            seen.push(index);
-            let [a, b, c] = site.corners(index as usize);
-            if let Some(hit) = ray_triangle(from, ray, a, b, c)
-                && hit > 1.0e-4
-                && hit <= reach
-            {
-                return true;
-            }
-        }
-        if seen.len() > 4096 {
-            seen.clear();
-        }
-    }
-    false
-}
-
-fn site_y_range(site: &SiteMesh) -> (f64, f64) {
-    let (low, high) = site.bounds();
-    (low.y, high.y)
 }
 
 /// Möller and Trumbore's ray and triangle test: the distance along the
@@ -785,41 +1078,6 @@ fn ray_triangle(from: Vec3, ray: Vec3, a: Vec3, b: Vec3, c: Vec3) -> Option<f64>
         return None;
     }
     Some(e2.dot(q) * inv)
-}
-
-/// Distance from `foot` to the nearest upright face that is not soil, and
-/// to the nearest face kept clear, each at most `reach`.
-#[allow(clippy::cast_possible_truncation, clippy::cast_precision_loss)]
-fn nearest_upright(site: &SiteMesh, foot: Vec3, reach: f64) -> (f64, f64) {
-    let column = SiteMesh::COLUMN_M;
-    let n = (reach / column).ceil() as i64;
-    let (mut wall, mut clear) = (reach, reach);
-    let mut seen = std::collections::HashSet::new();
-    for k in -n..=n {
-        for i in -n..=n {
-            let (x, z) = (foot.x + i as f64 * column, foot.z + k as f64 * column);
-            for &index in site.column_triangles(x, z) {
-                if !seen.insert(index) {
-                    continue;
-                }
-                let surface = site.surface(index as usize);
-                let normal = site.normal(index as usize);
-                let upright = normal.y.abs() < UPRIGHT_Y || surface.thin();
-                if surface.material == SOIL || !(upright || surface.clear) {
-                    continue;
-                }
-                let [a, b, c] = site.corners(index as usize);
-                let d = (closest_on_triangle(foot, a, b, c) - foot).length();
-                if upright {
-                    wall = wall.min(d);
-                }
-                if surface.clear {
-                    clear = clear.min(d);
-                }
-            }
-        }
-    }
-    (wall, clear)
 }
 
 /// A triangle that is not ground: not soil, and not the upward face a
@@ -878,6 +1136,7 @@ fn is_host_face(site: &SiteMesh, index: usize, ground: &dyn Fn(f64, f64) -> Opti
 )]
 fn surfaces(
     site: &SiteMesh,
+    tracer: &Tracer<'_>,
     origin: [f64; 2],
     cell: f64,
     columns: u32,
@@ -946,10 +1205,13 @@ fn surfaces(
     }
 
     let parts = join_near(site, parts);
-    let mut hosts: Vec<Host> = Vec::new();
-    let mut patches: Vec<Patch> = Vec::new();
     let directions = hemisphere(settings.sky_rays.max(8) / 2);
-    for members in &parts {
+    // Each part's hosts and patches, numbered from 0 within the part, on
+    // every core; then numbered on in the parts' order.
+    let built = spread(parts.len(), &|index| {
+        let members = &parts[index];
+        let mut hosts: Vec<Host> = Vec::new();
+        let mut patches: Vec<Patch> = Vec::new();
         let (low, high) = members.iter().fold(
             (
                 Vec3::new(f64::INFINITY, f64::INFINITY, f64::INFINITY),
@@ -1057,6 +1319,20 @@ fn surfaces(
                 );
             }
         }
+        (hosts, patches)
+    });
+    let mut hosts: Vec<Host> = Vec::new();
+    let mut patches: Vec<Patch> = Vec::new();
+    for (part_hosts, part_patches) in built {
+        let offset = u32::try_from(hosts.len()).unwrap_or(u32::MAX);
+        hosts.extend(part_hosts.into_iter().map(|host| Host {
+            id: host.id + offset,
+            ..host
+        }));
+        patches.extend(part_patches.into_iter().map(|patch| Patch {
+            host: patch.host + offset,
+            ..patch
+        }));
     }
     // Hosts left with no patch (all below ground, or hidden) go, and the
     // rest are numbered again in order.
@@ -1080,12 +1356,16 @@ fn surfaces(
         patch.host = renumber[patch.host as usize];
     }
     // Sky, height and root cell of each patch.
-    for patch in &mut patches {
+    let skies = spread(patches.len(), &|index| {
+        let patch = &patches[index];
         let c = Vec3::new(patch.centre[0], patch.centre[1], patch.centre[2]);
         let n = Vec3::new(patch.normal[0], patch.normal[1], patch.normal[2]);
-        patch.sky = (sky_seen(site, c + n * 0.05, n, &directions, settings.sky_reach_m) * 1000.0)
-            .round()
-            / 1000.0;
+        tracer.sky_seen(c + n * 0.05, n, &directions, settings.sky_reach_m)
+    });
+    for (patch, sky) in patches.iter_mut().zip(skies) {
+        let c = Vec3::new(patch.centre[0], patch.centre[1], patch.centre[2]);
+        let n = Vec3::new(patch.normal[0], patch.normal[1], patch.normal[2]);
+        patch.sky = (sky * 1000.0).round() / 1000.0;
         let under = site.footing(c.x, c.z, Some(c.y + 1.0e-3)).map(|(y, _)| y);
         patch.height_m = under.map_or(0.0, |y| ((c.y - y).max(0.0) * 1000.0).round() / 1000.0);
         // A step out from the face, at the ground.
@@ -1552,5 +1832,119 @@ fn bin_patches(
             thin_m: round3(bin.thin),
             soil_m: round3(bin.soil),
         });
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::site::Surface;
+
+    /// Scattered triangles of every size and lean, some long and thin
+    /// across many columns (wires, rails), some upright, some kept clear.
+    fn scatter() -> SiteMesh {
+        let mut seed = 0x2545_f491_4f6c_dd1d_u64;
+        let mut next = move || {
+            seed ^= seed << 13;
+            seed ^= seed >> 7;
+            seed ^= seed << 17;
+            #[allow(clippy::cast_precision_loss)]
+            let unit = (seed >> 11) as f64 / (1_u64 << 53) as f64;
+            unit
+        };
+        let (mut positions, mut triangles, mut surfaces) = (Vec::new(), Vec::new(), Vec::new());
+        for k in 0..300_u32 {
+            let base = Vec3::new(next() * 30.0 - 15.0, next() * 6.0, next() * 30.0 - 15.0);
+            let long = if k % 7 == 0 { 12.0 } else { 2.0 };
+            let a = base;
+            let b = base
+                + Vec3::new(
+                    next() * long - long / 2.0,
+                    next() * 3.0 - 1.5,
+                    next() * long - long / 2.0,
+                );
+            let c = base + Vec3::new(next() * 2.0 - 1.0, next() * 3.0 - 1.5, next() * 2.0 - 1.0);
+            positions.extend([a, b, c]);
+            triangles.push([3 * k, 3 * k + 1, 3 * k + 2]);
+            let mut surface = Surface::solid(if k % 3 == 0 { SOIL } else { BUILT });
+            surface.clear = k % 11 == 0;
+            surfaces.push(surface);
+        }
+        SiteMesh::with_surfaces(&positions, &triangles, &surfaces).unwrap()
+    }
+
+    #[test]
+    fn the_tracer_finds_what_testing_every_triangle_finds() {
+        let site = scatter();
+        let tracer = Tracer::new(&site, [-8.0, -8.0], [8.0, 8.0], 12.0);
+        let directions = hemisphere(64);
+        let everything = |from: Vec3, ray: Vec3, reach: f64| {
+            (0..site.triangle_count()).any(|i| {
+                let [a, b, c] = site.corners(i);
+                ray_triangle(from, ray, a, b, c).is_some_and(|hit| hit > 1.0e-4 && hit <= reach)
+            })
+        };
+        let mut blocked = 0;
+        for (k, from) in [
+            Vec3::new(0.3, 1.0, 0.7),
+            Vec3::new(-7.5, 0.2, 6.1),
+            Vec3::new(5.0, 3.0, -5.0),
+            Vec3::new(0.0, 0.0, 0.0),
+        ]
+        .into_iter()
+        .enumerate()
+        {
+            for (d, direction) in directions.iter().enumerate() {
+                // Rays up, level and a little down, and some along an axis.
+                let ray = match (k + d) % 4 {
+                    0 => *direction,
+                    1 => Vec3::new(direction.x, -0.01, direction.z).normalize_or(Vec3::X),
+                    2 => Vec3::new(direction.x, 0.0, 0.0).normalize_or(Vec3::X),
+                    _ => Vec3::new(direction.x, 0.05, direction.z).normalize_or(Vec3::X),
+                };
+                let found = tracer.blocked(from, ray, 12.0);
+                assert_eq!(
+                    found,
+                    everything(from, ray, 12.0),
+                    "from {from:?} along {ray:?}"
+                );
+                blocked += usize::from(found);
+            }
+        }
+        // Both answers are tested.
+        assert!(blocked > 20 && blocked < 4 * 64 - 20, "{blocked} blocked");
+    }
+
+    #[test]
+    fn the_ring_search_finds_the_nearest_wall_and_window() {
+        let site = scatter();
+        let tracer = Tracer::new(&site, [-8.0, -8.0], [8.0, 8.0], 10.0);
+        for foot in [
+            Vec3::new(0.3, 1.0, 0.7),
+            Vec3::new(-7.5, 0.2, 6.1),
+            Vec3::new(5.0, 3.0, -5.0),
+        ] {
+            let (mut wall, mut clear) = (10.0_f64, 10.0_f64);
+            for i in 0..site.triangle_count() {
+                let surface = site.surface(i);
+                let upright = site.normal(i).y.abs() < UPRIGHT_Y || surface.thin();
+                if surface.material == SOIL {
+                    continue;
+                }
+                let [a, b, c] = site.corners(i);
+                let d = (closest_on_triangle(foot, a, b, c) - foot).length();
+                if upright {
+                    wall = wall.min(d);
+                }
+                if surface.clear {
+                    clear = clear.min(d);
+                }
+            }
+            assert_eq!(
+                tracer.nearest_upright(foot, 10.0),
+                (wall, clear),
+                "at {foot:?}"
+            );
+        }
     }
 }

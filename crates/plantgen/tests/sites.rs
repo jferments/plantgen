@@ -876,6 +876,44 @@ mod field {
     }
 
     #[test]
+    fn stands_read_a_slope_in_a_niche_s_terms() {
+        // A sheet of soil falling 1 m in 5 to the south-west.
+        let fall = |x: f64, z: f64| 0.2 * (x - z) / 2.0_f64.sqrt();
+        let corners = [(-7.0, -7.0), (7.0, -7.0), (7.0, 7.0), (-7.0, 7.0)];
+        let positions: Vec<Vec3> = corners
+            .iter()
+            .map(|&(x, z)| Vec3::new(x, fall(x, z), z))
+            .collect();
+        let site = SiteMesh::new(&positions, &[[0, 3, 2], [0, 2, 1]], &[SOIL, SOIL]).unwrap();
+        let field = field_of(&site);
+        // Between cell centres the height is the sheet's own.
+        for (x, z) in [(0.13, -2.71), (4.4, 3.9), (-5.2, 0.0)] {
+            let h = field.height_at(x, z).unwrap();
+            assert!((h - fall(x, z)).abs() < 1.0e-3, "{h} at ({x}, {z})");
+        }
+        assert_eq!(field.height_at(40.0, 0.0), None);
+        let cell = field.cell_at(0.1, 0.1).unwrap();
+        let aspect = field.ground.aspect_deg[cell as usize];
+        assert!((aspect - 225.0).abs() < 1.0, "{aspect}");
+        // A niche's heat load is relative to level ground: warmer here.
+        let relative = field.relative_heat_load(cell).unwrap();
+        let expected = heat_load_index(45.0, field.ground.slope_deg[cell as usize], aspect)
+            / heat_load_index(45.0, 0.0, 0.0);
+        assert!(
+            relative > 1.05 && (relative - expected).abs() < 0.01,
+            "{relative}"
+        );
+        let factors = field.site_factors(cell, 120.0, 0.4).unwrap();
+        assert!((factors.elevation_m - 120.0 - fall(0.25, 0.25)).abs() < 0.01);
+        assert!(
+            (factors.slope_deg - 11.3).abs() < 0.2,
+            "{}",
+            factors.slope_deg
+        );
+        assert!((factors.heat_load - relative).abs() < 1.0e-12 && factors.moisture == 0.4);
+    }
+
+    #[test]
     fn a_host_builds_the_same_field_from_plain_arrays_and_reads_it_back() {
         let mut parts = (Vec::new(), Vec::new(), Vec::new());
         cuboid(

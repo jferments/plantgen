@@ -17,9 +17,27 @@ ways:
 - From JSON: `SiteField::from_json` reads the file back, and it refuses any
   other version.
 
-The same inputs give the same file, byte for byte. Build it once per tile
-and cache it. It changes only when the site does, or when `version` goes
-up.
+The same inputs give the same file, byte for byte, however many cores
+built it. Build it once per tile and cache it. It changes only when the
+site does, or when `version` goes up. It uses every idle core: the
+40 x 36 m test block takes about 0.1 s, and 480 x 432 m of it (144 blocks,
+1.9 million triangles) about 6 s on 4 cores.
+
+## Reading it for stands
+
+`SiteField` has the lookups a stand needs, so a caller does not index the
+lists itself:
+
+- `cell_at(x, z)` and `cell_centre(cell)`.
+- `height_at(x, z)`: the ground's height between cell centres (bilinear,
+  leaving out cells with no ground).
+- `relative_heat_load(cell)`: the heat load over level ground's at the
+  field's latitude. A species' niche writes its `heat_load` range on this
+  scale (1 on level ground), not McCune and Keon's own.
+- `site_factors(cell, datum_m, moisture)`: what
+  `Niche::site_response` reads (`niche::SiteFactors`): relative heat load,
+  slope, and elevation as the height above `datum_m`. The field does not
+  turn its wetness index into a niche's moisture; the host gives it.
 
 Frame: metres, +Y up, +X east, -Z north (growth's frame). With `z_up`,
 the input's +Z is up and its +Y north.
