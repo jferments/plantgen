@@ -226,10 +226,32 @@ impl Generator {
     ///
     /// # Errors
     ///
-    /// When the age is not above 0 and within the years the spec grows,
-    /// or the plant does not grow.
+    /// When the age is not above 0 and within the years the spec grows
+    /// or its old ages ([`PlantSpec::old_ages`]: doubling past its last
+    /// keyframe up to its lifespan), or the plant does not grow.
     pub fn grow_in(&self, environment: Environment, seed: u64, age: f64) -> Result<Plant, Error> {
         Ok(export::grow_seed(&self.inputs, environment, seed, age)?)
+    }
+
+    /// Plant `seed` grown in `environment`, kept at each of `ages`
+    /// (rising) from one growth: cheaper than [`Self::grow_in`] at each.
+    ///
+    /// # Errors
+    ///
+    /// When an age is not above 0 and within the years the spec grows or
+    /// its old ages, the ages do not rise, or the plant does not grow.
+    pub fn grow_ages_in(
+        &self,
+        environment: Environment,
+        seed: u64,
+        ages: &[f64],
+    ) -> Result<Vec<Plant>, Error> {
+        Ok(export::grow_seed_ages(
+            &self.inputs,
+            environment,
+            seed,
+            ages,
+        )?)
     }
 
     /// A grown plant as glTF binary files, one per level of detail, and
@@ -410,12 +432,24 @@ impl Generator {
         parts: bool,
     ) -> Result<(VariantRecord, Vec<PartRecord>), Error> {
         let plant = self.grow_in(environment, seed, age)?;
+        self.write_plant(&plant, settings, out, parts)
+    }
+
+    /// Export `plant` into `out` as [`Self::write_one_in`] does.
+    pub(crate) fn write_plant(
+        &self,
+        plant: &Plant,
+        settings: &Settings,
+        out: &Path,
+        parts: bool,
+    ) -> Result<(VariantRecord, Vec<PartRecord>), Error> {
+        let seed = plant.seed;
         let regions = if parts {
             crown_regions(&plant.size)
         } else {
             Vec::new()
         };
-        let exported = self.export_parts(&plant, settings, &regions)?;
+        let exported = self.export_parts(plant, settings, &regions)?;
         let written = export::write(&exported, out)?;
         let part_records = regions
             .iter()

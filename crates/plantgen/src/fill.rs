@@ -1,36 +1,44 @@
 //! Fill city tiles with plant communities, fast: the external contract.
 //!
-//! A fill never grows a plant per place. [`Fill::new`] picks a few hundred
-//! *prototypes* once per set of communities (a species, a seed, a setting
-//! and an age class each, every one exported with its tiers), and
-//! [`Fill::tile`] lays out a tile as packed [`Instance`]s of them, plus a
-//! ground cover raster and a far canopy raster. Any engine draws that with
-//! GPU instancing.
+//! A fill never grows a plant per place. [`Fill::new`] develops each
+//! community's stand at a few stand ages once ([`crate::development`]:
+//! which cohorts of which species a stand of that age holds, and how much
+//! of the ground each layer covers) and keeps each cohort as
+//! *prototypes*: a species, a seed, a setting and an age each.
+//! [`Fill::measure`] grows each species once per seed and setting, keeping
+//! every age its prototypes need from that one growth, so the fill knows
+//! how big each is. [`Fill::tile`] then fills each stand cell from a stand
+//! tile ([`crate::stand_tile`]: crowns placed until each layer covers what
+//! its stage covers) laid out once for its community, age and site, turned
+//! and shifted by the cell's place in the world, and keeps the plants the
+//! ground there takes ([`Site::plantable_at`]). A tile is packed
+//! [`Instance`]s of the prototypes, plus a ground cover raster and a far
+//! canopy raster; any engine draws that with GPU instancing.
 //!
-//! A tile's plan is a pure function of the fill's communities, the
-//! [`Site`], the [`StandMap`], the seed and
+//! A tile's plan is a pure function of the fill's communities and
+//! settings, the [`Site`], the [`StandMap`], the seed and
 //! [`GENERATOR_REVISION`](crate::GENERATOR_REVISION): the same on every
 //! machine, thread count and order. Every draw is keyed by a stand cell's
 //! place in the world, never by its place in the tile, so tiles laid side
 //! by side meet without a seam and a caller can fill any tile alone.
-//!
-//! The stands thread owns what is computed (density, layers, closure,
-//! allometry); this module holds the types and file forms callers build
-//! on. Until then [`Fill::tile`] scatters each community's members at a
-//! fixed density by layer: right in kind, not yet in number.
 
+use std::collections::{BTreeMap, HashMap};
 use std::path::Path;
+use std::sync::{Arc, Mutex, OnceLock, PoisonError};
 
 use serde::{Deserialize, Serialize};
 
 use crate::api::{Error, Generator, Options, PartRecord, Plant, Settings, VariantRecord};
-use crate::niche::SiteFactors;
+use crate::development::{self, Candidate, Stage};
+use crate::niche::{self, Niche, SiteFactors};
+use crate::package::Measurements;
 use crate::rng;
 use crate::spec::Environment;
+use crate::stand_tile;
 
 /// The version of the instance file ([`Instance::to_bytes`]) and of the
 /// tile JSON beside it.
-pub const INSTANCE_SCHEMA: u32 = 1;
+pub const INSTANCE_SCHEMA: u32 = 2;
 
 /// Bytes per packed instance.
 pub const INSTANCE_BYTES: usize = 32;
@@ -136,14 +144,32 @@ impl Community {
     }
 }
 
+/// The stand ages a fill develops its stands at unless chosen, years
+/// since disturbance: doubling from 10 to 640, so each stage of the sere
+/// ([`crate::development::Stage`]) has one or two.
+pub const STAND_AGES: [f64; 7] = [10.0, 20.0, 40.0, 80.0, 160.0, 320.0, 640.0];
+
+/// The scale range of a developed stand's copies of a prototype. Each
+/// prototype is its cohort's grown dominant, so its copies are that size
+/// or smaller: Wind River's tallest Douglas-fir stands 1.24 times its
+/// Douglas-firs' mean height (Shaw et al. 2004, Ecosystems 7: 427-439).
+pub const STAND_SCALE: [f64; 2] = [0.7, 1.0];
+
+/// Stand tiles laid out for each community, age and site, of which each
+/// cell draws one by its place in the world: neighbouring cells of one
+/// stand differ even before each is turned and shifted.
+pub const LAYOUTS: u64 = 4;
+
 /// How a [`Fill`] chooses its prototypes. Start from
 /// [`FillSettings::default`] and set what you choose.
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive]
 pub struct FillSettings {
-    /// Age (or size) classes per species: dominants to saplings.
-    pub age_classes: u16,
-    /// Distinct seeds per species, setting and class.
+    /// The ages, years since disturbance, each community's stand is
+    /// developed at, rising ([`STAND_AGES`] unless chosen). A stand cell
+    /// is drawn at the one nearest its own years, by ratio.
+    pub stand_ages: Vec<f64>,
+    /// Distinct seeds per species, setting and age.
     pub seeds: u16,
     /// How each prototype is drawn.
     pub options: Options,
@@ -151,15 +177,21 @@ pub struct FillSettings {
     /// its crown in bands, [`crate::api::crown_regions`]), so a caller can
     /// draw each part at the detail its own distance asks for.
     pub parts: bool,
+    /// Whether herbs are placed one by one. Without them a tile's herbs
+    /// are only its ground cover raster ([`Cover`]), for a host that draws
+    /// ground cover its own way: a hectare of herbs is tens of thousands
+    /// of instances.
+    pub herbs: bool,
 }
 
 impl Default for FillSettings {
     fn default() -> Self {
         Self {
-            age_classes: 4,
+            stand_ages: STAND_AGES.to_vec(),
             seeds: 2,
             options: Options::default(),
             parts: true,
+            herbs: true,
         }
     }
 }
@@ -170,8 +202,28 @@ pub struct PrototypeKey {
     pub species: String,
     pub seed: u64,
     pub environment: Environment,
-    /// 0 is the oldest class (dominants); higher classes are younger.
-    pub age_class: u16,
+    /// The age it is grown to, tenths of a year (as an [`Instance`] packs
+    /// its age): one of its cohorts' ages in a stand's development.
+    pub age_tenths: u32,
+}
+
+impl PrototypeKey {
+    /// The common name of its files: `<species>-<setting>-<seed>-<age>y`,
+    /// as [`Generator::export`] names a plant.
+    #[must_use]
+    pub fn stem(&self) -> String {
+        let age = if self.age_tenths.is_multiple_of(10) {
+            format!("{}", self.age_tenths / 10)
+        } else {
+            format!("{}.{}", self.age_tenths / 10, self.age_tenths % 10)
+        };
+        format!(
+            "{}-{}-{}-{age}y",
+            self.species,
+            self.environment.name(),
+            self.seed
+        )
+    }
 }
 
 /// One plant drawn once and placed many times.
@@ -180,6 +232,7 @@ pub struct Prototype {
     pub key: PrototypeKey,
     /// The age it is grown to, years.
     pub age_years: f64,
+    /// The layer its community keeps its species to, where it says.
     pub layer: Option<Layer>,
 }
 
@@ -585,11 +638,23 @@ pub struct CanopyCell {
     pub colour: [f32; 3],
 }
 
-/// The stand-scale numbers a tile's plan can be checked against.
+/// The stand-scale numbers a tile's plan can be checked against forest
+/// plots, over the whole tile (bare cells too).
 #[derive(Debug, Clone, Copy, PartialEq, Default, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct TileStats {
     pub instances: usize,
+    /// Every placed plant, herbs too.
     pub stems_per_ha: f64,
+    /// Plants 5 cm or more through at breast height (1.3 m), as plots
+    /// count trees.
+    pub trees_per_ha: f64,
+    /// Their stems' cross-section at breast height, m² a hectare.
+    pub basal_area_m2_per_ha: f64,
+    /// Share of the ground under tree crowns seen from above, 0 to 1.
+    pub canopy_cover: f64,
+    /// One-sided leaf area over ground area.
+    pub leaf_area_index: f64,
 }
 
 /// A filled tile: every placed plant, the ground cover and the far
@@ -672,65 +737,329 @@ impl TilePlan {
     }
 }
 
-/// A set of communities, their prototypes chosen once; fills any number
-/// of tiles. It is `Send + Sync` and [`Fill::tile`] takes `&self`, so a
-/// caller fills tiles on its own threads.
+/// A set of communities, their stands developed and prototypes chosen
+/// once; fills any number of tiles. It is `Send + Sync` and every method
+/// takes `&self`, so a caller fills tiles on its own threads; clones share
+/// what has been measured and laid out.
 #[derive(Debug, Clone)]
 pub struct Fill {
     communities: Vec<Community>,
     prototypes: Vec<Prototype>,
     settings: FillSettings,
+    /// Each species of the communities, in the order first named.
+    species: Vec<Species>,
+    /// Each community's members that stand, in order: the candidates of
+    /// its development.
+    stands: Vec<Vec<StandMember>>,
+    /// Each prototype's index by its key.
+    index: HashMap<PrototypeKey, u32>,
+    /// Each prototype's size, once measured or written.
+    sizes: Arc<Vec<OnceLock<Measurements>>>,
+    /// The stand tiles laid out so far.
+    laid: Arc<Mutex<HashMap<LayoutKey, Arc<Layout>>>>,
+}
+
+#[derive(Debug, Clone)]
+struct Species {
+    id: String,
+    generator: Generator,
+    niche: Option<Niche>,
+    /// The seeds of its prototypes: its package's own first.
+    seeds: Vec<u64>,
+    /// The light it needs from above to stand
+    /// ([`development::light_needed`]).
+    light_needed: f64,
+}
+
+impl Species {
+    fn new(id: &str, settings: &FillSettings) -> Result<Self, Error> {
+        let generator = Generator::new(id, &settings.options)?;
+        let niche = Niche::builtin(id).ok();
+        let mut seeds = Vec::new();
+        for seed in generator.spec().variants.seeds.iter().copied().chain(1..) {
+            if seeds.len() >= usize::from(settings.seeds) {
+                break;
+            }
+            if !seeds.contains(&seed) {
+                seeds.push(seed);
+            }
+        }
+        let light_needed = niche.as_ref().map_or(0.0, development::light_needed);
+        Ok(Self {
+            id: id.to_string(),
+            generator,
+            niche,
+            seeds,
+            light_needed,
+        })
+    }
+}
+
+/// One member of a community as its stand's development reads it.
+#[derive(Debug, Clone)]
+struct StandMember {
+    species: usize,
+    abundance: f64,
+    environments: Vec<Environment>,
+    layer: Option<Layer>,
+    /// Its candidate on a site that suits it fully.
+    candidate: Candidate,
+}
+
+impl StandMember {
+    fn new(member: &Member, species: &Species, at: usize, community: &str) -> Result<Self, Error> {
+        let spec = species.generator.spec();
+        let niche_layers = species
+            .niche
+            .as_ref()
+            .map(|niche| niche::Layer::ALL.map(|l| niche.layers.get(&l).copied().unwrap_or(0.0)));
+        // A layer the community gives keeps the species to it, at its
+        // niche's abundance there (or its most anywhere).
+        let layers = match (member.layer, niche_layers) {
+            (Some(layer), niche_layers) => {
+                let slot = layer_slot(layer);
+                let own = niche_layers.map_or(0.0, |layers| layers[slot]);
+                let most =
+                    niche_layers.map_or(0.0, |layers| layers.into_iter().fold(0.0, f64::max));
+                let mut layers = [0.0; 4];
+                layers[slot] = if own > 0.0 {
+                    own
+                } else if most > 0.0 {
+                    most
+                } else {
+                    1.0
+                };
+                layers
+            }
+            (None, Some(layers)) => layers,
+            (None, None) => {
+                return Err(Error(format!(
+                    "community {community}: {} has no niche, so give the layer it keeps to",
+                    member.species
+                )));
+            }
+        };
+        let mut ages = spec.growth.keyframes.clone();
+        ages.extend(spec.old_ages());
+        ages.retain(|age| *age > 0.0);
+        ages.sort_by(f64::total_cmp);
+        ages.dedup();
+        Ok(Self {
+            species: at,
+            abundance: member.abundance.unwrap_or(1.0),
+            environments: member.environments(),
+            layer: member.layer,
+            candidate: Candidate {
+                shade_tolerance: species
+                    .niche
+                    .as_ref()
+                    .map_or(0.5, |niche| niche.shade_tolerance),
+                layers,
+                lifespan: spec.growth.lifespan.unwrap_or(spec.growth.years),
+                ages,
+                suitability: 1.0,
+            },
+        })
+    }
+
+    /// The setting a cohort of it is grown in: a tree in a closed stand
+    /// grows as in one ([`Environment::Interior`]), before its stand's
+    /// crowns close as in the open; a shrub or herb as in the open. A
+    /// member kept to other settings takes the first of them.
+    fn environment(&self, stage: Stage) -> Environment {
+        let preferred = if self.candidate.tree() && stage != Stage::Establishment {
+            Environment::Interior
+        } else {
+            Environment::Open
+        };
+        if self.environments.contains(&preferred) {
+            preferred
+        } else {
+            self.environments[0]
+        }
+    }
+}
+
+/// The slot of a layer in [`niche::Layer::ALL`]'s order; ground cover is
+/// herbs'.
+fn layer_slot(layer: Layer) -> usize {
+    match layer {
+        Layer::Canopy => 0,
+        Layer::Subcanopy => 1,
+        Layer::Shrub => 2,
+        Layer::Herb | Layer::Ground | Layer::Climber => 3,
+    }
+}
+
+/// A stand tile's key: its community, stand age, how well the site suits
+/// each member (in quarters), cell side, seed and layout.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+struct LayoutKey {
+    community: usize,
+    age: usize,
+    suits: Vec<u8>,
+    cell_bits: u64,
+    seed: u64,
+    layout: u64,
+}
+
+/// A stand tile laid out: its plants and what its crowns cover.
+#[derive(Debug)]
+struct Layout {
+    plants: Vec<Laid>,
+    /// Share of the cell under tree crowns (canopy and subcanopy) seen
+    /// from above.
+    canopy_cover: f64,
+    /// Mean height of its canopy layer, metres.
+    canopy_height: f64,
+    /// Share of the ground under herbs.
+    herb_cover: f64,
+}
+
+#[derive(Debug, Clone, Copy)]
+struct Laid {
+    prototype: u32,
+    at: [f64; 2],
+    yaw: f64,
+    scale: f64,
+    lean: [f64; 2],
+    layer: niche::Layer,
+    /// Its crown's area seen from above, m².
+    crown_m2: f64,
+}
+
+#[derive(Serialize, Deserialize)]
+struct KeptSize {
+    generator_revision: u32,
+    key: PrototypeKey,
+    age_years: f64,
+    size: Measurements,
 }
 
 impl Fill {
-    /// Choose the prototypes of `communities`: for each species, every
-    /// setting, age class and seed. Nothing is grown yet; see
-    /// [`Fill::grow_prototype`].
+    /// Develop each community's stand at each of the settings' stand ages
+    /// and choose the prototypes of their cohorts, each in as many seeds
+    /// as the settings ask. Nothing is grown yet; see [`Fill::measure`].
+    /// A climber is not placed yet: it needs a host to climb.
     ///
     /// # Errors
     ///
-    /// When there are no communities, one does not check, or the settings
-    /// ask for no classes or seeds.
+    /// When there are no communities, one does not check or names a
+    /// species with no niche and no layer, or the settings ask for no
+    /// stand ages or seeds, or ages not above 0 and rising.
     pub fn new(communities: &[Community], settings: &FillSettings) -> Result<Self, Error> {
         if communities.is_empty() {
             return Err(Error("fill: no communities".into()));
         }
-        if settings.age_classes == 0 || settings.seeds == 0 {
-            return Err(Error("fill: at least one age class and one seed".into()));
+        if settings.stand_ages.is_empty() || settings.seeds == 0 {
+            return Err(Error("fill: at least one stand age and one seed".into()));
         }
+        if settings
+            .stand_ages
+            .iter()
+            .any(|age| !(age.is_finite() && *age > 0.0))
+            || settings
+                .stand_ages
+                .windows(2)
+                .any(|pair| pair[1] <= pair[0])
+        {
+            return Err(Error(format!(
+                "fill: stand ages must be above 0 and rise, found {:?}",
+                settings.stand_ages
+            )));
+        }
+        let mut species: Vec<Species> = Vec::new();
+        let mut stands = Vec::new();
         for community in communities {
             community.check()?;
-        }
-        let mut prototypes = Vec::new();
-        let mut seen = std::collections::BTreeSet::new();
-        for member in communities.iter().flat_map(|c| &c.members) {
-            if !seen.insert(member.species.clone()) {
-                continue;
+            let mut members = Vec::new();
+            for member in &community.members {
+                if member.layer == Some(Layer::Climber) {
+                    continue;
+                }
+                let at = if let Some(at) = species.iter().position(|s| s.id == member.species) {
+                    at
+                } else {
+                    species.push(Species::new(&member.species, settings)?);
+                    species.len() - 1
+                };
+                members.push(StandMember::new(member, &species[at], at, &community.id)?);
             }
-            let generator = Generator::new(&member.species, &settings.options)?;
-            let oldest = generator.default_age();
-            for environment in member.environments() {
-                for age_class in 0..settings.age_classes {
-                    for seed in 1..=u64::from(settings.seeds) {
-                        prototypes.push(Prototype {
-                            key: PrototypeKey {
-                                species: member.species.clone(),
-                                seed,
-                                environment,
-                                age_class,
-                            },
-                            age_years: class_age(oldest, age_class, settings.age_classes),
+            stands.push(members);
+        }
+        let mut fill = Self {
+            communities: communities.to_vec(),
+            prototypes: Vec::new(),
+            settings: settings.clone(),
+            species,
+            stands,
+            index: HashMap::new(),
+            sizes: Arc::new(Vec::new()),
+            laid: Arc::new(Mutex::new(HashMap::new())),
+        };
+        for community in 0..fill.communities.len() {
+            for age in &fill.settings.stand_ages {
+                let stand = development::develop(&fill.candidates(community, None), *age);
+                for cohort in &stand.cohorts {
+                    let member = &fill.stands[community][cohort.candidate];
+                    for key in fill.cohort_keys(member, cohort, stand.stage) {
+                        if fill.index.contains_key(&key) {
+                            continue;
+                        }
+                        let index = u32::try_from(fill.prototypes.len())
+                            .map_err(|_| Error("fill: too many prototypes".into()))?;
+                        fill.index.insert(key.clone(), index);
+                        fill.prototypes.push(Prototype {
+                            key,
+                            age_years: cohort.age,
                             layer: member.layer,
                         });
                     }
                 }
             }
         }
-        Ok(Self {
-            communities: communities.to_vec(),
-            prototypes,
-            settings: *settings,
-        })
+        fill.sizes = Arc::new(
+            (0..fill.prototypes.len())
+                .map(|_| OnceLock::new())
+                .collect(),
+        );
+        Ok(fill)
+    }
+
+    /// The candidates of community `community`'s development, on a site
+    /// suiting each member `suits` quarters (fully when not given).
+    fn candidates(&self, community: usize, suits: Option<&[u8]>) -> Vec<Candidate> {
+        self.stands[community]
+            .iter()
+            .enumerate()
+            .map(|(at, member)| Candidate {
+                suitability: suits.map_or(1.0, |suits| f64::from(suits[at]) / 4.0),
+                ..member.candidate.clone()
+            })
+            .collect()
+    }
+
+    /// The keys of a cohort's prototypes, one per seed.
+    fn cohort_keys(
+        &self,
+        member: &StandMember,
+        cohort: &development::Cohort,
+        stage: Stage,
+    ) -> Vec<PrototypeKey> {
+        let species = &self.species[member.species];
+        let environment = member.environment(stage);
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let age_tenths = (cohort.age * 10.0).round() as u32;
+        species
+            .seeds
+            .iter()
+            .map(|seed| PrototypeKey {
+                species: species.id.clone(),
+                seed: *seed,
+                environment,
+                age_tenths,
+            })
+            .collect()
     }
 
     #[must_use]
@@ -738,10 +1067,30 @@ impl Fill {
         &self.communities
     }
 
+    #[must_use]
+    pub fn settings(&self) -> &FillSettings {
+        &self.settings
+    }
+
     /// Every prototype; an [`Instance::prototype`] is an index here.
     #[must_use]
     pub fn prototypes(&self) -> &[Prototype] {
         &self.prototypes
+    }
+
+    /// Prototype `index`'s size, once [`Fill::measure`] (or
+    /// [`Fill::write_prototypes`] or [`Fill::grow_prototype`]) has grown
+    /// it.
+    #[must_use]
+    pub fn size(&self, index: usize) -> Option<&Measurements> {
+        self.sizes.get(index).and_then(OnceLock::get)
+    }
+
+    fn species_of(&self, prototype: &Prototype) -> &Species {
+        self.species
+            .iter()
+            .find(|species| species.id == prototype.key.species)
+            .unwrap_or(&self.species[0])
     }
 
     /// Grow prototype `index`, to export with its species'
@@ -755,33 +1104,18 @@ impl Fill {
             .prototypes
             .get(index)
             .ok_or_else(|| Error(format!("fill: no prototype {index}")))?;
-        let generator = Generator::new(&prototype.key.species, &self.settings.options)?;
+        let generator = self.species_of(prototype).generator.clone();
         let plant = generator.grow_in(
             prototype.key.environment,
             prototype.key.seed,
             prototype.age_years,
         )?;
+        let _ = self.sizes[index].set(plant.size.clone());
         Ok((generator, plant))
     }
 
-    /// Grow and export the prototypes `which` (indices into
-    /// [`Fill::prototypes`]; every one when empty) into `out`, on up to
-    /// `threads` threads, and list them in [`PROTOTYPES_FILE`]. A
-    /// prototype whose record (`<stem>.prototype.json`) is in `out` from
-    /// the same revision is kept, not drawn again, so a city's tiles can
-    /// ask for theirs as they come.
-    ///
-    /// # Errors
-    ///
-    /// When an index is not a prototype, one does not grow or export, or a
-    /// file cannot be written.
-    pub fn write_prototypes(
-        &self,
-        which: &[u32],
-        settings: &Settings,
-        threads: usize,
-        out: &Path,
-    ) -> Result<Vec<PrototypeFiles>, Error> {
+    /// The prototypes `which` names (every one when empty), sorted.
+    fn wanted(&self, which: &[u32]) -> Result<Vec<u32>, Error> {
         let mut wanted: Vec<u32> = if which.is_empty() {
             (0..u32::try_from(self.prototypes.len()).unwrap_or(u32::MAX)).collect()
         } else {
@@ -795,80 +1129,213 @@ impl Fill {
         {
             return Err(Error(format!("fill: no prototype {bad}")));
         }
+        Ok(wanted)
+    }
+
+    /// `indices` in growths: one per species, setting and seed, its ages
+    /// rising; the oldest growths first, so the longest start soonest.
+    fn growths(&self, indices: &[u32]) -> Vec<Vec<u32>> {
+        let mut groups: BTreeMap<(&str, Environment, u64), Vec<u32>> = BTreeMap::new();
+        for &index in indices {
+            let key = &self.prototypes[index as usize].key;
+            groups
+                .entry((key.species.as_str(), key.environment, key.seed))
+                .or_default()
+                .push(index);
+        }
+        let mut growths: Vec<Vec<u32>> = groups.into_values().collect();
+        for growth in &mut growths {
+            growth.sort_by(|a, b| {
+                self.prototypes[*a as usize]
+                    .age_years
+                    .total_cmp(&self.prototypes[*b as usize].age_years)
+            });
+        }
+        let oldest = |growth: &Vec<u32>| {
+            growth
+                .last()
+                .map_or(0.0, |index| self.prototypes[*index as usize].age_years)
+        };
+        growths.sort_by(|a, b| oldest(b).total_cmp(&oldest(a)));
+        growths
+    }
+
+    /// Grow the prototypes `which` (indices into [`Fill::prototypes`];
+    /// every one when empty) that are not measured yet, on up to `threads`
+    /// threads, so [`Fill::tile`] can lay their stands out: one growth per
+    /// species, setting and seed keeps every age its prototypes need. With
+    /// `cache`, a size measured or written into it before at the same
+    /// revision is read, not grown again, and each new one is written
+    /// there (`<stem>.size.json`), so a city's runs measure each plant
+    /// once. How many prototypes it grew.
+    ///
+    /// # Errors
+    ///
+    /// When an index is not a prototype, a plant does not grow, or a size
+    /// cannot be written.
+    pub fn measure(
+        &self,
+        which: &[u32],
+        threads: usize,
+        cache: Option<&Path>,
+    ) -> Result<usize, Error> {
+        let mut unknown = Vec::new();
+        for index in self.wanted(which)? {
+            if self.size(index as usize).is_some() {
+                continue;
+            }
+            if let Some(size) = cache.and_then(|dir| self.cached_size(index, dir)) {
+                let _ = self.sizes[index as usize].set(size);
+                continue;
+            }
+            unknown.push(index);
+        }
+        if let Some(dir) = cache {
+            std::fs::create_dir_all(dir)
+                .map_err(|error| Error(format!("cannot create {}: {error}", dir.display())))?;
+        }
+        let growths = self.growths(&unknown);
+        run_jobs(growths.len(), threads, |job| {
+            let indices = &growths[job];
+            let plants = self.grow_together(indices)?;
+            for (index, plant) in indices.iter().zip(plants) {
+                if let Some(dir) = cache {
+                    let prototype = &self.prototypes[*index as usize];
+                    let kept = KeptSize {
+                        generator_revision: crate::GENERATOR_REVISION,
+                        key: prototype.key.clone(),
+                        age_years: prototype.age_years,
+                        size: plant.size.clone(),
+                    };
+                    let path = dir.join(format!("{}.size.json", prototype.key.stem()));
+                    let text = serde_json::to_string_pretty(&kept)
+                        .map_err(|error| Error(error.to_string()))?;
+                    std::fs::write(&path, text + "\n").map_err(|error| {
+                        Error(format!("cannot write {}: {error}", path.display()))
+                    })?;
+                }
+                let _ = self.sizes[*index as usize].set(plant.size);
+            }
+            Ok(())
+        })?;
+        Ok(unknown.len())
+    }
+
+    /// The prototypes `indices` of one species, setting and seed, ages
+    /// rising, grown together.
+    fn grow_together(&self, indices: &[u32]) -> Result<Vec<Plant>, Error> {
+        let Some(first) = indices.first() else {
+            return Ok(Vec::new());
+        };
+        let prototype = &self.prototypes[*first as usize];
+        let ages: Vec<f64> = indices
+            .iter()
+            .map(|index| self.prototypes[*index as usize].age_years)
+            .collect();
+        self.species_of(prototype).generator.grow_ages_in(
+            prototype.key.environment,
+            prototype.key.seed,
+            &ages,
+        )
+    }
+
+    /// Prototype `index`'s size as a measure or a write left it in `dir`
+    /// at this revision.
+    fn cached_size(&self, index: u32, dir: &Path) -> Option<Measurements> {
+        let prototype = &self.prototypes[index as usize];
+        let stem = prototype.key.stem();
+        let same = |key: &PrototypeKey, age: f64, revision: u32| {
+            revision == crate::GENERATOR_REVISION
+                && *key == prototype.key
+                && (age - prototype.age_years).abs() < 1e-9
+        };
+        let read = |name: String| std::fs::read_to_string(dir.join(name)).ok();
+        if let Some(kept) = read(format!("{stem}.size.json"))
+            .and_then(|text| serde_json::from_str::<KeptSize>(&text).ok())
+            .filter(|kept| same(&kept.key, kept.age_years, kept.generator_revision))
+        {
+            return Some(kept.size);
+        }
+        ["", "-parts"].into_iter().find_map(|parts| {
+            read(format!("{stem}{parts}.prototype.json"))
+                .and_then(|text| serde_json::from_str::<KeptPrototype>(&text).ok())
+                .filter(|kept| {
+                    same(
+                        &kept.files.key,
+                        kept.files.age_years,
+                        kept.generator_revision,
+                    )
+                })
+                .map(|kept| kept.files.plant.size)
+        })
+    }
+
+    /// Grow and export the prototypes `which` (indices into
+    /// [`Fill::prototypes`]; every one when empty) into `out`, on up to
+    /// `threads` threads, and list them in [`PROTOTYPES_FILE`]; each is
+    /// measured as it is written. A prototype whose record
+    /// (`<stem>.prototype.json`) is in `out` from the same revision is
+    /// kept, not drawn again, so a city's tiles can ask for theirs as they
+    /// come.
+    ///
+    /// # Errors
+    ///
+    /// When an index is not a prototype, one does not grow or export, or a
+    /// file cannot be written.
+    pub fn write_prototypes(
+        &self,
+        which: &[u32],
+        settings: &Settings,
+        threads: usize,
+        out: &Path,
+    ) -> Result<Vec<PrototypeFiles>, Error> {
+        let wanted = self.wanted(which)?;
         std::fs::create_dir_all(out)
             .map_err(|error| Error(format!("cannot create {}: {error}", out.display())))?;
-        let mut generators = std::collections::BTreeMap::new();
-        for index in &wanted {
-            let species = &self.prototypes[*index as usize].key.species;
-            if !generators.contains_key(species) {
-                generators.insert(
-                    species.clone(),
-                    Generator::new(species, &self.settings.options)?,
-                );
+        let parts = self.settings.parts;
+        let growths = self.growths(&wanted);
+        let written = run_jobs(growths.len(), threads, |job| {
+            let indices = &growths[job];
+            let mut files = Vec::with_capacity(indices.len());
+            let mut fresh = Vec::new();
+            for &index in indices {
+                match self.kept_prototype(index, parts, out) {
+                    Some(kept) => files.push(kept),
+                    None => fresh.push(index),
+                }
             }
-        }
-        let next = std::sync::Mutex::new(0_usize);
-        let done = std::sync::Mutex::new(vec![None; wanted.len()]);
-        let failure = std::sync::Mutex::new(None);
-        std::thread::scope(|scope| {
-            for _ in 0..threads.clamp(1, wanted.len().max(1)) {
-                scope.spawn(|| {
-                    loop {
-                        let slot = {
-                            let mut next = next
-                                .lock()
-                                .unwrap_or_else(std::sync::PoisonError::into_inner);
-                            if *next >= wanted.len()
-                                || failure
-                                    .lock()
-                                    .unwrap_or_else(std::sync::PoisonError::into_inner)
-                                    .is_some()
-                            {
-                                return;
-                            }
-                            *next += 1;
-                            *next - 1
-                        };
-                        let index = wanted[slot];
-                        let prototype = &self.prototypes[index as usize];
-                        let generator = &generators[&prototype.key.species];
-                        match Self::write_prototype(
-                            generator,
-                            index,
-                            prototype,
-                            settings,
-                            self.settings.parts,
-                            out,
-                        ) {
-                            Ok(files) => {
-                                done.lock()
-                                    .unwrap_or_else(std::sync::PoisonError::into_inner)[slot] =
-                                    Some(files);
-                            }
-                            Err(error) => {
-                                failure
-                                    .lock()
-                                    .unwrap_or_else(std::sync::PoisonError::into_inner)
-                                    .get_or_insert(error);
-                                return;
-                            }
-                        }
-                    }
-                });
+            let plants = self.grow_together(&fresh)?;
+            for (index, plant) in fresh.into_iter().zip(plants) {
+                let prototype = &self.prototypes[index as usize];
+                let generator = &self.species_of(prototype).generator;
+                let (record, part_records) = generator.write_plant(&plant, settings, out, parts)?;
+                let written = PrototypeFiles {
+                    index,
+                    key: prototype.key.clone(),
+                    age_years: prototype.age_years,
+                    layer: prototype.layer,
+                    plant: record,
+                    parts: part_records,
+                };
+                let kept = KeptPrototype {
+                    generator_revision: crate::GENERATOR_REVISION,
+                    files: written.clone(),
+                };
+                let record = out.join(record_name(&prototype.key, parts));
+                let text = serde_json::to_string_pretty(&kept)
+                    .map_err(|error| Error(error.to_string()))?;
+                std::fs::write(&record, text + "\n").map_err(|error| {
+                    Error(format!("cannot write {}: {error}", record.display()))
+                })?;
+                files.push(written);
             }
-        });
-        if let Some(error) = failure
-            .into_inner()
-            .unwrap_or_else(std::sync::PoisonError::into_inner)
-        {
-            return Err(error);
-        }
-        let written: Vec<PrototypeFiles> = done
-            .into_inner()
-            .unwrap_or_else(std::sync::PoisonError::into_inner)
-            .into_iter()
-            .flatten()
-            .collect();
+            for written in &files {
+                let _ = self.sizes[written.index as usize].set(written.plant.size.clone());
+            }
+            Ok(files)
+        })?;
+        let mut written: Vec<PrototypeFiles> = written.into_iter().flatten().collect();
+        written.sort_by_key(|files| files.index);
         let list = PrototypeList {
             schema: INSTANCE_SCHEMA,
             generator_revision: crate::GENERATOR_REVISION,
@@ -881,29 +1348,17 @@ impl Fill {
         Ok(written)
     }
 
-    fn write_prototype(
-        generator: &Generator,
-        index: u32,
-        prototype: &Prototype,
-        settings: &Settings,
-        parts: bool,
-        out: &Path,
-    ) -> Result<PrototypeFiles, Error> {
-        let key = &prototype.key;
-        let record = out.join(format!(
-            "{}-{}-{}-a{}{}.prototype.json",
-            key.species,
-            key.environment.name(),
-            key.seed,
-            key.age_class,
-            if parts { "-parts" } else { "" }
-        ));
-        if let Some(kept) = std::fs::read_to_string(&record)
+    /// Prototype `index` as a write left it in `out` at this revision,
+    /// every file still there.
+    fn kept_prototype(&self, index: u32, parts: bool, out: &Path) -> Option<PrototypeFiles> {
+        let prototype = &self.prototypes[index as usize];
+        let record = out.join(record_name(&prototype.key, parts));
+        std::fs::read_to_string(&record)
             .ok()
             .and_then(|text| serde_json::from_str::<KeptPrototype>(&text).ok())
             .filter(|kept| {
                 kept.generator_revision == crate::GENERATOR_REVISION
-                    && kept.files.key == *key
+                    && kept.files.key == prototype.key
                     && (kept.files.age_years - prototype.age_years).abs() < 1e-9
                     && kept
                         .files
@@ -913,54 +1368,35 @@ impl Fill {
                         .chain(kept.files.parts.iter().flat_map(|part| &part.levels))
                         .all(|level| out.join(&level.file).is_file())
             })
-        {
-            return Ok(PrototypeFiles {
+            .map(|kept| PrototypeFiles {
                 index,
                 ..kept.files
-            });
-        }
-        let (plant, parts) = generator.write_one_in(
-            key.environment,
-            key.seed,
-            prototype.age_years,
-            settings,
-            out,
-            parts,
-        )?;
-        let files = PrototypeFiles {
-            index,
-            key: key.clone(),
-            age_years: prototype.age_years,
-            layer: prototype.layer,
-            plant,
-            parts,
-        };
-        let kept = KeptPrototype {
-            generator_revision: crate::GENERATOR_REVISION,
-            files: files.clone(),
-        };
-        let text = serde_json::to_string_pretty(&kept).map_err(|error| Error(error.to_string()))?;
-        std::fs::write(&record, text + "\n")
-            .map_err(|error| Error(format!("cannot write {}: {error}", record.display())))?;
-        Ok(files)
+            })
     }
 
-    /// Fill one tile: its instances, ground cover and far canopy.
+    /// Fill one tile: its instances, ground cover and far canopy. Each
+    /// stand cell is drawn from its community's stand at the stand age
+    /// nearest its years since disturbance, on the site factors at its
+    /// middle ([`Site::site_factors_at`]), and keeps each plant with the
+    /// share [`Site::plantable_at`] gives where it stands.
     ///
     /// # Errors
     ///
     /// When the stand map does not cover the site or names a community
-    /// the fill does not have.
+    /// the fill does not have, or a prototype a stand needs has not been
+    /// measured ([`Fill::measure`]).
+    #[allow(clippy::too_many_lines)]
     pub fn tile(&self, site: &Site, stands: &StandMap, seed: u64) -> Result<TilePlan, Error> {
         stands.check(site, self.communities.len())?;
-        let cell_area_ha = stands.cell_m * stands.cell_m / 10_000.0;
+        let cell_m = stands.cell_m;
         let mut instances = Vec::new();
         let mut cover = Vec::with_capacity(stands.cells.len());
         let mut canopy = Vec::with_capacity(stands.cells.len());
+        let (mut trees, mut basal, mut leaf_m2, mut crowns) = (0_usize, 0.0, 0.0, 0.0);
         for (index, cell) in stands.cells.iter().enumerate() {
             let (col, row) = (index % stands.cols, index / stands.cols);
             let world = world_cell(site, stands, col, row);
-            let Some(community) = cell.community.map(|c| &self.communities[usize::from(c)]) else {
+            let Some(community) = cell.community.map(usize::from) else {
                 cover.push(Cover {
                     kind: CoverKind::Bare,
                     fraction: 0.0,
@@ -972,100 +1408,357 @@ impl Fill {
                 });
                 continue;
             };
-            let before = instances.len();
-            for (m, member) in community.members.iter().enumerate() {
-                let key = rng::hash_words(&[seed, world[0], world[1], m as u64]);
-                let expected = stub_stems_per_ha(member.layer)
-                    * member.abundance.unwrap_or(1.0)
-                    * cell_area_ha;
-                #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-                let count = (expected + rng::unit(key)).floor() as u64;
-                for n in 0..count {
-                    let draw = |salt: u64| rng::unit(rng::hash_words(&[key, n, salt]));
-                    #[allow(clippy::cast_precision_loss)]
-                    let east = (col as f64 + draw(1)) * stands.cell_m;
-                    #[allow(clippy::cast_precision_loss)]
-                    let north = (row as f64 + draw(2)) * stands.cell_m;
-                    let prototype = self.pick(member, draw(3), draw(4));
-                    let yaw = draw(5) * std::f64::consts::TAU;
-                    #[allow(clippy::cast_possible_truncation)]
-                    instances.push(Instance {
-                        prototype,
-                        position: [
-                            east as f32,
-                            north as f32,
-                            site.height_at(east, north) as f32,
-                        ],
-                        rotation: Instance::lean(yaw, [0.0, 0.0]),
-                        scale: (0.85 + 0.3 * draw(6)) as f32,
-                        age_years: self.prototypes[prototype as usize].age_years as f32,
-                        tint: [
-                            (draw(7) * 2.0 - 1.0) as f32 * 0.2,
-                            (draw(8) * 2.0 - 1.0) as f32 * 0.1,
-                        ],
-                        extra: 0,
-                    });
-                }
-            }
             #[allow(clippy::cast_precision_loss)]
-            let placed = (instances.len() - before) as f64;
+            let corner = [col as f64 * cell_m, row as f64 * cell_m];
+            let factors = site.site_factors_at(corner[0] + 0.5 * cell_m, corner[1] + 0.5 * cell_m);
+            let suits = self.stands[community]
+                .iter()
+                .map(|member| {
+                    let suits = self.species[member.species]
+                        .niche
+                        .as_ref()
+                        .map_or(1.0, |niche| niche.site_response(factors));
+                    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+                    let quarters = (suits.clamp(0.0, 1.0) * 4.0).round() as u8;
+                    quarters
+                })
+                .collect();
+            let draw = |salt: u64| rng::hash_words(&[seed, world[0], world[1], salt]);
+            let layout = self.layout(LayoutKey {
+                community,
+                age: nearest_age(
+                    &self.settings.stand_ages,
+                    f64::from(cell.years_since_disturbance),
+                ),
+                suits,
+                cell_bits: cell_m.to_bits(),
+                seed,
+                layout: draw(1) % LAYOUTS,
+            })?;
+            // The cell's own turn and shift of the wrapping stand tile.
+            let turn = draw(2) % 4;
+            let shift = [rng::unit(draw(3)) * cell_m, rng::unit(draw(4)) * cell_m];
+            let keep = draw(5);
+            let (mut tree_crowns, mut kept_tree_crowns) = (0.0, 0.0);
+            let (mut herbs, mut kept_herbs) = (0_usize, 0_usize);
+            for (n, plant) in layout.plants.iter().enumerate() {
+                let tree = matches!(plant.layer, niche::Layer::Canopy | niche::Layer::Subcanopy);
+                let herb = plant.layer == niche::Layer::Herb;
+                if tree {
+                    tree_crowns += plant.crown_m2;
+                }
+                herbs += usize::from(herb);
+                let at = turned(
+                    [
+                        wrap(plant.at[0] + shift[0], cell_m),
+                        wrap(plant.at[1] + shift[1], cell_m),
+                    ],
+                    turn,
+                    cell_m,
+                );
+                let (east, north) = (corner[0] + at[0], corner[1] + at[1]);
+                let pick = |salt: u64| rng::unit(rng::hash_words(&[keep, n as u64, salt]));
+                if pick(1) >= site.plantable_at(east, north) {
+                    continue;
+                }
+                if tree {
+                    kept_tree_crowns += plant.crown_m2;
+                }
+                kept_herbs += usize::from(herb);
+                let lean = turned_vector(plant.lean, turn);
+                #[allow(clippy::cast_precision_loss)]
+                let yaw = plant.yaw + turn as f64 * std::f64::consts::FRAC_PI_2;
+                let prototype = &self.prototypes[plant.prototype as usize];
+                if let Some(size) = self.size(plant.prototype as usize) {
+                    let dbh = size.dbh.unwrap_or(0.0) * plant.scale;
+                    if dbh >= 0.05 {
+                        trees += 1;
+                        basal += std::f64::consts::PI * 0.25 * dbh * dbh;
+                    }
+                    leaf_m2 += size.leaf_area * plant.scale * plant.scale;
+                }
+                #[allow(clippy::cast_possible_truncation)]
+                instances.push(Instance {
+                    prototype: plant.prototype,
+                    position: [
+                        east as f32,
+                        north as f32,
+                        site.height_at(east, north) as f32,
+                    ],
+                    rotation: Instance::lean(yaw, lean),
+                    scale: plant.scale as f32,
+                    age_years: prototype.age_years as f32,
+                    tint: [
+                        (pick(2) * 2.0 - 1.0) as f32 * 0.2,
+                        (pick(3) * 2.0 - 1.0) as f32 * 0.1,
+                    ],
+                    extra: 0,
+                });
+            }
+            let kept_share = |kept: f64, all: f64| if all > 0.0 { kept / all } else { 1.0 };
+            let canopy_cover = layout.canopy_cover * kept_share(kept_tree_crowns, tree_crowns);
+            #[allow(clippy::cast_precision_loss)]
+            let herb_cover = layout.herb_cover * kept_share(kept_herbs as f64, herbs as f64);
+            crowns += canopy_cover * cell_m * cell_m;
             #[allow(clippy::cast_possible_truncation)]
-            let closure = (placed * 25.0 / (stands.cell_m * stands.cell_m)).min(1.0) as f32;
-            cover.push(Cover {
-                kind: CoverKind::Litter,
-                fraction: closure,
+            cover.push(if herb_cover > 0.0 {
+                Cover {
+                    kind: CoverKind::Herb,
+                    fraction: herb_cover as f32,
+                }
+            } else if canopy_cover > 0.0 {
+                Cover {
+                    kind: CoverKind::Litter,
+                    fraction: canopy_cover as f32,
+                }
+            } else {
+                Cover {
+                    kind: CoverKind::Bare,
+                    fraction: 0.0,
+                }
             });
+            #[allow(clippy::cast_possible_truncation)]
             canopy.push(CanopyCell {
-                height_m: 0.0,
-                cover: closure,
-                colour: [0.08, 0.12, 0.06],
+                height_m: layout.canopy_height as f32,
+                cover: canopy_cover as f32,
+                colour: CANOPY_COLOUR,
             });
         }
+        let area_m2 = site.tile_m * site.tile_m;
+        let area_ha = area_m2 / 10_000.0;
         #[allow(clippy::cast_precision_loss)]
-        let stems_per_ha = instances.len() as f64 / (site.tile_m * site.tile_m / 10_000.0);
+        let stats = TileStats {
+            instances: instances.len(),
+            stems_per_ha: instances.len() as f64 / area_ha,
+            trees_per_ha: trees as f64 / area_ha,
+            basal_area_m2_per_ha: basal / area_ha,
+            canopy_cover: crowns / area_m2,
+            leaf_area_index: leaf_m2 / area_m2,
+        };
         Ok(TilePlan {
             tile: site.tile,
             tile_m: site.tile_m,
-            cell_m: stands.cell_m,
+            cell_m,
             cols: stands.cols,
-            stats: TileStats {
-                instances: instances.len(),
-                stems_per_ha,
-            },
+            stats,
             instances,
             cover,
             canopy,
         })
     }
 
-    /// The prototype a member's plant is drawn as: an interior plant of a
-    /// class and seed by its draws.
-    fn pick(&self, member: &Member, class_draw: f64, seed_draw: f64) -> u32 {
-        let classes = f64::from(self.settings.age_classes);
-        let seeds = f64::from(self.settings.seeds);
-        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-        let (class, seed) = (
-            ((class_draw * classes) as u16).min(self.settings.age_classes - 1),
-            ((seed_draw * seeds) as u64).min(u64::from(self.settings.seeds) - 1) + 1,
-        );
-        let environments = member.environments();
-        let environment = if environments.contains(&Environment::Interior) {
-            Environment::Interior
-        } else {
-            environments[0]
-        };
-        let index = self
-            .prototypes
-            .iter()
-            .position(|p| {
-                p.key.species == member.species
-                    && p.key.environment == environment
-                    && p.key.age_class == class
-                    && p.key.seed == seed
-            })
-            .unwrap_or(0);
-        u32::try_from(index).unwrap_or(u32::MAX)
+    /// The stand tile `key` names, laid out once.
+    fn layout(&self, key: LayoutKey) -> Result<Arc<Layout>, Error> {
+        if let Some(found) = self
+            .laid
+            .lock()
+            .unwrap_or_else(PoisonError::into_inner)
+            .get(&key)
+        {
+            return Ok(Arc::clone(found));
+        }
+        // Laid out outside the lock: two threads that meet here make the
+        // same tile, and the first kept serves both.
+        let made = Arc::new(self.lay_out(&key)?);
+        Ok(Arc::clone(
+            self.laid
+                .lock()
+                .unwrap_or_else(PoisonError::into_inner)
+                .entry(key)
+                .or_insert(made),
+        ))
     }
+
+    /// Lay out the stand tile `key` names: its community's stand developed
+    /// at its age on its site, each cohort a member in each of its seeds,
+    /// in the layer its measured height puts it.
+    #[allow(clippy::too_many_lines)]
+    fn lay_out(&self, key: &LayoutKey) -> Result<Layout, Error> {
+        let candidates = self.candidates(key.community, Some(&key.suits));
+        let stand = development::develop(&candidates, self.settings.stand_ages[key.age]);
+        let mut chosen = Vec::new();
+        for cohort in &stand.cohorts {
+            let member = &self.stands[key.community][cohort.candidate];
+            let keys = self.cohort_keys(member, cohort, stand.stage);
+            #[allow(clippy::cast_precision_loss)]
+            let share = cohort.weight * member.abundance / keys.len().max(1) as f64;
+            for prototype_key in keys {
+                let index = self.index.get(&prototype_key).copied().ok_or_else(|| {
+                    Error(format!(
+                        "fill: no prototype {}; the stand needs one Fill::new did not choose",
+                        prototype_key.stem()
+                    ))
+                })?;
+                let size = self.size(index as usize).ok_or_else(|| {
+                    Error(format!(
+                        "fill: prototype {index} ({}) is not measured yet; call Fill::measure first",
+                        prototype_key.stem()
+                    ))
+                })?;
+                chosen.push((index, cohort.candidate, share, size, member.species));
+            }
+        }
+        let top = chosen
+            .iter()
+            .filter(|(_, candidate, ..)| candidates[*candidate].tree())
+            .map(|(.., size, _)| size.height)
+            .fold(0.0_f64, f64::max);
+        let mut has_herbs = false;
+        let members: Vec<stand_tile::Member> = chosen
+            .iter()
+            .map(
+                |(index, candidate, share, size, species)| stand_tile::Member {
+                    id: *index,
+                    layer: development::layer_of(&candidates[*candidate], size.height, top),
+                    share: *share,
+                    height_m: size.height,
+                    crown_base_m: size.crown_base.unwrap_or(0.0),
+                    crown_radius_m: size.crown_radius,
+                    light_needed: self.species[*species].light_needed,
+                },
+            )
+            .filter(|member| {
+                let herb = member.layer == niche::Layer::Herb;
+                has_herbs |= herb;
+                self.settings.herbs || !herb
+            })
+            .collect();
+        let tile_m = f64::from_bits(key.cell_bits);
+        let rules = stand_tile::Rules {
+            tile_m,
+            cover: stand.cover,
+            scale: STAND_SCALE,
+            ..stand_tile::Rules::default()
+        };
+        let placed = stand_tile::lay_out(
+            &members,
+            &rules,
+            rng::hash_words(&[key.seed, key.layout, key.community as u64, key.age as u64]),
+        );
+        let in_layers = |layers: &[niche::Layer]| -> Vec<stand_tile::Placed> {
+            placed
+                .iter()
+                .filter(|plant| layers.contains(&members[plant.member].layer))
+                .copied()
+                .collect()
+        };
+        let canopy_cover = stand_tile::cover(
+            &members,
+            &in_layers(&[niche::Layer::Canopy, niche::Layer::Subcanopy]),
+            tile_m,
+        );
+        let herb_cover = if !has_herbs {
+            0.0
+        } else if self.settings.herbs {
+            stand_tile::cover(&members, &in_layers(&[niche::Layer::Herb]), tile_m)
+        } else {
+            stand.cover[3]
+        };
+        let (mut heights, mut count) = (0.0, 0.0);
+        let plants = placed
+            .iter()
+            .map(|plant| {
+                let member = &members[plant.member];
+                if member.layer == niche::Layer::Canopy {
+                    heights += member.height_m * plant.scale;
+                    count += 1.0;
+                }
+                // Leant so its crown's middle stands where the layout put
+                // its crown.
+                let middle = f64::midpoint(member.crown_base_m, member.height_m) * plant.scale;
+                let shift = plant.crown_offset(tile_m);
+                let lean = if middle > 0.5 {
+                    [shift[0] / middle, shift[1] / middle]
+                } else {
+                    [0.0, 0.0]
+                };
+                let radius = member.crown_radius_m * plant.scale;
+                Laid {
+                    prototype: member.id,
+                    at: plant.at_m,
+                    yaw: plant.yaw_deg.to_radians(),
+                    scale: plant.scale,
+                    lean,
+                    layer: member.layer,
+                    crown_m2: std::f64::consts::PI * radius * radius,
+                }
+            })
+            .collect();
+        Ok(Layout {
+            plants,
+            canopy_cover,
+            canopy_height: if count > 0.0 { heights / count } else { 0.0 },
+            herb_cover,
+        })
+    }
+}
+
+/// The far canopy's colour seen from above, linear RGB: a dark conifer
+/// green until each species gives its own.
+const CANOPY_COLOUR: [f32; 3] = [0.08, 0.12, 0.06];
+
+/// The record a written prototype keeps beside its files.
+fn record_name(key: &PrototypeKey, parts: bool) -> String {
+    format!(
+        "{}{}.prototype.json",
+        key.stem(),
+        if parts { "-parts" } else { "" }
+    )
+}
+
+/// Run `count` jobs on up to `threads` threads, each job once; their
+/// results in order, or the first failure.
+fn run_jobs<T: Send>(
+    count: usize,
+    threads: usize,
+    job: impl Fn(usize) -> Result<T, Error> + Sync,
+) -> Result<Vec<T>, Error> {
+    let next = Mutex::new(0_usize);
+    let done: Mutex<Vec<Option<T>>> = Mutex::new((0..count).map(|_| None).collect());
+    let failure = Mutex::new(None);
+    std::thread::scope(|scope| {
+        for _ in 0..threads.clamp(1, count.max(1)) {
+            scope.spawn(|| {
+                loop {
+                    let slot = {
+                        let mut next = next.lock().unwrap_or_else(PoisonError::into_inner);
+                        if *next >= count
+                            || failure
+                                .lock()
+                                .unwrap_or_else(PoisonError::into_inner)
+                                .is_some()
+                        {
+                            return;
+                        }
+                        *next += 1;
+                        *next - 1
+                    };
+                    match job(slot) {
+                        Ok(result) => {
+                            done.lock().unwrap_or_else(PoisonError::into_inner)[slot] =
+                                Some(result);
+                        }
+                        Err(error) => {
+                            failure
+                                .lock()
+                                .unwrap_or_else(PoisonError::into_inner)
+                                .get_or_insert(error);
+                            return;
+                        }
+                    }
+                }
+            });
+        }
+    });
+    if let Some(error) = failure.into_inner().unwrap_or_else(PoisonError::into_inner) {
+        return Err(error);
+    }
+    Ok(done
+        .into_inner()
+        .unwrap_or_else(PoisonError::into_inner)
+        .into_iter()
+        .flatten()
+        .collect())
 }
 
 #[derive(Serialize, Deserialize)]
@@ -1074,27 +1767,47 @@ struct KeptPrototype {
     files: PrototypeFiles,
 }
 
-/// The stub's density until the stand's development sets it: mature
-/// stems per hectare by layer.
-fn stub_stems_per_ha(layer: Option<Layer>) -> f64 {
-    match layer {
-        Some(Layer::Canopy) | None => 300.0,
-        Some(Layer::Subcanopy) => 200.0,
-        Some(Layer::Shrub) => 1_000.0,
-        Some(Layer::Herb) => 3_000.0,
-        Some(Layer::Ground) => 5_000.0,
-        Some(Layer::Climber) => 100.0,
+/// The index of the stand age in `ages` nearest `years`, by ratio; the
+/// youngest for a stand not yet a year old.
+fn nearest_age(ages: &[f64], years: f64) -> usize {
+    if years.is_nan() || years < 1.0 {
+        return 0;
     }
+    (0..ages.len())
+        .min_by(|a, b| {
+            libm::fabs(libm::log(ages[*a] / years))
+                .total_cmp(&libm::fabs(libm::log(ages[*b] / years)))
+        })
+        .unwrap_or(0)
 }
 
-/// The age of class `class` of `classes`: the oldest at class 0, each
-/// younger class a step nearer a tenth of it.
-fn class_age(oldest: f64, class: u16, classes: u16) -> f64 {
-    if classes <= 1 {
-        return oldest;
+/// `value` wrapped into `[0, side)`.
+fn wrap(value: f64, side: f64) -> f64 {
+    let wrapped = value.rem_euclid(side);
+    if wrapped >= side { 0.0 } else { wrapped }
+}
+
+/// A point of a square of `side` turned `turns` quarter turns
+/// anticlockwise about its middle.
+fn turned(at: [f64; 2], turns: u64, side: f64) -> [f64; 2] {
+    let [x, y] = at;
+    let [x, y] = match turns % 4 {
+        0 => [x, y],
+        1 => [side - y, x],
+        2 => [side - x, side - y],
+        _ => [y, side - x],
+    };
+    [wrap(x, side), wrap(y, side)]
+}
+
+/// A vector turned `turns` quarter turns anticlockwise.
+fn turned_vector(v: [f64; 2], turns: u64) -> [f64; 2] {
+    match turns % 4 {
+        0 => v,
+        1 => [-v[1], v[0]],
+        2 => [-v[0], -v[1]],
+        _ => [v[1], -v[0]],
     }
-    let share = 1.0 - 0.9 * f64::from(class) / f64::from(classes - 1);
-    oldest * share
 }
 
 /// A stand cell's place in the world grid of cells, as two words that key
@@ -1142,9 +1855,45 @@ mod tests {
     }
 
     #[test]
-    fn class_ages_run_from_the_oldest_to_a_tenth() {
-        assert!((class_age(100.0, 0, 4) - 100.0).abs() < 1e-9);
-        assert!((class_age(100.0, 3, 4) - 10.0).abs() < 1e-9);
+    fn a_stand_cell_takes_the_stand_age_nearest_by_ratio() {
+        let ages = STAND_AGES;
+        assert_eq!(nearest_age(&ages, 0.0), 0);
+        assert_eq!(nearest_age(&ages, 27.0), 1);
+        assert_eq!(nearest_age(&ages, 30.0), 2);
+        assert_eq!(nearest_age(&ages, 500.0), 6);
+        assert_eq!(nearest_age(&ages, 5_000.0), 6);
+    }
+
+    #[test]
+    fn a_quarter_turn_keeps_a_point_in_its_square_and_turns_its_lean_alike() {
+        let side = 40.0;
+        for turns in 0..4 {
+            for at in [[0.0, 0.0], [10.0, 3.0], [39.99, 20.0]] {
+                let point = super::turned(at, turns, side);
+                assert!(point.iter().all(|v| (0.0..side).contains(v)), "{point:?}");
+            }
+        }
+        // A point east of the middle turns north of it, as east turns north.
+        let point = super::turned([30.0, 20.0], 1, side);
+        assert!((point[0] - 20.0).abs() < 1e-9 && (point[1] - 30.0).abs() < 1e-9);
+        assert_eq!(turned_vector([1.0, 0.0], 1), [-0.0, 1.0]);
+        assert_eq!(wrap(-1e-20, side), 0.0);
+    }
+
+    #[test]
+    fn a_prototype_stem_names_its_age_in_years() {
+        let key = PrototypeKey {
+            species: "x".into(),
+            seed: 2,
+            environment: Environment::Interior,
+            age_tenths: 305,
+        };
+        assert_eq!(key.stem(), "x-interior-2-30.5y");
+        let whole = PrototypeKey {
+            age_tenths: 4800,
+            ..key
+        };
+        assert_eq!(whole.stem(), "x-interior-2-480y");
     }
 
     /// Turns `v` by the quaternion `q` (x, y, z, w).
