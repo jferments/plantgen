@@ -56,10 +56,10 @@ pub use crate::export::{
     crown_regions,
 };
 pub use crate::fill::{
-    CanopyCell, Community, Cover, CoverKind, FieldTile, Fill, FillSettings, INSTANCE_BYTES,
-    INSTANCE_SCHEMA, Instance, Layer, Member, PROTOTYPES_FILE, Prototype, PrototypeFiles,
-    PrototypeKey, STAND_AGES, STAND_CELL_M, STAND_SCALE, Site, StandCell, StandMap, TileId,
-    TilePlan, TileStats, moisture_from_wetness,
+    CLIMBER_SPACING_M, CanopyCell, Community, Cover, CoverKind, CrackPlant, FieldTile, Fill,
+    FillSettings, INSTANCE_BYTES, INSTANCE_SCHEMA, Instance, Layer, Member, PROTOTYPES_FILE,
+    Prototype, PrototypeFiles, PrototypeKey, RoofSoil, Roofs, STAND_AGES, STAND_CELL_M,
+    STAND_SCALE, Site, StandCell, StandMap, TileId, TilePlan, TileStats, moisture_from_wetness,
 };
 pub use crate::package::Measurements;
 pub use crate::quality::Quality;
@@ -198,6 +198,18 @@ impl Generator {
         &self.inputs.spec
     }
 
+    /// What the species' roots ask of the soil (its program's `soil@1`
+    /// settings with its first seed's parameters), or `None` when its
+    /// program has no soil tool or does not compile.
+    #[must_use]
+    pub fn soil_need(&self) -> Option<crate::lsys::tools::SoilNeed> {
+        let spec = &self.inputs.spec;
+        let (program, params) = spec.program_in(self.library).ok()?;
+        let seed = spec.variants.seeds.first().copied().unwrap_or(1);
+        let params = spec.seeded_params(&program, &params, seed);
+        crate::lsys::tools::SoilNeed::of_program(&program, &params)
+    }
+
     /// The package key: a hash of the spec, its program, the quality, the
     /// day and [`GENERATOR_REVISION`](crate::GENERATOR_REVISION).
     #[must_use]
@@ -259,6 +271,52 @@ impl Generator {
             seed,
             ages,
         )?)
+    }
+
+    /// A climber's `seed` grown at the foot of a wall `wall_m` high and
+    /// kept at each of `ages` (rising), from one growth
+    /// ([`export::grow_on_wall`]): the wall's face is the plane z = -0.3
+    /// of the plant's frame, facing +z.
+    ///
+    /// # Errors
+    ///
+    /// As [`Self::grow_ages_in`], and when `wall_m` is not above 0.
+    pub fn grow_ages_on_wall(
+        &self,
+        seed: u64,
+        ages: &[f64],
+        wall_m: f64,
+    ) -> Result<Vec<Plant>, Error> {
+        Ok(export::grow_on_wall(&self.inputs, seed, ages, wall_m)?)
+    }
+
+    /// `plant` drawn at level `level` of its quality's levels of detail
+    /// (0 the finest; past the last, the last), on the generator's day,
+    /// as a package draws it; and the looks its cards' templates index.
+    /// For a renderer that draws many plants at once
+    /// ([`crate::preview::render_on_site`]): it gathers each species'
+    /// looks once and shifts its cards' templates past the looks before.
+    #[must_use]
+    pub fn draw(
+        &self,
+        plant: &Plant,
+        level: usize,
+    ) -> (crate::mesh::PlantMesh, &[crate::looks::Look]) {
+        let inputs = &self.inputs;
+        let lods = &inputs.quality.lods;
+        let level = level.min(lods.len().saturating_sub(1));
+        let staged = crate::looks::staged(&plant.graph, &inputs.sizes, &inputs.looks);
+        let drawn = staged.as_ref().unwrap_or(&plant.graph);
+        let (mesh, _) = package::level_mesh(
+            drawn,
+            inputs,
+            plant.seed,
+            &lods[level].for_height(plant.graph.height),
+            (level, 0.0),
+            None,
+            false,
+        );
+        (mesh, &inputs.looks)
     }
 
     /// A grown plant as glTF binary files, one per level of detail, and

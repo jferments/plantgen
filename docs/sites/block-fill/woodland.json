@@ -1,0 +1,28 @@
+{
+ "id": "block-woodland",
+ "members": [
+  {
+   "species": "pseudotsuga-menziesii",
+   "layer": "canopy"
+  },
+  {
+   "species": "acer-macrophyllum",
+   "layer": "subcanopy",
+   "abundance": 0.5
+  },
+  {
+   "species": "acer-circinatum",
+   "layer": "shrub",
+   "abundance": 0.6
+  },
+  {
+   "species": "gaultheria-shallon",
+   "layer": "shrub",
+   "abundance": 0.8
+  },
+  {
+   "species": "polystichum-munitum",
+   "layer": "herb"
+  }
+ ]
+}

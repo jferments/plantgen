@@ -30,6 +30,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::api::{Error, Generator, Options, PartRecord, Plant, Settings, VariantRecord};
 use crate::development::{self, Candidate, Stage};
+use crate::lsys::tools::SoilNeed;
 use crate::niche::{self, Niche, SiteFactors};
 use crate::package::Measurements;
 use crate::rng;
@@ -224,11 +225,16 @@ pub struct PrototypeKey {
     /// The age it is grown to, tenths of a year (as an [`Instance`] packs
     /// its age): one of its cohorts' ages in a stand's development.
     pub age_tenths: u32,
+    /// Whether it is a climber grown at the foot of a wall
+    /// ([`Generator::grow_ages_on_wall`]), not in its environment.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub on_wall: bool,
 }
 
 impl PrototypeKey {
     /// The common name of its files: `<species>-<setting>-<seed>-<age>y`,
-    /// as [`Generator::export`] names a plant.
+    /// as [`Generator::export`] names a plant; a climber's setting on a
+    /// wall is `wall`.
     #[must_use]
     pub fn stem(&self) -> String {
         let age = if self.age_tenths.is_multiple_of(10) {
@@ -236,12 +242,12 @@ impl PrototypeKey {
         } else {
             format!("{}.{}", self.age_tenths / 10, self.age_tenths % 10)
         };
-        format!(
-            "{}-{}-{}-{age}y",
-            self.species,
-            self.environment.name(),
-            self.seed
-        )
+        let setting = if self.on_wall {
+            "wall"
+        } else {
+            self.environment.name()
+        };
+        format!("{}-{setting}-{}-{age}y", self.species, self.seed)
     }
 }
 
@@ -302,6 +308,73 @@ pub struct Site {
     /// The measured site this tile is part of, and where the tile's
     /// south-west corner lies in it; `None` for a height-field site.
     pub field: Option<FieldTile>,
+    /// Plants that came up by themselves in the tile's pavements
+    /// ([`Site::with_colonists`]), drawn after its stands.
+    pub colonists: Vec<CrackPlant>,
+}
+
+/// A plant that came up by itself in a crack or a hole of a pavement
+/// ([`crate::succession`]), as a fill draws it.
+#[derive(Debug, Clone, PartialEq)]
+pub struct CrackPlant {
+    /// Its species' id, one of the fill's species.
+    pub species: String,
+    /// Metres from the tile's south-west corner.
+    pub east: f64,
+    pub north: f64,
+    pub age_years: f64,
+    /// Its height and crown radius, as its crack's soil has let it grow.
+    pub height_m: f64,
+    pub crown_m: f64,
+}
+
+/// A field tile's roof patches that hold soil, by the field cell under
+/// them ([`Site::roofs`]).
+#[derive(Debug, Clone, Default)]
+pub struct Roofs {
+    cells: HashMap<u32, u32>,
+}
+
+impl Roofs {
+    /// The roof soil at `(east, north)` metres from `site`'s corner, if a
+    /// roof patch holding soil lies over it.
+    #[must_use]
+    pub fn at(&self, site: &Site, east: f64, north: f64) -> Option<RoofSoil> {
+        let tile = site.field.as_ref()?;
+        let (x, z) = (tile.corner[0] + east, tile.corner[1] - north);
+        let cell = tile.field.cell_at(x, z)?;
+        let patch = &tile.field.patches[*self.cells.get(&cell)? as usize];
+        let [nx, ny, nz] = patch.normal;
+        // On the patch's plane.
+        let height_m =
+            patch.centre[1] - (nx * (x - patch.centre[0]) + nz * (z - patch.centre[2])) / ny;
+        Some(RoofSoil {
+            height_m,
+            soil_m: patch.soil_m,
+        })
+    }
+}
+
+/// Soil gathered on a roof where a plant stands ([`Roofs::at`]).
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct RoofSoil {
+    /// The roof's height there, in the field's frame.
+    pub height_m: f64,
+    /// How deep its soil lies.
+    pub soil_m: f64,
+}
+
+impl RoofSoil {
+    /// How far the roof's soil carries a plant `crown_m` in crown radius
+    /// and `height_m` tall whose roots ask `need`, 0 to 1, as
+    /// [`Site::soil_ratio_at`] reads the ground: an even layer `soil_m`
+    /// deep all round its foot.
+    #[must_use]
+    pub fn soil_ratio(&self, need: &SoilNeed, crown_m: f64, height_m: f64) -> f64 {
+        need.ratio(crown_m, height_m, |reach, down| {
+            Some(std::f64::consts::PI * reach * reach * down.min(self.soil_m))
+        })
+    }
 }
 
 /// A tile's place in a measured site field ([`crate::site_field`]).
@@ -384,6 +457,7 @@ impl Site {
             cols,
             factors: DEFAULT_FACTORS,
             field: None,
+            colonists: Vec::new(),
         })
     }
 
@@ -469,6 +543,188 @@ impl Site {
                 ground.open_share[index].clamp(0.0, 1.0)
             }
         })
+    }
+
+    /// This field's tile with the plants that come up by themselves in
+    /// its pavements after `years` untended: [`crate::succession::run`]
+    /// over `microsites` (the field's site mesh's,
+    /// [`crate::succession::microsites`]) with the species of `pool` and
+    /// the seed of `sources`, keeping those that stand inside the tile.
+    /// Each is drawn as its species' prototype nearest its age, scaled to
+    /// its height ([`Fill::tile`]), so the fill must hold every species of
+    /// `pool` that comes up.
+    ///
+    /// # Errors
+    ///
+    /// When the site is not a field's tile.
+    pub fn with_colonists(
+        mut self,
+        microsites: &[crate::succession::Microsite],
+        pool: &[crate::succession::Colonist],
+        sources: &[crate::succession::Source],
+        settings: &crate::succession::Settings,
+        years: u32,
+    ) -> Result<Self, Error> {
+        let Some(tile) = &self.field else {
+            return Err(Error(
+                "site: only a site field's tile has pavements for plants to come up in".into(),
+            ));
+        };
+        let corner = tile.corner;
+        let snapshots = crate::succession::run(microsites, pool, sources, settings, &[years]);
+        let Some(snapshot) = snapshots.into_iter().find(|s| s.year == years) else {
+            return Ok(self);
+        };
+        self.colonists = snapshot
+            .plants
+            .iter()
+            .filter_map(|plant| {
+                let site = &microsites[plant.microsite];
+                let (east, north) = (site.x - corner[0], corner[1] - site.z);
+                let inside =
+                    (0.0..self.tile_m).contains(&east) && (0.0..self.tile_m).contains(&north);
+                (inside && plant.height > 0.0).then(|| CrackPlant {
+                    species: pool[plant.colonist].id.clone(),
+                    east,
+                    north,
+                    age_years: plant.age,
+                    height_m: plant.height,
+                    crown_m: plant.crown,
+                })
+            })
+            .collect();
+        Ok(self)
+    }
+
+    /// The rootable soil under `(east, north)`, metres deep: the field
+    /// cell's [`crate::site_field::Ground::rooting_m`]; `None` where the
+    /// soil goes deeper than roots do, on a height-field site, or where the
+    /// cell has no ground or the field does not reach.
+    #[must_use]
+    pub fn rooting_at(&self, east: f64, north: f64) -> Option<f64> {
+        let tile = self.field.as_ref()?;
+        let cell = tile.cell(east, north)? as usize;
+        tile.field.ground.height[cell]?;
+        tile.field.ground.rooting_m[cell]
+    }
+
+    /// How far the soil round `(east, north)` carries a plant `crown_m`
+    /// in crown radius and `height_m` tall whose roots ask `need` of it,
+    /// 0 to 1 ([`SoilNeed::ratio`], as `soil@1` reads it each year). The
+    /// rootable volume within a reach of the foot is summed over the
+    /// field's cells whose centres lie within it: each cell's area down to
+    /// its [`Site::rooting_at`] depth (all the way where nothing stops the
+    /// roots), times its open share, so a tree in a pit in sound pavement
+    /// has its pit's soil and no more, and nothing where a cell has no
+    /// ground. A plant drawn there has its lengths times the square root
+    /// of this, as `soil@1` grows them. 1 on a height-field site or a
+    /// plant whose program asks nothing of the soil.
+    #[must_use]
+    pub fn soil_ratio_at(
+        &self,
+        east: f64,
+        north: f64,
+        need: &SoilNeed,
+        crown_m: f64,
+        height_m: f64,
+    ) -> f64 {
+        let Some(tile) = &self.field else {
+            return 1.0;
+        };
+        let field = &tile.field;
+        let cell_m = field.settings.cell_m;
+        let (x, z) = (tile.corner[0] + east, tile.corner[1] - north);
+        need.ratio(crown_m, height_m, |reach, down| {
+            let rings = (reach / cell_m).ceil() + 1.0;
+            let mut volume = 0.0;
+            let mut seen = 0_usize;
+            #[allow(clippy::cast_possible_truncation)]
+            let span = rings as i64;
+            for dz in -span..=span {
+                for dx in -span..=span {
+                    #[allow(clippy::cast_precision_loss)]
+                    let (px, pz) = (x + dx as f64 * cell_m, z + dz as f64 * cell_m);
+                    let Some(cell) = field.cell_at(px, pz) else {
+                        continue;
+                    };
+                    let centre = field.cell_centre(cell);
+                    if (centre[0] - x).hypot(centre[1] - z) > reach.max(0.5 * cell_m) {
+                        continue;
+                    }
+                    seen += 1;
+                    let index = cell as usize;
+                    if field.ground.height[index].is_none() {
+                        continue;
+                    }
+                    let depth = field.ground.rooting_m[index].map_or(down, |d| d.clamp(0.0, down));
+                    volume +=
+                        cell_m * cell_m * depth * field.ground.open_share[index].clamp(0.0, 1.0);
+                }
+            }
+            // Beyond the field's edge, nothing is known: no limit.
+            (seen > 0).then(|| {
+                // The cells stand in for the disc they cover.
+                #[allow(clippy::cast_precision_loss)]
+                let covered = seen as f64 * cell_m * cell_m;
+                let disc = std::f64::consts::PI * reach * reach;
+                volume * (disc / covered).min(1.0)
+            })
+        })
+    }
+
+    /// The patches of the field's roofs that hold soil (`soil_m` above
+    /// 0, facing up, not kept clear) by the field cell under them, the
+    /// highest where two overlap; none on a height-field site.
+    #[must_use]
+    pub fn roofs(&self) -> Roofs {
+        let mut cells = HashMap::new();
+        let Some(tile) = &self.field else {
+            return Roofs { cells };
+        };
+        let field = &tile.field;
+        let cell_m = field.settings.cell_m;
+        for (index, patch) in field.patches.iter().enumerate() {
+            let roof = field
+                .hosts
+                .get(patch.host as usize)
+                .is_some_and(|host| host.kind == crate::site_field::HostKind::Roof);
+            if !roof || patch.soil_m <= 0.0 || patch.clear || patch.normal[1] < 0.3 {
+                continue;
+            }
+            // The cells whose centres lie under the patch, seen from above.
+            let half = 0.5 * (patch.area * patch.normal[1]).sqrt();
+            let rings = (half / cell_m).ceil();
+            #[allow(clippy::cast_possible_truncation)]
+            let span = rings as i64;
+            for dz in -span..=span {
+                for dx in -span..=span {
+                    #[allow(clippy::cast_precision_loss)]
+                    let (x, z) = (
+                        patch.centre[0] + dx as f64 * cell_m,
+                        patch.centre[2] + dz as f64 * cell_m,
+                    );
+                    let Some(cell) = field.cell_at(x, z) else {
+                        continue;
+                    };
+                    let centre = field.cell_centre(cell);
+                    if (centre[0] - patch.centre[0]).abs() > half
+                        || (centre[1] - patch.centre[2]).abs() > half
+                    {
+                        continue;
+                    }
+                    let index = u32::try_from(index).unwrap_or(u32::MAX);
+                    cells
+                        .entry(cell)
+                        .and_modify(|kept: &mut u32| {
+                            if field.patches[*kept as usize].centre[1] < patch.centre[1] {
+                                *kept = index;
+                            }
+                        })
+                        .or_insert(index);
+                }
+            }
+        }
+        Roofs { cells }
     }
 
     /// The site factors at `(east, north)`, which set how well each
@@ -890,6 +1146,29 @@ impl TilePlan {
         std::fs::write(&path, json).map_err(fail)?;
         Ok(path)
     }
+
+    /// The tile as one GLB that any glTF viewer opens: each prototype the
+    /// tile places, at `level` (0 nearest to 3 farthest), copied once
+    /// from its files in `dir` (as [`Fill::write_prototypes`] listed them
+    /// in `prototypes`), and a node per prototype mesh drawing every plant
+    /// that uses it with `EXT_mesh_gpu_instancing`. The root node sits at
+    /// the tile's south-west corner (+X east, +Y up, -Z north). With
+    /// `meshopt`, its arrays are compressed with `EXT_meshopt_compression`.
+    ///
+    /// # Errors
+    ///
+    /// When a placed prototype is not in `prototypes`, has no such level,
+    /// or its file cannot be read or holds what instances cannot carry (a
+    /// rig, a node placed by a matrix or scaled unevenly).
+    pub fn glb(
+        &self,
+        prototypes: &[PrototypeFiles],
+        dir: &Path,
+        level: usize,
+        meshopt: bool,
+    ) -> Result<Vec<u8>, Error> {
+        crate::tile_scene::tile_glb(self, prototypes, dir, level, meshopt)
+    }
 }
 
 /// A set of communities, their stands developed and prototypes chosen
@@ -906,6 +1185,8 @@ pub struct Fill {
     /// Each community's members that stand, in order: the candidates of
     /// its development.
     stands: Vec<Vec<StandMember>>,
+    /// Each community's climbers, drawn at the feet of walls and fences.
+    climbers: Vec<Vec<Climber>>,
     /// Each prototype's index by its key.
     index: HashMap<PrototypeKey, u32>,
     /// Each prototype's twin grown as a stand edge, for a tree grown in a
@@ -917,6 +1198,20 @@ pub struct Fill {
     laid: Arc<Mutex<HashMap<LayoutKey, Arc<Layout>>>>,
 }
 
+/// A climber of a community ([`Layer::Climber`]): its species, its
+/// abundance, and its prototypes (one per seed) grown on a wall.
+#[derive(Debug, Clone)]
+struct Climber {
+    species: usize,
+    abundance: f64,
+    prototypes: Vec<u32>,
+}
+
+/// How far apart a climber of abundance 1 stands along the foot of a wall
+/// or a fence where the ground at its foot is soil, metres. Hand-set: ivy
+/// and other climbers set or come up every few metres along an old wall.
+pub const CLIMBER_SPACING_M: f64 = 3.0;
+
 #[derive(Debug, Clone)]
 struct Species {
     id: String,
@@ -927,6 +1222,9 @@ struct Species {
     /// The light it needs from above to stand
     /// ([`development::light_needed`]).
     light_needed: f64,
+    /// What its roots ask of the soil, where its program says
+    /// ([`Site::soil_ratio_at`]).
+    soil: Option<SoilNeed>,
 }
 
 impl Species {
@@ -943,12 +1241,14 @@ impl Species {
             }
         }
         let light_needed = niche.as_ref().map_or(0.0, development::light_needed);
+        let soil = generator.soil_need();
         Ok(Self {
             id: id.to_string(),
             generator,
             niche,
             seeds,
             light_needed,
+            soil,
         })
     }
 }
@@ -1101,8 +1401,8 @@ struct KeptSize {
 impl Fill {
     /// Develop each community's stand at each of the settings' stand ages
     /// and choose the prototypes of their cohorts, each in as many seeds
-    /// as the settings ask. Nothing is grown yet; see [`Fill::measure`].
-    /// A climber is not placed yet: it needs a host to climb.
+    /// as the settings ask, and each climber's on a wall. Nothing is grown
+    /// yet; see [`Fill::measure`].
     ///
     /// # Errors
     ///
@@ -1132,22 +1432,30 @@ impl Fill {
         }
         let mut species: Vec<Species> = Vec::new();
         let mut stands = Vec::new();
+        let mut climbers = Vec::new();
         for community in communities {
             community.check()?;
             let mut members = Vec::new();
+            let mut climbing = Vec::new();
             for member in &community.members {
-                if member.layer == Some(Layer::Climber) {
-                    continue;
-                }
                 let at = if let Some(at) = species.iter().position(|s| s.id == member.species) {
                     at
                 } else {
                     species.push(Species::new(&member.species, settings)?);
                     species.len() - 1
                 };
+                if member.layer == Some(Layer::Climber) {
+                    climbing.push(Climber {
+                        species: at,
+                        abundance: member.abundance.unwrap_or(1.0).max(0.0),
+                        prototypes: Vec::new(),
+                    });
+                    continue;
+                }
                 members.push(StandMember::new(member, &species[at], at, &community.id)?);
             }
             stands.push(members);
+            climbers.push(climbing);
         }
         let mut fill = Self {
             communities: communities.to_vec(),
@@ -1155,6 +1463,7 @@ impl Fill {
             settings: settings.clone(),
             species,
             stands,
+            climbers,
             index: HashMap::new(),
             edge_twins: Vec::new(),
             sizes: Arc::new(Vec::new()),
@@ -1187,6 +1496,7 @@ impl Fill {
                 }
             }
         }
+        fill.add_climber_prototypes()?;
         fill.edge_twins.resize(fill.prototypes.len(), None);
         fill.sizes = Arc::new(
             (0..fill.prototypes.len())
@@ -1215,6 +1525,54 @@ impl Fill {
             layer,
         });
         Ok(index)
+    }
+
+    /// Each climber's prototypes: one per seed, grown on a wall
+    /// ([`crate::export::WALL_M`]) to the first age its spec measures it
+    /// that high, or to its oldest.
+    fn add_climber_prototypes(&mut self) -> Result<(), Error> {
+        for community in 0..self.climbers.len() {
+            for climber in 0..self.climbers[community].len() {
+                let species = &self.species[self.climbers[community][climber].species];
+                let oldest = species.generator.default_age();
+                let age = species
+                    .generator
+                    .spec()
+                    .allometry
+                    .iter()
+                    .filter(|point| point.height >= crate::export::WALL_M && point.age > 0.0)
+                    .map(|point| point.age)
+                    .fold(oldest, f64::min);
+                #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+                let age_tenths = (age * 10.0).round() as u32;
+                let mut indices = Vec::new();
+                for seed in species.seeds.clone() {
+                    let key = PrototypeKey {
+                        species: species.id.clone(),
+                        seed,
+                        environment: Environment::Open,
+                        age_tenths,
+                        on_wall: true,
+                    };
+                    let index = if let Some(index) = self.index.get(&key) {
+                        *index
+                    } else {
+                        let index = u32::try_from(self.prototypes.len())
+                            .map_err(|_| Error("fill: too many prototypes".into()))?;
+                        self.index.insert(key.clone(), index);
+                        self.prototypes.push(Prototype {
+                            key,
+                            age_years: age,
+                            layer: Some(Layer::Climber),
+                        });
+                        index
+                    };
+                    indices.push(index);
+                }
+                self.climbers[community][climber].prototypes = indices;
+            }
+        }
+        Ok(())
     }
 
     /// The candidates of community `community`'s development, on a site
@@ -1249,6 +1607,7 @@ impl Fill {
                 seed: *seed,
                 environment,
                 age_tenths,
+                on_wall: false,
             })
             .collect()
     }
@@ -1296,11 +1655,22 @@ impl Fill {
             .get(index)
             .ok_or_else(|| Error(format!("fill: no prototype {index}")))?;
         let generator = self.species_of(prototype).generator.clone();
-        let plant = generator.grow_in(
-            prototype.key.environment,
-            prototype.key.seed,
-            prototype.age_years,
-        )?;
+        let plant = if prototype.key.on_wall {
+            generator
+                .grow_ages_on_wall(
+                    prototype.key.seed,
+                    &[prototype.age_years],
+                    crate::export::WALL_M,
+                )?
+                .pop()
+                .ok_or_else(|| Error(format!("fill: {} kept no plant", prototype.key.stem())))?
+        } else {
+            generator.grow_in(
+                prototype.key.environment,
+                prototype.key.seed,
+                prototype.age_years,
+            )?
+        };
         let _ = self.sizes[index].set(plant.size.clone());
         Ok((generator, plant))
     }
@@ -1326,11 +1696,11 @@ impl Fill {
     /// `indices` in growths: one per species, setting and seed, its ages
     /// rising; the oldest growths first, so the longest start soonest.
     fn growths(&self, indices: &[u32]) -> Vec<Vec<u32>> {
-        let mut groups: BTreeMap<(&str, Environment, u64), Vec<u32>> = BTreeMap::new();
+        let mut groups: BTreeMap<(&str, Environment, bool, u64), Vec<u32>> = BTreeMap::new();
         for &index in indices {
             let key = &self.prototypes[index as usize].key;
             groups
-                .entry((key.species.as_str(), key.environment, key.seed))
+                .entry((key.species.as_str(), key.environment, key.on_wall, key.seed))
                 .or_default()
                 .push(index);
         }
@@ -1423,11 +1793,12 @@ impl Fill {
             .iter()
             .map(|index| self.prototypes[*index as usize].age_years)
             .collect();
-        self.species_of(prototype).generator.grow_ages_in(
-            prototype.key.environment,
-            prototype.key.seed,
-            &ages,
-        )
+        let generator = &self.species_of(prototype).generator;
+        if prototype.key.on_wall {
+            generator.grow_ages_on_wall(prototype.key.seed, &ages, crate::export::WALL_M)
+        } else {
+            generator.grow_ages_in(prototype.key.environment, prototype.key.seed, &ages)
+        }
     }
 
     /// Prototype `index`'s size as a measure or a write left it in `dir`
@@ -1630,6 +2001,7 @@ impl Fill {
         let mut cover = Vec::with_capacity(stands.cells.len());
         let mut canopy = Vec::with_capacity(stands.cells.len());
         let (mut trees, mut basal, mut leaf_m2, mut crowns) = (0_usize, 0.0, 0.0, 0.0);
+        let roofs = site.roofs();
         for (index, cell) in stands.cells.iter().enumerate() {
             let (col, row) = (index % stands.cols, index / stands.cols);
             let world = world_cell(site, stands, col, row);
@@ -1738,11 +2110,37 @@ impl Fill {
                 );
                 let (east, north) = (corner[0] + at[0], corner[1] + at[1]);
                 let pick = |salt: u64| rng::unit(rng::hash_words(&[keep, n as u64, salt]));
-                if pick(1) >= site.plantable_at(east, north) {
+                let plantable = site.plantable_at(east, north);
+                // A herb over a building stands on its roof where soil has
+                // gathered there.
+                let roof = if herb && plantable <= 0.0 {
+                    roofs.at(site, east, north)
+                } else {
+                    None
+                };
+                if roof.is_none() && pick(1) >= plantable {
                     continue;
                 }
+                let prototype = &self.prototypes[plant.prototype as usize];
+                let size = self.size(plant.prototype as usize);
+                // A plant on shallow soil is drawn as `soil@1` grows it:
+                // its lengths times the square root of its soil's supply.
+                let scale = match (size, &self.species_of(prototype).soil) {
+                    (Some(size), Some(need)) => {
+                        let (crown_m, height_m) =
+                            (size.crown_radius * plant.scale, size.height * plant.scale);
+                        let ratio = match roof {
+                            Some(roof) => roof.soil_ratio(need, crown_m, height_m),
+                            None => site.soil_ratio_at(east, north, need, crown_m, height_m),
+                        };
+                        plant.scale * ratio.sqrt()
+                    }
+                    _ => plant.scale,
+                };
+                let up = roof.map_or_else(|| site.height_at(east, north), |roof| roof.height_m);
+                let crown_m2 = plant.crown_m2 * (scale / plant.scale).powi(2);
                 if tree {
-                    kept_tree_crowns += plant.crown_m2;
+                    kept_tree_crowns += crown_m2;
                 }
                 kept_herbs += usize::from(herb);
                 let lean = turned_vector(plant.lean, turn);
@@ -1770,25 +2168,26 @@ impl Fill {
                         edge_trees += 1;
                     }
                 }
-                let prototype = &self.prototypes[index as usize];
-                if let Some(size) = self.size(index as usize) {
-                    let dbh = size.dbh.unwrap_or(0.0) * plant.scale;
+                // The twin's own size, at the plant's (soil) scale.
+                let (prototype, measured) = if index == plant.prototype {
+                    (prototype, size)
+                } else {
+                    (&self.prototypes[index as usize], self.size(index as usize))
+                };
+                if let Some(size) = measured {
+                    let dbh = size.dbh.unwrap_or(0.0) * scale;
                     if dbh >= 0.05 {
                         trees += 1;
                         basal += std::f64::consts::PI * 0.25 * dbh * dbh;
                     }
-                    leaf_m2 += size.leaf_area * plant.scale * plant.scale;
+                    leaf_m2 += size.leaf_area * scale * scale;
                 }
                 #[allow(clippy::cast_possible_truncation)]
                 instances.push(Instance {
                     prototype: index,
-                    position: [
-                        east as f32,
-                        north as f32,
-                        site.height_at(east, north) as f32,
-                    ],
+                    position: [east as f32, north as f32, up as f32],
                     rotation: Instance::lean(yaw, lean),
-                    scale: plant.scale as f32,
+                    scale: scale as f32,
                     age_years: prototype.age_years as f32,
                     tint: [
                         (pick(2) * 2.0 - 1.0) as f32 * 0.2,
@@ -1825,6 +2224,53 @@ impl Fill {
                 cover: canopy_cover as f32,
                 colour: layout.canopy_colour,
             });
+        }
+        // Plants that came up by themselves in the pavements, in the order
+        // the site keeps them, each its species' prototype nearest its
+        // age, scaled to its height.
+        for (n, plant) in site.colonists.iter().enumerate() {
+            let index = self.colonist_prototype(plant)?;
+            let size = self.size(index).ok_or_else(|| {
+                Error(format!(
+                    "fill: prototype {index} ({}) has not been measured",
+                    self.prototypes[index].key.stem()
+                ))
+            })?;
+            let scale = if size.height > 0.0 {
+                plant.height_m / size.height
+            } else {
+                1.0
+            };
+            let draw = |salt: u64| rng::unit(rng::hash_words(&[seed, 0x6372_6163, n as u64, salt]));
+            let dbh = size.dbh.unwrap_or(0.0) * scale;
+            if dbh >= 0.05 {
+                trees += 1;
+                basal += std::f64::consts::PI * 0.25 * dbh * dbh;
+            }
+            leaf_m2 += size.leaf_area * scale * scale;
+            #[allow(clippy::cast_possible_truncation)]
+            instances.push(Instance {
+                prototype: u32::try_from(index).unwrap_or(u32::MAX),
+                position: [
+                    plant.east as f32,
+                    plant.north as f32,
+                    site.height_at(plant.east, plant.north) as f32,
+                ],
+                rotation: Instance::lean(draw(1) * std::f64::consts::TAU, [0.0, 0.0]),
+                scale: scale as f32,
+                age_years: self.prototypes[index].age_years as f32,
+                tint: [
+                    (draw(2) * 2.0 - 1.0) as f32 * 0.2,
+                    (draw(3) * 2.0 - 1.0) as f32 * 0.1,
+                ],
+                extra: 0,
+            });
+        }
+        for climbing in self.climbers_at(site, stands, seed) {
+            if let Some(size) = self.size(climbing.prototype as usize) {
+                leaf_m2 += size.leaf_area;
+            }
+            instances.push(climbing);
         }
         let area_m2 = site.tile_m * site.tile_m;
         let area_ha = area_m2 / 10_000.0;
@@ -1871,6 +2317,147 @@ impl Fill {
                 layout: 0,
             })?
             .canopy_height)
+    }
+
+    /// The climbers of a field's tile: at the foot of each climbable
+    /// patch of a wall or a fence that is not kept clear, each climber of
+    /// the community of the stand cell there stands with the chance its
+    /// abundance gives (at abundance 1, one per [`CLIMBER_SPACING_M`] of
+    /// foot) times the open share of the ground cell it roots in, so none
+    /// stands on sound pavement. Each is one of its prototypes grown on a
+    /// wall, its wall's face turned onto the patch's, and its reach
+    /// clipped to the host's top (`extra`, decimetres above its foot).
+    fn climbers_at(&self, site: &Site, stands: &StandMap, seed: u64) -> Vec<Instance> {
+        let mut placed = Vec::new();
+        let Some(tile) = &site.field else {
+            return placed;
+        };
+        if self.climbers.iter().all(Vec::is_empty) {
+            return placed;
+        }
+        let field = &tile.field;
+        let patch_m = field.settings.patch_m;
+        for (number, patch) in field.patches.iter().enumerate() {
+            let Some(host) = field.hosts.get(patch.host as usize) else {
+                continue;
+            };
+            let level = patch.normal[0].hypot(patch.normal[2]);
+            if !matches!(
+                host.kind,
+                crate::site_field::HostKind::Wall | crate::site_field::HostKind::Fence
+            ) || !patch.climbable
+                || patch.clear
+                || patch.v > 1.0e-6
+                || level < 0.7
+            {
+                continue;
+            }
+            let Some(root) = patch.root_cell.map(|cell| cell as usize) else {
+                continue;
+            };
+            let Some(ground) = field.ground.height.get(root).copied().flatten() else {
+                continue;
+            };
+            let open = field.ground.open_share[root].clamp(0.0, 1.0);
+            if open <= 0.0 {
+                continue;
+            }
+            // Its foot 0.3 m out from the face, as it grew at its wall.
+            let out = [patch.normal[0] / level, patch.normal[2] / level];
+            let (x, z) = (
+                patch.centre[0] + 0.3 * out[0],
+                patch.centre[2] + 0.3 * out[1],
+            );
+            let (east, north) = (x - tile.corner[0], tile.corner[1] - z);
+            if !(0.0..site.tile_m).contains(&east) || !(0.0..site.tile_m).contains(&north) {
+                continue;
+            }
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            let cell =
+                (north / stands.cell_m) as usize * stands.cols + (east / stands.cell_m) as usize;
+            let Some(community) = stands
+                .cells
+                .get(cell)
+                .and_then(|cell| cell.community)
+                .map(usize::from)
+            else {
+                continue;
+            };
+            let Some(climbers) = self.climbers.get(community) else {
+                continue;
+            };
+            for (which, climber) in climbers.iter().enumerate() {
+                let draw = |salt: u64| {
+                    rng::unit(rng::hash_words(&[
+                        seed,
+                        0x636c_696d,
+                        number as u64,
+                        which as u64,
+                        salt,
+                    ]))
+                };
+                let chance = (patch_m / CLIMBER_SPACING_M * climber.abundance).min(1.0) * open;
+                if climber.prototypes.is_empty() || draw(1) >= chance {
+                    continue;
+                }
+                #[allow(
+                    clippy::cast_possible_truncation,
+                    clippy::cast_sign_loss,
+                    clippy::cast_precision_loss
+                )]
+                let pick = ((draw(2) * climber.prototypes.len() as f64) as usize)
+                    .min(climber.prototypes.len() - 1);
+                let prototype = climber.prototypes[pick];
+                // The prototype's face looks south (+z); turn it onto the
+                // patch's, east toward north.
+                let yaw = (-out[1]).atan2(out[0]) + std::f64::consts::FRAC_PI_2;
+                #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+                let clip = ((host.high[1] - ground) * 10.0)
+                    .round()
+                    .clamp(1.0, 65_535.0) as u16;
+                #[allow(clippy::cast_possible_truncation)]
+                placed.push(Instance {
+                    prototype,
+                    position: [east as f32, north as f32, ground as f32],
+                    rotation: Instance::lean(yaw, [0.0, 0.0]),
+                    scale: 1.0,
+                    age_years: self.prototypes[prototype as usize].age_years as f32,
+                    tint: [
+                        (draw(3) * 2.0 - 1.0) as f32 * 0.2,
+                        (draw(4) * 2.0 - 1.0) as f32 * 0.1,
+                    ],
+                    extra: clip,
+                });
+            }
+        }
+        placed
+    }
+
+    /// The prototype a plant that came up in a crack is drawn as: its
+    /// species' nearest its age (by their ratio), grown in the open where
+    /// one is.
+    fn colonist_prototype(&self, plant: &CrackPlant) -> Result<usize, Error> {
+        let age = plant.age_years.max(0.1);
+        self.prototypes
+            .iter()
+            .enumerate()
+            .filter(|(_, prototype)| {
+                prototype.key.species == plant.species && !prototype.key.on_wall
+            })
+            .min_by(|(_, a), (_, b)| {
+                let off = |p: &Prototype| {
+                    let open = if p.key.environment == Environment::Open { 0.0 } else { 1.0 };
+                    (open, (p.age_years.max(0.1) / age).ln().abs())
+                };
+                off(a).partial_cmp(&off(b)).unwrap_or(std::cmp::Ordering::Equal)
+            })
+            .map(|(index, _)| index)
+            .ok_or_else(|| {
+                Error(format!(
+                    "fill: {} came up in a crack but the fill has no prototype of it; add the crack pool to the fill as a community",
+                    plant.species
+                ))
+            })
     }
 
     /// The stand tile `key` names, laid out once.
@@ -1942,7 +2529,10 @@ impl Fill {
                     crown_radius_m: size.crown_radius,
                     light_needed: self.species[*species].light_needed,
                 };
-                (member, self.species[*species].generator.spec().appearance.foliage)
+                (
+                    member,
+                    self.species[*species].generator.spec().appearance.foliage,
+                )
             })
             .filter(|(member, _)| {
                 let herb = member.layer == niche::Layer::Herb;
@@ -2229,8 +2819,14 @@ mod tests {
             seed: 2,
             environment: Environment::Interior,
             age_tenths: 305,
+            on_wall: false,
         };
         assert_eq!(key.stem(), "x-interior-2-30.5y");
+        let climber = PrototypeKey {
+            on_wall: true,
+            ..key.clone()
+        };
+        assert_eq!(climber.stem(), "x-wall-2-30.5y");
         let whole = PrototypeKey {
             age_tenths: 4800,
             ..key

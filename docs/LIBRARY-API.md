@@ -261,8 +261,31 @@ stands the eye under or among the crowns). On a 40 m tile of 60-year
 Douglas-firs, parts drew 1.48 M triangles from the ground where whole
 plants drew 2.50 M, and 1.67 M where 2.33 M from crown height.
 
-Dead wood and climbers are not placed yet: a climber member is skipped
-until the fill gives it a host to climb.
+**A tile as one glTF file.** For a host that only reads glTF (Blender,
+Godot, Unity's glTFast, a three.js `GLTFLoader`), `plantc fill ... --glb 3`
+(or `TilePlan::glb(&prototypes, dir, level, meshopt)`) also writes
+`tiles/X_Y.glb`: each prototype the tile places, at one level for the
+whole tile, stored once, and a node per prototype mesh that draws every
+plant using it with `EXT_mesh_gpu_instancing`. Its root node sits at the
+tile's south-west corner (+X east, +Y up, -Z north), so tiles laid side by
+side meet. A 40 m tile of an 80-year Douglas-fir stand with yarrow
+(1,047 plants) is 0.7 MiB at the low tier and 1.1 MiB at the mid tier
+with `--compress meshopt`, which three.js and glTFast read; Blender and
+Godot do not read meshopt, so for them write `--compress quantize` (0.9
+and 3.6 MiB). It draws
+the whole tile at one level; a caller that wants detail by distance reads
+the packed instances and the prototype files as above.
+
+Dead wood is not placed yet. A climber member (layer `climber`) has one
+prototype per seed grown at the foot of a 6 m brick wall
+(`Generator::grow_ages_on_wall`, the stem's setting `wall`), to the first
+age its spec measures it that tall. On a tile over a site field
+(`Site::from_field`) it stands at the feet of walls and fences: one per
+`CLIMBER_SPACING_M` (3 m) of climbable foot at abundance 1, times the
+open share of the ground it roots in, its face turned onto the wall's,
+and the instance's `extra` its reach clip in decimetres, the host's top
+above its foot. A renderer drops what grows above the clip. On a
+height-field tile there is nothing to climb and none stands.
 
 A community member names a `species` and may give a `layer` (canopy,
 subcanopy, shrub, herb, ground, climber) that keeps it to that layer

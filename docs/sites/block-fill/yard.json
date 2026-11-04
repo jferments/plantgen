@@ -1,0 +1,65 @@
+{
+ "id": "block-yard",
+ "members": [
+  {
+   "species": "holcus-lanatus",
+   "layer": "herb",
+   "environments": [
+    "open"
+   ],
+   "abundance": 1.5
+  },
+  {
+   "species": "dactylis-glomerata",
+   "layer": "herb",
+   "environments": [
+    "open"
+   ]
+  },
+  {
+   "species": "poa-annua",
+   "layer": "herb",
+   "environments": [
+    "open"
+   ],
+   "abundance": 0.6
+  },
+  {
+   "species": "taraxacum-sect-taraxacum",
+   "layer": "herb",
+   "environments": [
+    "open"
+   ],
+   "abundance": 0.6
+  },
+  {
+   "species": "plantago-major",
+   "layer": "herb",
+   "environments": [
+    "open"
+   ],
+   "abundance": 0.5
+  },
+  {
+   "species": "trifolium-repens",
+   "layer": "herb",
+   "environments": [
+    "open"
+   ],
+   "abundance": 0.6
+  },
+  {
+   "species": "erigeron-canadensis",
+   "layer": "herb",
+   "environments": [
+    "open"
+   ],
+   "abundance": 0.3
+  },
+  {
+   "species": "hedera-helix",
+   "layer": "climber",
+   "abundance": 0.8
+  }
+ ]
+}
