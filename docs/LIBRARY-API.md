@@ -210,6 +210,18 @@ Ok(())
   `fill.write_prototypes` exports them and measures what it writes;
   `fill.grow_prototype(i)` grows one to export with its species'
   `Generator`. A city shares one prototype set.
+- **Ingrowth beneath the canopy.** A shade-tolerant tree that came up
+  under its stand's crowns (hemlock, cedar and yew in an old Douglas-fir
+  forest) grows beneath its community's canopy, as tall as the tallest of
+  its trees commonly grows (`PrototypeKey::beneath_m`, its stem's setting
+  `beneath60m`; `Generator::grow_ages_beneath`): its like around it as in a
+  stand, and over it a canopy whose shade leaves 17% of the sky's light at
+  the ground (`spec::UNDERSTOREY_DEPTH`), more toward the canopy. A
+  western hemlock that came up 120 years ago beneath Wind River's 60 m
+  canopy is 19.7 m tall, where a stand of hemlocks its age is 43.6 m. Only
+  conifers grow so for now (`fill::BENEATH_PROGRAMS`): grown there, a
+  broadleaf sheds every leaf, so a broadleaf's ingrowth grows as in a
+  stand.
 - **Parts of tall plants.** A prototype 6 m or taller is also written in
   parts (`FillSettings::parts`, on by default): its bole under the crown
   and its crown in up to four bands sized by its own height, each limb

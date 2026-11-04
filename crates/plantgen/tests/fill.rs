@@ -284,6 +284,78 @@ fn every_prototype_is_a_cohort_of_a_stand_in_each_seed() {
     );
 }
 
+#[test]
+fn shade_tolerant_conifers_that_came_up_under_the_canopy_grow_beneath_it() {
+    // A 160-year stand of Douglas-fir, with western hemlock and bigleaf
+    // maple that came up under it from its 100th year.
+    let community = Community::from_json(
+        r#"{"id": "test-old-forest", "members": [
+            {"species": "pseudotsuga-menziesii"},
+            {"species": "tsuga-heterophylla"},
+            {"species": "acer-macrophyllum"}
+        ]}"#,
+    )
+    .expect("community");
+    let mut settings = FillSettings::default();
+    settings.stand_ages = vec![160.0];
+    settings.seeds = 1;
+    settings.edges = false;
+    let fill = Fill::new(&[community], &settings).expect("fill");
+    let keys: Vec<&PrototypeKey> = fill.prototypes().iter().map(|p| &p.key).collect();
+    let of = |species: &str| -> Vec<&PrototypeKey> {
+        keys.iter()
+            .copied()
+            .filter(|key| key.species == species)
+            .collect()
+    };
+    // The pioneers grow in their stand; the hemlocks that came up under
+    // it beneath a canopy as tall as Douglas-fir commonly grows (60 m),
+    // at every age to the 60 years since; the maples, whose program does
+    // not grow them beneath a canopy yet, in the stand.
+    assert!(
+        of("pseudotsuga-menziesii")
+            .iter()
+            .all(|key| key.environment == Environment::Interior && key.beneath_m.is_none())
+    );
+    let beneath: Vec<u32> = of("tsuga-heterophylla")
+        .iter()
+        .filter(|key| key.beneath_m == Some(60))
+        .map(|key| {
+            assert_eq!(key.environment, Environment::Suppressed);
+            key.age_tenths
+        })
+        .collect();
+    assert_eq!(beneath, [50, 150, 300, 600], "{keys:?}");
+    assert!(
+        of("acer-macrophyllum")
+            .iter()
+            .all(|key| key.beneath_m.is_none() && key.environment == Environment::Interior),
+        "{keys:?}"
+    );
+    let young = fill
+        .prototypes()
+        .iter()
+        .position(|p| p.key.beneath_m.is_some() && p.key.age_tenths == 150)
+        .expect("a 15-year hemlock beneath");
+    assert_eq!(
+        fill.prototypes()[young].key.stem(),
+        "tsuga-heterophylla-beneath60m-1-15y"
+    );
+    // Beneath the canopy a 15-year hemlock is a sapling, under half the
+    // height of one in a stand of its own age.
+    let (_, plant) = fill.grow_prototype(young).expect("grown");
+    let stand = Generator::new("tsuga-heterophylla", &Options::default())
+        .expect("hemlock")
+        .grow_in(Environment::Interior, 1, 15.0)
+        .expect("grown");
+    assert!(
+        plant.size.height < 0.5 * stand.size.height,
+        "{} m beneath, {} m in a stand",
+        plant.size.height,
+        stand.size.height
+    );
+}
+
 /// The way a placed plant faces: its east turned by its rotation, as an
 /// angle from east toward north.
 fn facing(instance: &Instance) -> f64 {
