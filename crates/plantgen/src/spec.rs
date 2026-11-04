@@ -415,17 +415,19 @@ pub const STAND_SPACING: f64 = 0.115;
 
 /// How a stand of the same age opens past the yield tables' ages, as its
 /// relative spacing at stand ages in years: [`STAND_SPACING`] to 160 years
-/// (McArdle et al. 1961), then the spacing of old-growth Douglas-fir. In
-/// Cascade Range Douglas-fir-western hemlock stands, Douglas-fir stands 124
-/// a hectare at 250 years and 60 at 450 (Franklin et al. 1981, Table 6), 9.0
-/// and 12.9 m apart; over the dominants' height between McArdle's site
-/// classes II and III (59.1 m at 250 years and 63.1 m at 440, McArdle et
-/// al. 1961, Figure 2, extended by Meyer) that is 0.152 and 0.204. The
-/// spacing holds after 450 years: by 850 only 8 Douglas-fir a hectare
-/// remain among younger shade-tolerant trees, a stand this model's stand
-/// of one plant's like does not describe.
-pub const STAND_THINNING: [(f64, f64); 3] =
-    [(160.0, STAND_SPACING), (250.0, 0.152), (450.0, 0.204)];
+/// (McArdle et al. 1961), then opening as the canopy trees die and gaps
+/// fill with shade-tolerant trees below them, to the old-growth
+/// Douglas-fir's spacing at 450 years. At Wind River's 500-year forest 35
+/// Douglas-fir a hectare stand among western hemlock and other younger
+/// trees of half their height (Shaw et al. 2004, Ecosystems 7: 427), 16.9 m
+/// apart, 0.27 of their 62 m; Franklin et al. (1981, Table 6) count 60 a
+/// hectare at 450 years in other Cascade stands (0.204). Opened to 0.204,
+/// a 480-year Douglas-fir held 364 m² of foliage, a third to a half of
+/// Sillett et al.'s (2018) old trees; at 0.27, with its stem sprouts, about
+/// 800. The spacing holds after 450 years: by 850 only 8 Douglas-fir a
+/// hectare remain among younger shade-tolerant trees, a stand this model's
+/// stand of one plant's like does not describe.
+pub const STAND_THINNING: [(f64, f64); 2] = [(160.0, STAND_SPACING), (450.0, 0.27)];
 
 /// The relative spacing of a stand of the same age at `age_years`, from
 /// [`STAND_THINNING`], straight between its ages.
@@ -1904,9 +1906,9 @@ mod tests {
     fn a_stand_opens_past_the_yield_tables_as_old_growth_does() {
         assert_eq!(stand_spacing(0.0), STAND_SPACING);
         assert_eq!(stand_spacing(160.0), STAND_SPACING);
-        assert!((stand_spacing(205.0) - (STAND_SPACING + 0.152) / 2.0).abs() < 1e-12);
-        assert!((stand_spacing(250.0) - 0.152).abs() < 1e-12);
-        assert!((stand_spacing(1000.0) - 0.204).abs() < 1e-12);
+        assert!((stand_spacing(305.0) - (STAND_SPACING + 0.27) / 2.0).abs() < 1e-12);
+        assert!((stand_spacing(450.0) - 0.27).abs() < 1e-12);
+        assert!((stand_spacing(1000.0) - 0.27).abs() < 1e-12);
     }
 
     use super::*;
