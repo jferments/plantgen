@@ -211,7 +211,9 @@ Ok(())
   position (east, north, up, metres from the tile's south-west corner),
   i16 x4 snorm rotation quaternion (z up), f16 scale, u16 age in tenths
   of a year, i8 x2 tint (lightness, hue shift), u16 extra (a climber's
-  reach clip in decimetres). `Instance::from_bytes` reads them back.
+  cut back to its wall, `WallClip::from_extra`; 0 for any other plant).
+  `Instance::from_bytes` reads them back. Schema 3 (`INSTANCE_SCHEMA`):
+  in schema 2 a climber's extra was its wall's top alone, in decimetres.
 - **Ground cover and far canopy** come per stand cell in the plan
   (`cover`: kind and fraction; `canopy`: height, cover, colour), for
   hosts that draw ground cover and far forest with their own systems.
@@ -264,9 +266,14 @@ age its spec measures it that tall. On a tile over a site field
 (`Site::from_field`) it stands at the feet of walls and fences: one per
 `CLIMBER_SPACING_M` (3 m) of climbable foot at abundance 1, times the
 open share of the ground it roots in, its face turned onto the wall's,
-and the instance's `extra` its reach clip in decimetres, the host's top
-above its foot. A renderer drops what grows above the clip. On a
-height-field tile there is nothing to climb and none stands.
+and not at a host whose foot stands above the ground (a gable end, a
+window) or that is too low to climb (a curb). The instance's `extra` is
+its `WallClip`: in the prototype's frame (+y up, its wall along x, the
+wall's face at z = -0.3), the host's top above its foot (`top_m`) and how
+far its run of wall goes along -x and +x (`back_m`, `ahead_m`; infinite
+past 6.2 m). A renderer drops every triangle and card that
+`WallClip::keeps` refuses, so the climber stops at its wall's top and
+ends. On a height-field tile there is nothing to climb and none stands.
 
 A community member names a `species` and may give a `layer` (canopy,
 subcanopy, shrub, herb, ground, climber) that keeps it to that layer
