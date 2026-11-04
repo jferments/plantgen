@@ -1499,4 +1499,13 @@ pub mod venation;
 /// pavements year by year (`plantc cracks`). Seven pavement weeds join the
 /// library, and three ecology traits (seed dispersal, seed bank, trampling
 /// tolerance) are stated for sixteen species.
-pub const GENERATOR_REVISION: u32 = 191;
+/// 194: a daisy's floret gone to seed is a cypsela as long as its flora
+/// measures (`cypsela`, from `fruit_size_m`); a lone head whose flora
+/// gives no involucre width draws its involucre, pappus and cypselae to
+/// the flora's lengths over the disc it is drawn with; the daisy program
+/// leaves a herb's basal leaves to the herb rule, so a rosette herb has
+/// its rosette, and scapes that share one rosette (`rosette_scapes`, a
+/// dandelion's) share its leaves and rise from its middle; a disciform
+/// head is checked as the discoid one it is drawn as (horseweed and
+/// dandelion, from FNA and Flora of China; 192 and 193 are #329 and #331).
+pub const GENERATOR_REVISION: u32 = 194;

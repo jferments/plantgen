@@ -2646,6 +2646,10 @@ pub struct Head {
     /// for none, as in daisies; drawn on florets gone to seed.
     #[serde(skip_serializing_if = "is_zero")]
     pub pappus: f64,
+    /// Length of a cypsela, over the disc's radius, where the flora
+    /// measures it; 0 for 0.8 of the florets' spacing.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub cypsela: f64,
     /// Colour of the phyllaries; the plant's foliage colour if absent.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub bracts: Option<[f32; 3]>,
@@ -2668,6 +2672,7 @@ impl Default for Head {
             floret_length: 0.0,
             open: 0.6,
             pappus: 0.0,
+            cypsela: 0.0,
             bracts: None,
         }
     }
