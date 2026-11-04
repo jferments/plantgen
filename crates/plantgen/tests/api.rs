@@ -73,7 +73,27 @@ fn any_seed_grows_its_own_plant_the_same_every_time() {
     // Not a variant its package keeps.
     let plant = generator.grow_in(Environment::Open, 7, 8.0).unwrap();
     assert_eq!(plant.variant, small_spec().variant_list().len());
-    assert!(generator.grow_in(Environment::Open, 7, 9.0).is_err());
+    // Past its old ages (doubling from 8 years to its 500-year lifespan,
+    // the last 256).
+    assert!(generator.grow_in(Environment::Open, 7, 300.0).is_err());
+}
+
+#[test]
+fn a_plant_grows_on_past_its_years_and_one_growth_keeps_each_age() {
+    let generator = Generator::of(&small_spec(), &options()).unwrap();
+    let both = generator
+        .grow_ages_in(Environment::Open, 7, &[4.0, 16.0])
+        .unwrap();
+    assert_eq!(both.len(), 2);
+    assert!(both[1].size.height > both[0].size.height);
+    // The younger is the plant grown to its age alone, size for size.
+    let alone = generator.grow_in(Environment::Open, 7, 4.0).unwrap();
+    assert_eq!(both[0].size, alone.size);
+    assert!(
+        generator
+            .grow_ages_in(Environment::Open, 7, &[16.0, 4.0])
+            .is_err()
+    );
 }
 
 #[test]

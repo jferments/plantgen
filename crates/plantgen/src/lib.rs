@@ -1533,4 +1533,28 @@ pub mod venation;
 /// foliage in the lower half of the foliated crown; with it, a deep, lobed
 /// crown 18 m across with 35% there (355 m² of foliage on 74 cm, where the
 /// dome held 414 m² on 86).
-pub const GENERATOR_REVISION: u32 = 193;
+///
+/// 194: a daisy's floret gone to seed is a cypsela as long as its flora
+/// measures (`cypsela`, from `fruit_size_m`); a lone head whose flora
+/// gives no involucre width draws its involucre, pappus and cypselae to
+/// the flora's lengths over the disc it is drawn with; the daisy program
+/// leaves a herb's basal leaves to the herb rule, so a rosette herb has
+/// its rosette, and scapes that share one rosette (`rosette_scapes`, a
+/// dandelion's) share its leaves and rise from its middle; a disciform
+/// head is checked as the discoid one it is drawn as (horseweed and
+/// dandelion, from FNA and Flora of China).
+///
+/// 195: the card tiers' midrib lines for cut leaves are lit as their
+/// blades face, not as round stems facing out from the plant's middle (a
+/// yarrow's leaves drew as dark lines), and a solid flower head's cone
+/// reaches as deep as the head's cover from the side says, down at most
+/// to where its stalks meet, lit half way between straight out and its
+/// face as the stands of clusters drawn as cards are. A yarrow's low cards
+/// from the side went from 0.75 to 0.93 as bright as the plant.
+///
+/// 196: on the card tiers, a cut leaf (a yarrow's, a hemlock's) is a pair
+/// of crossed cards of its own, wearing a picture of its look's longest
+/// leaf laid flat, in place of a midrib line and the dots its segments
+/// baked to in the plant's cards (`crate::billboards`): its leaves read
+/// as feathery blades, not lines and dots.
+pub const GENERATOR_REVISION: u32 = 196;
