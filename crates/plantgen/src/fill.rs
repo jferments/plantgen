@@ -24,6 +24,7 @@ use std::path::Path;
 use serde::{Deserialize, Serialize};
 
 use crate::api::{Error, Generator, Options, PartRecord, Plant, Settings, VariantRecord};
+use crate::niche::SiteFactors;
 use crate::rng;
 use crate::spec::Environment;
 
@@ -220,7 +221,20 @@ pub struct Site {
     /// south-west corner, `cols * cols` of them (at least 2 by 2).
     pub heights_m: Vec<f32>,
     pub cols: usize,
+    /// The site factors where the site does not say otherwise: moisture
+    /// and heat load as they are, elevation added to the ground height,
+    /// slope taken from the ground. [`Site::with_factors`] sets them.
+    pub factors: SiteFactors,
 }
+
+/// A height-field site's factors until a caller says: middling moisture,
+/// level ground's sunlight, heights above sea level as given.
+pub const DEFAULT_FACTORS: SiteFactors = SiteFactors {
+    moisture: 0.5,
+    heat_load: 1.0,
+    elevation_m: 0.0,
+    slope_deg: 0.0,
+};
 
 impl Site {
     /// A flat tile at height 0.
@@ -261,7 +275,45 @@ impl Site {
             tile_m,
             heights_m,
             cols,
+            factors: DEFAULT_FACTORS,
         })
+    }
+
+    /// This site with `factors` as its own (see [`Site::factors`]).
+    #[must_use]
+    pub fn with_factors(mut self, factors: SiteFactors) -> Self {
+        self.factors = factors;
+        self
+    }
+
+    /// The share of plants that may stand at `(east, north)` metres from
+    /// the tile's south-west corner, 0 to 1: 0 inside a building or on
+    /// sound pavement, a crack's open share on broken pavement, 1 on soil.
+    /// A height-field site is soil everywhere.
+    #[must_use]
+    pub fn plantable_at(&self, east: f64, north: f64) -> f64 {
+        let _ = (east, north);
+        1.0
+    }
+
+    /// The site factors at `(east, north)`, which set how well each
+    /// species of a community suits the ground there
+    /// ([`crate::niche::Niche::site_response`]). A height-field site has
+    /// its [`Site::factors`], its elevation raised by the ground's height
+    /// and its slope the ground's.
+    #[must_use]
+    pub fn site_factors_at(&self, east: f64, north: f64) -> SiteFactors {
+        #[allow(clippy::cast_precision_loss)]
+        let step = self.tile_m / (self.cols - 1) as f64;
+        let d = 0.5 * step;
+        let rise_east = (self.height_at(east + d, north) - self.height_at(east - d, north)) / step;
+        let rise_north = (self.height_at(east, north + d) - self.height_at(east, north - d)) / step;
+        let slope = libm::atan(libm::sqrt(rise_east * rise_east + rise_north * rise_north));
+        SiteFactors {
+            elevation_m: self.factors.elevation_m + self.height_at(east, north),
+            slope_deg: self.factors.slope_deg.max(slope.to_degrees()),
+            ..self.factors
+        }
     }
 
     /// The ground height at `(east, north)` metres from the tile's
