@@ -1572,7 +1572,7 @@ pub mod venation;
 /// before. Fed by light, a crown packed with shaded foliage (a Rocky
 /// Mountain juniper's) feeds little.
 ///
-/// 198: growth in deep shade (`pinidae` revision 16, the light tool's new
+/// 199: growth in deep shade (`pinidae` revision 16, the light tool's new
 /// `top`, the light of the plant's best-lit module): a conifer's leader
 /// floor, `leader_shade`, fades with `top` below half the sky's light, so
 /// on a plant shaded all over the leader's growth saturates with light
@@ -1588,4 +1588,4 @@ pub mod venation;
 /// leafless pole and a broadleaf died: a suppressed Douglas-fir is 30 m
 /// at 120 years with a living crown. Open- and stand-grown trees grow as
 /// tall as before, with leaf area within 3%.
-pub const GENERATOR_REVISION: u32 = 198;
+pub const GENERATOR_REVISION: u32 = 199;
