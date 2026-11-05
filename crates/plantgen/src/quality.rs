@@ -24,16 +24,25 @@ const fn lod(min_radius: f64, ring_edge: f64, max_sides: u32, bend: f64, cluster
         max_sides,
         bend,
         cluster,
+        reach: None,
     }
 }
+
+/// Each profile's second and third levels; its first draws the twigs out
+/// of a near eye's reach as the second does, and the limbs the third
+/// keeps as its own (`crate::mesh::Reach`).
+const DRAFT_1: LodSpec = lod(0.006, 0.16, 6, 10.0, 0.0);
+const DRAFT_2: LodSpec = lod(0.02, 0.35, 5, 18.0, 0.8);
+const STANDARD_1: LodSpec = lod(0.004, 0.1, 8, 8.0, 0.0);
+const STANDARD_2: LodSpec = lod(0.015, 0.25, 6, 15.0, 0.6);
 
 /// Fast builds for iterating on a species.
 pub const DRAFT: Quality = Quality {
     name: "draft",
     lods: [
-        lod(0.0, 0.08, 10, 0.0, 0.0),
-        lod(0.006, 0.16, 6, 10.0, 0.0),
-        lod(0.02, 0.35, 5, 18.0, 0.8),
+        lod(0.0, 0.08, 10, 0.0, 0.0).reaching(DRAFT_1, DRAFT_2),
+        DRAFT_1,
+        DRAFT_2,
         lod(0.05, 0.6, 4, 28.0, 1.8),
     ],
     impostor_views: 6,
@@ -44,9 +53,9 @@ pub const DRAFT: Quality = Quality {
 pub const STANDARD: Quality = Quality {
     name: "standard",
     lods: [
-        lod(0.0, 0.04, 16, 0.0, 0.0),
-        lod(0.004, 0.1, 8, 8.0, 0.0),
-        lod(0.015, 0.25, 6, 15.0, 0.6),
+        lod(0.0, 0.04, 16, 0.0, 0.0).reaching(STANDARD_1, STANDARD_2),
+        STANDARD_1,
+        STANDARD_2,
         lod(0.04, 0.5, 4, 25.0, 1.5),
     ],
     impostor_views: 8,
