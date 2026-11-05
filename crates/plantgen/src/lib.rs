@@ -1609,4 +1609,16 @@ pub mod venation;
 /// holds 63 m² of foliage at 120 years where it held 46, and Wind River at
 /// 500 years (`plantc fill`, seeds 7-10) a leaf area index of 3.9 where it
 /// had 3.3. Open- and stand-grown trees' leaf area moves by under 2%.
-pub const GENERATOR_REVISION: u32 = 200;
+///
+/// 201: old conifer crowns fill out (`pinidae` revision 18). A stand of a
+/// plant's like opens past 160 years to 0.27 of its height at 450
+/// (`spec::STAND_THINNING`; Wind River's 35 Douglas-fir a hectare, Shaw et
+/// al. 2004), where it opened to 0.204 (Franklin et al. 1981's 60); and a
+/// fir's, spruce's, hemlock's, larch's or Douglas-fir's stem keeps a
+/// dormant bud at each whorl that sprouts a vigorous new limb once the
+/// tree's rise has slowed (`stem_epi`, Ishii and McDowell 2002). A
+/// Douglas-fir grown 480 years in a stand holds 663 m² of foliage where it
+/// held 364 (Sillett et al. 2018: about 630 to 1,480), on a trunk 133 cm
+/// through (Ishii and McDowell: 87 to 154); every conifer's young sizes
+/// grow as before.
+pub const GENERATOR_REVISION: u32 = 201;
