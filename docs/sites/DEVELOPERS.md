@@ -106,7 +106,9 @@ patches.
    shared edges into parts, low woody and thin parts within 0.12 m joined
    (`join_near`, so a fence is one part), each part classified, then cut
    into hosts and binned into patches by (u, v, side). Their sky goes
-   through the tracer too.
+   through the tracer too. Only the parts that reach the field's grid are
+   kept, so a mesh made for a whole town can be measured a tile at a time:
+   over a 1 km Olympia mesh a 512 m tile's field took 11 s, not 40.
 
 ### How a part is classified
 
@@ -178,6 +180,64 @@ fifth of that. What made the difference, so it is not lost:
   the faces that can count.
 - Where the time goes now: mostly the ground's sky rays and the host
   parts (patch binning samples each face at a quarter of a patch).
+- **A field reads only its own parts.** Parts whose faces all miss the
+  field's grid are dropped before they are classified, so one mesh made
+  for a whole town serves every tile cut from it. Before, each 512 m tile
+  of a 1 km mesh classified the whole mesh (33 to 43 s a tile; now 11 s).
+
+## A real city tile
+
+How a host gets from a city's open data to a filled tile. This was done
+for Olympia, Washington: four 512 m tiles of ground, roads and buildings,
+4 m stand cells, seven communities. The fill's timings are in
+[LIBRARY-API.md](../LIBRARY-API.md), "Many communities per tile".
+
+![A 160 m window of Olympia's South Capitol neighbourhood filled: open-grown Douglas-firs in yards among houses, streets, sidewalks and poles](../images/stands/olympia-south-capitol.jpg)
+
+A 160 m window of the South Capitol neighbourhood at detail level 2.
+Ground from SRTM; buildings, roads and land use from Overture Maps
+(© OpenStreetMap contributors, Overture Maps Foundation); tree cover
+from ESA WorldCover 2021. Herbs are left to the host's ground cover.
+
+1. **The mesh.** Ground as a grid (1 m here, from SRTM's 30 m heights),
+   buildings as prisms from their footprints and heights (or floors times
+   3 m), roads as ribbons as wide as their class with sidewalks beside
+   them, and poles and fences where the data has them. Use the frame
+   above (x east, +Y up, z = -north), with heights relative to the lowest
+   ground, and give the mesh the field's margin (20 m), no more: parts in
+   a wider margin are measured as hosts the field never reads.
+2. **Materials.** In the site document, paving (asphalt, concrete,
+   paths, ballast) must be `rock`: a `built` face that looks up is a host,
+   so `built` roads become roofs (half a million patches on one tile).
+   Walls and roofs are `built`, fences and poles `wood`, and lawn,
+   forest floor and bare ground `soil` with their depth.
+3. **Water.** Leave out streams the data marks as underground or in a
+   culvert: drawn on the surface, they grow a strip of riverside alder
+   down a street.
+4. **The stand map.** One community index (or none) and the years since
+   disturbance for each 4 m cell, rows from the south. Olympia's rules,
+   first match wins: under 15% soil or inside a building, none; within
+   15 m of water, alder by water (40 years under tree cover, else 10);
+   tree cover of a half or more, yard trees (80 years) near a house or on
+   residential land, else lowland forest (80); within 4 m of a house, a
+   garden bed (10); bare, construction or by a railway, a lot (10); a
+   third or more paved, a verge (1); otherwise lawn (1).
+5. **Yard trees grow open.** Give a yard community's members
+   `"environments": ["open", "edge"]`. As stand members they grow as in a
+   closed stand, tall and narrow, and bury the houses in forest. Keep
+   thicket-formers (rowan, hawthorn) out of garden beds, where a bed's
+   cover makes thousands of them a hectare.
+6. **Filling.** One `Fill` for the whole city. For each tile, build its
+   field once from the town's mesh over the tile's box
+   (`site_field::build`), then
+   `fill.tile_among(&site, &stands, &outside, seed)` with the
+   neighbouring tiles' cells as `outside`. The first tile lays out the
+   stand tiles the city needs, and the rest reuse them. `plantc fill
+   <community.json>... --stands stands.json --field SITE.json --corner
+   X,Z --ages 1,10,40,80 --herbs no` does one tile.
+7. **Drawing it.** `--render` draws every plant at one level, so above
+   about 10 million triangles it needs more than 15 GB. Draw a window
+   (a 160 m tile of the same mesh) at level 2, or level 1 closer in.
 
 ## Tests and test sites
 

@@ -532,7 +532,10 @@ Usage:
       --ages years since disturbance (default 10,20,40,80,160,320,640);
       a stand cell takes the nearest. Without --stands (a StandMap:
       cell_m, cols and cells), the first community covers the tile at
-      --years since disturbance (default 100). Every prototype is measured
+      --years since disturbance (default 100). A map's cells may be as
+      fine as a city's yards and verges (4 m): each reads its window of one
+      stand tile laid out for its block of cells about 40 m across, so fine
+      cells cost little more than coarse ones. Every prototype is measured
       first, its size kept in DIR/prototypes so a later fill grows none
       again. --prototypes used (the default) also exports, into
       DIR/prototypes with prototypes.json, each prototype the tile places
