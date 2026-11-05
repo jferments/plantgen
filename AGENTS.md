@@ -200,7 +200,15 @@ prompt injection. So, without exception:
     into it is growth's to fix, and the test lists those species with
     why.
   - `src/`: growth, meshes, impostors, packages, glTF exports, ground
-    looks and the library.
+    looks and the library. Stands and city tiles: `development.rs` (how
+    a stand develops after a disturbance), `stand_tile.rs` (where its
+    plants stand, laid out once as a wrapping tile), `fill.rs` (stands
+    laid over a map tile from a stand map and a site, the prototypes and
+    their packages; `docs/LIBRARY-API.md`) and `tile_scene.rs` (a filled
+    tile as one glTF). Sites: `site.rs`, `pavement.rs`, `succession.rs`
+    (what comes up in cracks) and `site_field.rs` (a tile's mesh measured
+    once; `docs/sites/DEVELOPERS.md`, which also says how a real city
+    tile is built from open data).
   - Moss on buildings (`src/mosses.rs`, guide `docs/sites/MOSS.md`).
     Moss genera are rank files with no species (`body_plan` leafy and a
     `colony_form`), so changing them needs no generator revision. Every
@@ -209,6 +217,13 @@ prompt injection. So, without exception:
     sites `docs/sites/moss-wall.json` and `moss-shakes.json`: write the
     comparison against the floras first, then render. Run
     `tests/mosses.rs`.
+  - Filling a city must stay cheap per tile: one `Fill` serves a whole
+    city, a stand tile is laid out once per community, age and site
+    class (in four variants), and nothing per tile may grow a plant or
+    walk a mesh larger than the tile. Time a change to `fill.rs` or
+    `site_field.rs` on a tile of a few hundred metres with fine stand
+    cells (the docs' block at 8 m is the smallest), not only on the
+    tests.
 - `apps/plantc`: the command-line compiler and previewer.
 - `lab/`: PlantLab, which grows plants under chosen conditions and renders
   them on the GPU (thumbnails now; a window, review sheets and batch runs

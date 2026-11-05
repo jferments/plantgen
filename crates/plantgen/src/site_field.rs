@@ -1211,6 +1211,23 @@ fn surfaces(
     }
 
     let parts = join_near(site, parts);
+    // Only the parts that reach the field's grid: a part wholly past it
+    // has no ground cell to root anything in, and one site mesh may reach
+    // far past the tile (a town's, cut into tiles).
+    let far = [
+        origin[0] + f64::from(columns) * cell,
+        origin[1] + f64::from(rows) * cell,
+    ];
+    let parts: Vec<Vec<usize>> = parts
+        .into_iter()
+        .filter(|members| {
+            members.iter().any(|&i| {
+                let [a, b, c] = site.corners(i);
+                let (low, high) = (a.min(b).min(c), a.max(b).max(c));
+                low.x <= far[0] && high.x >= origin[0] && low.z <= far[1] && high.z >= origin[1]
+            })
+        })
+        .collect();
     let directions = hemisphere(settings.sky_rays.max(8) / 2);
     // Each part's hosts and patches, numbered from 0 within the part, on
     // every core; then numbered on in the parts' order.
