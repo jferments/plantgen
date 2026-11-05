@@ -1,0 +1,87 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Homalothecium",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.004,
+      "max": 0.015,
+      "typical": 0.008
+    },
+    "leaf_length_m": {
+      "min": 0.001,
+      "max": 0.0024,
+      "typical": 0.0016
+    },
+    "leaf_width_m": {
+      "min": 0.0002,
+      "max": 0.0008,
+      "typical": 0.0004
+    },
+    "hair_point_length_m": 0,
+    "leaf_colour": [
+      98,
+      101,
+      52
+    ],
+    "leaf_dry_posture": "appressed",
+    "seta_length_m": {
+      "min": 0.01,
+      "max": 0.02
+    },
+    "capsule_length_m": {
+      "min": 0.002,
+      "max": 0.003
+    },
+    "capsule_posture": "erect",
+    "capsule_share": 0.003,
+    "substrates": [
+      "rock",
+      "built",
+      "bark"
+    ],
+    "substrate_reaction": "basic",
+    "light": [
+      "sun",
+      "part"
+    ],
+    "moisture": [
+      "mesic",
+      "dry"
+    ],
+    "desiccation_tolerance": "high",
+    "colony_spread_m_per_year": 0.008
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Homalothecium (Ignatov; efloras, read 2026-11-05): plants in loose to dense tufts or mats, green to rich golden; stems creeping, pinnate; stem leaves erect-appressed when dry, lanceolate, strongly plicate; seta red-brown; capsule inclined to erect, red-brown, cylindric. Typical values are H. sericeum, the silky wall moss (same volume): light green to golden or brownish yellow; stems to 5 cm, branches 5-7 mm, curved and secund from the surface; stem leaves 1.8-2.4 x 0.6-0.8 mm, branch leaves 1-2 x 0.2-0.5 mm, appressed dry, spreading moist; seta 1-2 cm; capsule erect, cylindric, 2-3 mm; on rock and rock faces."
+    },
+    "traits.substrates": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "FNA gives rock and rock faces for North America, where it is rare; in Europe H. sericeum is one of the commonest mosses of old walls, limestone and the bark of trees (general bryological knowledge; to cite from Atherton et al., Mosses and Liverworts of Britain and Ireland, 2010)."
+    },
+    "traits.substrate_reaction": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Base-rich rock, mortar and limestone, as in European floras; see the note on substrates."
+    },
+    "traits.capsule_share": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Dioicous; capsules rare. Estimate."
+    },
+    "traits.colony_spread_m_per_year": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Estimate as for other pleurocarp mats; to check against Glime, Bryophyte Ecology."
+    },
+    "traits.leaf_colour": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Hue measured: imagekit run moss-colour-2026-11-05 on batch moss-pnw-2026-11-05 (iNaturalist research-grade photos from Washington, about 20 a taxon, script moss_colour.py): the median linear r/g and b/g of the moss pixels (Homalothecium r/g 0.94, b/g 0.27). Photos are exposed brighter than moss is, so only the hue is taken from them; the brightness is a green reflectance of 0.13, a lit leaf's, just above the 0.05-0.11 moss canopies reflect in the visible (Lovelock and Robinson 2002, Plant Cell Environ. 25: 1239, Antarctic Grimmia; moss biocrust albedo about 0.11 against 0.20 for bare soil, Sci. Total Environ. 2020), the canopy's own shade darkening the shell further."
+    }
+  }
+}

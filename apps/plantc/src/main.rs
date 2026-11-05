@@ -124,6 +124,7 @@ fn run() -> Result<(), Failure> {
         "site" => site_command(&args),
         "cracks" => cracks_command(&args),
         "field" => field_command(&args),
+        "moss" => moss_command(&args),
         "render" => render_command(&args),
         "sheet" => sheet_command(&args),
         "tiers" => tiers_command(&args),
@@ -276,6 +277,22 @@ Usage:
       seeds), each species' niche and lifespan, and a site's moisture,
       heat_load, elevation_m and slope_deg (plantgen::development), with
       tile_m, seed, repeat, cover, scale, overlap and herb_radius_m.
+  plantc moss <site.json> [--years N] [--seed N] [--latitude DEG]
+              [--box X0,Y0,Z0,X1,Y1,Z1] [--out COVER.json] [--cover COVER.json]
+              [--render FILE.png [--view VIEW] [--size PIXELS] [--from south|north]
+               [--focus X,Y,Z [--span METRES]] [--wet 0..1]
+               [--detail patch|shell|shoots|near] [--capsules yes|no]]
+      Grow mosses over a site's faces (plantgen::mosses): every moss genus
+      the library gives a colony_form settles where its light, wetness
+      and substrate fit (rain on faces turned up, damp at a wall's foot,
+      shade from the sun, mortar and tiles basic, bark and wood acid) and
+      spreads year by year, years 30 when left out, within --box (the
+      whole site when left out). --out writes the colonies; --cover reads
+      them instead of growing. --render draws the site and its mosses:
+      shells of the colonies' forms, or with --detail shoots every shoot's
+      leaves and capsules (near: only within --span of --focus); --wet 1
+      just rained on, 0 dry (0.4 when left out); --from north looks from
+      the north side.
   plantc site <site.json> [--out FILE.png] [--view VIEW] [--size PIXELS]
               [--day N] [--quality draft|standard]
               [--focus X,Y,Z [--span METRES]]
@@ -3162,6 +3179,188 @@ fn site_size(spec: &PlantSpec, age: f64) -> (f64, f64) {
         .min(tallest.unwrap_or(f64::INFINITY));
     let reach = greatest("crown_width_max_m").map_or(height * 0.6, |width| width * 0.5);
     (height, reach.max(height * 0.3))
+}
+
+/// `plantc moss`: grow mosses over a site and draw them.
+#[allow(clippy::too_many_lines)]
+fn moss_command(args: &[String]) -> Result<(), Failure> {
+    use plantgen::mosses::{self, Detail, DrawOptions, MossCover, MossSettings};
+    let options = Options::parse(
+        args,
+        &[
+            "years", "seed", "latitude", "box", "out", "cover", "render", "view", "size", "from",
+            "focus", "span", "wet", "detail", "capsules",
+        ],
+    )?;
+    let given = options.one_positional("a site document")?;
+    let text =
+        fs::read_to_string(given).map_err(|error| format!("cannot read {given}: {error}"))?;
+    let document: serde_json::Value =
+        serde_json::from_str(&text).map_err(|error| format!("invalid site: {error}"))?;
+    let folder = Path::new(given).parent().unwrap_or(Path::new("."));
+    let site = site_mesh_of(&document, folder)?;
+    let numbers = |name: &str, count: usize| -> Result<Option<Vec<f64>>, String> {
+        options
+            .flags
+            .get(name)
+            .map(|text| {
+                let values: Vec<f64> = text
+                    .split(',')
+                    .map(|part| part.trim().parse::<f64>())
+                    .collect::<Result<_, _>>()
+                    .map_err(|_| format!("`--{name}` expects {count} numbers, found `{text}`"))?;
+                if values.len() == count {
+                    Ok(values)
+                } else {
+                    Err(format!(
+                        "`--{name}` expects {count} numbers, found `{text}`"
+                    ))
+                }
+            })
+            .transpose()
+    };
+    let started = Instant::now();
+    let cover = if let Some(path) = options.flags.get("cover") {
+        let text =
+            fs::read_to_string(path).map_err(|error| format!("cannot read {path}: {error}"))?;
+        MossCover::from_json(&text).map_err(|error| format!("{path}: {error}"))?
+    } else {
+        let kinds = mosses::kinds(library())?;
+        if kinds.is_empty() {
+            return Err("the library describes no moss genus with a colony_form".into());
+        }
+        let mut settings = MossSettings::default();
+        if let Some(years) = options.number::<u32>("years")? {
+            settings.years = years;
+        }
+        if let Some(seed) = options.number::<u64>("seed")? {
+            settings.seed = seed;
+        }
+        if let Some(latitude) = options.number::<f64>("latitude")? {
+            settings.latitude_deg = latitude;
+        }
+        if let Some(values) = numbers("box", 6)? {
+            settings.low = [values[0], values[1], values[2]];
+            settings.high = [values[3], values[4], values[5]];
+        }
+        mosses::grow(&site, &kinds, &settings)
+    };
+    out!(
+        "{} colonies after {} years ({:.1} s)",
+        cover.colonies.len(),
+        cover.settings.years,
+        started.elapsed().as_secs_f64()
+    );
+    for (genus, count, area) in cover.census() {
+        out!("  {genus:<14} {count:>6} colonies, {:.3} m2", area);
+    }
+    if let Some(path) = options.flags.get("out") {
+        fs::write(path, cover.to_json()?)
+            .map_err(|error| format!("cannot write {path}: {error}"))?;
+        out!("wrote {path}");
+    }
+    let Some(render) = options.flags.get("render") else {
+        return Ok(());
+    };
+    let focus = numbers("focus", 3)?.map(|v| Vec3::new(v[0], v[1], v[2]));
+    let span: f64 = options.number("span")?.unwrap_or(2.0);
+    let detail = match options.flags.get("detail").map(String::as_str) {
+        None | Some("near") => Detail::Near,
+        Some("patch") => Detail::Patch,
+        Some("shell") => Detail::Shell,
+        Some("shoots") => Detail::Shoots,
+        Some(other) => {
+            return Err(
+                format!("unknown detail `{other}`; use patch, shell, shoots or near").into(),
+            );
+        }
+    };
+    let draw = DrawOptions {
+        hydration: options.number::<f64>("wet")?.unwrap_or(0.4).clamp(0.0, 1.0),
+        detail,
+        near: focus.map(|at| (at, span)),
+        capsules: options.flags.get("capsules").is_none_or(|v| v != "no"),
+    };
+    let mut moss = cover.draw(&site, &draw);
+    let (low, high) = match focus {
+        Some(at) => {
+            let half = Vec3::new(span, span, span) * 1.5;
+            (at - half, at + half)
+        }
+        None => site.bounds(),
+    };
+    let mut ground = site.drawn(
+        low - Vec3::new(1.0, 1.0, 1.0),
+        high + Vec3::new(1.0, 1.0, 1.0),
+        Vec3::ZERO,
+    );
+    // Seen from the north: the scene turned half round about the focus.
+    let north = match options.flags.get("from").map(String::as_str) {
+        None | Some("south") => false,
+        Some("north") => true,
+        Some(other) => return Err(format!("unknown side `{other}`; use south or north").into()),
+    };
+    let pivot = focus.unwrap_or_else(|| {
+        let (a, b) = site.bounds();
+        (a + b) * 0.5
+    });
+    if north {
+        for mesh in [&mut moss, &mut ground] {
+            for p in &mut mesh.positions {
+                p[0] = (2.0 * pivot.x) as f32 - p[0];
+                p[2] = (2.0 * pivot.z) as f32 - p[2];
+            }
+            for n in &mut mesh.normals {
+                n[0] = -n[0];
+                n[2] = -n[2];
+            }
+        }
+    }
+    let view = match options.flags.get("view") {
+        Some(name) => View::from_name(name).ok_or_else(|| format!("unknown view `{name}`"))?,
+        None => View::Oblique,
+    };
+    let pixels: usize = options.number("size")?.unwrap_or(1200);
+    let framed = match focus {
+        Some(at) => Some((at, span)),
+        None => {
+            let (a, b) = site.bounds();
+            Some(((a + b) * 0.5, (b - a).length() * 0.45))
+        }
+    };
+    let templates = Templates::for_plant(&[], &[]);
+    let image = preview::render_on_site(
+        &PlantMesh::default(),
+        &[
+            (&ground, raster::Material::Opaque),
+            (&moss, raster::Material::Opaque),
+        ],
+        &templates,
+        &PreviewOptions {
+            width: pixels,
+            height: pixels * 3 / 4,
+            view,
+            supersample: 2,
+            figure: false,
+            frame_height: None,
+            frame_reach: None,
+            focus: framed,
+            fit_plant: false,
+        },
+    );
+    let png = raster::encode_png(
+        image.width,
+        image.height,
+        &image.to_srgb8(Some(preview::SKY)),
+    )
+    .map_err(|error| format!("cannot encode PNG: {error}"))?;
+    fs::write(render, png).map_err(|error| format!("cannot write {render}: {error}"))?;
+    out!(
+        "wrote {render}: {} triangles of moss, {} of site",
+        moss.triangle_count(),
+        ground.triangle_count()
+    );
+    Ok(())
 }
 
 /// `plantc field`: a site's field, measured once (plantgen::site_field).

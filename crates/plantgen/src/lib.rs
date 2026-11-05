@@ -69,6 +69,7 @@ pub mod math;
 pub mod mechanics;
 pub mod mesh;
 pub mod meshopt;
+pub mod mosses;
 pub mod motion;
 pub mod niche;
 pub mod occlusion;
@@ -1621,6 +1622,14 @@ pub mod venation;
 /// held 364 (Sillett et al. 2018: about 630 to 1,480), on a trunk 133 cm
 /// through (Ishii and McDowell: 87 to 154); every conifer's young sizes
 /// grow as before.
+///
+/// 202: a card tier's texel budget pays for its packed atlas, the room
+/// packing leaves between pictures included, not only for the pictures'
+/// own texels (`crate::billboards`): the pictures are baked at the
+/// densest that packs within it. Pictures pack in rows or along the top
+/// edge of those laid before, whichever is lower. Of 498 card tiers of
+/// 248 species, none grew and together they hold 14% fewer texels; most
+/// low tiers went from 512 by 550 to 620 texels to 512 by 512.
 ///
 /// 203: a pine-family shoot's foliage costs what its own light makes it
 /// (`pinidae` revision 19, `shade_own`): a needle grown in its own crown's
