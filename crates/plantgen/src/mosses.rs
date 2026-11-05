@@ -1438,6 +1438,12 @@ struct Drawer<'a> {
 /// and Grimmia cushions look hoary rather than white.
 const HYALINE: [f32; 3] = [0.5, 0.51, 0.49];
 
+/// Hyaline tips and awns massed over a colony, seen from afar, with the
+/// shade among them: a silvery grey about as bright as the green, so
+/// silver moss reads greyer, not brighter, than its neighbours (photos of
+/// Bryum argenteum: as bright as Kindbergia's, less saturated).
+const HYALINE_MASSED: [f32; 3] = [0.2, 0.205, 0.195];
+
 /// How much darker a colony's shell is than its lit leaves: the shade
 /// among the shoots that a shell does not draw.
 const CANOPY_SHADE: f64 = 0.62;
@@ -1501,7 +1507,7 @@ impl Drawer<'_> {
     /// against about 0.13 for a leaf).
     fn shell_colour(&self, kind: &MossKind, vigour: f64) -> [f32; 3] {
         let leaf = scaled(self.leaf_colour(kind, vigour), CANOPY_SHADE);
-        blend(leaf, HYALINE, kind.whiteness(self.options.hydration))
+        blend(leaf, HYALINE_MASSED, kind.whiteness(self.options.hydration))
     }
 
     #[allow(clippy::too_many_lines)]
@@ -1625,6 +1631,16 @@ impl Drawer<'_> {
             .lifted(centre, normal, reach, bridge)
             .map(|(p, n)| (p + n * (height * profile(0.0) * sink), shell_colour));
         grid.push(tip);
+        // Where the surface steps (a tile's edge), the shell drapes over
+        // the step down, falling no steeper than it runs out, rather than
+        // dropping sheer; at a step up it runs in under the overlapping
+        // edge the same way.
+        let mut floor: Vec<Option<f64>> = vec![
+            surfaces
+                .lifted(centre, normal, reach, bridge)
+                .map(|(p, _)| (p - centre).dot(normal));
+            sectors
+        ];
         for ring in 1..=rings {
             #[allow(clippy::cast_precision_loss)]
             let rho = ring as f64 / rings as f64;
@@ -1633,7 +1649,15 @@ impl Drawer<'_> {
                 let angle = sector as f64 / sectors as f64 * std::f64::consts::TAU;
                 let r = outline(angle) * rho;
                 let q = centre + (t * math::cos(angle) + b * math::sin(angle)) * r;
-                let laid = surfaces.lifted(q, normal, reach, bridge);
+                #[allow(clippy::cast_precision_loss)]
+                let run = outline(angle) / rings as f64;
+                let laid = surfaces.lifted(q, normal, reach, bridge).map(|(p, n)| {
+                    let below = (p - centre).dot(normal);
+                    let inner = floor[sector].unwrap_or(below);
+                    let p = p + normal * (below.clamp(inner - run, inner + run) - below);
+                    floor[sector] = Some((p - centre).dot(normal));
+                    (p, n)
+                });
                 let point = laid.map(|(p, n)| {
                     let h = mix(mix(seed, ring as u64), sector as u64);
                     let speckle = if fine {
