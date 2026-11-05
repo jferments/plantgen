@@ -145,6 +145,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_shape": {"ovate": "usually", "oblong": "often"},
     "bark_colour": [76, 92, 56],
     "leaf_habit": "evergreen",
     "leaf_arrangement": "alternate",
@@ -186,9 +187,11 @@
     "spine_curve": {"curved": "often", "hooked": "often", "straight": "sometimes"},
     "spine_angle": "declined",
     "internodal_prickles": "dense",
-    "aciculi": "none"
+    "aciculi": "none",
+    "stem_posture": "prostrate"
   },
   "evidence": {
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "abrams-1944", "note": "Abrams, Illustrated Flora of the Pacific States vol. II (1944), read 2026-11-04, Rubus vitifolius (R. ursinus): \"leaflets ovate to oblong, coarsely toothed\"."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.3, 0.36, 0.22], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "taxon": {
       "evidence": "Authored",
@@ -297,7 +300,8 @@
     "traits.spine_curve": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus ursinus (eFloras, read 2026-10-19): prickles erect to retrorse or hooked."},
     "traits.spine_angle": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus ursinus (eFloras, read 2026-10-19): prickles erect to retrorse: drawn leaning back toward the stem's base."},
     "traits.internodal_prickles": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus ursinus (eFloras, read 2026-10-19): prickles moderate to dense on the creeping stems."},
-    "traits.aciculi": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus ursinus (eFloras, read 2026-10-19): no bristles described on the stems."}
+    "traits.aciculi": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus ursinus (eFloras, read 2026-10-19): no bristles described on the stems."},
+    "traits.stem_posture": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS species review, Rubus ursinus (Tirmenstein 1989): its slender stems trail along the ground, 5 to 6 m long, or climb."}
   },
   "provenance": {
     "sources": [

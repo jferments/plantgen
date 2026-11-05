@@ -1651,10 +1651,34 @@ pub mod venation;
 /// mesh; it draws 0.6 million, 54 MB. Plants up to 40 m tall are drawn
 /// as before.
 ///
-/// 205: two herbs drawn as their floras state them: a common mullein in
-/// flower stands 1-2 m (Gleason and Cronquist), Jepson's 30 cm kept as
-/// the rare low, where one plant in three was drawn under 1 m; and a
-/// vanilla leaf's stalk bears one leaf of three leaflets (Abrams: the
-/// single leaf), not three such leaves, its leaflets Flora of North
-/// America's 4-11 cm long.
-pub const GENERATOR_REVISION: u32 = 205;
+/// 205: a shrub up to 3 m tall whose taxa do not say how its stems rise
+/// (`stem_clump`) sends up many stems from its base, as `stem_clump` many
+/// gives, in place of one stem forking just above the ground (a rule on the
+/// shrub form at the flowering plants); taller shrubs and prostrate mats keep
+/// their forking stem. 32 library shrubs change, and the open
+/// plant-identification judge names them better grown so.
+///
+/// 206: sixteen shrubs whose specs gave no leaf shape state it from
+/// Abrams' and Britton and Brown's floras (`leaf_shape`), so the shape
+/// rule (the kingdom's `outline`) draws their blades and leaflets: a
+/// trailing blackberry's and a Cascade Oregon grape's leaflets were the
+/// shape the compound template guesses. Where a spec sets a blade's
+/// `widest`, `base` or `tip` by hand, the hand outline still wins, except
+/// a hardhack's, which drew obovate leaves where Abrams gives elliptical
+/// to oval ones.
+///
+/// 207: two herbs drawn as their floras state them, and compound leaves'
+/// leaflets drawn as floras describe them. A common mullein in flower
+/// stands 1-2 m (Gleason and Cronquist), Jepson's 30 cm kept as the rare
+/// low; a vanilla leaf's stalk bears one leaf (Abrams). Leaf shapes gain
+/// flabellate (a fan: sides bowing out from a narrow foot to a lobed or
+/// toothed far edge, rounded or cut square as the apex says) and
+/// obcordate (notched deep at a broad tip); side leaflets stated
+/// asymmetric are lopsided (`lateral_leaflets`); a lobed leaflet's lobe
+/// tips follow `leaflet_lobe_apex`; leaflets take their stated apex and
+/// base (tapers, points, notches), as simple blades did; and a leaflet
+/// may be twice as broad as long. A vanilla leaf draws three broad lobed
+/// wedges and a redwood sorrel three heart-shaped leaflets, where hand
+/// outlines drew neither, and 44 more compound-leaved species change
+/// with their stated leaflet tips.
+pub const GENERATOR_REVISION: u32 = 207;
