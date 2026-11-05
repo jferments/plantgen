@@ -444,6 +444,23 @@ pub fn stand_spacing(age_years: f64) -> f64 {
     last.1
 }
 
+/// The shade of the crowns over a tree that came up beneath its stand's
+/// canopy, as a stand's ingrowth does ([`PlantSpec::neighbourhood_beneath`]):
+/// its optical depth from the canopy's top to the ground. A depth of 1
+/// leaves 17% of the sky's light at the ground, as the light tool weighs
+/// an overcast sky, and more toward the canopy: the 10-20% western hemlock
+/// regeneration needs to grow (Carter and Klinka 1992, Forest Ecology and
+/// Management 55: 87-105). The floor under old-growth Douglas-fir and
+/// hemlock is darker, 0.5% of the diffuse light (Canham et al. 1990,
+/// Canadian Journal of Forest Research 20: 620-631), but the trees that
+/// stand beneath the canopy are those that grew in its brighter patches.
+/// Grown beneath a 60 m canopy with its like around it, a western hemlock
+/// is 19.7 m tall at 120 years and 24 m at 240, where Wind River's
+/// hemlocks average 19 m (Shaw et al. 2004, Ecosystems 7: 427-439); at a
+/// depth of 1.4 it was 12-14 m from 120 to 320 years, its crown dying
+/// back.
+pub const UNDERSTOREY_DEPTH: f64 = 1.0;
+
 /// The synthetic stand a variant grows in.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -1775,6 +1792,22 @@ impl PlantSpec {
                 ..neighbourhood
             },
             _ => neighbourhood,
+        }
+    }
+
+    /// The neighbourhood of this plant come up beneath a closed canopy
+    /// `canopy_m` tall, as a stand's ingrowth does: its like's crowns
+    /// around it as in a stand ([`Environment::Interior`]), and over it the
+    /// canopy's shade, [`UNDERSTOREY_DEPTH`] spread evenly from the ground
+    /// to the canopy's top. Its light rises as it climbs, and a tree that
+    /// grows through the canopy stands in the sun.
+    #[must_use]
+    pub fn neighbourhood_beneath(&self, canopy_m: f64) -> Neighbourhood {
+        Neighbourhood {
+            density: UNDERSTOREY_DEPTH / canopy_m.max(1.0),
+            relative_height: 0.0,
+            canopy: canopy_m,
+            ..self.neighbourhood(Environment::Interior)
         }
     }
 

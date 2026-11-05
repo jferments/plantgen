@@ -232,12 +232,19 @@ pub struct PrototypeKey {
     /// ([`Generator::grow_ages_on_wall`]), not in its environment.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub on_wall: bool,
+    /// The height in whole metres of the closed canopy it came up beneath,
+    /// for a shade-tolerant tree that established under its stand's
+    /// crowns (ingrowth), grown with [`Generator::grow_ages_beneath`]; its
+    /// `environment` is then [`Environment::Suppressed`].
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub beneath_m: Option<u16>,
 }
 
 impl PrototypeKey {
     /// The common name of its files: `<species>-<setting>-<seed>-<age>y`,
     /// as [`Generator::export`] names a plant; a climber's setting on a
-    /// wall is `wall`.
+    /// wall is `wall`, and a tree's come up beneath a canopy 60 m tall
+    /// `beneath60m`.
     #[must_use]
     pub fn stem(&self) -> String {
         let age = if self.age_tenths.is_multiple_of(10) {
@@ -246,9 +253,11 @@ impl PrototypeKey {
             format!("{}.{}", self.age_tenths / 10, self.age_tenths % 10)
         };
         let setting = if self.on_wall {
-            "wall"
+            "wall".to_string()
+        } else if let Some(canopy) = self.beneath_m {
+            format!("beneath{canopy}m")
         } else {
-            self.environment.name()
+            self.environment.name().to_string()
         };
         format!("{}-{setting}-{}-{age}y", self.species, self.seed)
     }
@@ -1380,7 +1389,22 @@ struct Species {
     /// What its roots ask of the soil, where its program says
     /// ([`Site::soil_ratio_at`]).
     soil: Option<SoilNeed>,
+    /// How tall its crowns stand in a stand's canopy, metres: the low end
+    /// of the tallest it commonly grows (`height_max_m`), where its traits
+    /// state it.
+    canopy_m: Option<f64>,
+    /// Whether its program grows it beneath a canopy as a shade-suppressed
+    /// tree grows ([`BENEATH_PROGRAMS`]).
+    grows_beneath: bool,
 }
+
+/// The programs whose trees grow beneath a closed canopy as
+/// shade-suppressed trees do, slowly and keeping their limbs (`pinidae`
+/// from its revision 16), so a stand's shade-tolerant ingrowth of them
+/// grows beneath its canopy ([`PrototypeKey::beneath_m`]). A broadleaf's
+/// program has no such growth yet: grown there, a bigleaf maple sheds
+/// every leaf, so a broadleaf's ingrowth grows as in a stand.
+pub const BENEATH_PROGRAMS: [&str; 1] = ["pinidae"];
 
 impl Species {
     fn new(id: &str, settings: &FillSettings) -> Result<Self, Error> {
@@ -1397,6 +1421,12 @@ impl Species {
         }
         let light_needed = niche.as_ref().map_or(0.0, development::light_needed);
         let soil = generator.soil_need();
+        let canopy_m = crate::library::Library::builtin()
+            .traits_of(id)
+            .ok()
+            .and_then(|traits| traits.get("height_max_m").and_then(crate::traits::least))
+            .filter(|height| *height > 0.0);
+        let grows_beneath = BENEATH_PROGRAMS.contains(&generator.spec().generator.program.as_str());
         Ok(Self {
             id: id.to_string(),
             generator,
@@ -1404,6 +1434,8 @@ impl Species {
             seeds,
             light_needed,
             soil,
+            canopy_m,
+            grows_beneath,
         })
     }
 }
@@ -1478,7 +1510,9 @@ impl StandMember {
     /// The setting a cohort of it is grown in: a tree in a closed stand
     /// grows as in one ([`Environment::Interior`]), before its stand's
     /// crowns close as in the open; a shrub or herb as in the open. A
-    /// member kept to other settings takes the first of them.
+    /// member kept to other settings takes the first of them. A
+    /// shade-tolerant tree that came up beneath the canopy grows beneath
+    /// it instead ([`Fill::cohort_keys`]).
     fn environment(&self, stage: Stage) -> Environment {
         let preferred = if self.candidate.tree() && stage != Stage::Establishment {
             Environment::Interior
@@ -1627,6 +1661,7 @@ impl Fill {
         for community in 0..fill.communities.len() {
             for age in fill.settings.stand_ages.clone() {
                 let stand = development::develop(&fill.candidates(community, None), age);
+                let canopy = fill.canopy_m(community);
                 for cohort in &stand.cohorts {
                     let member = &fill.stands[community][cohort.candidate];
                     let (layer, edges) = (
@@ -1635,7 +1670,7 @@ impl Fill {
                             && member.candidate.tree()
                             && member.environments.contains(&Environment::Edge),
                     );
-                    for key in fill.cohort_keys(member, cohort, stand.stage) {
+                    for key in fill.cohort_keys(member, cohort, stand.stage, canopy) {
                         let interior = key.environment == Environment::Interior;
                         let edge_key = PrototypeKey {
                             environment: Environment::Edge,
@@ -1708,6 +1743,7 @@ impl Fill {
                         environment: Environment::Open,
                         age_tenths,
                         on_wall: true,
+                        beneath_m: None,
                     };
                     let index = if let Some(index) = self.index.get(&key) {
                         *index
@@ -1743,15 +1779,48 @@ impl Fill {
             .collect()
     }
 
-    /// The keys of a cohort's prototypes, one per seed.
+    /// How tall the canopy of `community`'s stands stands, whole metres:
+    /// as tall as the tallest of its trees commonly grows
+    /// ([`Species::canopy_m`]), whatever the site and the stand's age, so a
+    /// prototype's key does not hang on them. None where none of its
+    /// trees states it.
+    fn canopy_m(&self, community: usize) -> Option<u16> {
+        let tallest = self.stands[community]
+            .iter()
+            .filter(|member| member.candidate.tree())
+            .filter_map(|member| self.species[member.species].canopy_m)
+            .fold(0.0_f64, f64::max);
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        (tallest >= 1.0).then(|| tallest.round().min(f64::from(u16::MAX)) as u16)
+    }
+
+    /// The keys of a cohort's prototypes, one per seed. A shade-tolerant
+    /// tree that came up under its stand's crowns (ingrowth, not its
+    /// pioneers) grows beneath a canopy `canopy` metres tall
+    /// ([`PrototypeKey::beneath_m`]) where its program grows it there
+    /// ([`BENEATH_PROGRAMS`]) and its member is not kept from
+    /// [`Environment::Suppressed`]: a western hemlock that came up 120
+    /// years ago beneath Wind River's 60 m canopy is 19.7 m tall, not the
+    /// 43.6 m of a stand of hemlocks its age.
     fn cohort_keys(
         &self,
         member: &StandMember,
         cohort: &development::Cohort,
         stage: Stage,
+        canopy: Option<u16>,
     ) -> Vec<PrototypeKey> {
         let species = &self.species[member.species];
-        let environment = member.environment(stage);
+        let beneath_m = canopy.filter(|_| {
+            species.grows_beneath
+                && member.candidate.tree()
+                && !cohort.pioneer
+                && member.environments.contains(&Environment::Suppressed)
+        });
+        let environment = if beneath_m.is_some() {
+            Environment::Suppressed
+        } else {
+            member.environment(stage)
+        };
         #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
         let age_tenths = (cohort.age * 10.0).round() as u32;
         species
@@ -1763,6 +1832,7 @@ impl Fill {
                 environment,
                 age_tenths,
                 on_wall: false,
+                beneath_m,
             })
             .collect()
     }
@@ -1810,24 +1880,28 @@ impl Fill {
             .get(index)
             .ok_or_else(|| Error(format!("fill: no prototype {index}")))?;
         let generator = self.species_of(prototype).generator.clone();
-        let plant = if prototype.key.on_wall {
-            generator
-                .grow_ages_on_wall(
-                    prototype.key.seed,
-                    &[prototype.age_years],
-                    crate::export::WALL_M,
-                )?
-                .pop()
-                .ok_or_else(|| Error(format!("fill: {} kept no plant", prototype.key.stem())))?
-        } else {
-            generator.grow_in(
-                prototype.key.environment,
-                prototype.key.seed,
-                prototype.age_years,
-            )?
-        };
+        let plant = Self::grow_ages(&generator, &prototype.key, &[prototype.age_years])?
+            .pop()
+            .ok_or_else(|| Error(format!("fill: {} kept no plant", prototype.key.stem())))?;
         let _ = self.sizes[index].set(plant.size.clone());
         Ok((generator, plant))
+    }
+
+    /// A prototype `key` of `generator`'s species grown and kept at each
+    /// of `ages` (rising): at the foot of a wall, beneath its stand's
+    /// canopy, or in its environment.
+    fn grow_ages(
+        generator: &Generator,
+        key: &PrototypeKey,
+        ages: &[f64],
+    ) -> Result<Vec<Plant>, Error> {
+        Ok(if key.on_wall {
+            generator.grow_ages_on_wall(key.seed, ages, crate::export::WALL_M)?
+        } else if let Some(canopy) = key.beneath_m {
+            generator.grow_ages_beneath(f64::from(canopy), key.seed, ages)?
+        } else {
+            generator.grow_ages_in(key.environment, key.seed, ages)?
+        })
     }
 
     /// The prototypes `which` names (every one when empty), sorted.
@@ -1848,14 +1922,22 @@ impl Fill {
         Ok(wanted)
     }
 
-    /// `indices` in growths: one per species, setting and seed, its ages
-    /// rising; the oldest growths first, so the longest start soonest.
+    /// `indices` in growths: one per species, setting (and canopy over
+    /// it) and seed, its ages rising; the oldest growths first, so the
+    /// longest start soonest.
     fn growths(&self, indices: &[u32]) -> Vec<Vec<u32>> {
-        let mut groups: BTreeMap<(&str, Environment, bool, u64), Vec<u32>> = BTreeMap::new();
+        type Growth<'a> = (&'a str, Environment, bool, Option<u16>, u64);
+        let mut groups: BTreeMap<Growth, Vec<u32>> = BTreeMap::new();
         for &index in indices {
             let key = &self.prototypes[index as usize].key;
             groups
-                .entry((key.species.as_str(), key.environment, key.on_wall, key.seed))
+                .entry((
+                    key.species.as_str(),
+                    key.environment,
+                    key.on_wall,
+                    key.beneath_m,
+                    key.seed,
+                ))
                 .or_default()
                 .push(index);
         }
@@ -1948,12 +2030,7 @@ impl Fill {
             .iter()
             .map(|index| self.prototypes[*index as usize].age_years)
             .collect();
-        let generator = &self.species_of(prototype).generator;
-        if prototype.key.on_wall {
-            generator.grow_ages_on_wall(prototype.key.seed, &ages, crate::export::WALL_M)
-        } else {
-            generator.grow_ages_in(prototype.key.environment, prototype.key.seed, &ages)
-        }
+        Self::grow_ages(&self.species_of(prototype).generator, &prototype.key, &ages)
     }
 
     /// Prototype `index`'s size as a measure or a write left it in `dir`
@@ -2673,7 +2750,7 @@ impl Fill {
         let mut chosen = Vec::new();
         for cohort in &stand.cohorts {
             let member = &self.stands[key.community][cohort.candidate];
-            let keys = self.cohort_keys(member, cohort, stand.stage);
+            let keys = self.cohort_keys(member, cohort, stand.stage, self.canopy_m(key.community));
             #[allow(clippy::cast_precision_loss)]
             let share = cohort.weight * member.abundance / keys.len().max(1) as f64;
             for prototype_key in keys {
@@ -3028,6 +3105,7 @@ mod tests {
             environment: Environment::Interior,
             age_tenths: 305,
             on_wall: false,
+            beneath_m: None,
         };
         assert_eq!(key.stem(), "x-interior-2-30.5y");
         let climber = PrototypeKey {
@@ -3035,6 +3113,12 @@ mod tests {
             ..key.clone()
         };
         assert_eq!(climber.stem(), "x-wall-2-30.5y");
+        let beneath = PrototypeKey {
+            environment: Environment::Suppressed,
+            beneath_m: Some(60),
+            ..key.clone()
+        };
+        assert_eq!(beneath.stem(), "x-beneath60m-2-30.5y");
         let whole = PrototypeKey {
             age_tenths: 4800,
             ..key

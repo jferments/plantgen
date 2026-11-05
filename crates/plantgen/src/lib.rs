@@ -1596,4 +1596,17 @@ pub mod venation;
 /// leafless pole and a broadleaf died: a suppressed Douglas-fir is 30 m
 /// at 120 years with a living crown. Open- and stand-grown trees grow as
 /// tall as before, with leaf area within 3%.
-pub const GENERATOR_REVISION: u32 = 199;
+///
+/// 200: shaded foliage costs less (`pinidae` revision 17, `shade_cost`):
+/// the light under which a conifer's apex starves, and its limbs are shed,
+/// is `shade_cost + (1 - shade_cost) top` times what it was, `shade_cost`
+/// = 130 / 315: King (1997) gives an understorey Pacific silver fir's
+/// needle mass per area as 130 g/m² plus 185 times the share of the sky's
+/// light at its apex, and the growth that keeps its foliage in proportion
+/// to it.
+/// A plant whose top is in the full sky grows as before; one shaded all
+/// over keeps more of its shoots: a hemlock grown beneath a 60 m canopy
+/// holds 63 m² of foliage at 120 years where it held 46, and Wind River at
+/// 500 years (`plantc fill`, seeds 7-10) a leaf area index of 3.9 where it
+/// had 3.3. Open- and stand-grown trees' leaf area moves by under 2%.
+pub const GENERATOR_REVISION: u32 = 200;

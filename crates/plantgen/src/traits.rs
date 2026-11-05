@@ -793,10 +793,8 @@ impl Vocabulary {
             let (Some(value), Some(limit)) = (traits.get(key), traits.get(above.as_str())) else {
                 continue;
             };
-            if let (Some(least), Some(most)) = (
-                bound(value, &["low", "min"]),
-                bound(limit, &["high", "max"]),
-            ) && least > most
+            if let (Some(least), Some(most)) = (least(value), greatest(limit))
+                && least > most
             {
                 found.push(format!(
                     "`{key}` {} is above `{above}` {}",
@@ -1085,6 +1083,13 @@ pub fn states_of(value: &Value) -> Vec<String> {
 #[must_use]
 pub fn greatest(value: &Value) -> Option<f64> {
     bound(value, &["high", "max"])
+}
+
+/// The least a number stated as itself or as a range may be: its `low`,
+/// else its `min`.
+#[must_use]
+pub fn least(value: &Value) -> Option<f64> {
+    bound(value, &["low", "min"])
 }
 
 /// A number, or the first of `bounds` a range has.
