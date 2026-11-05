@@ -532,6 +532,11 @@
       "map": {"lateral_leaflets": {"symmetric": 0, "asymmetric": 0.3}},
       "why": "A rosette's leaves are the species' leaves, unless their own are stated: A compound leaf's side leaflets stated asymmetric are drawn with the half toward the leaf's foot 1.3 times as broad as the other is narrow, 0.7: the broad half of a vanilla leaf's side leaflet fills in beside the petiole."
     },
+    "appearance.organs.*.shape.lobe_round": {
+      "template": ["compound"],
+      "map": {"leaflet_lobe_apex": {"acute": 0, "obtuse": 0.5, "rounded": 1}},
+      "why": "A lobed leaflet's lobes end in points, blunt tips or round ones, as stated; blunt where no flora says."
+    },
     "appearance.organs.leaf.shape.lobes": {
       "template": ["compound"],
       "map": {"leaflet_incision": {"none": 0, "lobed": 3, "cleft": 3}},
@@ -803,6 +808,7 @@
       "source": "plantgen-authors",
       "note": "How PlantGen draws a lopsided side leaflet, a choice of the model's (leaf outlines, 2026-11-05): floras say 'asymmetric' or 'oblique' without a measure; 0.3 makes the broad half nearly twice the narrow (1.3 against 0.7), as a vanilla leaf's side leaflets are in photographs."
     },
+    "rules.appearance.organs.*.shape.lobe_round": {"evidence": "Authored", "source": "plantgen-authors", "note": "How a lobed leaflet's lobe tips are drawn (leaf outlines, 2026-11-05), a choice of the model's, as a lobed blade's: acute 0 (narrowing fast to a point over an open sinus), obtuse half way, rounded 1."},
     "rules.appearance.organs.leaf.shape.lobes": {
       "evidence": "Authored",
       "source": "plantgen-authors",

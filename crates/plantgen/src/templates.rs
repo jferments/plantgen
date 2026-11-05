@@ -1104,28 +1104,36 @@ fn ended_profile(
     width
 }
 
-/// The half-angle, radians, of a fan leaflet `width` as broad as long
-/// ([`Compound::flabellate`]): its far edge an arc about its foot, it is
-/// $`2 \sin\beta`$ as broad as long, up to a half circle.
+/// How flat a fan leaflet's far edge is ([`Compound::flabellate`]), 0
+/// rounded off about its foot to 1 cut straight across: from its apex
+/// taper, a rounded apex (0.35) rounded, a truncate one (0.12) straight;
+/// unset, rounded. A vanilla leaf's leaflets end nearly square.
 #[must_use]
-pub fn fan_angle(width: f64) -> f64 {
-    math::asin((0.5 * width).clamp(0.05, 1.0))
+pub fn fan_flatness(c: &Compound) -> f64 {
+    c.apex_taper
+        .map_or(0.0, |taper| ((0.35 - taper) / 0.23).clamp(0.0, 1.0))
 }
 
-/// A fan leaflet's half-width at `t` along it, as a share of its widest:
-/// straight sides from its foot, then the arc of radius 1 about it.
-fn fan_profile(width: f64, t: f64) -> f64 {
+/// A fan's far edge, as far from its foot as `phi` radians off its
+/// midrib, a share of its length: an arc at `flat` 0, a straight edge
+/// at 1.
+fn fan_reach(phi: f64, flat: f64) -> f64 {
+    1.0 / math::pow(math::cos(phi).max(0.05), flat)
+}
+
+/// How a fan leaflet's sides bow out from its narrow foot: its
+/// half-width at `t` of its length is $`1 - (1 - t)^p`$ of its widest,
+/// a wedge whose sides curve out (cuneate below, broad above), as a
+/// vanilla leaf's do, not straight from its foot.
+const FAN_SIDES: f64 = 1.4;
+
+/// A fan leaflet's half-width at `t` along it, as a share of its widest
+/// (at its corners, the far edge's ends).
+fn fan_profile(t: f64) -> f64 {
     if !(0.0..=1.0).contains(&t) {
         return 0.0;
     }
-    let beta = fan_angle(width);
-    let (sin, cos) = (math::sin(beta), math::cos(beta));
-    let half = if t < cos {
-        t * sin / cos.max(1e-9)
-    } else {
-        (1.0 - t * t).max(0.0).sqrt()
-    };
-    half / sin
+    1.0 - math::pow(1.0 - t, FAN_SIDES)
 }
 
 /// A compound leaf's leaflet's half-width at `t` along its blade, as a
@@ -1134,7 +1142,7 @@ fn fan_profile(width: f64, t: f64) -> f64 {
 /// tip and foot as their tapers and point say.
 pub(crate) fn leaflet_profile(c: &Compound, t: f64, widest: f64, base: f64, tip: f64) -> f64 {
     if c.fanned() {
-        return fan_profile(c.leaflet_width, t);
+        return fan_profile(t);
     }
     ended_profile(
         |u| outline_profile(c.outline.as_deref(), u, widest, base, tip),
@@ -1187,7 +1195,8 @@ fn leaflet_fade(t: f64) -> f64 {
 const TEETH: (f64, f64) = (0.08, 0.95);
 const LEAFLET_TEETH: (f64, f64) = (0.14, 0.92);
 const LOBES: (f64, f64) = (0.06, 0.9);
-/// How rounded a lobed leaflet's lobes are: blunt, as an oak's.
+/// How rounded a lobed leaflet's lobes are where its look leaves it
+/// unset ([`Compound::lobe_round`]): blunt, as an oak's.
 const LEAFLET_LOBE_ROUND: f64 = 0.7;
 /// The share of a palmate lobe, along it, that its teeth form in.
 const LOBE_TEETH: (f64, f64) = (0.42, 0.92);
@@ -1281,11 +1290,9 @@ fn leaflet_width(s: &Compound, form: &Form, length: f64, t: f64, margin: Option<
         if let Some(margin) = margin
             && (LOBES.0..LOBES.1).contains(&t)
         {
-            let drawn = Drawn {
-                round: LEAFLET_LOBE_ROUND,
-                ..LOBE
-            };
-            let fall = margin.fall(t, drawn, |share| lobe_flank(share, LEAFLET_LOBE_ROUND));
+            let round = s.lobe_round.unwrap_or(LEAFLET_LOBE_ROUND);
+            let drawn = Drawn { round, ..LOBE };
+            let fall = margin.fall(t, drawn, |share| lobe_flank(share, round));
             let fade = math::sin(PI * (t - LOBES.0) / (LOBES.1 - LOBES.0));
             width *= 1.0 - depth * fall * math::pow(fade, 0.4);
         }
@@ -1449,15 +1456,12 @@ pub fn grow_leaf(shape: &Shape) -> Option<GrownLeaf> {
         Shape::Compound(s) => {
             let form = Form::of(s);
             let count = s.leaflet_lobes().map_or(s.teeth, |(lobes, _)| lobes);
-            let zone = if s.fanned() {
-                // A fan's teeth or lobes run along its far edge alone.
-                (math::cos(fan_angle(s.leaflet_width)) - 0.01, 1.0)
-            } else if s.leaflet_lobes().is_some() {
+            let zone = if s.leaflet_lobes().is_some() {
                 LOBES
             } else {
                 LEAFLET_TEETH
             };
-            Some(GrownLeaf {
+            let mut grown = GrownLeaf {
                 layout: Some(divided::layout(s)),
                 ..pinnate_leaf(
                     (count, zone),
@@ -1468,7 +1472,15 @@ pub fn grow_leaf(shape: &Shape) -> Option<GrownLeaf> {
                     (0.0, &no_lobes, if s.fanned() { 2 } else { 0 }),
                     seed,
                 )
-            })
+            };
+            if s.fanned() {
+                // A fan's teeth or lobes stand evenly along its far edge
+                // alone, from its corner (0) to its midrib (1), each side.
+                grown.margins = (0..2_u64)
+                    .map(|side| Margin::grow(count, (0.0, 1.0), &|_| 0.0, mix64(seed ^ (side + 7))))
+                    .collect();
+            }
+            Some(grown)
         }
         Shape::Sprig(s) => Some(pinnate_leaf(
             (s.teeth, TEETH),
@@ -2341,34 +2353,37 @@ fn fan_point(
     if along < 0.0 || blade <= 0.0 {
         return None;
     }
-    let beta = fan_angle(s.leaflet_width);
-    let side = (beta * lopsided).min(0.97 * PI);
-    let r = hypot(along, across) / blade;
-    let phi = math::atan2(across.abs(), along);
-    if phi > side || r > 1.0 {
+    let (a, x) = (along / blade, across.abs() / blade);
+    // Its corner on this side, `half` either side of the midrib at its
+    // length.
+    let half = 0.5 * s.leaflet_width * lopsided;
+    if x > half * fan_profile(a.min(1.0)) {
         return None;
     }
-    // The same place on an even fan, where the margin and veins grew.
-    let even = phi * beta / side.max(1e-9);
-    let t = math::cos(even);
-    let mut reach = 1.0;
+    // Its sides bow out past the line from its foot to its corner; its
+    // far edge runs between the corners.
+    let corner = math::atan2(half, 1.0);
+    let phi = math::atan2(x, a).min(corner);
+    let mut reach = fan_reach(phi, fan_flatness(s));
     if let Some(margin) = margin {
+        // Its teeth or lobes stand evenly along its far edge, from the
+        // corner (0) to the midrib (1).
+        let u = 1.0 - phi / corner.max(1e-9);
+        let round = s.lobe_round.unwrap_or(LEAFLET_LOBE_ROUND);
         if let Some((_, depth)) = s.leaflet_lobes() {
-            let drawn = Drawn {
-                round: LEAFLET_LOBE_ROUND,
-                ..LOBE
-            };
-            let fall = margin.fall(t, drawn, |share| lobe_flank(share, LEAFLET_LOBE_ROUND));
+            let drawn = Drawn { round, ..LOBE };
+            let fall = margin.fall(u, drawn, |share| lobe_flank(share, round));
             reach -= FAN_LOBE * depth * fall;
         } else {
-            let fall = margin.fall(t, TOOTH, |share| margins::tooth_flank(share, 0.0));
+            let fall = margin.fall(u, TOOTH, |share| margins::tooth_flank(share, 0.0));
             reach -= 0.036 * fall;
         }
     }
-    (r <= reach).then(|| (r, (r * math::sin(even) * across.signum(), r * t)))
+    let r = hypot(a, x);
+    (r <= reach).then(|| (a, (x / lopsided * across.signum(), a)))
 }
 
-/// How far a fan leaflet's lobes cut back from its arc toward its foot,
+/// How far a fan leaflet's lobes cut back from its far edge toward its foot,
 /// a share of its length, for each unit of `lobe_depth`: a vanilla leaf's
 /// coarse lobes, a fifth of the way in where its lobes are cleft.
 const FAN_LOBE: f64 = 0.35;

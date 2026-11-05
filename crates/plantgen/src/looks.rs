@@ -1778,6 +1778,11 @@ pub struct Compound {
     /// for a cleft one.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub lobe_depth: Option<f64>,
+    /// How rounded a lobed leaflet's lobes are, 0 pointed to 1 round, as
+    /// a lobed blade's ([`Lobed::round`]); unset, blunt (0.7), as an
+    /// oak's.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub lobe_round: Option<f64>,
     /// How the leaflets are set: along a rachis (pinnate, the default) or
     /// from the petiole's tip (palmate).
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -1854,12 +1859,14 @@ pub struct Compound {
     pub apex_notch: Option<f64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub base_taper: Option<f64>,
-    /// Each leaflet drawn as a fan (flabellate): straight sides spreading
-    /// from its foot to a far edge that is an arc about it, as broad as
-    /// `leaflet_width` says (up to a half circle at 2), its teeth or lobes
-    /// on that far edge alone. A vanilla leaf's three leaflets are fans
-    /// that close into a near circle, "distal margins 3-4-lobed, proximal
-    /// margins entire" (Flora of North America). It takes the place of
+    /// Each leaflet drawn as a fan (flabellate): from a narrow foot its
+    /// sides bow out to its corners, where it is `leaflet_width` as broad
+    /// as long, and its teeth or lobes stand on its far edge alone,
+    /// evenly between the corners. The far edge is rounded off about the
+    /// foot, or, as its `apex_taper` says, cut straight across where the
+    /// apex is truncate. A vanilla leaf's leaflets are such wedges, ending
+    /// nearly square, "proximal margins entire, distal margins
+    /// (1-)3-4(-8)-lobed" (Flora of North America). It takes the place of
     /// the leaflet's outline, `widest`, `tip` and `base`.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub flabellate: Option<bool>,
@@ -1918,6 +1925,7 @@ impl Default for Compound {
             petiole: 0.15,
             lobes: None,
             lobe_depth: None,
+            lobe_round: None,
             pattern: None,
             pinnules: None,
             segments: None,
@@ -4556,6 +4564,7 @@ impl Compound {
         for (field, value, low, high) in [
             ("confluent", self.confluent, 0.0, 1.0),
             ("lobe_depth", self.lobe_depth, 0.0, 0.85),
+            ("lobe_round", self.lobe_round, 0.0, 1.0),
             ("angle", self.angle, 20.0, 90.0),
             ("pinnule_angle", self.pinnule_angle, 20.0, 90.0),
             ("segment_angle", self.segment_angle, 20.0, 90.0),

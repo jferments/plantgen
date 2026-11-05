@@ -147,11 +147,7 @@ impl Form {
         let profile_at =
             |t: f64| crate::templates::leaflet_profile(c, t, widest, blade_base, tip);
         let spread = c.spread.unwrap_or_else(|| {
-            if c.fanned() && pattern == Pattern::Palmate && pinnules == 0 {
-                fans_abut(c)
-            } else {
-                open_enough(pattern, c.leaflets, pinnules, c.leaflet_width, profile_at)
-            }
+            open_enough(pattern, c.leaflets, pinnules, c.leaflet_width, profile_at)
         });
         let petiolule = c.petiolule.unwrap_or_else(|| {
             // Fans meet at their feet.
@@ -258,26 +254,6 @@ pub fn open_enough(
         .0;
     let angle = 2.0 * math::atan2(0.5 * width, widest);
     (f64::from(count - 1) * angle.to_degrees() * 1.5).clamp(180.0, 340.0)
-}
-
-/// How far a palmate leaf of fan leaflets opens where its look leaves its
-/// spread unset, degrees between its outermost leaflets: as far as sets
-/// each fan's edge against its neighbour's, a lateral's half toward the
-/// middle spanning less where it is oblique ([`Compound::oblique`]). A
-/// vanilla leaf's three fans, each 110 degrees across, close into a near
-/// circle; at most 340.
-#[must_use]
-pub fn fans_abut(c: &Compound) -> f64 {
-    let half = crate::templates::fan_angle(c.leaflet_width).to_degrees();
-    let oblique = c.oblique.unwrap_or(0.0);
-    // Between the middle leaflet and its lopsided neighbours, or between
-    // two laterals, the broad half of one against the narrow of the next.
-    let gap = if c.leaflets == 3 {
-        half * (2.0 - oblique)
-    } else {
-        2.0 * half
-    };
-    (f64::from(c.leaflets.max(2) - 1) * gap).clamp(30.0, 340.0)
 }
 
 /// Where along its blade a leaflet whose half-width along it is `profile`

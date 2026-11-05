@@ -2023,6 +2023,15 @@
       "optional": true,
       "why": "whether a compound leaf's side leaflets are even about their midribs or lopsided, the half toward the leaf's foot the broader, where floras say: a bean's or a vanilla leaf's ('lateral leaflet blades strongly asymmetric', Flora of North America)"
     },
+    "leaflet_lobe_apex": {
+      "group": "leaves",
+      "organ": "leaflet",
+      "type": "enum",
+      "values": ["acute", "obtuse", "rounded"],
+      "optional": true,
+      "when": {"leaflet_incision": ["lobed", "cleft"]},
+      "why": "the tips of a lobed leaflet's lobes: pointed (a vanilla leaf's), blunt, or rounded (a poison oak's)"
+    },
     "leaflet_incision": {
       "group": "leaves",
       "organ": "leaflet",
