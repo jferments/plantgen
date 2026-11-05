@@ -82,6 +82,12 @@ pub trait Surroundings: Sync {
     fn sun_latitude(&self) -> Option<f64> {
         None
     }
+
+    /// The rootable soil within `radius` and `depth` of the plant's foot,
+    /// m³, for `soil@1`; `None` when the soil is as deep as roots go.
+    fn soil_volume(&self, _radius: f64, _depth: f64) -> Option<f64> {
+        None
+    }
 }
 
 impl Surroundings for Neighbourhood {
@@ -106,6 +112,8 @@ pub struct Around<'a> {
     pub substrate: Option<&'a SubstrateField>,
     /// The latitude of the sun, degrees, when the sky has one.
     pub sun: Option<f64>,
+    /// The soil the plant can root in, when the place says.
+    pub soil: Option<&'a SoilVolume>,
 }
 
 impl Surroundings for Around<'_> {
@@ -144,6 +152,10 @@ impl Surroundings for Around<'_> {
     fn sun_latitude(&self) -> Option<f64> {
         self.sun
     }
+
+    fn soil_volume(&self, radius: f64, depth: f64) -> Option<f64> {
+        self.soil.map(|soil| soil.volume(radius, depth))
+    }
 }
 
 /// The conditions a plant grows in. Every section is optional; a section
@@ -170,6 +182,110 @@ pub struct Conditions {
     /// What the plant grows on (G3): a preset or a distance-field grid.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub substrate: Option<Substrate>,
+    /// The soil its roots can reach, by reach (soil depth design D1); a
+    /// host or a site works it out from what lies round the plant's foot.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub rooting: Option<Rooting>,
+}
+
+/// The soil a plant's roots can reach from its foot (soil depth design
+/// D1): the rootable volume within each lateral reach and depth, cubic
+/// metres, each cell of the ground counted by the share of it a root can
+/// use (soil whole, gravel and compacted fill in part, slab and rock not
+/// at all but through their cracks). Cumulative, so it never falls as
+/// either reach grows; read between the given reaches linearly and held
+/// past the last.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Rooting {
+    pub version: u32,
+    /// Lateral reaches from the foot, metres, rising.
+    pub radii_m: Vec<f64>,
+    /// Depths below the foot, metres, rising.
+    pub depths_m: Vec<f64>,
+    /// Rootable volume within each reach and depth, by reach then depth.
+    pub volume_m3: Vec<f64>,
+}
+
+impl Rooting {
+    /// The rootable volume within `radius` and `depth` of the foot.
+    #[must_use]
+    pub fn volume(&self, radius: f64, depth: f64) -> f64 {
+        let at = |axis: &[f64], v: f64| -> (usize, usize, f64) {
+            let last = axis.len() - 1;
+            if v <= axis[0] {
+                return (0, 0, 0.0);
+            }
+            if v >= axis[last] {
+                return (last, last, 0.0);
+            }
+            let upper = axis.partition_point(|a| *a < v);
+            let lower = upper - 1;
+            (
+                lower,
+                upper,
+                (v - axis[lower]) / (axis[upper] - axis[lower]),
+            )
+        };
+        let (r0, r1, tr) = at(&self.radii_m, radius);
+        let (d0, d1, td) = at(&self.depths_m, depth);
+        let n = self.depths_m.len();
+        let cell = |r: usize, d: usize| self.volume_m3[r * n + d];
+        let low = cell(r0, d0) + (cell(r0, d1) - cell(r0, d0)) * td;
+        let high = cell(r1, d0) + (cell(r1, d1) - cell(r1, d0)) * td;
+        // Within the first reach and depth, in proportion to the area and
+        // depth reached.
+        let shrink = |v: f64, first: f64| {
+            if first > 0.0 {
+                (v / first).min(1.0)
+            } else {
+                1.0
+            }
+        };
+        (low + (high - low) * tr)
+            * shrink(radius, self.radii_m[0]).powi(2)
+            * shrink(depth, self.depths_m[0])
+    }
+
+    fn validate(&self) -> Result<(), String> {
+        version("rooting", self.version)?;
+        let rising = |axis: &[f64]| {
+            !axis.is_empty()
+                && axis.iter().all(|v| v.is_finite() && *v > 0.0)
+                && axis.windows(2).all(|w| w[0] < w[1])
+        };
+        if !rising(&self.radii_m) || !rising(&self.depths_m) {
+            return Err("rooting radii_m and depths_m must be positive and rising".into());
+        }
+        if self.volume_m3.len() != self.radii_m.len() * self.depths_m.len()
+            || !self.volume_m3.iter().all(|v| v.is_finite() && *v >= 0.0)
+        {
+            return Err(
+                "rooting volume_m3 must hold a volume of 0 or more for each reach and depth".into(),
+            );
+        }
+        Ok(())
+    }
+}
+
+/// The soil a plant can root in, as growth reads it: a [`Rooting`] table,
+/// or level soil of a depth (the `soil` section's `depth_m`), every cell
+/// of it rootable.
+#[derive(Debug, Clone, PartialEq)]
+pub enum SoilVolume {
+    Table(Rooting),
+    Level(f64),
+}
+
+impl SoilVolume {
+    /// The rootable volume within `radius` and `depth` of the foot, m³.
+    #[must_use]
+    pub fn volume(&self, radius: f64, depth: f64) -> f64 {
+        match self {
+            Self::Table(table) => table.volume(radius, depth),
+            Self::Level(soil) => std::f64::consts::PI * radius * radius * depth.min(*soil).max(0.0),
+        }
+    }
 }
 
 /// The stand round the plant: today's [`Neighbourhood`], with the same
@@ -824,7 +940,20 @@ impl Conditions {
             disturbance: None,
             interactions: None,
             substrate: None,
+            rooting: None,
         }
+    }
+
+    /// The soil the plant can root in: the `rooting` table, else level
+    /// soil of the `soil` section's depth; `None` when neither is given,
+    /// and the soil is as deep as roots go.
+    #[must_use]
+    pub fn soil_volume(&self) -> Option<SoilVolume> {
+        self.rooting.clone().map(SoilVolume::Table).or_else(|| {
+            self.soil
+                .as_ref()
+                .map(|soil| SoilVolume::Level(soil.depth_m))
+        })
     }
 
     /// A named stand with its neighbours replaced by `neighbourhood`.
@@ -874,6 +1003,7 @@ impl Conditions {
                 .clone()
                 .or_else(|| base.interactions.clone()),
             substrate: self.substrate.clone().or_else(|| base.substrate.clone()),
+            rooting: self.rooting.clone().or_else(|| base.rooting.clone()),
         }
     }
 
@@ -994,6 +1124,9 @@ impl Conditions {
         }
         if let Some(substrate) = &self.substrate {
             substrate.validate()?;
+        }
+        if let Some(rooting) = &self.rooting {
+            rooting.validate()?;
         }
         Ok(())
     }
@@ -1306,6 +1439,7 @@ mod tests {
             host: None,
             substrate: None,
             sun: None,
+            soil: None,
         };
         let up = Vec3::new(0.0, 1.0, 0.0);
         assert!(!around.clear_sky() && around.crowded());
@@ -1434,8 +1568,8 @@ mod tests {
         assert!((nearest(0.4) - Layout::LEAST_SPACING_M).abs() < 1e-9);
         // Past the yield tables' ages it opens as old growth does.
         assert!((nearest_at(40.0, 160.0) - 4.6).abs() < 1e-9);
-        assert!((nearest_at(40.0, 450.0) - 0.204 * 40.0).abs() < 1e-9);
-        assert!((nearest_at(40.0, 850.0) - 0.204 * 40.0).abs() < 1e-9);
+        assert!((nearest_at(40.0, 450.0) - 0.27 * 40.0).abs() < 1e-9);
+        assert!((nearest_at(40.0, 850.0) - 0.27 * 40.0).abs() < 1e-9);
     }
 
     #[test]

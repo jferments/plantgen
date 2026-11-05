@@ -79,7 +79,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let campanulids = "(clade campanulids: _ranks/clade/campanulids.json)";
     assert!(
         built_in.starts_with(&format!(
-            "Rules, by their home (1031):\n  appearance.organs.*.inflorescence.branch.kind  {flowering}\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
+            "Rules, by their home (1042):\n  appearance.organs.*.inflorescence.branch.kind  {flowering}\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
         )),
         "{built_in}"
     );
@@ -107,12 +107,12 @@ fn rules_and_traits_say_where_they_come_from() {
             "\n  appearance.organs.leaf.leafing.autumn  {flowering}\n  appearance.organs.leaf.leafing.fall  {flowering}\n  appearance.organs.leaf.leafing.full  {flowering}\n  appearance.organs.leaf.leafing.out  {flowering}\n  appearance.organs.leaf.leafing.turn  {flowering}\n  appearance.organs.leaf.shape.leaf on `sprig` cards  {flowering}\n  appearance.organs.leaf.shape.template  {flowering}\n  appearance.organs.leaf.shape.twigs on `sprig` cards  {flowering}\n  appearance.organs.thorn.bend.droop  {flowering}\n  appearance.organs.thorn.colour  {flowering}\n  appearance.organs.thorn.form  {flowering}\n  appearance.organs.thorn.form.prickles.between  {flowering}\n  appearance.organs.thorn.form.prickles.between_only  {flowering}\n  appearance.organs.thorn.form.prickles.bristles  {flowering}\n  appearance.organs.thorn.shape.aspect on `blade` cards  {flowering}\n  appearance.organs.thorn.shape.taper on `blade` cards  {flowering}\n  appearance.organs.thorn.shape.template  {flowering}\n  generator.params.alternate_above  {flowering}\n  generator.params.axil_racemes  {flowering}\n  generator.params.bloom_angle  {flowering}\n  generator.params.bloom_floor  {flowering}\n  generator.params.bloom_hang  {flowering}\n  generator.params.bloom_size  {flowering}\n  generator.params.bloom_stalk  {flowering}\n  generator.params.branch_nodes  {flowering}\n  generator.params.bud_size  {flowering}\n  generator.params.bud_years  {flowering}\n  generator.params.flower_size  {flowering}\n  generator.params.flower_tilt  {flowering}\n  generator.params.fork_angle  {flowering}\n  generator.params.fork_clear  {flowering}\n  generator.params.fork_height  {flowering}\n  generator.params.fork_stems  {flowering}\n  generator.params.forks  {flowering}\n  generator.params.fruit_length  {flowering}\n  generator.params.fruit_size  {flowering}\n  generator.params.geminate  {flowering}\n  generator.params.hook  {flowering}\n  generator.params.lie  {flowering}\n  generator.params.lie_branch  {flowering}\n  generator.params.nod  {flowering}\n  generator.params.scape  {flowering}\n  generator.params.short_share  {flowering}\n  generator.params.stem_life  {flowering}\n  generator.params.sucker_rate  {flowering}\n  generator.params.sucker_spread  {flowering}\n  generator.params.suckers  {flowering}\n  generator.params.thorn_angle  {flowering}\n  generator.params.thorn_length  {flowering}\n  generator.params.thorn_pair  {flowering}\n  generator.params.thorn_share  {flowering}\n  generator.params.thorn_spread  {flowering}\n  generator.params.thorn_tips  {flowering}\n  generator.params.thorn_years  {flowering}\n  generator.params.thorns  {flowering}\n  generator.params.unit_leaves  {flowering}\n  generator.params.units  {flowering}\n  appearance.organs.leaf.fill  (clade angiosperms: _ranks/clade/angiosperms.json, forms.decurrent_tree)\n  appearance.organs.leaf.spray  (clade angiosperms: _ranks/clade/angiosperms.json, forms.decurrent_tree)\n  generator.defaults.crown_base  (clade angiosperms: _ranks/clade/angiosperms.json, forms.decurrent_tree)\n"
         ),
         format!(
-            "\n  generator.defaults.path_half  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.defaults.space_reach  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.defaults.spur_leaf  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.params.crown_radius  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.params.fork_angle  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.params.unit_nodes  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.defaults.flower_size  (clade angiosperms: _ranks/clade/angiosperms.json, forms.stem_succulent)\n  generator.defaults.radius_max  (clade angiosperms: _ranks/clade/angiosperms.json, forms.stem_succulent)\n  generator.defaults.leaf_size  (clade angiosperms: _ranks/clade/angiosperms.json, forms.vine)\n  generator.defaults.leaf_years  (clade angiosperms: _ranks/clade/angiosperms.json, forms.vine)\n  generator.defaults.renew  (clade angiosperms: _ranks/clade/angiosperms.json, forms.vine)\n  generator.params.blooms  (clade angiosperms: _ranks/clade/angiosperms.json, forms.vine)\n  generator.params.basal_length  {campanulids}\n  generator.params.leaf_base  {campanulids}\n  generator.params.leaf_length  {campanulids}\n  generator.params.leaf_top  {campanulids}\n"
+            "\n  generator.defaults.path_half  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.defaults.space_reach  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.defaults.spur_leaf  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.params.crown_radius  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.params.fork_angle  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.params.root_depth  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.params.unit_nodes  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.defaults.flower_size  (clade angiosperms: _ranks/clade/angiosperms.json, forms.stem_succulent)\n  generator.defaults.radius_max  (clade angiosperms: _ranks/clade/angiosperms.json, forms.stem_succulent)\n  generator.defaults.leaf_size  (clade angiosperms: _ranks/clade/angiosperms.json, forms.vine)\n  generator.defaults.leaf_years  (clade angiosperms: _ranks/clade/angiosperms.json, forms.vine)\n  generator.defaults.renew  (clade angiosperms: _ranks/clade/angiosperms.json, forms.vine)\n  generator.params.blooms  (clade angiosperms: _ranks/clade/angiosperms.json, forms.vine)\n  generator.params.basal_length  {campanulids}\n  generator.params.leaf_base  {campanulids}\n  generator.params.leaf_length  {campanulids}\n  generator.params.leaf_top  {campanulids}\n"
         ),
         // The monocots' rules sort between the campanulids' and the seed
         // plants'.
         format!(
-            "\n  generator.params.adult_age  {seed_plants}\n  generator.params.apex_death  {seed_plants}\n  generator.params.apex_whorl  {seed_plants}\n  generator.params.bloom_pairs  {seed_plants}\n  generator.params.bloom_years  {seed_plants}\n  generator.params.bole_clear  {seed_plants}\n  generator.params.branch_droop  {seed_plants}\n  generator.params.branch_hold  {seed_plants}\n  generator.params.bud_base  {seed_plants}\n  generator.params.crown_fullness  {seed_plants}\n  generator.params.crown_ratio  {seed_plants}\n  generator.params.crown_units  {seed_plants}\n  generator.params.crown_widest  {seed_plants}\n  generator.params.dioecious  {seed_plants}\n  generator.params.dormant_buds  {seed_plants}\n  generator.params.flat_top  {seed_plants}\n  generator.params.fork_set  {seed_plants}\n  generator.params.limb_arch  {seed_plants}\n  generator.params.limb_turn  {seed_plants}\n  generator.params.long_share  {seed_plants}\n  generator.params.plagio  {seed_plants}\n  generator.params.room_height  {seed_plants}\n  generator.params.set_point  {seed_plants}\n  generator.params.shed_ratio  {seed_plants}\n  generator.params.short_share  {seed_plants}\n  generator.params.space_density  {seed_plants}\n  generator.params.space_kill  {seed_plants}\n  generator.params.space_renew  {seed_plants}\n  generator.params.sprout_rise  {seed_plants}\n  generator.params.terminal_bloom  {seed_plants}\n  generator.params.tip_abort  {seed_plants}\n  generator.params.tip_bloom  {seed_plants}\n  generator.params.unit_nodes  {seed_plants}\n"
+            "\n  generator.params.adult_age  {seed_plants}\n  generator.params.apex_death  {seed_plants}\n  generator.params.apex_whorl  {seed_plants}\n  generator.params.bloom_pairs  {seed_plants}\n  generator.params.bloom_years  {seed_plants}\n  generator.params.bole_clear  {seed_plants}\n  generator.params.branch_droop  {seed_plants}\n  generator.params.branch_hold  {seed_plants}\n  generator.params.bud_base  {seed_plants}\n  generator.params.crown_fullness  {seed_plants}\n  generator.params.crown_ratio  {seed_plants}\n  generator.params.crown_units  {seed_plants}\n  generator.params.crown_widest  {seed_plants}\n  generator.params.dioecious  {seed_plants}\n  generator.params.dormant_buds  {seed_plants}\n  generator.params.flat_top  {seed_plants}\n  generator.params.fork_set  {seed_plants}\n  generator.params.limb_arch  {seed_plants}\n  generator.params.limb_turn  {seed_plants}\n  generator.params.long_share  {seed_plants}\n  generator.params.plagio  {seed_plants}\n  generator.params.room_height  {seed_plants}\n  generator.params.root_depth  {seed_plants}\n  generator.params.set_point  {seed_plants}\n  generator.params.shed_ratio  {seed_plants}\n  generator.params.short_share  {seed_plants}\n  generator.params.space_density  {seed_plants}\n  generator.params.space_kill  {seed_plants}\n  generator.params.space_renew  {seed_plants}\n  generator.params.sprout_rise  {seed_plants}\n  generator.params.terminal_bloom  {seed_plants}\n  generator.params.tip_abort  {seed_plants}\n  generator.params.tip_bloom  {seed_plants}\n  generator.params.unit_nodes  {seed_plants}\n"
         ),
     ] {
         assert!(built_in.contains(&line), "{line} in {built_in}");
@@ -169,7 +169,7 @@ fn rules_and_traits_say_where_they_come_from() {
         "{built_in}"
     );
     assert!(
-        built_in.contains("General, with no taxonomic home: 153 rules at all plants;"),
+        built_in.contains("General, with no taxonomic home: 154 rules at all plants;"),
         "{built_in}"
     );
     // The maples' program is named for their family, so it is homed.
@@ -200,7 +200,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let library = dir.to_str().unwrap();
     let rules = stdout(&plantc(&["--library", library, "rules"]));
     assert!(
-        rules.starts_with("Rules, by their home (1032):\n"),
+        rules.starts_with("Rules, by their home (1043):\n"),
         "{rules}"
     );
     assert!(
@@ -366,13 +366,18 @@ fn a_library_folder_replaces_built_in_species() {
 
 #[test]
 fn grow_says_when_a_plant_has_died() {
-    // Under a 30 m canopy the bigleaf maple sheds everything within five
-    // years; the sizes would otherwise read as a row of zeros.
+    // Under a dense 30 m canopy (the suppressed setting's before generator
+    // revision 199, 0.1% of the sky's light at the ground) the bigleaf
+    // maple sheds everything within five years; the sizes would otherwise
+    // read as a row of zeros.
     let grown = stdout(&plantc(&[
         "grow",
         "acer-macrophyllum",
         "--env",
         "suppressed",
+        "--conditions",
+        r#"{"schema": 1, "neighbours": {"version": 1, "density": 0.15,
+            "relative_height": 1, "canopy": 30, "spacing": 5, "one_sided": false}}"#,
         "--years",
         "5",
     ]));
@@ -674,4 +679,75 @@ fn variants_writes_distinct_plants_ready_to_import() {
             .success()
     );
     fs::remove_dir_all(&dir).unwrap();
+}
+
+#[test]
+fn fill_writes_a_tile_and_the_prototypes_it_places() {
+    let dir = scratch("fill");
+    let community = dir.join("meadow.json");
+    fs::write(
+        &community,
+        r#"{"id": "meadow", "members": [
+            {"species": "achillea-millefolium", "layer": "herb", "abundance": 0.15}
+        ]}"#,
+    )
+    .unwrap();
+    let out = dir.join("fill");
+    let args = [
+        "fill",
+        community.to_str().unwrap(),
+        "--tile",
+        "2,-3",
+        "--tile-m",
+        "40",
+        "--seed",
+        "5",
+        "--ages",
+        "20,40",
+        "--seeds",
+        "1",
+        "--quality",
+        "draft",
+        "--compress",
+        "quantize",
+        "--out",
+        out.to_str().unwrap(),
+    ];
+    let made = stdout(&plantc(&args));
+    assert!(made.contains("filled tile 2,-3"), "{made}");
+    let header: serde_json::Value =
+        serde_json::from_slice(&fs::read(out.join("tiles/2_-3.json")).unwrap()).unwrap();
+    let count = header["instances"].as_u64().unwrap();
+    assert!(count > 0);
+    let bin = fs::read(out.join("tiles/2_-3.bin")).unwrap();
+    assert_eq!(bin.len() as u64, count * 32);
+    let list: serde_json::Value =
+        serde_json::from_slice(&fs::read(out.join("prototypes/prototypes.json")).unwrap()).unwrap();
+    let prototypes = list["prototypes"].as_array().unwrap();
+    // Every instance's prototype is written, with its four levels.
+    for chunk in bin.chunks(32) {
+        let index = u32::from_le_bytes(chunk[..4].try_into().unwrap());
+        let proto = prototypes
+            .iter()
+            .find(|p| p["index"].as_u64() == Some(u64::from(index)))
+            .expect("the tile's prototype is listed");
+        for level in proto["plant"]["levels"].as_array().unwrap() {
+            assert!(
+                out.join("prototypes")
+                    .join(level["file"].as_str().unwrap())
+                    .is_file()
+            );
+        }
+    }
+    assert!(made.contains("measured 1 prototypes (1 grown"), "{made}");
+    // Filling again keeps the prototypes, measures none and writes the
+    // same tile, and --glb writes it as one glTF file too.
+    let mut with_glb = args.to_vec();
+    with_glb.extend(["--glb", "3"]);
+    let again = stdout(&plantc(&with_glb));
+    assert!(again.contains("(0 grown"), "{again}");
+    assert!(again.contains("wrote the tile as one glTF file"), "{again}");
+    assert_eq!(fs::read(out.join("tiles/2_-3.bin")).unwrap(), bin);
+    let glb = fs::read(out.join("tiles/2_-3.glb")).unwrap();
+    assert_eq!(&glb[..4], b"glTF");
 }

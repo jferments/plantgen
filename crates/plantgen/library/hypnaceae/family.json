@@ -2,5 +2,23 @@
   "schema": 1,
   "rank": "family",
   "name": "Hypnaceae",
-  "parent": "order/hypnales"
+  "parent": "order/hypnales",
+  "traits": {
+    "leaf_dry_posture": {
+      "falcate": "often",
+      "imbricate": "often"
+    },
+    "capsule_posture": {
+      "inclined": "usually",
+      "horizontal": "often",
+      "erect": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Hypnaceae (Schofield, Buck and Ireland; efloras, read 2026-11-05): plants in tufts or mats, often lustrous; stems creeping to erect, irregularly to regularly pinnate; leaves often falcate-secund, ovate-lanceolate; seta elongate; capsule inclined, horizontal or sometimes erect."
+    }
+  }
 }

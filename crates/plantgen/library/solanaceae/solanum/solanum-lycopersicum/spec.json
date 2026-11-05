@@ -15,7 +15,8 @@
       "clump_radius": 0.01,
       "stem_radius": 0.007,
       "side_shoots": 3,
-      "sprawl": 0.03
+      "sprawl": 0.03,
+      "leaf_length": 0.3
     }
   },
   "growth": {
@@ -178,7 +179,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Drawing values no character gives (nightshades, 2026-10-17): one plant from one seed; stem 14 mm thick at the foot by eye from photographs (iNaturalist 184420443); three side shoots from the upper axils below the first cluster (Bailey vol. 4 p. 1931: much branched, with spreading branches; Wikipedia 'Tomato': lateral buds take over); a weak stem that bends over a little, as Bailey's 'straggling' and Wikipedia's decumbent vines."
+      "note": "Drawing values no character gives (nightshades, 2026-10-17): one plant from one seed; stem 14 mm thick at the foot by eye from photographs (iNaturalist 184420443); three side shoots from the upper axils below the first cluster (Bailey vol. 4 p. 1931: much branched, with spreading branches; Wikipedia 'Tomato': lateral buds take over); a weak stem that bends over a little, as Bailey's 'straggling' and Wikipedia's decumbent vines. The longest leaf is the traits' 30 cm (leaf_length 0.3, 2026-11-04; the forb rule's middle length had drawn 22.5 cm)."
     },
     "allometry": {
       "evidence": "SourceInferred",

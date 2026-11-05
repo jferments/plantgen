@@ -352,6 +352,16 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a short shoot of an alternate-leaved plant unfolds its two leaves a year at one point (broadleaf's Q), so where short shoots bear most of the leaves, as on beach rose's crowded laterals, the measure counts two leaves at most nodes and reads them opposite",
     ),
     (
+        "sagina-procumbens",
+        "flowering_months",
+        "its program does not open its flowers one after another over its months (the family's flowers have no fruit_below share, which inherit's stage_seasons needs), so its flowers close as its first capsules ripen, in July, against the stated May to September (a model estimate)",
+    ),
+    (
+        "sagina-procumbens",
+        "fruiting_months",
+        "for the same reason its capsules are drawn from the program's own fruit day, August, to October, against the stated June to October (a model estimate)",
+    ),
+    (
         "sarcandra-glabra",
         "flower_symmetry",
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",

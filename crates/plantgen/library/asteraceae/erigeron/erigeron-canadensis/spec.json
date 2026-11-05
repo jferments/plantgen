@@ -1,0 +1,213 @@
+{
+  "schema": 1,
+  "id": "erigeron-canadensis",
+  "taxon": {
+    "scientific_name": "Erigeron canadensis",
+    "family": "Asteraceae",
+    "genus": "Erigeron",
+    "plant_name_id": 2926303,
+    "common_name": "Canadian horseweed"
+  },
+  "growth_form": "forb",
+  "allometry": [{"age": 2, "environment": "open", "height": 1.25, "tolerance": 0.4}],
+  "tier": "procedural_proxy",
+  "traits": {
+    "capitulum_kind": "disciform",
+    "involucre_diameter_m": {"min": 0.003, "max": 0.004},
+    "involucre_height_m": {"min": 0.003, "max": 0.004, "low": 0.0025},
+    "disc_florets": {"min": 8, "max": 30},
+    "phyllary_series": {"min": 2, "max": 3},
+    "pappus": "bristles",
+    "pappus_length_m": {"min": 0.002, "max": 0.003},
+    "seed_dispersal": ["wind"],
+    "life_span": "annual",
+    "woodiness": "herbaceous",
+    "height_typical_m": {
+      "min": 0.5,
+      "max": 2.0
+    },
+    "height_max_m": 2,
+    "rosette": "none",
+    "leaf_length_m": {
+      "min": 0.02,
+      "max": 0.1
+    },
+    "leaf_width_m": {
+      "min": 0.004,
+      "max": 0.015
+    },
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_shape": {
+      "oblanceolate": "usually",
+      "linear": "often"
+    },
+    "leaf_margin": {
+      "entire": "usually",
+      "dentate": "often"
+    },
+    "sexual_system": "hermaphrodite",
+    "flowering_months": [
+      7,
+      8,
+      9,
+      10
+    ],
+    "fruit_type": "cypsela",
+    "fruit_size_m": {
+      "min": 0.001,
+      "max": 0.0015
+    },
+    "fruit_colour_ripe": [
+      120,
+      80,
+      45
+    ],
+    "fruiting_months": [
+      8,
+      9,
+      10
+    ],
+    "inflorescence": "panicle",
+    "inflorescence_posture": "erect",
+    "inflorescence_length_m": {
+      "min": 0.1,
+      "max": 0.4
+    },
+    "cauline_leaves": "reduced"
+  },
+  "evidence": {
+    "traits.capitulum_kind": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (Conyza canadensis, vol. 20, read on efloras.org 2026-11-04): involucres 3-4 mm; receptacles 1-1.5(-3) mm diam. in fruit; pistillate florets 20-30(-45+), laminae 0.3-1 mm; disc florets 8-30+; cypselae 1-1.5 mm; pappi of 15-25 white bristles 2-3 mm. The genus's heads are disciform: the pistillate florets' laminae, 0.3-1 mm, barely pass the disc."},
+    "traits.involucre_diameter_m": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China (Erigeron canadensis, read on efloras.org 2026-11-04): capitula 3-4 mm in diam.; involucre subcylindric, 2.5-4 mm; phyllaries 2- or 3-seriate; ray florets 20-30(-45), lamina slightly longer than disk floret; disk florets 8-30; achenes 1-1.5 mm; pappus 1-seriate, bristles 15-25, 2.5-3 mm. The capitula's diameter, as the involucre's: the pistillate florets' laminae barely pass it."},
+    "traits.involucre_height_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (Conyza canadensis, vol. 20, read on efloras.org 2026-11-04): involucres 3-4 mm; receptacles 1-1.5(-3) mm diam. in fruit; pistillate florets 20-30(-45+), laminae 0.3-1 mm; disc florets 8-30+; cypselae 1-1.5 mm; pappi of 15-25 white bristles 2-3 mm. Flora of China (Erigeron canadensis, read on efloras.org 2026-11-04): capitula 3-4 mm in diam.; involucre subcylindric, 2.5-4 mm; phyllaries 2- or 3-seriate; ray florets 20-30(-45), lamina slightly longer than disk floret; disk florets 8-30; achenes 1-1.5 mm; pappus 1-seriate, bristles 15-25, 2.5-3 mm."},
+    "traits.disc_florets": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (Conyza canadensis, vol. 20, read on efloras.org 2026-11-04): involucres 3-4 mm; receptacles 1-1.5(-3) mm diam. in fruit; pistillate florets 20-30(-45+), laminae 0.3-1 mm; disc florets 8-30+; cypselae 1-1.5 mm; pappi of 15-25 white bristles 2-3 mm."},
+    "traits.phyllary_series": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China (Erigeron canadensis, read on efloras.org 2026-11-04): capitula 3-4 mm in diam.; involucre subcylindric, 2.5-4 mm; phyllaries 2- or 3-seriate; ray florets 20-30(-45), lamina slightly longer than disk floret; disk florets 8-30; achenes 1-1.5 mm; pappus 1-seriate, bristles 15-25, 2.5-3 mm."},
+    "traits.pappus": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (Conyza canadensis, vol. 20, read on efloras.org 2026-11-04): involucres 3-4 mm; receptacles 1-1.5(-3) mm diam. in fruit; pistillate florets 20-30(-45+), laminae 0.3-1 mm; disc florets 8-30+; cypselae 1-1.5 mm; pappi of 15-25 white bristles 2-3 mm."},
+    "traits.pappus_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (Conyza canadensis, vol. 20, read on efloras.org 2026-11-04): involucres 3-4 mm; receptacles 1-1.5(-3) mm diam. in fruit; pistillate florets 20-30(-45+), laminae 0.3-1 mm; disc florets 8-30+; cypselae 1-1.5 mm; pappi of 15-25 white bristles 2-3 mm. Flora of China (Erigeron canadensis, read on efloras.org 2026-11-04): capitula 3-4 mm in diam.; involucre subcylindric, 2.5-4 mm; phyllaries 2- or 3-seriate; ray florets 20-30(-45), lamina slightly longer than disk floret; disk florets 8-30; achenes 1-1.5 mm; pappus 1-seriate, bristles 15-25, 2.5-3 mm."},
+    "allometry": {"evidence": "Authored", "source": "plantgen-authors", "note": "1.25 m in flower: the middle of Flora of North America's plants (3-)50-200(-350+) cm. Not measured."},
+    "traits.seed_dispersal": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America, Conyza canadensis: cypselae 1-1.5 mm with a pappus of 15-25 white bristles 2-3 mm, a wind-borne seed (inferred from the pappus)."},
+    "taxon": {
+      "evidence": "Authored",
+      "source": "wcvp-v16",
+      "note": "Accepted name, family, genus and plant_name_id from WCVP v16 (Library 1.0 list); common name from the species-facts record."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2926303), as no source read gives it, from its coarse growth form."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China (Erigeron canadensis): herbs, annual, 50-100 cm tall or more; stems erect, branched above, densely leafy; basal leaves withered at anthesis; lower petiolate, oblanceolate, [2-]6-10 x [0.4-]1-1.5 cm; mid and upper subsessile or sessile, linear-lanceolate or linear, smaller; capitula 3-4 mm in diam., numerous, in terminal, large paniculiform synflorescences; ray florets white."
+    },
+    "traits.woodiness": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2926303), as no source read gives it."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Conyza canadensis = Erigeron canadensis): plants erect, (3-)50-200(-350+) cm, branched mostly distally; leaves: proximal blades oblanceolate to linear, 20-50(-100+) x 4-10(-15+) mm, toothed to entire; distal similar, smaller, entire. Heads usually in paniculiform arrays; involucres 3-4 mm; ray laminae 0.3-1 mm."
+    },
+    "traits.height_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2926303), as no source read gives it."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Conyza canadensis = Erigeron canadensis): plants erect, (3-)50-200(-350+) cm, branched mostly distally; leaves: proximal blades oblanceolate to linear, 20-50(-100+) x 4-10(-15+) mm, toothed to entire; distal similar, smaller, entire. Heads usually in paniculiform arrays; involucres 3-4 mm; ray laminae 0.3-1 mm."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China (Erigeron canadensis): herbs, annual, 50-100 cm tall or more; stems erect, branched above, densely leafy; basal leaves withered at anthesis; lower petiolate, oblanceolate, [2-]6-10 x [0.4-]1-1.5 cm; mid and upper subsessile or sessile, linear-lanceolate or linear, smaller; capitula 3-4 mm in diam., numerous, in terminal, large paniculiform synflorescences; ray florets white."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China (Erigeron canadensis): herbs, annual, 50-100 cm tall or more; stems erect, branched above, densely leafy; basal leaves withered at anthesis; lower petiolate, oblanceolate, [2-]6-10 x [0.4-]1-1.5 cm; mid and upper subsessile or sessile, linear-lanceolate or linear, smaller; capitula 3-4 mm in diam., numerous, in terminal, large paniculiform synflorescences; ray florets white."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2926303), as no source read gives it."
+    },
+    "traits.leaf_division": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2926303), as no source read gives it."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Conyza canadensis = Erigeron canadensis): plants erect, (3-)50-200(-350+) cm, branched mostly distally; leaves: proximal blades oblanceolate to linear, 20-50(-100+) x 4-10(-15+) mm, toothed to entire; distal similar, smaller, entire. Heads usually in paniculiform arrays; involucres 3-4 mm; ray laminae 0.3-1 mm."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Conyza canadensis = Erigeron canadensis): plants erect, (3-)50-200(-350+) cm, branched mostly distally; leaves: proximal blades oblanceolate to linear, 20-50(-100+) x 4-10(-15+) mm, toothed to entire; distal similar, smaller, entire. Heads usually in paniculiform arrays; involucres 3-4 mm; ray laminae 0.3-1 mm."
+    },
+    "traits.sexual_system": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2926303), as no source read gives it."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2926303), as no source read gives it."
+    },
+    "traits.fruit_type": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2926303), as no source read gives it."
+    },
+    "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (Conyza canadensis, vol. 20, read on efloras.org 2026-11-04): involucres 3-4 mm; receptacles 1-1.5(-3) mm diam. in fruit; pistillate florets 20-30(-45+), laminae 0.3-1 mm; disc florets 8-30+; cypselae 1-1.5 mm; pappi of 15-25 white bristles 2-3 mm. Flora of China (Erigeron canadensis, read on efloras.org 2026-11-04): capitula 3-4 mm in diam.; involucre subcylindric, 2.5-4 mm; phyllaries 2- or 3-seriate; ray florets 20-30(-45), lamina slightly longer than disk floret; disk florets 8-30; achenes 1-1.5 mm; pappus 1-seriate, bristles 15-25, 2.5-3 mm."},
+    "traits.fruit_colour_ripe": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2926303), as no source read gives it, sRGB from the colour word."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2926303), as no source read gives it."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Conyza canadensis = Erigeron canadensis): plants erect, (3-)50-200(-350+) cm, branched mostly distally; leaves: proximal blades oblanceolate to linear, 20-50(-100+) x 4-10(-15+) mm, toothed to entire; distal similar, smaller, entire. Heads usually in paniculiform arrays; involucres 3-4 mm; ray laminae 0.3-1 mm."
+    },
+    "traits.inflorescence_posture": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2926303), as no source read gives it."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2926303), as no source read gives it."
+    },
+    "traits.cauline_leaves": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China (Erigeron canadensis): herbs, annual, 50-100 cm tall or more; stems erect, branched above, densely leafy; basal leaves withered at anthesis; lower petiolate, oblanceolate, [2-]6-10 x [0.4-]1-1.5 cm; mid and upper subsessile or sessile, linear-lanceolate or linear, smaller; capitula 3-4 mm in diam., numerous, in terminal, large paniculiform synflorescences; ray florets white."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "PlantGen species facts 2026-10-15 (model estimates)",
+        "licence": "MIT, as PlantGen"
+      }
+    ],
+    "contributors": [
+      "PlantGen contributors"
+    ],
+    "notes": "Facts-only draft (C5 pilot): the species' characters from its species-facts record, everything else from its rank files."
+  }
+}

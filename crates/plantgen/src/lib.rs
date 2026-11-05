@@ -39,11 +39,13 @@ pub mod clusters;
 pub mod conditions;
 pub mod cores;
 pub mod damage;
+pub mod development;
 pub mod divided;
 pub mod drawing;
 pub mod evidence;
 pub mod export;
 pub mod felling;
+pub mod fill;
 pub mod flowers;
 pub mod form;
 pub mod formula;
@@ -67,12 +69,14 @@ pub mod math;
 pub mod mechanics;
 pub mod mesh;
 pub mod meshopt;
+pub mod mosses;
 pub mod motion;
 pub mod niche;
 pub mod occlusion;
 pub mod organs;
 pub mod package;
 pub mod parts;
+pub mod pavement;
 pub mod preview;
 pub mod prickles;
 pub mod quality;
@@ -82,13 +86,17 @@ pub mod roots;
 pub mod shed;
 pub mod shoots;
 pub mod site;
+pub mod site_field;
 pub mod spec;
 pub mod spikelets;
 pub mod spines;
 pub mod stand;
+pub mod stand_tile;
 pub mod substrate;
+pub mod succession;
 pub mod templates;
 pub mod texture;
+mod tile_scene;
 pub mod traits;
 pub mod venation;
 
@@ -1484,7 +1492,146 @@ pub mod venation;
 /// low cards spent 936 of 1 632 triangles on them, a sago palm's 552 of
 /// 914, with no change in what they show.
 ///
-/// 192: sixteen shrubs whose specs gave no leaf shape state it from
+/// 191: pavements in a site (pavement-cracks plan K1 to K3, soil depth
+/// design D1). A site may lay crack tiles (`crate::pavement`): a slab with
+/// its cracks, holes and the grit in them, which a plant roots in only
+/// where it opens. The `soil@1` tool weighs the soil a plant's roots reach
+/// (`Conditions::rooting`, which `SiteMesh::rooting` measures through a
+/// pavement's slab, base and subgrade) against what its crown needs, and
+/// 14 base programs scale growth by the ratio (`rs`, and `tg`, time less
+/// the years soil cost): a tree in a crack stays a sapling, in a pothole
+/// it grows on. Plants that set no rooting table grow byte for byte as
+/// before. `crate::succession` decides which plants come up in a site's
+/// pavements year by year (`plantc cracks`). Seven pavement weeds join the
+/// library, and three ecology traits (seed dispersal, seed bank, trampling
+/// tolerance) are stated for sixteen species.
+///
+/// 192: a tree's or shrub's stem stays a tube on the card tiers up to
+/// where it is half as thick as at its foot (`crate::billboards`): a
+/// 60-year Douglas fir grown in a closed stand drew its crown floating 9 m
+/// over an 11 m stump on its low tier.
+///
+/// 193: old conifer crowns (`pinidae` revision 14): a living tip of a fir,
+/// spruce, hemlock, larch, pine or Douglas-fir shades its neighbours less
+/// as the tree's rise slows, down to a fifth of a fast-rising tip's shade
+/// (`bud_keep`); a lit limb of a fir, spruce, hemlock, larch or Douglas-fir
+/// keeps lengthening up to 15 cm a year once the leader slows
+/// (`branch_floor`, 0.06 before), a floor that now comes in over the top
+/// `floor_ramp` of the height as the side shoots' did; and a fir's,
+/// spruce's, hemlock's or Douglas-fir's dormant buds sprout in a tenth of
+/// the open sky's light, not three tenths (`epi_light`, Ishii & Ford 2001).
+/// A Douglas-fir grown 250 years in a stand held 163 m² of foliage on a
+/// trunk 66 cm through, 29% of what Sillett et al.'s (2018) leaf area
+/// equation gives for its crown; it now holds 288 m² (44%, its crown 26 m
+/// deep where it was 21) on 70 cm, and a western hemlock 253 m² where it
+/// held 177, on 83 cm where it was 79. Every Pinaceae species' young sizes
+/// grow within a few percent of before; the other conifer families grow as
+/// before. And once a Pinaceae tree's leader slows, the least yearly growth
+/// of its limbs fades past a tenth of its height out from the trunk
+/// (`floor_reach` 0.1, which only columnar crowns took before), so an old
+/// crown stops spreading and turns cylindrical, as Ishii and McDowell
+/// (2002) find old Douglas-firs' crowns: without it, a Douglas-fir grown
+/// 480 years in a stand drew a dome 21 m across over bare limbs, 9% of its
+/// foliage in the lower half of the foliated crown; with it, a deep, lobed
+/// crown 18 m across with 35% there (355 m² of foliage on 74 cm, where the
+/// dome held 414 m² on 86).
+///
+/// 194: a daisy's floret gone to seed is a cypsela as long as its flora
+/// measures (`cypsela`, from `fruit_size_m`); a lone head whose flora
+/// gives no involucre width draws its involucre, pappus and cypselae to
+/// the flora's lengths over the disc it is drawn with; the daisy program
+/// leaves a herb's basal leaves to the herb rule, so a rosette herb has
+/// its rosette, and scapes that share one rosette (`rosette_scapes`, a
+/// dandelion's) share its leaves and rise from its middle; a disciform
+/// head is checked as the discoid one it is drawn as (horseweed and
+/// dandelion, from FNA and Flora of China).
+///
+/// 195: the card tiers' midrib lines for cut leaves are lit as their
+/// blades face, not as round stems facing out from the plant's middle (a
+/// yarrow's leaves drew as dark lines), and a solid flower head's cone
+/// reaches as deep as the head's cover from the side says, down at most
+/// to where its stalks meet, lit half way between straight out and its
+/// face as the stands of clusters drawn as cards are. A yarrow's low cards
+/// from the side went from 0.75 to 0.93 as bright as the plant.
+///
+/// 196: on the card tiers, a cut leaf (a yarrow's, a hemlock's) is a pair
+/// of crossed cards of its own, wearing a picture of its look's longest
+/// leaf laid flat, in place of a midrib line and the dots its segments
+/// baked to in the plant's cards (`crate::billboards`): its leaves read
+/// as feathery blades, not lines and dots.
+///
+/// 197: old conifer trunks (`pinidae` revision 15): a conifer's stem lays a
+/// ring every year on the trunk it has, 3e-5 m² of ring for each m² of
+/// foliage above times the share of the sky's light it catches
+/// (`pipe_cambium`, the pipe tool's `cambium`), so a trunk keeps
+/// thickening once its crown stops growing. The trunk was the pipe model's
+/// alone: a Douglas-fir grown 480 years in a stand was 74 cm through, and
+/// is now 118 (Ishii and McDowell 2002: 87 to 154 cm, mean 117, at 450
+/// years at Wind River). Young trees keep the pipe model's girth, as their
+/// pipes outgrow one year's ring (open-grown Douglas-fir 96 cm at 60
+/// years, as before; UTD 95), and limbs keep theirs, so crowns grow as
+/// before. Fed by light, a crown packed with shaded foliage (a Rocky
+/// Mountain juniper's) feeds little.
+///
+/// 198: six herbs draw their leaves as their floras state them, where
+/// their files drew them otherwise (checked against whole-plant photos
+/// from the side): sheep sorrel's and rusty saxifrage's basal leaves
+/// reach the 8 cm Abrams gives, Arizona lupine's leaf cards its longest
+/// leaflets on their longest petioles, jimsonweed's and the tomato's
+/// longest leaves the floras' longest, and a thread-leaved sundew's leaves
+/// stand erect, as Flora of North America says.
+///
+/// 199: growth in deep shade (`pinidae` revision 16, the light tool's new
+/// `top`, the light of the plant's best-lit module): a conifer's leader
+/// floor, `leader_shade`, fades with `top` below half the sky's light, so
+/// on a plant shaded all over the leader's growth saturates with light
+/// and is nothing in the dark, where the floor kept it rising at a share
+/// of its open rate in any shade; a shoot starves by its light against
+/// `top` (correlative inhibition), and under a floor of a quarter of
+/// `shade_death` however shaded the whole plant. Under a closed canopy a
+/// hemlock was a bare pole rising at half its open rate; in 5% light it
+/// is now 4.2 m at 60 years with limbs from 2 m. And the `suppressed`
+/// setting is a tree overtopped in its own stand (its like's crowns
+/// around it as `interior`'s, and crowns 30% taller over it), where it
+/// was a dense medium to 30 m from the ground, in which a conifer grew a
+/// leafless pole and a broadleaf died: a suppressed Douglas-fir is 30 m
+/// at 120 years with a living crown. Open- and stand-grown trees grow as
+/// tall as before, with leaf area within 3%.
+///
+/// 200: shaded foliage costs less (`pinidae` revision 17, `shade_cost`):
+/// the light under which a conifer's apex starves, and its limbs are shed,
+/// is `shade_cost + (1 - shade_cost) top` times what it was, `shade_cost`
+/// = 130 / 315: King (1997) gives an understorey Pacific silver fir's
+/// needle mass per area as 130 g/m² plus 185 times the share of the sky's
+/// light at its apex, and the growth that keeps its foliage in proportion
+/// to it.
+/// A plant whose top is in the full sky grows as before; one shaded all
+/// over keeps more of its shoots: a hemlock grown beneath a 60 m canopy
+/// holds 63 m² of foliage at 120 years where it held 46, and Wind River at
+/// 500 years (`plantc fill`, seeds 7-10) a leaf area index of 3.9 where it
+/// had 3.3. Open- and stand-grown trees' leaf area moves by under 2%.
+///
+/// 201: old conifer crowns fill out (`pinidae` revision 18). A stand of a
+/// plant's like opens past 160 years to 0.27 of its height at 450
+/// (`spec::STAND_THINNING`; Wind River's 35 Douglas-fir a hectare, Shaw et
+/// al. 2004), where it opened to 0.204 (Franklin et al. 1981's 60); and a
+/// fir's, spruce's, hemlock's, larch's or Douglas-fir's stem keeps a
+/// dormant bud at each whorl that sprouts a vigorous new limb once the
+/// tree's rise has slowed (`stem_epi`, Ishii and McDowell 2002). A
+/// Douglas-fir grown 480 years in a stand holds 663 m² of foliage where it
+/// held 364 (Sillett et al. 2018: about 630 to 1,480), on a trunk 133 cm
+/// through (Ishii and McDowell: 87 to 154); every conifer's young sizes
+/// grow as before.
+///
+/// 202: a card tier's texel budget pays for its packed atlas, the room
+/// packing leaves between pictures included, not only for the pictures'
+/// own texels (`crate::billboards`): the pictures are baked at the
+/// densest that packs within it. Pictures pack in rows or along the top
+/// edge of those laid before, whichever is lower. Of 498 card tiers of
+/// 248 species, none grew and together they hold 14% fewer texels; most
+/// low tiers went from 512 by 550 to 620 texels to 512 by 512.
+///
+/// 204: sixteen shrubs whose specs gave no leaf shape state it from
 /// Abrams' and Britton and Brown's floras (`leaf_shape`), so the shape
 /// rule (the kingdom's `outline`) draws their blades and leaflets: a
 /// trailing blackberry's and a Cascade Oregon grape's leaflets were the
@@ -1492,4 +1639,4 @@ pub mod venation;
 /// `widest`, `base` or `tip` by hand, the hand outline still wins, except
 /// a hardhack's, which drew obovate leaves where Abrams gives elliptical
 /// to oval ones.
-pub const GENERATOR_REVISION: u32 = 192;
+pub const GENERATOR_REVISION: u32 = 204;

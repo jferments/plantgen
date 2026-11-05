@@ -2,5 +2,24 @@
   "schema": 1,
   "rank": "family",
   "name": "Brachytheciaceae",
-  "parent": "order/hypnales"
+  "parent": "order/hypnales",
+  "traits": {
+    "seta_colour": [
+      122,
+      58,
+      38
+    ],
+    "capsule_colour": [
+      118,
+      60,
+      40
+    ]
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Brachytheciaceae (Ignatov; efloras, read 2026-11-05): plants in loose to dense tufts or mats, usually glossy; stems creeping to arching, pinnate; seta red-brown, usually dark red-brown. Capsule colour as the genera's red-brown capsules (Homalothecium)."
+    }
+  }
 }

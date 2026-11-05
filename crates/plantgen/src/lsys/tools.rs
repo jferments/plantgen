@@ -154,6 +154,8 @@ fn settings(
         env: &NO_ENV,
         t: clock.t,
         dt: clock.dt,
+        lag: clock.lag,
+        rs: clock.rs,
         age: 0.0,
         step: f64::from(clock.step),
         key: hash_words(&[seed, SALT_SETTINGS]),
@@ -482,6 +484,8 @@ pub struct ToolOutput {
     pub env: Vec<(u32, EnvValues)>,
     /// Light at each organ (1 when there is no light tool).
     pub organ_light: Vec<f64>,
+    /// The plant's soil supply over its demand (`soil@1`); 1 without it.
+    pub rs: f64,
 }
 
 /// Run every configured tool on a scene.
@@ -557,7 +561,7 @@ pub fn run(
             };
             let taken: Option<&(dyn Fn(Vec3) -> bool + Sync)> =
                 (field.is_some() || surroundings.crowded()).then_some(&taken);
-            let buried = |point: Vec3| field.is_some_and(|field| field.solid(point));
+            let buried = |point: Vec3| field.is_some_and(|field| field.buried(point));
             let buried: Option<&(dyn Fn(Vec3) -> bool + Sync)> = field.is_some().then_some(&buried);
             colonize(
                 scene,
@@ -601,10 +605,29 @@ pub fn run(
         .tool(ToolKind::Substrate)
         .map(|_| substrate_of(surroundings));
 
+    // Soil depth design D1: the soil the roots reach over what the plant's
+    // size needs, once for the whole plant.
+    let rs = program.tool(ToolKind::Soil).map_or(1.0, |config| {
+        let values = settings(config, globals, clock, seed, &mut stack);
+        soil_supply(scene, surroundings, &values)
+    });
+
+    // The plant's best-lit module this step (`top`).
+    let top = scene
+        .queries
+        .iter()
+        .zip(&query_light)
+        .filter(|(query, _)| {
+            matches!(program.symbols[usize::from(query.symbol)].kind,
+                SymbolKind::Module { queries } if queries & Query::Light.bit() != 0)
+        })
+        .fold(0.0_f64, |top, (_, light)| top.max(*light));
+
     let mut env = Vec::with_capacity(scene.queries.len());
     for (index, query) in scene.queries.iter().enumerate() {
         let mut values = [0.0; ENV_FIELDS];
         values[EnvField::Light as usize] = query_light[index];
+        values[EnvField::Top as usize] = top;
         if let Some(from) = &light_from {
             values[EnvField::Lx as usize] = from[index].x;
             values[EnvField::Ly as usize] = from[index].y;
@@ -612,7 +635,7 @@ pub fn run(
         }
         if let Some(flux) = &flux {
             let node = query.node as usize;
-            values[EnvField::Vigour as usize] = flux.vigour[node];
+            values[EnvField::Vigour as usize] = flux.vigour[node] * rs;
             values[EnvField::Qsum as usize] = flux.light[node];
             values[EnvField::Nseg as usize] = f64::from(flux.segments[node]);
             values[EnvField::Ntip as usize] = f64::from(flux.tips[node]);
@@ -651,7 +674,111 @@ pub fn run(
         }
         env.push((query.module, values));
     }
-    Ok(ToolOutput { env, organ_light })
+    Ok(ToolOutput {
+        env,
+        organ_light,
+        rs,
+    })
+}
+
+/// The ratio of a plant's soil supply to its demand, 0 to 1, for
+/// `soil@1` with settings `[depth, spread, demand, height]` (soil depth
+/// design D1).
+///
+/// - The crown's radius `r` is the farthest any segment end or organ
+///   reaches sideways from the foot.
+/// - Roots reach out to `spread · r` and down `height` metres for each
+///   metre of the plant's height, at most `depth`. Tumber-Dávila et al.
+///   2022 (*New Phytologist* 235: 1032-1056) give a mean shoot height to
+///   rooting depth ratio of 0.654 for herbaceous plants (so 1.53 m of
+///   root per metre of shoot, the default) and, for woody plants, one
+///   above 1 wherever the climate is not dry; and a lateral root spread
+///   of about 2.2 times the crown's radius (their shoot to root radius
+///   ratio 0.44 for woody plants, 0.452 for herbaceous).
+/// - A crown needs `demand` cubic metres of rootable soil per square metre
+///   it covers: about 0.6 for trees, after Lindsey and Bassuk 1991
+///   (*Journal of Arboriculture* 17: 141-149).
+/// - It never needs more than open ground would give at that reach, so a
+///   seedling in deep soil is not slowed.
+///
+/// 1 when the surroundings say nothing of the soil, which is then as deep
+/// as roots go.
+fn soil_supply(scene: &Scene, surroundings: &dyn Surroundings, values: &[f64]) -> f64 {
+    let sideways = |p: Vec3| p.x.hypot(p.z);
+    let crown = scene
+        .segments
+        .iter()
+        .map(|segment| sideways(segment.end).max(sideways(segment.start)))
+        .chain(scene.organs.iter().map(|organ| sideways(organ.position)))
+        .fold(0.0_f64, f64::max);
+    SoilNeed::from_settings(values).ratio(crown, scene.height, |reach, down| {
+        surroundings.soil_volume(reach, down)
+    })
+}
+
+/// What a plant's roots ask of the soil: `soil@1`'s settings, evaluated
+/// (soil depth design D1). [`soil_supply`] reads them each step; the
+/// yearly arrival step of a pavement tile ([`crate::succession`]) reads
+/// them once, for a plant of a size it estimates.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct SoilNeed {
+    /// Deepest the roots reach, metres.
+    pub depth: f64,
+    /// How far out the roots reach, as a multiple of the crown's radius.
+    pub spread: f64,
+    /// Rootable soil the crown needs per square metre it covers, m³/m².
+    pub demand: f64,
+    /// Metres of root depth per metre of the plant's height.
+    pub per_height: f64,
+}
+
+impl SoilNeed {
+    fn from_settings(values: &[f64]) -> Self {
+        Self {
+            depth: values[0].max(0.0),
+            spread: values[1].max(0.0),
+            demand: values[2].max(0.0),
+            per_height: values[3].max(0.0),
+        }
+    }
+
+    /// The `soil@1` settings of `program` with its parameter values
+    /// `globals`, or `None` when it has no soil tool.
+    #[must_use]
+    pub fn of_program(program: &Program, globals: &[f64]) -> Option<Self> {
+        let config = program.tool(ToolKind::Soil)?;
+        let clock = Clock {
+            step: 0,
+            t: 0.0,
+            dt: 1.0,
+            lag: 0.0,
+            rs: 1.0,
+        };
+        let mut stack = Vec::new();
+        Some(Self::from_settings(&settings(
+            config, globals, clock, 0, &mut stack,
+        )))
+    }
+
+    /// The ratio of supply to demand, 0 to 1, for a crown `crown` metres
+    /// in radius on a plant `height` metres tall, where `volume(reach,
+    /// depth)` is the rootable soil within `reach` of the foot and `depth`
+    /// below it (`None` where nothing is known, which gives 1).
+    #[must_use]
+    pub fn ratio(&self, crown: f64, height: f64, volume: impl Fn(f64, f64) -> Option<f64>) -> f64 {
+        let reach = self.spread * crown;
+        let down = (height * self.per_height).min(self.depth);
+        if crown <= 0.0 || reach <= 0.0 || down <= 0.0 || self.demand <= 0.0 {
+            return 1.0;
+        }
+        let Some(supply) = volume(reach, down) else {
+            return 1.0;
+        };
+        let area = std::f64::consts::PI * crown * crown;
+        let open = std::f64::consts::PI * reach * reach * down;
+        let need = (self.demand * area).min(open);
+        (supply / need).clamp(0.0, 1.0)
+    }
 }
 
 /// Which nodes stand on a limb: a `[ ]` branch from an axis that goes on
@@ -3237,6 +3364,13 @@ pub struct Pipes {
     /// as heartwood (`heartwood` > 0); otherwise only limbs shed from the
     /// bole do.
     pub heartwood: bool,
+    /// Ring area each stem segment (order 0) lays down per unit of time on
+    /// the girth it already has, per m² of leaf area above it times that
+    /// foliage's light (`cambium`): the stem's cambium adds a ring every
+    /// year, fed by what the foliage above makes, whether or not the pipes
+    /// above grow, so a trunk whose crown has stopped growing keeps
+    /// thickening. Limbs keep the pipe model's girth. 0: off.
+    pub cambium: f64,
 }
 
 /// The pipe model: a segment's radius `r` satisfies
@@ -3250,14 +3384,19 @@ pub struct Pipes {
 /// of area `rings · leaf area above` to every segment (Pressler's law: ring
 /// area is proportional to the foliage above), so stems keep thickening
 /// after their crowns stop growing. A segment's radius is the larger of
-/// the two, and never shrinks. The growth loop also keeps the pipes of
+/// the two, and never shrinks. With `cambium`, each step also lays a ring
+/// of area `cambium · Σ leaf area above × its light at the last step` on
+/// the girth each stem segment has
+/// (limbs keep the pipes' girth, so crowns grow and bend as before): while
+/// the pipes grow faster it is one ring on them, and once they stall (an
+/// old crown that no longer grows) the rings add up. The growth loop also keeps the pipes of
 /// shed limbs in the stem below them (Shinozaki et al.'s disused pipes).
 ///
 /// # Errors
 ///
 /// Fails on invalid settings.
 pub fn pipe(scene: &Scene, organ_area: &[f64], values: &[f64]) -> Result<Pipes, GrowthError> {
-    let [exponent, tip, organ, rings, heartwood] = values[..] else {
+    let [exponent, tip, organ, rings, heartwood, cambium] = values[..] else {
         return Err(invalid("pipe", "wrong number of settings".into()));
     };
     // Written so that NaN settings fail too.
@@ -3265,12 +3404,14 @@ pub fn pipe(scene: &Scene, organ_area: &[f64], values: &[f64]) -> Result<Pipes, 
         && tip > 0.0
         && organ >= 0.0
         && rings >= 0.0
-        && rings.is_finite();
+        && rings.is_finite()
+        && cambium >= 0.0
+        && cambium.is_finite();
     if !valid {
         return Err(invalid(
             "pipe",
             format!(
-                "exponent must be 1 to 4, tip positive, organ and rings not negative; found {exponent}, {tip}, {organ} and {rings}"
+                "exponent must be 1 to 4, tip positive, organ, rings and cambium not negative; found {exponent}, {tip}, {organ}, {rings} and {cambium}"
             ),
         ));
     }
@@ -3326,6 +3467,7 @@ pub fn pipe(scene: &Scene, organ_area: &[f64], values: &[f64]) -> Result<Pipes, 
         ring_rate: rings,
         exponent,
         heartwood: heartwood > 0.0,
+        cambium,
     })
 }
 
@@ -3807,6 +3949,8 @@ pub fn organ_areas(program: &Program, globals: &[f64]) -> Result<Vec<f64>, Growt
                     env: &NO_ENV,
                     t: 0.0,
                     dt: 0.0,
+                    lag: 0.0,
+                    rs: 1.0,
                     age: 0.0,
                     step: 0.0,
                     key: 0,
@@ -3898,6 +4042,8 @@ mod tests {
             step: 0,
             t: 0.0,
             dt: 1.0,
+            lag: 0.0,
+            rs: 1.0,
         };
         let scene = Interpreter::new(&program, &globals, &limits)
             .interpret(&string, clock)
@@ -3919,6 +4065,8 @@ mod tests {
             step: 0,
             t: 0.0,
             dt: 1.0,
+            lag: 0.0,
+            rs: 1.0,
         };
         run(
             &setup.program,
@@ -4011,6 +4159,31 @@ mod tests {
         let far = output.env[1].1[EnvField::Light as usize];
         assert!(low < 0.95, "bud under foliage gets {low}");
         assert!((far - 1.0).abs() < 1e-12, "bud in the open gets {far}");
+        // Every module reads the plant's best light as `top`, the shaded
+        // bud too, and a module that queries no light counts for none.
+        for (_, values) in &output.env {
+            assert!((values[EnvField::Top as usize] - far).abs() < 1e-12);
+        }
+    }
+
+    #[test]
+    fn top_is_the_best_lit_light_querying_module() {
+        // Two buds under foliage; a module that queries only its
+        // position sits in the open above them.
+        let setup = setup(
+            "lsystem p 1; module B queries light; module P queries position;
+             organ leaf foliage area 0.5;
+             tool light@1 { cell = 0.5, extinction = 1 };
+             axiom [ B ] F(1) [ B ] F(1) [ leaf(1) leaf(1) leaf(1) ] F(4) P;",
+        );
+        let output = tools(&setup, &Neighbourhood::OPEN);
+        let lower = output.env[0].1[EnvField::Light as usize];
+        let upper = output.env[1].1[EnvField::Light as usize];
+        let best = lower.max(upper);
+        assert!(best < 0.99, "both buds are shaded: {lower}, {upper}");
+        for (_, values) in &output.env {
+            assert!((values[EnvField::Top as usize] - best).abs() < 1e-12);
+        }
     }
 
     #[test]
@@ -4165,6 +4338,8 @@ mod tests {
             step: 0,
             t: 0.0,
             dt: 1.0,
+            lag: 0.0,
+            rs: 1.0,
         };
         let mut state = ToolState::default();
         let output = run(
@@ -4321,6 +4496,8 @@ mod tests {
                 step,
                 t: f64::from(step),
                 dt: 1.0,
+                lag: 0.0,
+                rs: 1.0,
             };
             settings(config, &[], clock, seed, stack)[1]
         };
@@ -4336,7 +4513,7 @@ mod tests {
             "lsystem p 1; module A queries position; tool pipe@1 { exponent = 2, tip = 0.01 };
              axiom F(1) [ F(1) A ] [ F(1) A ] F(1) A;",
         );
-        let pipes = pipe(&setup.scene, &[], &[2.0, 0.01, 0.0, 0.0, 0.0]).unwrap();
+        let pipes = pipe(&setup.scene, &[], &[2.0, 0.01, 0.0, 0.0, 0.0, 0.0]).unwrap();
         // Three tips above the base: r = sqrt(3) * 0.01.
         assert!((pipes.radii[0] - 3.0_f64.sqrt() * 0.01).abs() < 1e-12);
         assert!((pipes.radii[1] - 0.01).abs() < 1e-12);
@@ -4350,6 +4527,7 @@ mod tests {
             host: None,
             substrate,
             sun: None,
+            soil: None,
         }
     }
 

@@ -12,7 +12,7 @@ use crate::rng::{hash_words, normal, unit};
 /// Values the environment tools wrote for one module in the last step.
 pub type EnvValues = [f64; ENV_FIELDS];
 
-pub const ENV_FIELDS: usize = 32;
+pub const ENV_FIELDS: usize = 33;
 
 /// The environment fields a rule can read, grouped by the query that
 /// provides them.
@@ -78,6 +78,12 @@ pub enum EnvField {
     /// keeps clear (a site's window or door, sites plan S4), metres; past
     /// `host@1`'s reach when there is none within it.
     Gc,
+    /// `top`: the most light any module of the plant that queries light
+    /// has this step, 0 to 1: how lit the plant's best-lit tips are, so
+    /// a rule can weigh a shoot's light against its own plant's
+    /// (correlative inhibition: a shoot in shade starves sooner on a tree
+    /// whose other shoots are in the sun; Sprugel 2002, Takenaka 2000).
+    Top,
 }
 
 impl EnvField {
@@ -114,6 +120,7 @@ impl EnvField {
         (Self::Lz, "lz"),
         (Self::Limb, "limb"),
         (Self::Gc, "gc"),
+        (Self::Top, "top"),
     ];
 
     #[must_use]
@@ -128,7 +135,7 @@ impl EnvField {
     #[must_use]
     pub fn query(self) -> Query {
         match self {
-            Self::Light | Self::Lx | Self::Ly | Self::Lz => Query::Light,
+            Self::Light | Self::Lx | Self::Ly | Self::Lz | Self::Top => Query::Light,
             Self::Vigour | Self::Qsum | Self::Nseg | Self::Ntip => Query::Vigour,
             Self::Space | Self::Sx | Self::Sy | Self::Sz => Query::Space,
             Self::Gd | Self::Gx | Self::Gy | Self::Gz | Self::Gc => Query::Host,
@@ -189,6 +196,13 @@ pub enum Var {
     Age,
     /// Index of the derivation step.
     Step,
+    /// `tg`: the years the plant has grown, `t` less the years its soil
+    /// held it back (`soil@1`, soil depth design D1); `t` without that.
+    Tg,
+    /// `rs`: the soil the plant's roots reach over what its size needs, 0
+    /// to 1, at the last step (`soil@1`); 1 without the tool or with soil
+    /// as deep as roots go.
+    Rs,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -386,6 +400,10 @@ pub struct Scope<'a> {
     pub env: &'a EnvValues,
     pub t: f64,
     pub dt: f64,
+    /// Years of growth the soil has held the plant back by ([`Var::Tg`]).
+    pub lag: f64,
+    /// The plant's soil supply over its demand ([`Var::Rs`]).
+    pub rs: f64,
     pub age: f64,
     pub step: f64,
     /// Key of every random draw: the module's lineage and, for productions,
@@ -437,6 +455,8 @@ pub fn eval(code: &Code, scope: &Scope<'_>, stack: &mut Vec<f64>) -> f64 {
                 Var::Dt => scope.dt,
                 Var::Age => scope.age,
                 Var::Step => scope.step,
+                Var::Tg => scope.t - scope.lag,
+                Var::Rs => scope.rs,
             },
             Op::Env(field) => scope.env[field as usize],
             Op::Neg => -pop(stack),
@@ -510,6 +530,8 @@ mod tests {
             env: &NO_ENV,
             t: 5.0,
             dt: 1.0,
+            lag: 0.0,
+            rs: 1.0,
             age: 2.0,
             step: 5.0,
             key: 42,
