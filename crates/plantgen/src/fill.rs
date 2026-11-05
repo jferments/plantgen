@@ -1801,7 +1801,9 @@ impl Fill {
     /// ([`BENEATH_PROGRAMS`]) and its member is not kept from
     /// [`Environment::Suppressed`]: a western hemlock that came up 120
     /// years ago beneath Wind River's 60 m canopy is 19.7 m tall, not the
-    /// 43.6 m of a stand of hemlocks its age.
+    /// 43.6 m of a stand of hemlocks its age. The share of it a gap
+    /// released ([`development::Cohort::released`]) grows as in a stand, at
+    /// the age its size matches.
     fn cohort_keys(
         &self,
         member: &StandMember,
@@ -1814,6 +1816,7 @@ impl Fill {
             species.grows_beneath
                 && member.candidate.tree()
                 && !cohort.pioneer
+                && !cohort.released
                 && member.environments.contains(&Environment::Suppressed)
         });
         let environment = if beneath_m.is_some() {

@@ -273,11 +273,26 @@ pub fn lay_out(members: &[Member], rules: &Rules, seed: u64) -> Vec<Placed> {
             continue;
         }
         let total: f64 = pool.iter().map(|&i| members[i].share).sum();
+        // The mean crown of a draw, seen from above, square metres.
+        let mean_crown = pool
+            .iter()
+            .map(|&i| {
+                let radius = members[i].crown_radius_m.max(CELL_M * 0.5);
+                members[i].share * std::f64::consts::PI * radius * radius
+            })
+            .sum::<f64>()
+            / total;
         let mut misses = 0;
         // Taller members first within a layer: draw a batch, then place it
-        // tallest first, so short plants fill what the tall leave.
+        // tallest first, so short plants fill what the tall leave. A batch
+        // holds no more draws than the layer has room left for, at a
+        // draw's mean crown, so its tallest don't take the whole layer
+        // and the layer holds its members by their shares.
         while misses < GIVE_UP {
-            let mut batch: Vec<(usize, f64)> = (0..32)
+            let room = (target - raster.cover(Some(layer_index))) * rules.tile_m * rules.tile_m;
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            let draws = (room / mean_crown).ceil().clamp(1.0, 32.0) as usize;
+            let mut batch: Vec<(usize, f64)> = (0..draws)
                 .map(|_| {
                     let mut pick = next(1) * total;
                     let mut chosen = pool[pool.len() - 1];
@@ -470,6 +485,37 @@ mod tests {
             under * 2 < open,
             "{under} under the canopy, {open} in the open"
         );
+    }
+
+    #[test]
+    fn a_layer_holds_its_members_by_their_shares_when_few_fill_it() {
+        // A 40 m cell's canopy of old Douglas-firs holds about five of
+        // them; a third of the draws are shorter trees released into gaps.
+        let rules = Rules {
+            cover: [0.7, 0.0, 0.0, 0.0],
+            ..Rules::default()
+        };
+        let mut pioneer = tree(0, Layer::Canopy, 60.0, 8.8);
+        pioneer.share = 2.0;
+        let released = tree(1, Layer::Canopy, 44.0, 3.1);
+        let members = [pioneer, released];
+        let (mut short, mut all, mut scales, mut tall) = (0, 0, 0.0, 0.0);
+        for seed in 1..=8 {
+            for plant in lay_out(&members, &rules, seed) {
+                all += 1;
+                if plant.member == 1 {
+                    short += 1;
+                } else {
+                    scales += plant.scale;
+                    tall += 1.0;
+                }
+            }
+        }
+        // Not the tallest alone: the shorter trees stand among them.
+        assert!(f64::from(short) > 0.2 * f64::from(all), "{short} of {all}");
+        // And the tall stand at their copies' sizes, not the largest only.
+        let mean = scales / tall;
+        assert!(mean < 1.06, "mean scale {mean}");
     }
 
     #[test]
