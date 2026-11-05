@@ -281,7 +281,7 @@ Usage:
               [--box X0,Y0,Z0,X1,Y1,Z1] [--out COVER.json] [--cover COVER.json]
               [--render FILE.png [--view VIEW] [--size PIXELS] [--from south|north]
                [--focus X,Y,Z [--span METRES]] [--wet 0..1]
-               [--detail shell|shoots|near] [--capsules yes|no]]
+               [--detail patch|shell|shoots|near] [--capsules yes|no]]
       Grow mosses over a site's faces (plantgen::mosses): every moss genus
       the library gives a colony_form settles where its light, wetness
       and substrate fit (rain on faces turned up, damp at a wall's foot,
@@ -3266,10 +3266,13 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
     let span: f64 = options.number("span")?.unwrap_or(2.0);
     let detail = match options.flags.get("detail").map(String::as_str) {
         None | Some("near") => Detail::Near,
+        Some("patch") => Detail::Patch,
         Some("shell") => Detail::Shell,
         Some("shoots") => Detail::Shoots,
         Some(other) => {
-            return Err(format!("unknown detail `{other}`; use shell, shoots or near").into());
+            return Err(
+                format!("unknown detail `{other}`; use patch, shell, shoots or near").into(),
+            );
         }
     };
     let draw = DrawOptions {

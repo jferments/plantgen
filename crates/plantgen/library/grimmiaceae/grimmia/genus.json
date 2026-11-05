@@ -24,8 +24,8 @@
       "typical": 0.0006
     },
     "leaf_colour": [
-      86,
-      104,
+      92,
+      101,
       60
     ],
     "leaf_dry_posture": "flexuose",
@@ -78,7 +78,7 @@
     "traits.leaf_colour": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Olive grey-green, as FNA's 'olivaceous' and 'grayish green' (Grimmiaceae, G. pulvinata); the grey of the cushion comes from the hyaline awns, drawn separately."
+      "note": "Olive grey-green, as FNA's 'olivaceous' and 'grayish green' (Grimmiaceae, G. pulvinata); the grey of the cushion comes from the hyaline awns, drawn separately. Hue measured: imagekit run moss-colour-2026-11-05 on batch moss-pnw-2026-11-05 (iNaturalist research-grade photos from Washington, about 20 a taxon, script moss_colour.py): the median linear r/g and b/g of the moss pixels (G. pulvinata r/g 0.81, b/g 0.34). Photos are exposed brighter than moss is, so only the hue is taken from them; the brightness is a green reflectance of 0.13, a lit leaf's, just above the 0.05-0.11 moss canopies reflect in the visible (Lovelock and Robinson 2002, Plant Cell Environ. 25: 1239, Antarctic Grimmia; moss biocrust albedo about 0.11 against 0.20 for bare soil, Sci. Total Environ. 2020), the canopy's own shade darkening the shell further."
     },
     "traits.colony_spread_m_per_year": {
       "evidence": "Authored",

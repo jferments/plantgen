@@ -52,6 +52,16 @@ pub const MOSS_COVER_VERSION: u32 = 1;
 
 const GOLDEN: f64 = 2.399_963_229_728_653;
 
+/// Pieces a small colony in a perfect place sheds a year that may take
+/// root, before its habitat's chance; one of 1 cm radius sheds three
+/// times as many. Walls and roofs fill in over decades rather than years.
+/// Estimate.
+const OFFSPRING_PER_YEAR: f64 = 2.0;
+
+/// The mean distance beyond its rim a colony's pieces lodge: most fall
+/// within a few centimetres. Estimate.
+const OFFSPRING_THROW_M: f64 = 0.03;
+
 /// How a colony's shoots grow together (trait `colony_form`).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -413,7 +423,11 @@ impl MossKind {
     /// moss as a tint ([`MossCover::tint`]).
     #[must_use]
     pub fn far_colour(&self) -> [f32; 3] {
-        blend(self.colour, HYALINE, self.whiteness(0.5))
+        blend(
+            scaled(self.colour, CANOPY_SHADE),
+            HYALINE,
+            self.whiteness(0.5),
+        )
     }
 
     /// How much the hair-points and hyaline tips whiten a colony seen from
@@ -422,7 +436,7 @@ impl MossKind {
     fn whiteness(&self, hydration: f64) -> f64 {
         let awn = (self.hair_point_m / self.leaf_length_m).min(1.2);
         let dryness = 1.0 - hydration;
-        (awn * (0.07 + 0.16 * dryness) + self.hyaline_share * (0.2 + 0.22 * dryness)).min(0.4)
+        (awn * (0.07 + 0.16 * dryness) + self.hyaline_share * (0.2 + 0.22 * dryness)).min(0.3)
     }
 }
 
@@ -801,6 +815,21 @@ pub fn grow(site: &SiteMesh, kinds: &[MossKind], settings: &MossSettings) -> Mos
                 |(_, habitat)| *habitat,
             )
     };
+    // The habitat where a spore or a piece of shoot lodges at `p`.
+    // Spores, grit and water lodge in nooks: a joint between bricks, the
+    // step under a tile's edge, an inner corner.
+    let lodged = |face: &Face, p: Vec3| -> Habitat {
+        let mut habitat = habitat_near(face, p);
+        let nook = nook(&tracer, p, face.normal);
+        habitat.hold = (habitat.hold * (0.3 + 1.4 * nook)).min(1.0);
+        habitat.wetness = (habitat.wetness + 0.2 * nook).min(1.0);
+        habitat
+    };
+    let face_of: std::collections::HashMap<u32, usize> = faces
+        .iter()
+        .enumerate()
+        .map(|(at, face)| (face.triangle, at))
+        .collect();
     let mut colonies: Vec<Colony> = Vec::new();
     let mut grid = Grid::new(0.08);
     let salt = hash_words(&[settings.seed, hash_str("moss")]);
@@ -828,12 +857,7 @@ pub fn grow(site: &SiteMesh, kinds: &[MossKind], settings: &MossSettings) -> Mos
                 {
                     continue;
                 }
-                let mut habitat = habitat_near(face, p);
-                // Spores, grit and water lodge in nooks: a joint between
-                // bricks, the step under a tile's edge, an inner corner.
-                let nook = nook(&tracer, p, face.normal);
-                habitat.hold = (habitat.hold * (0.3 + 1.4 * nook)).min(1.0);
-                habitat.wetness = (habitat.wetness + 0.2 * nook).min(1.0);
+                let habitat = lodged(face, p);
                 let fits: Vec<f64> = kinds.iter().map(|kind| kind.vigour(&habitat)).collect();
                 let total: f64 = fits.iter().sum();
                 if total <= 1.0e-6 {
@@ -861,6 +885,69 @@ pub fn grow(site: &SiteMesh, kinds: &[MossKind], settings: &MossSettings) -> Mos
                 let id = colonies.len();
                 colonies.push(Colony {
                     kind: u16::try_from(chosen).unwrap_or(0),
+                    triangle: face.triangle,
+                    centre: [p.x, p.y, p.z],
+                    normal: [lie.x, lie.y, lie.z],
+                    radius_m: start,
+                    age: 0.0,
+                    vigour: fit,
+                });
+                grid.insert(id, p);
+            }
+        }
+        // Colonies seed the surface about them: broken shoots, gemmae and
+        // the many spores that fall close to the capsule that shed them
+        // (most of a moss's realized dispersal is within a few metres of
+        // the parent, Lönnell et al. 2012, PLoS ONE 7: e41987; on walls
+        // the pieces lodge along a seam and spread into cushions that
+        // join, BBS on Tortula muralis), so moss spreads in clumps and
+        // fills the gaps between its colonies.
+        let parents = colonies.len();
+        for i in 0..parents {
+            let colony = colonies[i];
+            if colony.age < 2.0 {
+                continue;
+            }
+            let kind = &kinds[usize::from(colony.kind)];
+            let expected =
+                colony.vigour.sqrt() * (0.5 + colony.radius_m / 0.01) * OFFSPRING_PER_YEAR;
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            let draws = expected.ceil() as u64;
+            for k in 0..draws {
+                let h = hash_words(&[salt, u64::from(year), hash_str("offspring"), i as u64, k]);
+                #[allow(clippy::cast_precision_loss)]
+                if unit(h) > expected - k as f64 {
+                    continue;
+                }
+                let angle = unit(mix(h, 1)) * std::f64::consts::TAU;
+                let throw = -(1.0 - unit(mix(h, 2))).max(1.0e-9).ln() * OFFSPRING_THROW_M;
+                let normal = v3(colony.normal);
+                let (t, b) = frame(normal);
+                let q = v3(colony.centre)
+                    + (t * math::cos(angle) + b * math::sin(angle)) * (colony.radius_m + throw);
+                let Some((p, _, triangle)) = surfaces.laid_on(q, normal, 0.02) else {
+                    continue;
+                };
+                let Some(face) = face_of.get(&triangle).map(|at| &faces[*at]) else {
+                    continue;
+                };
+                if !surfaces.open_at(p, face.normal) {
+                    continue;
+                }
+                // A piece of shoot needs no protonema to take, so it
+                // takes more readily than a spore.
+                let fit = kind.vigour(&lodged(face, p));
+                if unit(mix(h, 4)) > fit.sqrt() * 0.6 {
+                    continue;
+                }
+                let start = kind.shoot_width_m() * 1.5;
+                if grid.covered(&colonies, p, start) {
+                    continue;
+                }
+                let lie = surfaces.lie(p, 0.03, face.normal);
+                let id = colonies.len();
+                colonies.push(Colony {
+                    kind: colony.kind,
                     triangle: face.triangle,
                     centre: [p.x, p.y, p.z],
                     normal: [lie.x, lie.y, lie.z],
@@ -1020,13 +1107,22 @@ impl Grid {
 /// How finely colonies are drawn.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Detail {
-    /// Every colony a shell.
+    /// Every colony a low patch of a few tens of triangles, its rim and
+    /// height only, for far views and low settings.
+    Patch,
+    /// Every colony a shell: its rim frayed into outlying tufts, its top
+    /// in clumps of shoots, a few hundred triangles.
     Shell,
     /// Every colony with its shoots.
     Shoots,
-    /// Shoots within the near sphere, shells elsewhere.
+    /// Shoots within twice the near sphere's radius, shells out to
+    /// [`PATCH_BEYOND`] times it, patches farther.
     Near,
 }
+
+/// How many times the near sphere's radius out [`Detail::Near`] draws
+/// shells before it draws patches.
+pub const PATCH_BEYOND: f64 = 20.0;
 
 /// How a [`MossCover`] is drawn.
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -1189,11 +1285,16 @@ impl<'a> Surfaces<'a> {
     /// above or below `q` it takes the outermost, the one open to the air
     /// (a tile, not the deck under it); with none so, the nearest.
     pub(crate) fn laid(&self, q: Vec3, normal: Vec3, reach: f64) -> Option<(Vec3, Vec3)> {
+        self.laid_on(q, normal, reach).map(|(p, n, _)| (p, n))
+    }
+
+    /// [`Surfaces::laid`], with the index of the face laid on.
+    pub(crate) fn laid_on(&self, q: Vec3, normal: Vec3, reach: f64) -> Option<(Vec3, Vec3, u32)> {
         let key = |v: f64| math::floor_index(v / Self::CELL);
         let triangles = self.cells.get(&(key(q.x), key(q.y), key(q.z)))?;
         let reach = reach.min(Self::PAD);
-        let mut outer: Option<(f64, Vec3, Vec3)> = None;
-        let mut nearest: Option<(f64, Vec3, Vec3)> = None;
+        let mut outer: Option<(f64, Vec3, Vec3, u32)> = None;
+        let mut nearest: Option<(f64, Vec3, Vec3, u32)> = None;
         for &index in triangles {
             let face_normal = self.site.normal(index as usize);
             if face_normal.dot(normal) < 0.75 {
@@ -1208,14 +1309,14 @@ impl<'a> Surfaces<'a> {
             let offset = p - q;
             let along = offset.dot(normal);
             if (offset - normal * along).length() < 1.0e-4 {
-                if outer.is_none_or(|(e, _, _)| along > e) {
-                    outer = Some((along, p, face_normal));
+                if outer.is_none_or(|(e, _, _, _)| along > e) {
+                    outer = Some((along, p, face_normal, index));
                 }
-            } else if nearest.is_none_or(|(e, _, _)| d < e) {
-                nearest = Some((d, p, face_normal));
+            } else if nearest.is_none_or(|(e, _, _, _)| d < e) {
+                nearest = Some((d, p, face_normal, index));
             }
         }
-        outer.or(nearest).map(|(_, p, n)| (p, n))
+        outer.or(nearest).map(|(_, p, n, index)| (p, n, index))
     }
 
     /// `q` laid as [`Surfaces::laid`] does, then lifted to the highest of
@@ -1307,7 +1408,13 @@ struct Drawer<'a> {
     options: DrawOptions,
 }
 
-const HYALINE: [f32; 3] = [0.62, 0.63, 0.6];
+/// Hyaline awns and leaf tips, massed: a light grey, as dry Racomitrium
+/// and Grimmia cushions look hoary rather than white.
+const HYALINE: [f32; 3] = [0.5, 0.51, 0.49];
+
+/// How much darker a colony's shell is than its lit leaves: the shade
+/// among the shoots that a shell does not draw.
+const CANOPY_SHADE: f64 = 0.62;
 
 fn scaled(c: [f32; 3], k: f64) -> [f32; 3] {
     #[allow(clippy::cast_possible_truncation)]
@@ -1342,30 +1449,38 @@ impl Drawer<'_> {
         }
     }
 
-    /// The leaf colour of `kind` at the moment's hydration: bright moist,
-    /// darker and duller dry (*Bryophyte Biology* pp. 193, 276), less so
-    /// on a struggling colony.
+    /// The leaf colour of `kind` at the moment's hydration. Wet leaves
+    /// are darker and a deeper green, as water fills the spaces between
+    /// them and their cells; drying, a moss reflects more across the
+    /// visible and turns duller, yellower and paler (moss crusts reflect
+    /// more dry than wet over 400-900 nm, Remote Sens. 12: 1158, 2020;
+    /// woolly Racomitrium light grey dry, dark green moist). A struggling
+    /// colony is yellower and browner.
     fn leaf_colour(&self, kind: &MossKind, vigour: f64) -> [f32; 3] {
-        let dry = [
-            kind.colour[0] * 0.62 + 0.012,
-            kind.colour[1] * 0.55 + 0.008,
-            kind.colour[2] * 0.5,
-        ];
-        let c = blend(dry, kind.colour, self.options.hydration);
-        // A struggling colony is yellower and browner.
-        blend([0.11, 0.085, 0.035], c, 0.45 + 0.55 * vigour)
+        let c = kind.colour;
+        let grey = 0.3 * c[0] + 0.6 * c[1] + 0.1 * c[2];
+        let wet = [c[0] * 0.8, c[1] * 0.86, c[2] * 0.8];
+        let dry = blend(blend(c, [grey; 3], 0.45), [0.13, 0.11, 0.06], 0.25);
+        let dry = scaled(dry, 1.08);
+        let c = blend(dry, wet, self.options.hydration);
+        blend([0.1, 0.08, 0.035], c, 0.45 + 0.55 * vigour)
     }
 
     /// The colour a shell shows from afar: the leaves, whitened by the
     /// hair-points and hyaline tips that show the more when it is dry
-    /// (FNA vol. 27, Grimmia pulvinata: the awns entwine when dry).
+    /// (FNA vol. 27, Grimmia pulvinata: the awns entwine when dry), and
+    /// darkened by the shade among its shoots, which a shell does not
+    /// draw: a moss canopy reflects about half what its lit leaves do
+    /// (canopy 0.05-0.11 in the visible, Lovelock and Robinson 2002,
+    /// against about 0.13 for a leaf).
     fn shell_colour(&self, kind: &MossKind, vigour: f64) -> [f32; 3] {
-        let leaf = self.leaf_colour(kind, vigour);
+        let leaf = scaled(self.leaf_colour(kind, vigour), CANOPY_SHADE);
         blend(leaf, HYALINE, kind.whiteness(self.options.hydration))
     }
 
     #[allow(clippy::too_many_lines)]
-    fn colony(&mut self, kind: &MossKind, colony: &Colony, seed: u64, shoots: bool) {
+    #[allow(clippy::fn_params_excessive_bools)]
+    fn colony(&mut self, kind: &MossKind, colony: &Colony, seed: u64, shoots: bool, patch: bool) {
         let centre = v3(colony.centre);
         let normal = v3(colony.normal).normalize_or(Vec3::Y);
         let (t, b) = frame(normal);
@@ -1386,7 +1501,16 @@ impl Drawer<'_> {
             ColonyForm::Turf => 0.22,
             ColonyForm::Mat | ColonyForm::Weft => 0.35,
         };
-        let outline = |angle: f64| radius * (1.0 + roughness * ring_noise(seed, angle, lobes));
+        // A ragged rim: the colony's lobes, and finer the clumps of shoots
+        // at its edge, some ahead of the rest.
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let fine_lobes = ((std::f64::consts::TAU * radius / 0.006) as u32).clamp(6, 40);
+        let outline = |angle: f64| {
+            radius
+                * (1.0
+                    + roughness * ring_noise(seed, angle, lobes)
+                    + 0.1 * ring_noise(mix(seed, 77), angle, fine_lobes))
+        };
         let profile = |rho: f64| -> f64 {
             let rho = rho.clamp(0.0, 1.0);
             match kind.form {
@@ -1401,22 +1525,43 @@ impl Drawer<'_> {
         // does not reach round a corner.
         let reach = (height * 0.6).max(0.035);
         // Hollows narrower than this are bridged, steps overhung as far.
-        let bridge = (height * 0.8).clamp(0.003, 0.008);
+        // A mortar joint is 10 mm: a colony grown over it bridges it, its
+        // shoots and the grit they hold filling it.
+        let bridge = (height * 0.8)
+            .clamp(0.003, 0.008)
+            .max(radius * 0.25)
+            .min(0.012);
         let surfaces = self.surfaces;
         // The shell.
         // Under a mat's shoots it is the shoots below the top ones, so it
         // is drawn fine, a few millimetres a cell, and mottled.
         let fine = shoots && matches!(kind.form, ColonyForm::Mat | ColonyForm::Weft);
+        // The clumps a shell shows: a cushion's shoots crowd in tufts of a
+        // few millimetres, a mat's shoots and branches lie in patches.
+        let lump = match kind.form {
+            ColonyForm::Cushion => (kind.shoot_width_m() * 3.0).max(0.004),
+            ColonyForm::Turf => (kind.shoot_width_m() * 4.0).max(0.005),
+            ColonyForm::Mat | ColonyForm::Weft => 0.009,
+        };
         #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-        let (rings, sectors) = if fine {
+        let (rings, sectors) = if patch {
+            (
+                if radius > 0.03 { 2 } else { 1 },
+                ((std::f64::consts::TAU * radius / 0.012).ceil() as usize).clamp(6, 16),
+            )
+        } else if fine {
             (
                 ((radius / 0.0025).ceil() as usize).clamp(6, 72),
                 ((std::f64::consts::TAU * radius / 0.0025).ceil() as usize).clamp(10, 480),
             )
         } else {
+            // Fine enough to show its clumps, about two cells a clump.
+            // and no more than five rings for a large one, whose clumps
+            // then show in its colours more than its shape.
+            let cell = (lump * 0.55).max(0.004).max(radius / 5.0);
             (
-                if radius > 0.05 { 10 } else { 6 },
-                ((std::f64::consts::TAU * radius / 0.006).ceil() as usize).clamp(10, 96),
+                ((radius / cell).ceil() as usize).clamp(3, 5),
+                ((std::f64::consts::TAU * radius / cell).ceil() as usize).clamp(8, 32),
             )
         };
         // Colonies differ a little, as clones and their places do.
@@ -1424,7 +1569,6 @@ impl Drawer<'_> {
             self.shell_colour(kind, colony.vigour),
             0.86 + 0.28 * unit(mix(seed, 3)),
         );
-        let base_colour = blend([0.07, 0.05, 0.025], shell_colour, 0.35);
         // Drawn with its shoots, the shell is only the dark depth among
         // them: a cushion's or turf's sits a little below the tips, a
         // mat's well down, so its creeping stems lie on it.
@@ -1440,15 +1584,14 @@ impl Drawer<'_> {
         let shell_colour = match (shoots, mat) {
             (false, _) => shell_colour,
             (true, true) => scaled(shell_colour, 0.6),
-            (true, false) => blend(scaled(shell_colour, 0.5), [0.05, 0.035, 0.014], 0.5),
+            (true, false) => blend(scaled(shell_colour, 0.4), [0.05, 0.035, 0.014], 0.6),
         };
+        // Its foot, at the rim, darker still.
+        let base_colour = blend([0.07, 0.05, 0.025], shell_colour, 0.35);
         let mut grid: Vec<Option<(Vec3, [f32; 3])>> = Vec::with_capacity(rings * sectors + 1);
-        let tip = if fine {
-            surfaces.laid(centre, normal, reach)
-        } else {
-            surfaces.lifted(centre, normal, reach, bridge)
-        }
-        .map(|(p, n)| (p + n * (height * profile(0.0) * sink), shell_colour));
+        let tip = surfaces
+            .lifted(centre, normal, reach, bridge)
+            .map(|(p, n)| (p + n * (height * profile(0.0) * sink), shell_colour));
         grid.push(tip);
         for ring in 1..=rings {
             #[allow(clippy::cast_precision_loss)]
@@ -1458,11 +1601,7 @@ impl Drawer<'_> {
                 let angle = sector as f64 / sectors as f64 * std::f64::consts::TAU;
                 let r = outline(angle) * rho;
                 let q = centre + (t * math::cos(angle) + b * math::sin(angle)) * r;
-                let laid = if fine {
-                    surfaces.laid(q, normal, reach)
-                } else {
-                    surfaces.lifted(q, normal, reach, bridge)
-                };
+                let laid = surfaces.lifted(q, normal, reach, bridge);
                 let point = laid.map(|(p, n)| {
                     let h = mix(mix(seed, ring as u64), sector as u64);
                     let speckle = if fine {
@@ -1475,14 +1614,25 @@ impl Drawer<'_> {
                         );
                         0.4 + 1.2 * n * n
                     } else {
-                        0.82 + 0.36 * unit(h)
+                        0.92 + 0.16 * unit(h)
+                    };
+                    // Clumps of shoots: the shell rises and falls by them,
+                    // lit on their tops and shaded between.
+                    let clump = if fine || patch {
+                        0.5
+                    } else {
+                        let u = (q - centre).dot(t) / lump;
+                        let v = (q - centre).dot(b) / lump;
+                        0.65 * lattice_noise(mix(seed, 5), u, v)
+                            + 0.35 * lattice_noise(mix(seed, 6), u * 2.3, v * 2.3)
                     };
                     let c = blend(
                         base_colour,
-                        scaled(shell_colour, speckle),
+                        scaled(shell_colour, speckle * (0.62 + 0.76 * clump)),
                         profile(rho).powf(0.35),
                     );
-                    (p + n * (height * profile(rho) * sink + 0.0004), c)
+                    let rise = height * profile(rho) * sink * (0.7 + 0.6 * clump);
+                    (p + n * (rise + 0.0004), c)
                 });
                 grid.push(point);
             }
@@ -1526,6 +1676,37 @@ impl Drawer<'_> {
                 }
             }
         }
+        // Outliers: small tufts beyond the rim, young colonies and pieces
+        // of shoot lodged round the parent, the more the nearer it, so a
+        // colony's edge frays into the surface rather than stopping on a
+        // smooth line.
+        if patch {
+            return;
+        }
+        {
+            let width = kind.shoot_width_m();
+            let perimeter = std::f64::consts::TAU * radius;
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            let count = (perimeter / 0.015 * colony.vigour.clamp(0.2, 1.0)).ceil() as usize;
+            for k in 0..count {
+                let h = mix(seed, 90_000 + k as u64);
+                let angle = unit(mix(h, 1)) * std::f64::consts::TAU;
+                let out = unit(mix(h, 2));
+                let r = outline(angle) * 0.95 + out * out * (0.006 + radius * 0.5);
+                let q = centre + (t * math::cos(angle) + b * math::sin(angle)) * r;
+                let Some((p, n)) = surfaces.laid(q, normal, reach) else {
+                    continue;
+                };
+                let size = width * (1.0 + 2.5 * unit(mix(h, 3))) * (1.0 - 0.6 * out);
+                let rise = (height * 0.5).min(size * 1.2) * (1.0 - 0.5 * out);
+                let colour = scaled(shell_colour, 0.7 + 0.5 * unit(mix(h, 4)));
+                if shoots && !mat {
+                    self.shoot_tip(kind, colony, p + n * rise, n, h);
+                } else {
+                    self.tuft(p, n, size, rise, colour, blend(base_colour, colour, 0.4), h);
+                }
+            }
+        }
         // Shoots and capsules.
         let width = kind.shoot_width_m();
         let area = std::f64::consts::PI * radius * radius;
@@ -1543,9 +1724,13 @@ impl Drawer<'_> {
         let fertile_share = kind.capsule_share * mature * colony.vigour.clamp(0.3, 1.0);
         if matches!(kind.form, ColonyForm::Mat | ColonyForm::Weft) {
             if shoots {
-                self.mat(kind, colony, seed, &outline, &profile, height, reach);
+                self.mat(
+                    kind, colony, seed, &outline, &profile, height, reach, bridge,
+                );
             }
-            if self.options.capsules {
+            // Capsules come with the shoots: on a shell, a millimetre or
+            // two across, they would cost more triangles than it does.
+            if self.options.capsules && shoots {
                 // Pleurocarps raise setae from short side branches all over
                 // the mat (FNA vol. 28, Hypnaceae).
                 #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
@@ -1564,6 +1749,9 @@ impl Drawer<'_> {
             }
             return;
         }
+        if !shoots {
+            return;
+        }
         for k in 0..count {
             let h = mix(seed, k as u64 + 7);
             #[allow(clippy::cast_precision_loss)]
@@ -1577,9 +1765,6 @@ impl Drawer<'_> {
                 + radial * r
                 + (t * (unit(mix(h, 15)) - 0.5) + b * (unit(mix(h, 16)) - 0.5)) * (width * 0.9);
             let fertile = self.options.capsules && unit(mix(h, 11)) < fertile_share;
-            if !shoots && !fertile {
-                continue;
-            }
             let Some((p, n)) = surfaces.lifted(q, normal, reach, bridge) else {
                 continue;
             };
@@ -1740,6 +1925,7 @@ impl Drawer<'_> {
         profile: &dyn Fn(f64) -> f64,
         height: f64,
         reach: f64,
+        bridge: f64,
     ) {
         let centre = v3(colony.centre);
         let normal = v3(colony.normal).normalize_or(Vec3::Y);
@@ -1778,7 +1964,7 @@ impl Drawer<'_> {
                     break;
                 }
                 let q = centre + (t * u + b * v) * radius;
-                let Some((p, n)) = surfaces.laid(q, normal, reach) else {
+                let Some((p, n)) = surfaces.lifted(q, normal, reach, bridge) else {
                     break;
                 };
                 let lift = height * profile(rho) * (0.45 + 0.4 * unit(mix(h, 900 + node)));
@@ -1924,6 +2110,39 @@ impl Drawer<'_> {
         }
     }
 
+    /// A small tuft as a low five-sided dome: `size` across its foot,
+    /// `rise` high, lit `top` and darker `foot`.
+    #[allow(clippy::too_many_arguments)]
+    fn tuft(
+        &mut self,
+        p: Vec3,
+        n: Vec3,
+        size: f64,
+        rise: f64,
+        top: [f32; 3],
+        foot: [f32; 3],
+        seed: u64,
+    ) {
+        let (t, b) = frame(n);
+        let turn = unit(seed) * std::f64::consts::TAU;
+        let apex = p + n * (rise + 0.0004);
+        let ring: Vec<Vec3> = (0..5u32)
+            .map(|k| {
+                let a = turn + f64::from(k) / 5.0 * std::f64::consts::TAU;
+                let r = size * 0.5 * (0.75 + 0.5 * unit(mix(seed, u64::from(k) + 1)));
+                p + (t * math::cos(a) + b * math::sin(a)) * r + n * 0.0003
+            })
+            .collect();
+        for k in 0..5 {
+            let (a, c) = (ring[k], ring[(k + 1) % 5]);
+            if (c - a).cross(apex - a).dot(n) >= 0.0 {
+                self.tri([a, c, apex], [foot, foot, top], false);
+            } else {
+                self.tri([c, a, apex], [foot, foot, top], false);
+            }
+        }
+    }
+
     fn tube(&mut self, a: Vec3, b: Vec3, ra: f64, rb: f64, colour: [f32; 3]) {
         let axis = (b - a).normalize_or(Vec3::Y);
         let side = any_side(axis);
@@ -1983,15 +2202,25 @@ impl MossCover {
             let Some(kind) = self.kinds.get(usize::from(colony.kind)) else {
                 continue;
             };
+            let distance = options.near.map_or(0.0, |(at, _)| {
+                v3(colony.centre).distance(at) - colony.radius_m
+            });
+            let patch = match options.detail {
+                Detail::Patch => true,
+                Detail::Near => options
+                    .near
+                    .is_some_and(|(_, reach)| distance > reach * PATCH_BEYOND),
+                _ => false,
+            };
             let shoots = match options.detail {
-                Detail::Shell => false,
+                Detail::Shell | Detail::Patch => false,
                 Detail::Shoots => true,
                 Detail::Near => options.near.is_some_and(|(at, reach)| {
-                    v3(colony.centre).distance(at) < reach + colony.radius_m
+                    v3(colony.centre).distance(at) < reach * 2.0 + colony.radius_m
                 }),
             };
             let seed = hash_words(&[self.settings.seed, hash_str("colony"), index as u64]);
-            drawer.colony(kind, colony, seed, shoots);
+            drawer.colony(kind, colony, seed, shoots, patch);
         }
         drawer.mesh
     }

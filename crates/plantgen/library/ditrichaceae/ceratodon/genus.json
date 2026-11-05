@@ -16,8 +16,8 @@
     "leaf_width_m": 0.0004,
     "hair_point_length_m": 0,
     "leaf_colour": [
-      98,
-      118,
+      97,
+      101,
       44
     ],
     "leaf_dry_posture": "crisped",
@@ -79,6 +79,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Estimate for a pioneer turf on open ground; to check against Glime, Bryophyte Ecology."
+    },
+    "traits.leaf_colour": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Hue measured: imagekit run moss-colour-2026-11-05 on batch moss-pnw-2026-11-05 (iNaturalist research-grade photos from Washington, about 20 a taxon, script moss_colour.py): the median linear r/g and b/g of the moss pixels (C. purpureus r/g 0.92, b/g 0.20). Photos are exposed brighter than moss is, so only the hue is taken from them; the brightness is a green reflectance of 0.13, a lit leaf's, just above the 0.05-0.11 moss canopies reflect in the visible (Lovelock and Robinson 2002, Plant Cell Environ. 25: 1239, Antarctic Grimmia; moss biocrust albedo about 0.11 against 0.20 for bare soil, Sci. Total Environ. 2020), the canopy's own shade darkening the shell further."
     }
   }
 }
