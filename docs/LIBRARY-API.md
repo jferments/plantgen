@@ -342,6 +342,39 @@ Each instance's `rotation` carries its yaw and its lean together.
 per metre up, so a plant on a slope or reaching for a gap stands as the
 fill grew it with no extra field to read.
 
+## Moss on a host's walls and roofs: `plantgen::mosses`
+
+Moss is a surface layer over a site mesh, not plant instances. Grow a
+cover once for a building or a tile, keep it as JSON, and draw it at the
+level the view needs. The full guide is
+[docs/sites/MOSS.md](sites/MOSS.md).
+
+```rust
+use plantgen::library::Library;
+use plantgen::math::Vec3;
+use plantgen::mosses::{self, Detail, DrawOptions, MossSettings};
+
+// `site` is a SiteMesh, for example from plantgen::api::site_mesh.
+let mut kinds = mosses::kinds(Library::builtin())?;
+// Keep only the region's genera (as a site document's `mosses` list does).
+kinds.retain(|k| ["Dicranoweisia", "Rosulabryum", "Niphotrichum"].contains(&k.genus.as_str()));
+let cover = mosses::grow(&site, &kinds, &MossSettings { years: 30, ..Default::default() });
+let json = cover.to_json()?; // and MossCover::from_json to read it back
+
+// Triangles: patches far off, shells, or shoots close up.
+let mesh = cover.draw(&site, &DrawOptions { detail: Detail::Shell, ..Default::default() });
+
+// No triangles: colour and coverage (0-1) to bake into the host's texture.
+let tint = cover.tint(0.4); // hydration, 0 dry to 1 wet
+if let Some((rgb, coverage)) = tint.at(Vec3::new(4.3, 2.5, -0.8), Vec3::Y) {
+    // blend rgb over the roof's texel by coverage
+}
+```
+
+`MossCover::census` gives each genus's colonies and area. Growing the
+test wall and shed for 30 years takes about 30 s; drawing a whole
+building at shell level is under a million triangles.
+
 ## From the command line
 
 ```bash

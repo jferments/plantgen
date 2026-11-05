@@ -55,7 +55,7 @@
     "traits": {
       "evidence": "SourceInferred",
       "source": "fna-27",
-      "note": "FNA vol. 27, Grimmia (Hastings and Greven; efloras, read 2026-11-05): plants 5-40(-70) mm, in dense cushions to loose mats, olivaceous to dark black-green; muticous to long-awned, awns rarely longer than the blade; seta straight or arcuate; capsule erect. The typical values are the commonest Grimmia of walls and roofs, G. pulvinata (same volume): hemispherical hoary grey-green cushions, stems 1-3 cm, leaves 1-1.7 x 0.3-0.6 mm, flexuose when dry and erect when moist, abruptly narrowed to a short to long awn; seta arcuate 3-4 mm; capsule usually present, exserted, ellipsoid, brownish; on acid to basic rock, old mortar and tree trunks. Wikipedia, Grimmia pulvinata (read 2026-11-05): cushions 1-2 cm tall."
+      "note": "FNA vol. 27, Grimmia (Hastings and Greven; efloras, read 2026-11-05): plants 5-40(-70) mm, in dense cushions to loose mats, olivaceous to dark black-green; muticous to long-awned, awns rarely longer than the blade; seta straight or arcuate; capsule erect. The typical values are the commonest Grimmia of walls and roofs, G. pulvinata (same volume): hemispherical hoary grey-green cushions, stems 1-3 cm, leaves 1-1.7 x 0.3-0.6 mm, flexuose when dry and erect when moist, abruptly narrowed to a short to long awn; seta arcuate 3-4 mm; capsule usually present, exserted, ellipsoid, brownish; on acid to basic rock, old mortar and tree trunks. Wikipedia, Grimmia pulvinata (read 2026-11-05): cushions 1-2 cm tall; capsules bend back into the leaves when dry and stand out when moist (drawn for every arcuate seta)."
     },
     "traits.capsule_length_m": {
       "evidence": "Authored",

@@ -280,8 +280,8 @@ Usage:
   plantc moss <site.json> [--years N] [--seed N] [--latitude DEG]
               [--box X0,Y0,Z0,X1,Y1,Z1] [--out COVER.json] [--cover COVER.json]
               [--render FILE.png [--view VIEW] [--size PIXELS] [--from south|north]
-               [--focus X,Y,Z [--span METRES]] [--wet 0..1]
-               [--detail patch|shell|shoots|near] [--capsules yes|no]]
+               [--focus X,Y,Z | --genus GENUS] [--span METRES] [--wet 0..1]
+               [--detail tint|patch|shell|shoots|near] [--capsules yes|no]]
       Grow mosses over a site's faces (plantgen::mosses): every moss genus
       the library gives a colony_form settles where its light, wetness
       and substrate fit (rain on faces turned up, damp at a wall's foot,
@@ -292,7 +292,9 @@ Usage:
       shells of the colonies' forms, or with --detail shoots every shoot's
       leaves and capsules (near: only within --span of --focus); --wet 1
       just rained on, 0 dry (0.4 when left out); --from north looks from
-      the north side.
+      the north side. --genus looks at that genus's widest well-grown
+      colony instead of --focus; a close render prints the genus of the
+      colony it is centred on, for its caption.
   plantc site <site.json> [--out FILE.png] [--view VIEW] [--size PIXELS]
               [--day N] [--quality draft|standard]
               [--focus X,Y,Z [--span METRES]]
@@ -3196,7 +3198,7 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
         args,
         &[
             "years", "seed", "latitude", "box", "out", "cover", "render", "view", "size", "from",
-            "focus", "span", "wet", "detail", "capsules",
+            "focus", "span", "wet", "detail", "capsules", "genus",
         ],
     )?;
     let given = options.one_positional("a site document")?;
@@ -3283,7 +3285,37 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
     let Some(render) = options.flags.get("render") else {
         return Ok(());
     };
-    let focus = numbers("focus", 3)?.map(|v| Vec3::new(v[0], v[1], v[2]));
+    let mut focus = numbers("focus", 3)?.map(|v| Vec3::new(v[0], v[1], v[2]));
+    // `--genus G`: look at that genus's showpiece colony, so a view named
+    // for a genus shows it and no other.
+    if let Some(genus) = options.flags.get("genus") {
+        if focus.is_some() {
+            return Err("give --genus or --focus, not both".into());
+        }
+        let colony = cover
+            .showpiece(genus)
+            .ok_or_else(|| format!("the cover holds no colony of `{genus}`"))?;
+        let at = cover.view_point(colony);
+        focus = Some(Vec3::new(at[0], at[1], at[2]));
+    }
+    // Name the colony a close view is centred on, for its caption.
+    if let Some(at) = focus
+        && let Some((colony, distance)) = cover.nearest([at.x, at.y, at.z])
+    {
+        let genus = cover
+            .kinds
+            .get(usize::from(colony.kind))
+            .map_or("?", |kind| kind.genus.as_str());
+        out!(
+            "centred on {genus} (colony {:.1} cm across, {:.0} years old, {:.1} cm from the focus {:.4},{:.4},{:.4})",
+            colony.radius_m * 200.0,
+            colony.age,
+            distance * 100.0,
+            at.x,
+            at.y,
+            at.z
+        );
+    }
     let span: f64 = options.number("span")?.unwrap_or(2.0);
     // `tint`: no moss triangles; the site's own surfaces coloured by the
     // moss over them, as a host tints a roof's or wall's texture.

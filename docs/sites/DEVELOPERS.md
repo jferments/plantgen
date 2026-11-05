@@ -25,10 +25,12 @@ carry soil green; wetness and heat load from above.
 | Pavement colonisation | `crates/plantgen/src/succession.rs` | Which plants come up by themselves in the cracks, year by year, without growing each one. |
 | Site field | `crates/plantgen/src/site_field.rs` | `SiteField`: one tile measured once (ground grid, hosts and patches, crack sites) for stands and other hosts. |
 | Stand fill's ground | `crates/plantgen/src/fill.rs` | `Site::from_field`: a fill tile over a site field, where plants may stand (`plantable_at`), what their niches read (`site_factors_at`, moisture from the wetness index by `moisture_from_wetness`), how much soil their roots find (`soil_ratio_at`), and the plants that came up in its cracks (`with_colonists`). See SITE-FIELD.md, "Reading it for stands". |
+| Moss | `crates/plantgen/src/mosses.rs` | `mosses::grow`: moss colonies over a site's surfaces, year by year, into a `MossCover`; `MossCover::draw` (patch, shell, shoots, near) and `MossCover::tint` (no triangles). See [MOSS.md](MOSS.md). |
 | Host API | `crates/plantgen/src/api.rs` | `SiteInput`, `site_mesh`, `site_field`, `site_material`: the same from plain arrays, no files. |
-| CLI | `apps/plantc/src/main.rs` | `plantc site` (grow and draw plants on a site), `plantc cracks` (colonisation), `plantc field` (measure a field). |
+| CLI | `apps/plantc/src/main.rs` | `plantc site` (grow and draw plants on a site), `plantc cracks` (colonisation), `plantc field` (measure a field), `plantc moss` (grow and draw moss). |
 | Tests | `crates/plantgen/tests/sites.rs` | Sites, pavements, colonisation, and the `field` module. Unit tests of the tracer are in `site_field.rs`. |
-| Test sites | `docs/sites/` | `garden`, `house`, `road` and `block` (each kind of host in one 40 x 36 m area), and the scripts that make them. |
+| Moss tests | `crates/plantgen/tests/mosses.rs` | Genera, placement, determinism, levels, tint. |
+| Test sites | `docs/sites/` | `garden`, `house`, `road` and `block` (each kind of host in one 40 x 36 m area), and the scripts that make them; `moss-wall` and `moss-shakes` (a garden wall and a shed) for moss, made by `make_moss_wall.py`. |
 
 ## How the data flows
 
