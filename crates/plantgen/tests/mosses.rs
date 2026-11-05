@@ -178,28 +178,68 @@ fn the_same_site_grows_the_same_cover_and_it_reads_back() {
 }
 
 #[test]
-fn a_cover_draws_as_shells_far_and_shoots_near() {
+fn a_cover_draws_as_patches_far_shells_between_and_shoots_near() {
     let site = wall_site();
     let cover = mosses::grow(&site, &library_kinds(), &settings());
-    let shells = cover.draw(
-        &site,
-        &DrawOptions {
-            detail: Detail::Shell,
-            capsules: false,
-            ..DrawOptions::default()
-        },
+    let draw = |detail: Detail, near: Option<(Vec3, f64)>| {
+        cover.draw(
+            &site,
+            &DrawOptions {
+                detail,
+                near,
+                capsules: false,
+                ..DrawOptions::default()
+            },
+        )
+    };
+    let patches = draw(Detail::Patch, None);
+    let shells = draw(Detail::Shell, None);
+    assert!(!patches.indices.is_empty());
+    // A patch is a few tens of triangles, a shell a few hundred.
+    assert!(
+        patches.indices.len() * 3 < shells.indices.len(),
+        "patches {} shells {}",
+        patches.indices.len() / 3,
+        shells.indices.len() / 3
     );
-    assert!(!shells.indices.is_empty());
-    // Shoots drawn round one colony add many more triangles.
+    // Round one colony, Near draws its shoots: many more triangles there.
     let at = cover.colonies[0].centre;
-    let near = cover.draw(
-        &site,
-        &DrawOptions {
-            detail: Detail::Near,
-            near: Some((Vec3::new(at[0], at[1], at[2]), 0.02)),
-            capsules: false,
-            ..DrawOptions::default()
-        },
-    );
-    assert!(near.indices.len() > shells.indices.len());
+    let at = Vec3::new(at[0], at[1], at[2]);
+    let near = draw(Detail::Near, Some((at, 0.02)));
+    let close = |mesh: &plantgen::mesh::Mesh| {
+        mesh.indices
+            .iter()
+            .filter(|i| {
+                let p = mesh.positions[**i as usize];
+                Vec3::new(f64::from(p[0]), f64::from(p[1]), f64::from(p[2])).distance(at) < 0.03
+            })
+            .count()
+    };
+    assert!(close(&near) > close(&shells) * 3);
+}
+
+#[test]
+fn moss_is_darker_and_greener_wet_than_dry() {
+    let site = wall_site();
+    let cover = mosses::grow(&site, &library_kinds(), &settings());
+    let mean = |hydration: f64| {
+        let mesh = cover.draw(
+            &site,
+            &DrawOptions {
+                hydration,
+                detail: Detail::Patch,
+                ..DrawOptions::default()
+            },
+        );
+        #[allow(clippy::cast_precision_loss)]
+        let n = mesh.colors.len().max(1) as f32;
+        mesh.colors.iter().fold([0.0f32; 3], |sum, c| {
+            [sum[0] + c[0] / n, sum[1] + c[1] / n, sum[2] + c[2] / n]
+        })
+    };
+    let (wet, dry) = (mean(0.95), mean(0.05));
+    let luminance = |c: [f32; 3]| 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+    // Drying, moss reflects more and turns duller and yellower.
+    assert!(luminance(wet) < luminance(dry), "wet {wet:?} dry {dry:?}");
+    assert!(wet[1] / wet[0] > dry[1] / dry[0], "wet {wet:?} dry {dry:?}");
 }

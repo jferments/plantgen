@@ -21,9 +21,9 @@
       "max": 0.5
     },
     "leaf_colour": [
-      92,
-      128,
-      66
+      89,
+      101,
+      58
     ],
     "leaf_dry_posture": "imbricate",
     "seta_length_m": {
@@ -77,7 +77,7 @@
     "traits.leaf_colour": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "The green lower blade; the silver comes from the hyaline tip (leaf_hyaline_share), drawn separately."
+      "note": "The green lower blade; the silver comes from the hyaline tip (leaf_hyaline_share), drawn separately. Hue measured: imagekit run moss-colour-2026-11-05 on batch moss-pnw-2026-11-05 (iNaturalist research-grade photos from Washington, about 20 a taxon, script moss_colour.py): the median linear r/g and b/g of the moss pixels (B. argenteum r/g 0.77, b/g 0.33). Photos are exposed brighter than moss is, so only the hue is taken from them; the brightness is a green reflectance of 0.13, a lit leaf's, just above the 0.05-0.11 moss canopies reflect in the visible (Lovelock and Robinson 2002, Plant Cell Environ. 25: 1239, Antarctic Grimmia; moss biocrust albedo about 0.11 against 0.20 for bare soil, Sci. Total Environ. 2020), the canopy's own shade darkening the shell further."
     },
     "traits.colony_spread_m_per_year": {
       "evidence": "Authored",

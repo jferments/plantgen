@@ -35,7 +35,13 @@ year the face stays wet enough to grow.
 `grow` walks the years. Each year spores land on every face in the region
 (`arrivals_per_m2`, default 40). Where one lands, a genus is drawn by its
 vigour there and starts a colony with a chance of half its vigour, unless
-a colony already covers the spot. Then every colony's edge moves out by
+a colony already covers the spot. Colonies two years old or more also shed pieces (broken shoots, gemmae,
+and the spores that fall near their capsule) that lodge a few centimetres
+beyond their rim and take root more readily than a spore, since they need
+no protonema. Most of a moss's realized dispersal is that near, and on walls
+the pieces lodge along a seam and grow into cushions that join, so moss
+spreads in clumps and fills the gaps between its colonies rather than
+standing in separate discs. Then every colony's edge moves out by
 its genus's `colony_spread_m_per_year`, more when vigorous, until:
 
 - it meets a neighbour (cushions and turfs press together; a mat's
@@ -57,12 +63,21 @@ with (`MossKind::far_colour`).
 
 ## Drawing
 
-`MossCover::draw` gives one mesh. Each colony is a shell laid over the
-faces under it (a dome for a cushion, a level-topped turf, a low mat),
-coloured by its leaves and, where they have them, the hair-points that
-whiten it the more when it is dry. Near a point (`Detail::Near`) the shell
-sinks and darkens to the shoots' older lower parts, and every shoot is
-drawn over it:
+`MossCover::draw` gives one mesh, at one of three levels of detail
+(`Detail`):
+
+| Level | What a colony is | Triangles a colony | Test scene (9,000 colonies) |
+| --- | --- | --- | --- |
+| `Patch` | a low patch: its ragged rim and height, a ring or two | about 11 | 0.1 million |
+| `Shell` | its rim frayed into outlying tufts, its top in clumps of shoots (in its shape and its colours) | about 130 | 1.2 million |
+| shoots | every shoot, leaf, mat stem and capsule | thousands to hundreds of thousands | |
+
+`Detail::Near` draws shoots within twice the near sphere's radius, shells
+out to `PATCH_BEYOND` (20) times it, patches farther. Capsules come only
+with the shoots.
+
+Up close every shoot is drawn over a shell that sinks and darkens to the
+shoots' older lower parts:
 
 - Cushions and turfs: upright shoot tips, leaves in a spiral at the
   golden angle, standing out more when wet, folded, twisted or crisped
@@ -72,12 +87,35 @@ drawn over it:
 - Capsules on setae (straight or arcuate), in the posture the genus's
   `capsule_posture` gives, on the share of shoots `capsule_share` gives.
 
-`DrawOptions::hydration` (0 dry to 1 just rained on) sets the leaf
-angles, colour (brighter wet, duller and darker dry) and whiteness.
-
 Every point is laid on a face of the site within reach: of the faces
 straight above or below it, the outermost (a tile, not the deck under
-it). Nothing floats or reaches round a corner.
+it). A colony bridges hollows up to a quarter of its radius, at most a
+12 mm mortar joint. Nothing floats or reaches round a corner.
+
+### Colour
+
+A genus's `leaf_colour` is a lit leaf's: its hue measured from photos
+(the median r/g and b/g of the moss pixels in about 20 Washington
+iNaturalist photos a taxon, imagekit run `moss-colour-2026-11-05`), its
+brightness a green reflectance of 0.13. Photos are exposed brighter than
+moss is, so only the hue comes from them. A shell is darker by
+`CANOPY_SHADE` (0.62), the shade among its shoots: moss canopies reflect
+0.05 to 0.11 of visible light. `DrawOptions::hydration` (0 dry to 1 just
+rained on) sets the leaf angles and colour: wet moss is darker and a
+deeper green, dry moss paler, duller and yellower, its hair-points and
+hyaline tips greying it the more.
+
+### Lower settings and a texture-only level
+
+At a distance even a patch a colony is wasted on a roof that holds
+thousands. The next step, for the site fill, is a level with no
+triangles: the cover tints the host's own surface (its texture or vertex
+colours) by coverage and `MossKind::far_colour`, with the patches or
+shells only within a few tens of metres. A host can do that now from
+the colonies (centre, normal, radius); a helper that bakes coverage into
+a host face's texture is to come with the fill work. Levels between:
+shells merged per face into one heightfield, and shell texturing (a few
+stacked alpha layers, as for fur) where the renderer has alpha.
 
 ## The genera
 
@@ -110,9 +148,10 @@ cargo build --release -p plantc
   --render /tmp/moss-close.png --focus -1.583,0.52,0.13 --span 0.07 --view side
 ```
 
-`--from north` turns the view half round, `--wet 0.1` draws it dry,
+`--detail patch|shell|shoots|near` picks the level, `--from north` turns
+the view half round, `--wet 0.1` draws it dry,
 `--capsules no` leaves out the sporophytes. Growing the test wall and shed
-takes about 20 s; a close view with shoots, a few million triangles and
+takes about a minute; a close view with shoots, a few million triangles and
 seconds to tens of seconds.
 
 ## Tests
@@ -120,7 +159,8 @@ seconds to tens of seconds.
 `crates/plantgen/tests/mosses.rs`: the genera and their forms, colonies
 kept off a board kept clear and the slab pressed on it, the shaded side
 of a wall carrying more moss than the sunny one, the same cover every
-time and through JSON, and shells far with shoots near.
+time and through JSON, patches far with shells between and shoots near,
+and moss darker and greener wet than dry.
 
 ## Into the site fill
 
