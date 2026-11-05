@@ -1247,6 +1247,7 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("floret_length", Number),
                 ("open", Number),
                 ("pappus", Number),
+                ("cypsela", Number),
             ],
         ),
         ("umbel", &[("clusters", Count), ("florets", Count)]),

@@ -1247,13 +1247,16 @@ fn grow_variant(
     )
 }
 
-/// Grow `variant` of the inputs' spec as a package grows it, over all its
-/// years (so its keyframes know when each part will be shed) and on its
-/// host's wood for a guest, keeping keyframes at `ages` only.
-pub(crate) fn grow_one(
+/// Grow `variant` of the inputs' spec as a package grows it, over `years`
+/// (its own years, so its keyframes know when each part will be shed, or
+/// past them to one of its old ages, [`PlantSpec::old_ages`], as
+/// [`PlantSpec::grown_old`] grows it) and on its host's wood for a guest,
+/// keeping keyframes at `ages` only.
+pub(crate) fn grow_until(
     inputs: &Inputs,
     variant: &Variant,
     ages: &[f64],
+    years: f64,
 ) -> Result<Growth, PackageError> {
     let spec = &inputs.spec;
     let (program, params) = spec.program_from(&inputs.program_source)?;
@@ -1267,7 +1270,7 @@ pub(crate) fn grow_one(
         &GrowthSettings {
             seed: variant.seed,
             dt: spec.growth.step,
-            years: spec.growth.years,
+            years,
             keyframes: ages.to_vec(),
             conditions: variant.conditions(),
             limits: Limits::default(),

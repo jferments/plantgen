@@ -2,5 +2,21 @@
   "schema": 1,
   "rank": "superorder",
   "name": "Hypnanae",
-  "parent": "subclass/bryidae"
+  "parent": "subclass/bryidae",
+  "traits": {
+    "perichaetia": {
+      "pleurocarpous": "usually"
+    },
+    "colony_form": {
+      "mat": "usually",
+      "weft": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "bryophyte-biology",
+      "note": "Goffinet and Shaw, Bryophyte Biology (2009), p. 128 (as extracted 2026-10-15, card bryo-p128-1): in the Hypnanae the sporophytes arise on side branches (pleurocarpy), and the shoots branch freely and usually creep, so they grow as mats; p. 88 (card bryo-p88-1): a creeping main axis with pinnate branches gives a feathery outline."
+    }
+  }
 }

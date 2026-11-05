@@ -1,0 +1,255 @@
+{
+  "schema": 1,
+  "id": "taraxacum-sect-taraxacum",
+  "taxon": {
+    "scientific_name": "Taraxacum sect. Taraxacum",
+    "family": "Asteraceae",
+    "genus": "Taraxacum",
+    "plant_name_id": 2916959,
+    "common_name": "common dandelion"
+  },
+  "growth_form": "forb",
+  "allometry": [{"age": 2, "environment": "open", "height": 0.22, "tolerance": 0.4}],
+  "tier": "procedural_proxy",
+  "traits": {
+    "capitulum_kind": "liguliflorous",
+    "ligulate_florets": {"min": 40, "max": 100},
+    "phyllaries": {"min": 13, "max": 18},
+    "phyllary_series": {"min": 2, "max": 2},
+    "involucre_height_m": {"min": 0.014, "max": 0.025},
+    "pappus": "bristles",
+    "pappus_length_m": {"min": 0.005, "max": 0.006, "high": 0.008},
+    "seedbank": "long_term",
+    "seed_dispersal": ["wind"],
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "height_typical_m": {
+      "min": 0.05,
+      "max": 0.4
+    },
+    "height_max_m": 0.5,
+    "rosette": "basal",
+    "leaf_length_m": {
+      "min": 0.05,
+      "max": 0.25
+    },
+    "leaf_width_m": {
+      "min": 0.01,
+      "max": 0.06
+    },
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_shape": "oblanceolate",
+    "leaf_margin": "dentate",
+    "sexual_system": "hermaphrodite",
+    "flowering_months": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "fruit_type": "cypsela",
+    "fruit_size_m": {
+      "min": 0.0025,
+      "max": 0.0028,
+      "low": 0.002,
+      "high": 0.004
+    },
+    "fruit_colour_ripe": [
+      120,
+      80,
+      45
+    ],
+    "fruiting_months": [
+      4,
+      5,
+      6,
+      7
+    ],
+    "inflorescence": "solitary",
+    "inflorescence_length_m": {
+      "min": 0.03,
+      "max": 0.05
+    },
+    "rosette_leaves": {
+      "min": 20,
+      "max": 40
+    },
+    "leaf_base_shape": "attenuate",
+    "leaf_posture": "spreading",
+    "flowering_stems": {
+      "min": 1,
+      "max": 10
+    },
+    "rosette_scapes": {
+      "min": 1,
+      "max": 10
+    },
+    "ligulate_colour": [
+      245,
+      200,
+      30
+    ],
+    "cauline_leaves": "none"
+  },
+  "evidence": {
+    "traits.capitulum_kind": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (Taraxacum officinale, vol. 19, read on efloras.org 2026-11-04): involucres green to dark green or brownish green, campanulate, 14-25 mm; phyllaries 13-18 in 2 series; florets 40-100+, corollas yellow; cypselae bodies oblanceoloid, (2-)2.5-2.8(-4) mm, beaks slender, 7-9 mm; pappi white to sordid, 5-6(-8) mm. Every floret is a strap (the genus: florets all liguliflorous)."},
+    "traits.ligulate_florets": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (Taraxacum officinale, vol. 19, read on efloras.org 2026-11-04): involucres green to dark green or brownish green, campanulate, 14-25 mm; phyllaries 13-18 in 2 series; florets 40-100+, corollas yellow; cypselae bodies oblanceoloid, (2-)2.5-2.8(-4) mm, beaks slender, 7-9 mm; pappi white to sordid, 5-6(-8) mm."},
+    "traits.phyllaries": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (Taraxacum officinale, vol. 19, read on efloras.org 2026-11-04): involucres green to dark green or brownish green, campanulate, 14-25 mm; phyllaries 13-18 in 2 series; florets 40-100+, corollas yellow; cypselae bodies oblanceoloid, (2-)2.5-2.8(-4) mm, beaks slender, 7-9 mm; pappi white to sordid, 5-6(-8) mm."},
+    "traits.phyllary_series": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (Taraxacum officinale, vol. 19, read on efloras.org 2026-11-04): involucres green to dark green or brownish green, campanulate, 14-25 mm; phyllaries 13-18 in 2 series; florets 40-100+, corollas yellow; cypselae bodies oblanceoloid, (2-)2.5-2.8(-4) mm, beaks slender, 7-9 mm; pappi white to sordid, 5-6(-8) mm."},
+    "traits.involucre_height_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (Taraxacum officinale, vol. 19, read on efloras.org 2026-11-04): involucres green to dark green or brownish green, campanulate, 14-25 mm; phyllaries 13-18 in 2 series; florets 40-100+, corollas yellow; cypselae bodies oblanceoloid, (2-)2.5-2.8(-4) mm, beaks slender, 7-9 mm; pappi white to sordid, 5-6(-8) mm. The 14-25 mm is the involucre's length; the species account gives no width (the genus: 8-40 mm diam.)."},
+    "traits.pappus": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (Taraxacum officinale, vol. 19, read on efloras.org 2026-11-04): involucres green to dark green or brownish green, campanulate, 14-25 mm; phyllaries 13-18 in 2 series; florets 40-100+, corollas yellow; cypselae bodies oblanceoloid, (2-)2.5-2.8(-4) mm, beaks slender, 7-9 mm; pappi white to sordid, 5-6(-8) mm."},
+    "traits.pappus_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (Taraxacum officinale, vol. 19, read on efloras.org 2026-11-04): involucres green to dark green or brownish green, campanulate, 14-25 mm; phyllaries 13-18 in 2 series; florets 40-100+, corollas yellow; cypselae bodies oblanceoloid, (2-)2.5-2.8(-4) mm, beaks slender, 7-9 mm; pappi white to sordid, 5-6(-8) mm."},
+    "allometry": {"evidence": "Authored", "source": "plantgen-authors", "note": "0.22 m in flower in its second year in the open: the middle of Flora of North America's plants (1-)5-40(-60) cm, its scapes standing over the rosette. Not measured."},
+    "traits.seedbank": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Taraxacum officinale: its seed lives long in the soil."},
+    "traits.seed_dispersal": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Taraxacum officinale: it makes a great deal of seed that the wind carries."},
+    "taxon": {
+      "evidence": "Authored",
+      "source": "wcvp-v16",
+      "note": "Accepted name, family, genus and plant_name_id from WCVP v16 (Library 1.0 list); common name from the species-facts record."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2916959), as no source read gives it, from its coarse growth form."
+    },
+    "traits.life_span": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2916959), as no source read gives it."
+    },
+    "traits.woodiness": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2916959), as no source read gives it."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Taraxacum officinale): plants (1-)5-40(-60) cm; stems 1-10+, erect or ascending; leaves 20+, horizontal to erect; petioles narrowly winged; blades oblanceolate, oblong or obovate (often runcinate), (4-)5-45 x (0.7-)1-10 cm, bases attenuate to narrowly cuneate, margins usually shallowly to deeply lobed to lacerate or toothed, lobes retrorse, broadly to narrowly triangular, acute to long-acuminate; involucres 14-25 mm; florets 40-100+, corollas yellow (orange-yellow), 15-22 mm."
+    },
+    "traits.height_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2916959), as no source read gives it."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Taraxacum officinale): plants (1-)5-40(-60) cm; stems 1-10+, erect or ascending; leaves 20+, horizontal to erect; petioles narrowly winged; blades oblanceolate, oblong or obovate (often runcinate), (4-)5-45 x (0.7-)1-10 cm, bases attenuate to narrowly cuneate, margins usually shallowly to deeply lobed to lacerate or toothed, lobes retrorse, broadly to narrowly triangular, acute to long-acuminate; involucres 14-25 mm; florets 40-100+, corollas yellow (orange-yellow), 15-22 mm."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Taraxacum officinale): plants (1-)5-40(-60) cm; stems 1-10+, erect or ascending; leaves 20+, horizontal to erect; petioles narrowly winged; blades oblanceolate, oblong or obovate (often runcinate), (4-)5-45 x (0.7-)1-10 cm, bases attenuate to narrowly cuneate, margins usually shallowly to deeply lobed to lacerate or toothed, lobes retrorse, broadly to narrowly triangular, acute to long-acuminate; involucres 14-25 mm; florets 40-100+, corollas yellow (orange-yellow), 15-22 mm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Taraxacum officinale): plants (1-)5-40(-60) cm; stems 1-10+, erect or ascending; leaves 20+, horizontal to erect; petioles narrowly winged; blades oblanceolate, oblong or obovate (often runcinate), (4-)5-45 x (0.7-)1-10 cm, bases attenuate to narrowly cuneate, margins usually shallowly to deeply lobed to lacerate or toothed, lobes retrorse, broadly to narrowly triangular, acute to long-acuminate; involucres 14-25 mm; florets 40-100+, corollas yellow (orange-yellow), 15-22 mm."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2916959), as no source read gives it."
+    },
+    "traits.leaf_division": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2916959), as no source read gives it."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Taraxacum officinale): plants (1-)5-40(-60) cm; stems 1-10+, erect or ascending; leaves 20+, horizontal to erect; petioles narrowly winged; blades oblanceolate, oblong or obovate (often runcinate), (4-)5-45 x (0.7-)1-10 cm, bases attenuate to narrowly cuneate, margins usually shallowly to deeply lobed to lacerate or toothed, lobes retrorse, broadly to narrowly triangular, acute to long-acuminate; involucres 14-25 mm; florets 40-100+, corollas yellow (orange-yellow), 15-22 mm."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Taraxacum officinale): plants (1-)5-40(-60) cm; stems 1-10+, erect or ascending; leaves 20+, horizontal to erect; petioles narrowly winged; blades oblanceolate, oblong or obovate (often runcinate), (4-)5-45 x (0.7-)1-10 cm, bases attenuate to narrowly cuneate, margins usually shallowly to deeply lobed to lacerate or toothed, lobes retrorse, broadly to narrowly triangular, acute to long-acuminate; involucres 14-25 mm; florets 40-100+, corollas yellow (orange-yellow), 15-22 mm."
+    },
+    "traits.sexual_system": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2916959), as no source read gives it."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2916959), as no source read gives it."
+    },
+    "traits.fruit_type": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2916959), as no source read gives it."
+    },
+    "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (Taraxacum officinale, vol. 19, read on efloras.org 2026-11-04): involucres green to dark green or brownish green, campanulate, 14-25 mm; phyllaries 13-18 in 2 series; florets 40-100+, corollas yellow; cypselae bodies oblanceoloid, (2-)2.5-2.8(-4) mm, beaks slender, 7-9 mm; pappi white to sordid, 5-6(-8) mm. The fruit's size is its body's, as floras measure a cypsela, without its beak."},
+    "traits.fruit_colour_ripe": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2916959), as no source read gives it, sRGB from the colour word."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2916959), as no source read gives it."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Taraxacum officinale): leaves 20+, basal; stems 1-10+, erect or ascending, leafless, each with one head (involucres 14-25 mm)."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2916959), as no source read gives it."
+    },
+    "traits.rosette_leaves": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Taraxacum officinale): plants (1-)5-40(-60) cm; stems 1-10+, erect or ascending; leaves 20+, horizontal to erect; petioles narrowly winged; blades oblanceolate, oblong or obovate (often runcinate), (4-)5-45 x (0.7-)1-10 cm, bases attenuate to narrowly cuneate, margins usually shallowly to deeply lobed to lacerate or toothed, lobes retrorse, broadly to narrowly triangular, acute to long-acuminate; involucres 14-25 mm; florets 40-100+, corollas yellow (orange-yellow), 15-22 mm."
+    },
+    "traits.leaf_base_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Taraxacum officinale): plants (1-)5-40(-60) cm; stems 1-10+, erect or ascending; leaves 20+, horizontal to erect; petioles narrowly winged; blades oblanceolate, oblong or obovate (often runcinate), (4-)5-45 x (0.7-)1-10 cm, bases attenuate to narrowly cuneate, margins usually shallowly to deeply lobed to lacerate or toothed, lobes retrorse, broadly to narrowly triangular, acute to long-acuminate; involucres 14-25 mm; florets 40-100+, corollas yellow (orange-yellow), 15-22 mm."
+    },
+    "traits.leaf_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Taraxacum officinale): plants (1-)5-40(-60) cm; stems 1-10+, erect or ascending; leaves 20+, horizontal to erect; petioles narrowly winged; blades oblanceolate, oblong or obovate (often runcinate), (4-)5-45 x (0.7-)1-10 cm, bases attenuate to narrowly cuneate, margins usually shallowly to deeply lobed to lacerate or toothed, lobes retrorse, broadly to narrowly triangular, acute to long-acuminate; involucres 14-25 mm; florets 40-100+, corollas yellow (orange-yellow), 15-22 mm."
+    },
+    "traits.rosette_scapes": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Taraxacum): perennials, taprooted or with branched caudices; stems (1-10+) erect or ascending, scapiform; leaves basal (in rosettes); heads borne singly. Taraxacum officinale: stems 1-10+; leaves 20+. The scapes rise together from the one rosette on its taproot, so it sends up all of them."
+    },
+    "traits.flowering_stems": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Taraxacum officinale): plants (1-)5-40(-60) cm; stems 1-10+, erect or ascending; leaves 20+, horizontal to erect; petioles narrowly winged; blades oblanceolate, oblong or obovate (often runcinate), (4-)5-45 x (0.7-)1-10 cm, bases attenuate to narrowly cuneate, margins usually shallowly to deeply lobed to lacerate or toothed, lobes retrorse, broadly to narrowly triangular, acute to long-acuminate; involucres 14-25 mm; florets 40-100+, corollas yellow (orange-yellow), 15-22 mm."
+    },
+    "traits.ligulate_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Taraxacum officinale): plants (1-)5-40(-60) cm; stems 1-10+, erect or ascending; leaves 20+, horizontal to erect; petioles narrowly winged; blades oblanceolate, oblong or obovate (often runcinate), (4-)5-45 x (0.7-)1-10 cm, bases attenuate to narrowly cuneate, margins usually shallowly to deeply lobed to lacerate or toothed, lobes retrorse, broadly to narrowly triangular, acute to long-acuminate; involucres 14-25 mm; florets 40-100+, corollas yellow (orange-yellow), 15-22 mm."
+    },
+    "traits.cauline_leaves": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Taraxacum officinale): leaves 20+, basal; stems 1-10+, erect or ascending, leafless, each with one head (involucres 14-25 mm)."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "PlantGen species facts 2026-10-15 (model estimates)",
+        "licence": "MIT, as PlantGen"
+      }
+    ],
+    "contributors": [
+      "PlantGen contributors"
+    ],
+    "notes": "Facts-only draft (C5 pilot): the species' characters from its species-facts record, everything else from its rank files."
+  }
+}

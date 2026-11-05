@@ -194,6 +194,32 @@ fn builds_are_deterministic() {
     assert_eq!(first, second);
 }
 
+/// The atlas a tier's pictures pack into keeps the tier's texel budget,
+/// the room the packing leaves between pictures too: a poison hemlock's
+/// low cards packed into 512 x 624 texels of a 512 x 512 budget once its
+/// cut leaves took cards of their own.
+#[test]
+fn a_tiers_packed_atlas_keeps_its_texel_budget() {
+    for id in ["achillea-millefolium", "conium-maculatum", SPECIES[2]] {
+        let (height, _, plants) = carded(id);
+        for (tier, plant) in TIERS.iter().zip(&plants) {
+            let atlas = plant.atlas();
+            let budget = tier.texels(height);
+            println!(
+                "{id} {}: {} x {} of {budget}",
+                tier.name, atlas.width, atlas.height
+            );
+            assert!(
+                atlas.width * atlas.height <= budget,
+                "{id} {}: {} x {} texels of {budget}",
+                tier.name,
+                atlas.width,
+                atlas.height
+            );
+        }
+    }
+}
+
 #[test]
 fn pictures_pack_into_one_atlas() {
     let (_, _, plants) = carded(SPECIES[2]);
@@ -284,9 +310,11 @@ fn an_agaves_long_leaves_are_drawn_whole() {
         let leaves = plant.stats.leaf_triangles;
         assert!(leaves > 0, "{}: no leaf drawn whole", tier.name);
         assert_eq!(leaves % billboards::WHOLE_LEAF_TRIANGLES, 0);
-        // Each blade takes a card's worth of triangles from the cards.
+        // Each blade takes a card's worth of triangles from the cards
+        // (cut leaves' own cards are paid from a budget of their own).
         assert!(
-            plant.stats.card_triangles + leaves <= tier.cards(height) * (CORNERS - 2),
+            plant.stats.card_triangles - plant.stats.lace_triangles + leaves
+                <= tier.cards(height) * (CORNERS - 2),
             "{}: {} card and {leaves} leaf triangles",
             tier.name,
             plant.stats.card_triangles
@@ -330,21 +358,44 @@ fn a_yarrows_corymbs_are_drawn_solid() {
 }
 
 #[test]
-fn a_yarrows_cut_leaves_are_drawn_along_their_midribs() {
-    // Baked, its leaves' fine segments are each less than a texel, and
-    // the cards kept them as scattered dots with nothing joining them.
-    // Each leaf's midrib is a line in the leaf's own dark green now, as
-    // far as the tier's budget for them goes.
+fn a_yarrows_cut_leaves_are_drawn_on_cards_of_their_own() {
+    // Baked into the plant's cards, its leaves' fine segments are each
+    // less than a texel, and the cards kept them as scattered dots; drawn
+    // as midrib lines they read as lines, not feathery blades. Each leaf
+    // is a pair of crossed cards now, wearing a picture of the plant's
+    // own longest leaf laid flat, as far as the tier's budget goes.
     let (_, _, plants) = carded("achillea-millefolium");
     for (tier, plant) in TIERS.iter().zip(&plants) {
-        let leafy = plant
-            .wood
-            .colors
+        let lace = plant.stats.lace_triangles;
+        println!("{}: {lace} cut-leaf card triangles", tier.name);
+        assert!(
+            lace >= 18 * 8,
+            "{}: {lace} cut-leaf card triangles",
+            tier.name
+        );
+        assert_eq!(lace % 8, 0);
+        // Every leaf card wears one picture, its look's: the same alpha
+        // index on the last `lace` triangles' corners.
+        let cards = &plant.cards;
+        let first = cards.indices.len() - lace * 3;
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let mut worn: Vec<u32> = cards.indices[first..]
             .iter()
-            .filter(|c| c[1] > 1.6 * c[0] && c[1] > 2.0 * c[2])
-            .count();
-        println!("{}: {leafy} midrib corners", tier.name);
-        assert!(leafy >= 200, "{}: {leafy} midrib corners", tier.name);
+            .map(|&i| cards.colors[i as usize][3] as u32)
+            .collect();
+        worn.sort_unstable();
+        worn.dedup();
+        assert_eq!(worn.len(), 1, "{}: pictures {worn:?}", tier.name);
+        let picture = &plant.pictures[worn[0] as usize];
+        let covered = picture.color.iter().filter(|c| c[3] >= 0.5).count();
+        // A cut blade covers little of its frame, but not nothing.
+        #[allow(clippy::cast_precision_loss)]
+        let share = covered as f64 / (picture.width * picture.height) as f64;
+        assert!(
+            (0.05..0.6).contains(&share),
+            "{}: covers {share:.2}",
+            tier.name
+        );
     }
 }
 
@@ -502,6 +553,27 @@ fn a_carrots_card_tiers_keep_its_pale_stem_and_its_umbel() {
 }
 
 #[test]
+fn a_yarrows_card_tiers_keep_its_tone_from_the_side() {
+    // Its leaves' midribs were lit as round stems facing out from the
+    // plant's middle, and its solid corymbs were cones as deep as they
+    // were broad, lit as their faces with a normal straight down at the
+    // foot: from the side the low cards drew 0.75 as bright as the plant
+    // and the corymbs half their cover. Each line is lit as its blade
+    // faces now, and each corymb's cone is as deep as its cover from the
+    // side says.
+    for tier in &TIERS {
+        let (whole, carded) = full_and_tier("achillea-millefolium", tier);
+        let ratio = carded.tone[0] / whole.tone[0];
+        println!("{}: tone from the side {ratio:.2}", tier.name);
+        assert!(
+            ratio >= 0.88,
+            "{}: from the side the cards draw {ratio:.2} as bright as the plant",
+            tier.name
+        );
+    }
+}
+
+#[test]
 fn tubercled_bodies_keep_their_tone_on_the_cards() {
     // Smooth where the plant is all mounds, a living rock's and a
     // pincushion's coarse bodies took the sun their tubercles shade each
@@ -594,5 +666,53 @@ fn a_palms_leaflets_draw_no_lines_under_their_fronds_cards() {
         low.wood_triangles <= 400,
         "the low tier's wood takes {} triangles",
         low.wood_triangles
+    );
+}
+
+/// The lowest and highest point of node `name`'s mesh in an uncompressed
+/// GLB, metres up.
+fn node_heights(glb: &[u8], name: &str) -> Option<(f64, f64)> {
+    let length = u32::from_le_bytes(glb[12..16].try_into().ok()?) as usize;
+    let json: serde_json::Value = serde_json::from_slice(&glb[20..20 + length]).ok()?;
+    let node = json["nodes"]
+        .as_array()?
+        .iter()
+        .find(|node| node["name"] == name)?;
+    let mesh = &json["meshes"][node["mesh"].as_u64()? as usize];
+    mesh["primitives"]
+        .as_array()?
+        .iter()
+        .map(|primitive| {
+            let accessor =
+                &json["accessors"][primitive["attributes"]["POSITION"].as_u64()? as usize];
+            Some((accessor["min"][1].as_f64()?, accessor["max"][1].as_f64()?))
+        })
+        .collect::<Option<Vec<_>>>()?
+        .into_iter()
+        .reduce(|a, b| (a.0.min(b.0), a.1.max(b.1)))
+}
+
+#[test]
+fn a_stand_grown_firs_low_tier_keeps_its_bole_up_to_its_crown() {
+    // A Douglas fir grown in a closed stand bears its crown high on a
+    // bare bole. Baked into the crown's cards with the thin wood, the
+    // bole above 11 m went with them, and the crown floated 9 m over a
+    // stump.
+    let mut options = plantgen::api::Options::default();
+    options.quality = plantgen::quality::DRAFT;
+    let fir = plantgen::api::Generator::new("pseudotsuga-menziesii", &options).expect("fir");
+    let plant = fir
+        .grow_in(plantgen::api::Environment::Interior, 1, 60.0)
+        .expect("it grows");
+    let mut settings = plantgen::api::Settings::default();
+    settings.budget = plantgen::api::Budget::tiers();
+    let exported = fir.export(&plant, &settings).expect("it exports");
+    let low = exported.levels.last().expect("a low tier");
+    assert!(low.cards.is_some(), "the low tier is the baked cards");
+    let (_, wood_top) = node_heights(&low.glb, "wood").expect("wood");
+    let (crown_foot, _) = node_heights(&low.glb, "cards").expect("cards");
+    assert!(
+        wood_top > crown_foot,
+        "the bole ends at {wood_top:.1} m, under the crown's foot at {crown_foot:.1} m"
     );
 }

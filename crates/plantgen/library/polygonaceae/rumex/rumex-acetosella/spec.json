@@ -24,7 +24,8 @@
       "flowers": 1,
       "flower_angle": 0,
       "pedicel": 0,
-      "dioecious": 1
+      "dioecious": 1,
+      "basal_length": 0.065
     }
   },
   "growth": {
@@ -259,7 +260,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Set by hand for sheep sorrel from Abrams's description and the photos the traits cite: the herb program's structure (stems, nodes, basal leaves, how the flowers are borne). Its inflorescence is drawn as one cluster at each stem's tip, sized by the traits, so the stem ends where the cluster begins. Not fitted to measurements."
+      "note": "Set by hand for sheep sorrel from Abrams's description and the photos the traits cite: the herb program's structure (stems, nodes, basal leaves, how the flowers are borne). Its inflorescence is drawn as one cluster at each stem's tip, sized by the traits, so the stem ends where the cluster begins. Not fitted to measurements. The basal leaves are the largest, up to Abrams's 8 cm (the uppermost smaller): basal_length 0.065, each 0.75 to 1.25 of it (2026-11-04; the forb rule's middle length had drawn none over 6.6 cm)."
     },
     "allometry": {
       "evidence": "Authored",

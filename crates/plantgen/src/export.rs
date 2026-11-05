@@ -343,6 +343,296 @@ pub struct Level {
     pub budget: Option<LevelBudget>,
     /// Drawn as a baked-card tier ([`crate::billboards`]): its name.
     pub cards: Option<&'static str>,
+    /// With [`export_parts`], the level cut into the parts' boxes, one
+    /// file each, in the regions' order: what of the level lies in each.
+    pub parts: Vec<LevelPart>,
+}
+
+/// One region's share of a level ([`export_parts`]).
+#[derive(Debug, Clone, PartialEq)]
+pub struct LevelPart {
+    pub file: String,
+    pub glb: Vec<u8>,
+    pub summary: gltf::Summary,
+}
+
+/// A box of a plant, in its own metres (x and z across, y up), whose
+/// share of each level [`export_parts`] writes as a file of its own. A
+/// triangle, card or part lies in the region its middle lies in.
+#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize)]
+pub struct Region {
+    pub name: String,
+    pub min: [f32; 3],
+    pub max: [f32; 3],
+}
+
+impl Region {
+    #[must_use]
+    pub fn holds(&self, point: [f32; 3]) -> bool {
+        (0..3).all(|axis| point[axis] >= self.min[axis] && point[axis] < self.max[axis])
+    }
+}
+
+/// The plant's height at most which it is drawn whole, metres: a smaller
+/// plant is seen whole from wherever it is near.
+pub const PARTS_FROM_HEIGHT: f64 = 6.0;
+
+/// The shallowest a crown's band is, metres; a tall plant's are at
+/// least a sixth of its height.
+pub const PART_BAND: f64 = 8.0;
+
+/// The regions a tall plant is cut into so a renderer can draw each at
+/// the detail its own distance asks for: the bole under the crown, then
+/// the crown in up to four bands of at least [`PART_BAND`] or a sixth of
+/// the plant's height, the top
+/// band reaching past the plant's top. Every region reaches far enough
+/// out and down to hold everything at its heights. None for a plant
+/// under [`PARTS_FROM_HEIGHT`].
+#[must_use]
+pub fn crown_regions(size: &Measurements) -> Vec<Region> {
+    let height = size.height;
+    if height.is_nan() || height < PARTS_FROM_HEIGHT {
+        return Vec::new();
+    }
+    let far = f32::MAX / 4.0;
+    let band = |name: String, low: f64, high: f64| Region {
+        name,
+        #[allow(clippy::cast_possible_truncation)]
+        min: [-far, low as f32, -far],
+        #[allow(clippy::cast_possible_truncation)]
+        max: [far, high as f32, far],
+    };
+    let base = size
+        .crown_base
+        .filter(|base| *base > 0.5 && *base < height * 0.9)
+        .unwrap_or(0.0);
+    let mut regions = Vec::new();
+    if base > 0.0 {
+        regions.push(band("bole".into(), -1.0e6, base));
+    }
+    // Bands by the crown's own depth: a deep crown in more of them, each
+    // at least a sixth of the plant's height.
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+    let bands = ((height - base) / PART_BAND.max(height / 6.0))
+        .ceil()
+        .clamp(1.0, 4.0) as usize;
+    #[allow(clippy::cast_precision_loss)]
+    let step = (height - base) / bands as f64;
+    for index in 0..bands {
+        #[allow(clippy::cast_precision_loss)]
+        let low = if index == 0 && base <= 0.0 {
+            -1.0e6
+        } else {
+            base + step * index as f64
+        };
+        #[allow(clippy::cast_precision_loss)]
+        let high = if index + 1 == bands {
+            1.0e6
+        } else {
+            base + step * (index + 1) as f64
+        };
+        regions.push(band(format!("crown{index}"), low, high));
+    }
+    regions
+}
+
+/// Where each segment of `graph` counts as lying when a plant is cut into
+/// regions: the height at which its limb leaves the stem. A whole limb
+/// then falls in one region, cut from the stem where it joins it and
+/// never through its foliage, and a bole's short lower limbs go with the
+/// bole.
+fn limb_heights(graph: &PlantGraph) -> Vec<f32> {
+    let mut heights: Vec<Option<f32>> = vec![None; graph.segments.len()];
+    for index in 0..graph.segments.len() {
+        let mut chain = Vec::new();
+        let mut cursor = index;
+        let found = loop {
+            if let Some(height) = heights[cursor] {
+                break height;
+            }
+            let segment = &graph.segments[cursor];
+            #[allow(clippy::cast_possible_truncation)]
+            let here = segment.start.y as f32;
+            let parent = segment.parent.map(|p| p as usize);
+            match parent {
+                None => break here,
+                Some(_) if segment.order == 0 => break here,
+                Some(parent) if graph.segments[parent].order == 0 => break here,
+                Some(parent) => {
+                    chain.push(cursor);
+                    cursor = parent;
+                }
+            }
+        };
+        heights[cursor] = Some(found);
+        for link in chain {
+            heights[link] = Some(found);
+        }
+    }
+    heights.into_iter().map(|h| h.unwrap_or(0.0)).collect()
+}
+
+/// The point a triangle of `mesh` counts as lying at: its middle, at the
+/// height its limb leaves the stem ([`limb_heights`]) where it says
+/// which segment bears it.
+fn triangle_point(mesh: &Mesh, triangle: &[u32; 3], limbs: &[f32]) -> [f32; 3] {
+    let mut middle: [f32; 3] = std::array::from_fn(|axis| {
+        triangle
+            .iter()
+            .map(|&v| mesh.positions[v as usize][axis])
+            .sum::<f32>()
+            / 3.0
+    });
+    if let Some(&height) = mesh
+        .segments
+        .get(triangle[0] as usize)
+        .and_then(|&segment| limbs.get(segment as usize))
+    {
+        middle[1] = height;
+    }
+    middle
+}
+
+/// The triangles of `mesh` that lie in `region` ([`triangle_point`]), and
+/// for each vertex kept the vertex it was.
+fn clipped(mesh: &Mesh, region: &Region, limbs: &[f32]) -> (Mesh, Vec<usize>) {
+    let mut out = Mesh::default();
+    let mut from = Vec::new();
+    let mut placed: HashMap<u32, u32> = HashMap::new();
+    for triangle in mesh.indices.as_chunks::<3>().0 {
+        if !region.holds(triangle_point(mesh, triangle, limbs)) {
+            continue;
+        }
+        for &corner in triangle {
+            let index = *placed.entry(corner).or_insert_with(|| {
+                let v = corner as usize;
+                out.positions.push(mesh.positions[v]);
+                out.normals.push(mesh.normals[v]);
+                if let Some(uv) = mesh.uvs.get(v) {
+                    out.uvs.push(*uv);
+                }
+                out.colors.push(mesh.colors[v]);
+                if let Some(birth) = mesh.births.get(v) {
+                    out.births.push(*birth);
+                }
+                if let Some(shed) = mesh.sheds.get(v) {
+                    out.sheds.push(*shed);
+                }
+                if let Some(level) = mesh.levels.get(v) {
+                    out.levels.push(*level);
+                }
+                if let Some(segment) = mesh.segments.get(v) {
+                    out.segments.push(*segment);
+                }
+                from.push(v);
+                #[allow(clippy::cast_possible_truncation)]
+                let index = out.positions.len() as u32 - 1;
+                index
+            });
+            out.indices.push(index);
+        }
+    }
+    (out, from)
+}
+
+/// The share of `drawing` that lies in `region`, as owned pieces.
+fn region_pieces(
+    drawing: &Drawing<'_>,
+    region: &Region,
+    limbs: &[f32],
+) -> (PlantMesh, Vec<f32>, Pieces, Option<Baked>) {
+    let (wood, from) = clipped(&drawing.plant.wood, region, limbs);
+    let shades = from
+        .iter()
+        .map(|&v| drawing.shades.get(v).copied().unwrap_or(1.0))
+        .collect();
+    let plant = PlantMesh {
+        wood,
+        ..drawing.plant.clone()
+    };
+    let pieces = Pieces {
+        placements: drawing
+            .pieces
+            .placements
+            .iter()
+            .filter(|placement| {
+                let base = placement.base;
+                #[allow(clippy::cast_possible_truncation)]
+                let mut point = [base.x as f32, base.y as f32, base.z as f32];
+                if let Some(&height) = drawing
+                    .plant
+                    .cards
+                    .get(placement.card)
+                    .and_then(|card| limbs.get(card.segment as usize))
+                {
+                    point[1] = height;
+                }
+                region.holds(point)
+            })
+            .copied()
+            .collect(),
+        spines: drawing
+            .pieces
+            .spines
+            .as_ref()
+            .map(|mesh| clipped(mesh, region, limbs).0),
+        cards: drawing
+            .pieces
+            .cards
+            .iter()
+            .map(|(index, mesh)| (*index, clipped(mesh, region, limbs).0))
+            .filter(|(_, mesh)| !mesh.indices.is_empty())
+            .collect(),
+    };
+    let baked = drawing.baked.map(|baked| Baked {
+        cards: clipped(&baked.cards, region, limbs).0,
+        albedo: baked.albedo.clone(),
+    });
+    (plant, shades, pieces, baked)
+}
+
+/// Each region's share of a level drawn as `drawing`, named after `file`.
+fn level_parts(
+    drawing: &Drawing<'_>,
+    graph: &PlantGraph,
+    inputs: &Inputs,
+    settings: Settings,
+    regions: &[Region],
+    file: &str,
+    extras: &dyn Fn(Option<f32>) -> Value,
+) -> Result<Vec<LevelPart>, PackageError> {
+    if regions.is_empty() {
+        return Ok(Vec::new());
+    }
+    let limbs = limb_heights(graph);
+    regions
+        .iter()
+        .map(|region| {
+            let (plant, shades, pieces, baked) = region_pieces(drawing, region, &limbs);
+            let part = Drawing {
+                plant: &plant,
+                shades: &shades,
+                pieces: &pieces,
+                parts: drawing.parts,
+                baked: baked.as_ref(),
+            };
+            let (glb, _) = level_glb(&part, inputs, settings, None, extras);
+            let name = file.strip_suffix(".glb").map_or_else(
+                || format!("{file}-{}", region.name),
+                |stem| match stem.rsplit_once("-lod") {
+                    Some((plant, level)) => format!("{plant}-{}-lod{level}.glb", region.name),
+                    None => format!("{stem}-{}.glb", region.name),
+                },
+            );
+            let summary =
+                gltf::check(&glb).map_err(|error| format_error(format!("{name}: {error}")))?;
+            Ok(LevelPart {
+                file: name,
+                glb,
+                summary,
+            })
+        })
+        .collect()
 }
 
 /// A level's share of a [`Budget`]: its triangles, and the bytes it was
@@ -464,7 +754,9 @@ pub fn grow(inputs: &Inputs, variant: usize, age: f64) -> Result<Plant, PackageE
             variants.len()
         ))
     })?;
-    grow_chosen(inputs, variant, chosen, age)
+    grow_chosen(inputs, variant, chosen, &[age])?
+        .pop()
+        .ok_or_else(|| format_error("the growth kept no keyframe"))
 }
 
 /// Grow the inputs' spec in `environment` from any `seed`, over all its
@@ -477,14 +769,33 @@ pub fn grow(inputs: &Inputs, variant: usize, age: f64) -> Result<Plant, PackageE
 ///
 /// # Errors
 ///
-/// When the age is not within the spec's years, or the plant does not
-/// grow.
+/// When the age is not within the spec's years or its old ages
+/// ([`PlantSpec::old_ages`](crate::spec::PlantSpec::old_ages)), or the
+/// plant does not grow.
 pub fn grow_seed(
     inputs: &Inputs,
     environment: Environment,
     seed: u64,
     age: f64,
 ) -> Result<Plant, PackageError> {
+    grow_seed_ages(inputs, environment, seed, &[age])?
+        .pop()
+        .ok_or_else(|| format_error("the growth kept no keyframe"))
+}
+
+/// [`grow_seed`] at each of `ages` (ascending), from one growth: the
+/// plant as it stands at each age, as a stand's cohorts of one species
+/// and seed are.
+///
+/// # Errors
+///
+/// As [`grow_seed`], for any of the ages.
+pub fn grow_seed_ages(
+    inputs: &Inputs,
+    environment: Environment,
+    seed: u64,
+    ages: &[f64],
+) -> Result<Vec<Plant>, PackageError> {
     let spec = &inputs.spec;
     let variants = spec.variant_list();
     let listed = variants.iter().position(|variant| {
@@ -507,38 +818,213 @@ pub fn grow_seed(
     };
     // A seed the package does not keep gets an index past its variants,
     // so no package check takes it for one it keeps.
-    grow_chosen(inputs, listed.unwrap_or(variants.len()), &chosen, age)
+    grow_chosen(inputs, listed.unwrap_or(variants.len()), &chosen, ages)
+}
+
+/// [`grow_seed_ages`] for a plant come up beneath a closed canopy
+/// `canopy_m` tall, as a stand's ingrowth does
+/// ([`PlantSpec::neighbourhood_beneath`](crate::spec::PlantSpec::neighbourhood_beneath)):
+/// its `seed` grown in its like's stand under the canopy's shade, never
+/// one of the variants its package keeps.
+///
+/// # Errors
+///
+/// As [`grow_seed_ages`], and when `canopy_m` is not above 0.
+pub fn grow_beneath(
+    inputs: &Inputs,
+    canopy_m: f64,
+    seed: u64,
+    ages: &[f64],
+) -> Result<Vec<Plant>, PackageError> {
+    let spec = &inputs.spec;
+    if !(canopy_m.is_finite() && canopy_m > 0.0) {
+        return Err(format_error(format!(
+            "{}: a canopy must be above 0 m high, found {canopy_m}",
+            spec.id
+        )));
+    }
+    let chosen = crate::spec::Variant {
+        environment: Environment::Suppressed,
+        seed,
+        neighbourhood: spec.neighbourhood_beneath(canopy_m),
+        class: None,
+        substrate: None,
+    };
+    grow_chosen(inputs, spec.variant_list().len(), &chosen, ages)
+}
+
+/// How high the wall a climber's fill prototype climbs stands, metres
+/// ([`grow_on_wall`]): two storeys. A fill draws it clipped to the height
+/// of the wall or fence it stands at.
+pub const WALL_M: f64 = 6.0;
+
+/// [`grow_seed_ages`] for a climber at the foot of a wall: its `seed`
+/// grown in the open, 0.3 m south of the south face of a brick wall
+/// `wall_m` high and 8 m long on level soil, holding to the wall as it
+/// would to one in a site's mesh ([`crate::site::SiteMesh::host_round`]),
+/// and kept at each of `ages`. In the plant's frame the wall's face is
+/// the plane z = -0.3, facing +z. The spec's own host is not grown.
+///
+/// # Errors
+///
+/// As [`grow_seed_ages`], and when `wall_m` is not above 0.
+pub fn grow_on_wall(
+    inputs: &Inputs,
+    seed: u64,
+    ages: &[f64],
+    wall_m: f64,
+) -> Result<Vec<Plant>, PackageError> {
+    use crate::site::{Cut, SiteMesh, climbable};
+    use crate::substrate::{BUILT, SOIL};
+    let spec = &inputs.spec;
+    if !(wall_m.is_finite() && wall_m > 0.0) {
+        return Err(format_error(format!(
+            "{}: a wall must be above 0 m high, found {wall_m}",
+            spec.id
+        )));
+    }
+    let oldest = spec
+        .old_ages()
+        .last()
+        .copied()
+        .unwrap_or(spec.growth.years)
+        .max(spec.growth.years);
+    if ages.is_empty()
+        || ages.iter().any(|age| !(*age > 0.0 && *age <= oldest))
+        || ages.windows(2).any(|pair| pair[1] <= pair[0])
+    {
+        return Err(format_error(format!(
+            "{} grows for {oldest} years; ages must be above 0, at most that and rise, found {ages:?}",
+            spec.id
+        )));
+    }
+    let mut positions = Vec::new();
+    let mut triangles = Vec::new();
+    let mut materials = Vec::new();
+    let mut cuboid = |low: Vec3, high: Vec3, material: u8| {
+        let first = u32::try_from(positions.len()).unwrap_or(u32::MAX);
+        for i in 0..8 {
+            positions.push(Vec3::new(
+                if i & 1 == 0 { low.x } else { high.x },
+                if i & 2 == 0 { low.y } else { high.y },
+                if i & 4 == 0 { low.z } else { high.z },
+            ));
+        }
+        for [a, b, c, d] in [
+            [0, 4, 6, 2],
+            [1, 3, 7, 5],
+            [0, 1, 5, 4],
+            [2, 6, 7, 3],
+            [0, 2, 3, 1],
+            [4, 5, 7, 6],
+        ] {
+            triangles.push([first + a, first + b, first + c]);
+            triangles.push([first + a, first + c, first + d]);
+            materials.extend([material, material]);
+        }
+    };
+    cuboid(Vec3::new(-6.0, -2.0, -6.0), Vec3::new(6.0, 0.0, 6.0), SOIL);
+    cuboid(
+        Vec3::new(-4.0, -0.3, -0.6),
+        Vec3::new(4.0, wall_m, -0.3),
+        BUILT,
+    );
+    let site = SiteMesh::new(&positions, &triangles, &materials).map_err(format_error)?;
+    let foot = Vec3::ZERO;
+    let cut = Cut::for_plant(wall_m + 0.5, 3.0);
+    let mut conditions = crate::conditions::Conditions::preset(Environment::Open);
+    conditions.substrate = Some(site.substrate_round(foot, cut).map_err(format_error)?);
+    let host = site
+        .host_round(foot, cut, &climbable)
+        .map(std::sync::Arc::new);
+    let (program, params) = spec.program_from(&inputs.program_source)?;
+    let growth = crate::grow::grow(
+        &program,
+        &spec.seeded_params(&program, &params, seed),
+        &crate::grow::GrowthSettings {
+            seed,
+            dt: spec.growth.step,
+            years: ages.last().copied().unwrap_or(spec.growth.years),
+            keyframes: ages.to_vec(),
+            conditions,
+            limits: crate::lsys::Limits::default(),
+            host,
+        },
+    )
+    .map_err(|error| PackageError::Growth {
+        variant: format!("{} on a wall, seed {seed}", spec.id),
+        message: error.to_string(),
+    })?;
+    if growth.keyframes.len() != ages.len() {
+        return Err(format_error("the growth kept no keyframe"));
+    }
+    let organ_types = growth.organ_types;
+    let variant = spec.variant_list().len();
+    Ok(growth
+        .keyframes
+        .into_iter()
+        .map(|graph| Plant {
+            variant,
+            environment: Environment::Open,
+            seed,
+            class: None,
+            size: Measurements::of(&graph, &organ_types),
+            graph,
+            organ_types: organ_types.clone(),
+        })
+        .collect())
 }
 
 fn grow_chosen(
     inputs: &Inputs,
     variant: usize,
     chosen: &crate::spec::Variant,
-    age: f64,
-) -> Result<Plant, PackageError> {
-    if !(age > 0.0 && age <= inputs.spec.growth.years) {
+    ages: &[f64],
+) -> Result<Vec<Plant>, PackageError> {
+    // Past its years, a plant grows on to its old ages as a grown-old
+    // spec does (`PlantSpec::grown_old`).
+    let years = inputs.spec.growth.years;
+    let oldest = inputs
+        .spec
+        .old_ages()
+        .last()
+        .copied()
+        .unwrap_or(years)
+        .max(years);
+    if let Some(age) = ages.iter().find(|age| !(**age > 0.0 && **age <= oldest)) {
         return Err(format_error(format!(
-            "{} grows for {} years; an age must be above 0 and at most that, found {age}",
-            inputs.spec.id, inputs.spec.growth.years
+            "{} grows for {oldest} years; an age must be above 0 and at most that, found {age}",
+            inputs.spec.id
         )));
     }
-    let growth = package::grow_one(inputs, chosen, &[age])?;
+    if ages.windows(2).any(|pair| pair[1] <= pair[0]) {
+        return Err(format_error(format!(
+            "{}: ages must rise, found {ages:?}",
+            inputs.spec.id
+        )));
+    }
+    let until = ages.last().copied().unwrap_or(years).max(years);
+    let growth = package::grow_until(inputs, chosen, ages, until)?;
     let organ_types = growth.organ_types;
-    let graph = growth
+    if growth.keyframes.len() != ages.len() {
+        return Err(format_error("the growth kept no keyframe"));
+    }
+    Ok(growth
         .keyframes
         .into_iter()
-        .next()
-        .ok_or_else(|| format_error("the growth kept no keyframe"))?;
-    let size = Measurements::of(&graph, &organ_types);
-    Ok(Plant {
-        variant,
-        environment: chosen.environment,
-        seed: chosen.seed,
-        class: chosen.class.map(|class| class.to_string()),
-        graph,
-        organ_types,
-        size,
-    })
+        .map(|graph| {
+            let size = Measurements::of(&graph, &organ_types);
+            Plant {
+                variant,
+                environment: chosen.environment,
+                seed: chosen.seed,
+                class: chosen.class.map(|class| class.to_string()),
+                graph,
+                organ_types: organ_types.clone(),
+                size,
+            }
+        })
+        .collect())
 }
 
 /// Export `plant` of `inputs` as `settings` say; with `built`, the package
@@ -555,12 +1041,47 @@ pub fn export(
     settings: &Settings,
     built: Option<&Built<'_>>,
 ) -> Result<Export, PackageError> {
+    export_in(inputs, plant, settings, built, &[])
+}
+
+/// [`export`], and each level cut into `regions` too ([`Level::parts`]),
+/// so a renderer can draw each part of a tall plant at the detail its own
+/// distance asks for: a tree's top coarse from the ground under it and
+/// fine from a roof at its height. A part's file is the level's own
+/// drawing within the region, so the parts of a level together draw the
+/// level. [`crown_regions`] gives a tree's.
+///
+/// # Errors
+///
+/// As [`export`], and when the plant moves (a rig's bones span the
+/// parts).
+pub fn export_parts(
+    inputs: &Inputs,
+    plant: &Plant,
+    settings: &Settings,
+    regions: &[Region],
+) -> Result<Export, PackageError> {
+    export_in(inputs, plant, settings, None, regions)
+}
+
+fn export_in(
+    inputs: &Inputs,
+    plant: &Plant,
+    settings: &Settings,
+    built: Option<&Built<'_>>,
+    regions: &[Region],
+) -> Result<Export, PackageError> {
     let stem = stem(inputs, plant);
     let file = |level: usize| format!("{stem}-lod{level}.glb");
     let rig = Rig::of(inputs, plant);
     let rig = rig.as_ref();
+    if rig.is_some() && !regions.is_empty() {
+        return Err(format_error(
+            "a plant that moves is exported whole: its bones span the parts",
+        ));
+    }
     let files = if settings.budget.is_some() {
-        budgeted(inputs, plant, *settings, rig, &file)?
+        budgeted(inputs, plant, *settings, rig, &file, regions)?
     } else {
         let levels = package::level_meshes(&plant.graph, inputs, plant.seed, true);
         if let Some(built) = built {
@@ -574,7 +1095,7 @@ pub fn export(
                 detail: Detail::level(&inputs.quality, plant.graph.height, level),
                 parts: Cow::Borrowed(&inputs.parts),
             };
-            files.push(drawn.file(inputs, plant, *settings, rig, level, file(level))?);
+            files.push(drawn.file(inputs, plant, *settings, rig, level, file(level), regions)?);
         }
         files
     };
@@ -645,6 +1166,7 @@ impl Drawn<'_> {
     }
 
     /// Its file as level `level`, named `file`.
+    #[allow(clippy::too_many_arguments)]
     fn file(
         &self,
         inputs: &Inputs,
@@ -653,6 +1175,7 @@ impl Drawn<'_> {
         rig: Option<&Rig>,
         level: usize,
         file: String,
+        regions: &[Region],
     ) -> Result<Level, PackageError> {
         let pieces = Pieces::of(&self.mesh, inputs, &self.parts, &self.detail, rig.is_some());
         let drawing = Drawing {
@@ -662,15 +1185,25 @@ impl Drawn<'_> {
             parts: &self.parts,
             baked: None,
         };
+        let extras = |step| metadata(inputs, plant, Some((level, &self.detail, step)), settings);
         let (glb, position_step) = level_glb(
             &drawing,
             inputs,
             settings,
             rig.map(|rig| (rig, &plant.graph)),
-            &|step| metadata(inputs, plant, Some((level, &self.detail, step)), settings),
+            &extras,
         );
         let summary =
             gltf::check(&glb).map_err(|error| format_error(format!("{file}: {error}")))?;
+        let parts = level_parts(
+            &drawing,
+            &plant.graph,
+            inputs,
+            settings,
+            regions,
+            &file,
+            &extras,
+        )?;
         Ok(Level {
             file,
             glb,
@@ -679,6 +1212,7 @@ impl Drawn<'_> {
             detail: self.detail,
             budget: None,
             cards: None,
+            parts,
         })
     }
 }
@@ -786,6 +1320,7 @@ impl<'a> Trials<'a> {
                 self.rig,
                 0,
                 String::new(),
+                &[],
             )?
             .glb
             .len();
@@ -830,6 +1365,7 @@ fn budgeted(
     settings: Settings,
     rig: Option<&Rig>,
     file: &dyn Fn(usize) -> String,
+    regions: &[Region],
 ) -> Result<Vec<Level>, PackageError> {
     let budget = settings.budget;
     let staged = crate::looks::staged(&plant.graph, &inputs.sizes, &inputs.looks);
@@ -932,7 +1468,8 @@ fn budgeted(
                 )
             });
         finer = Some(drawing.mesh.wood.triangle_count());
-        let mut written = drawing.file(inputs, plant, settings, rig, level, file(level))?;
+        let mut written =
+            drawing.file(inputs, plant, settings, rig, level, file(level), regions)?;
         let (drawn, bytes) = (written.summary.triangles, written.glb.len());
         // The search counts a drawing's triangles as its file draws them.
         debug_assert_eq!(drawing.triangles(inputs), drawn);
@@ -963,7 +1500,14 @@ fn budgeted(
         let carded = if fleshy {
             None
         } else {
-            Some(baked_level(inputs, plant, settings, last, file(last))?)
+            Some(baked_level(
+                inputs,
+                plant,
+                settings,
+                last,
+                file(last),
+                regions,
+            )?)
         };
         if let Some(carded) = carded
             && carded.summary.triangles < before
@@ -996,6 +1540,7 @@ fn baked_level(
     settings: Settings,
     level: usize,
     file: String,
+    regions: &[Region],
 ) -> Result<Level, PackageError> {
     let tier = &crate::billboards::LOW;
     let staged = crate::looks::staged(&plant.graph, &inputs.sizes, &inputs.looks);
@@ -1073,12 +1618,22 @@ fn baked_level(
         parts: &[],
         baked: Some(&baked),
     };
-    let (glb, position_step) = level_glb(&drawing, inputs, settings, None, &|step| {
+    let extras = |step| {
         let mut value = metadata(inputs, plant, Some((level, &detail, step)), settings);
         value["cards"] = json!(tier.name);
         value
-    });
+    };
+    let (glb, position_step) = level_glb(&drawing, inputs, settings, None, &extras);
     let summary = gltf::check(&glb).map_err(|error| format_error(format!("{file}: {error}")))?;
+    let parts = level_parts(
+        &drawing,
+        &plant.graph,
+        inputs,
+        settings,
+        regions,
+        &file,
+        &extras,
+    )?;
     Ok(Level {
         file,
         glb,
@@ -1087,6 +1642,7 @@ fn baked_level(
         detail,
         budget: None,
         cards: Some(tier.name),
+        parts,
     })
 }
 
@@ -1313,6 +1869,11 @@ pub fn write(export: &Export, directory: &Path) -> Result<Vec<PathBuf>, PackageE
         let path = directory.join(&level.file);
         std::fs::write(&path, &level.glb).map_err(io(&path))?;
         written.push(path);
+        for part in &level.parts {
+            let path = directory.join(&part.file);
+            std::fs::write(&path, &part.glb).map_err(io(&path))?;
+            written.push(path);
+        }
     }
     let path = directory.join(format!("{}.json", export.stem));
     std::fs::write(&path, &export.index).map_err(io(&path))?;

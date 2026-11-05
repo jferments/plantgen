@@ -50,6 +50,7 @@ the Claude API's SDK, and `[local]` adds torch and the image models for
 imagekit fetch inat --taxon "Acer circinatum" --n 60
 imagekit fetch inat --taxon "Camassia quamash" --n 40 --phenology flowering
 imagekit fetch gbif --taxon "Acer circinatum" --n 30 --basis PRESERVED_SPECIMEN
+imagekit fetch gbif --taxon "Daucus carota" --n 60 --organ habit
 imagekit fetch commons --taxon "Acer circinatum" --n 20
 imagekit fetch archive --identifier illustratedflor03brit --pages 101,102
 imagekit fetch folder ~/Pictures/plants --licence cc-by --creator "Your Name" --taxon-from-folders
@@ -72,6 +73,12 @@ imagekit fetch folder ~/Pictures/plants --licence cc-by --creator "Your Name" --
 - **Commons:** reads the files directly in the category. Many species keep
   most of their files in subcategories, so name one with `--category`.
 - **GBIF:** images sit on each herbarium's own server, and some fail.
+  `--organ habit` takes only Pl@ntNet photos whose observer tagged them
+  as the whole plant (the other tags are flower, leaf, fruit, bark and
+  other). Silhouette measures need whole plants, and in iNaturalist only
+  about one photo in twenty shows one; Pl@ntNet holds tens to hundreds for
+  a common European species, few for North American ones. The images come
+  from `bs.plantnet.org`.
 
 **Fetch by view.** A species needs photos of each view to a target (whole
 plant, leafless, shoot, leaf face-on and underside, flower face and side,
@@ -92,7 +99,7 @@ names, and counts a photo when triage found it usable and not a cultivar.
 Cacti (family Cactaceae, or areoles seen) get the apex and areole targets in
 place of the leaf ones. Then fetch again for the views still short: more
 iNaturalist photos with `--months` for winter or `--phenology`, Commons and
-your own for whole plants, GBIF sheets for leaves.
+your own for whole plants (or `fetch gbif --organ habit`), GBIF sheets for leaves.
 
 ## Licences
 

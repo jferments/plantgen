@@ -429,6 +429,10 @@ struct Girth {
     ring_area: IdMap<f64>,
     disused: IdMap<f64>,
     parent: IdMap<Option<u64>>,
+    /// Each organ's light at the last step, kept only for the pipe tool's
+    /// `cambium`: the stem's rings are fed by the foliage above, its area
+    /// times its light.
+    lit: IdMap<f64>,
 }
 
 impl Girth {
@@ -440,12 +444,17 @@ impl Girth {
         &mut self,
         scene: &Scene,
         pipes: Option<&tools::Pipes>,
+        organ_area: &[f64],
         crown_base: f64,
         dt: f64,
     ) -> (Vec<f64>, Vec<f64>) {
         let below = match pipes {
             Some(pipes) => self.disused_below(scene, pipes, crown_base),
             None => Vec::new(),
+        };
+        let fed = match pipes {
+            Some(pipes) if pipes.cambium > 0.0 => self.lit_above(scene, organ_area),
+            _ => Vec::new(),
         };
         scene
             .segments
@@ -466,6 +475,15 @@ impl Girth {
                         let radius = pipe.max(math::sqrt(*rings / math::PI));
                         // This step's ring shows from the next step on.
                         *rings += pipes.ring_rate * dt * pipes.leaf_area[index];
+                        if pipes.cambium > 0.0 && segment.order == 0 {
+                            // The stem's cambium lays its ring on the wood
+                            // there is, fed by the foliage above: its area
+                            // times the light it had.
+                            let had =
+                                radius.max(self.widest.get(&segment.id).copied().unwrap_or(0.0));
+                            *rings =
+                                rings.max(math::PI * had * had) + pipes.cambium * dt * fed[index];
+                        }
                         radius
                     }
                     None => segment.width,
@@ -476,6 +494,47 @@ impl Girth {
                 (*widest, *widest - was)
             })
             .unzip()
+    }
+
+    /// Keeps each organ's light at this step, for the next step's rings
+    /// (only where the pipe tool lays them with `cambium`).
+    fn remember_light(&mut self, scene: &Scene, pipes: Option<&tools::Pipes>, organ_light: &[f64]) {
+        self.lit.clear();
+        if pipes.is_some_and(|pipes| pipes.cambium > 0.0) {
+            self.lit.extend(
+                scene
+                    .organs
+                    .iter()
+                    .zip(organ_light)
+                    .map(|(organ, &light)| (organ.id, light)),
+            );
+        }
+    }
+
+    /// The leaf area above each segment, each organ's area times its light
+    /// at the last step (none for an organ new since then), in m².
+    fn lit_above(&self, scene: &Scene, organ_area: &[f64]) -> Vec<f64> {
+        let mut lit = vec![0.0; scene.nodes.len()];
+        for organ in &scene.organs {
+            if let (Some(node), Some(&light)) = (organ.node, self.lit.get(&organ.id)) {
+                lit[node as usize] +=
+                    organ_area[usize::from(organ.symbol)] * organ.size * organ.size * light;
+            }
+        }
+        let (offsets, children) = scene.children();
+        for index in (0..scene.nodes.len()).rev() {
+            let span = offsets[index] as usize..offsets[index + 1] as usize;
+            let above: f64 = children[span]
+                .iter()
+                .map(|&child| lit[child as usize])
+                .sum();
+            lit[index] += above;
+        }
+        scene
+            .segments
+            .iter()
+            .map(|segment| lit[segment.node as usize])
+            .collect()
     }
 
     /// Each segment's disused pipes (Shinozaki et al. 1964): a limb shed
@@ -593,6 +652,8 @@ fn step_settings(
         env: &crate::lsys::expr::NO_ENV,
         t: clock.t,
         dt: clock.dt,
+        lag: clock.lag,
+        rs: clock.rs,
         age: 0.0,
         step: f64::from(clock.step),
         key: 0,
@@ -754,6 +815,12 @@ pub struct Grower<'a> {
     // What wood rests on: the substrate, or level soil without one.
     ground: std::sync::Arc<crate::substrate::SubstrateField>,
     sun: Option<f64>,
+    /// The soil the plant can root in, for `soil@1`.
+    soil: Option<crate::conditions::SoilVolume>,
+    /// Years of growth the soil has held the plant back by.
+    lag: f64,
+    /// Its soil supply over its demand at the last step.
+    rs: f64,
     steps: u32,
     keyframe_steps: Vec<u32>,
     organ_area: Vec<f64>,
@@ -813,6 +880,9 @@ impl<'a> Grower<'a> {
             substrate: None,
             ground: std::sync::Arc::new(crate::substrate::SubstrateField::flat()),
             sun: None,
+            soil: None,
+            lag: 0.0,
+            rs: 1.0,
             steps,
             keyframe_steps,
             organ_area,
@@ -885,6 +955,7 @@ impl<'a> Grower<'a> {
     /// Fails when the conditions' substrate is not a valid grid.
     pub fn set_conditions(&mut self, conditions: Conditions) -> Result<(), GrowthError> {
         self.substrate = substrate_field(&conditions)?.map(std::sync::Arc::new);
+        self.soil = conditions.soil_volume();
         // `rest` and `bend@1` lay wood on the substrate, or on level soil
         // without one, as substrate@1 reads it.
         self.ground = self
@@ -976,6 +1047,8 @@ impl<'a> Grower<'a> {
             step,
             t: f64::from(step) * settings.dt,
             dt: settings.dt,
+            lag: self.lag,
+            rs: self.rs,
         };
         if let Some(layout) = self.layout {
             // Its neighbours' crowns are its own as the last step left it.
@@ -1017,9 +1090,13 @@ impl<'a> Grower<'a> {
             }))
             .map_or(0.0, |crown| crown.base_m)
         };
-        let (radii, grown) = self
-            .girth
-            .radii(&scene, pipes.as_ref(), crown_base, settings.dt);
+        let (radii, grown) = self.girth.radii(
+            &scene,
+            pipes.as_ref(),
+            &self.organ_area,
+            crown_base,
+            settings.dt,
+        );
         if let Some(values) = step_settings(program, ToolKind::Bend, params, clock, &mut self.stack)
         {
             tools::bend(
@@ -1071,6 +1148,7 @@ impl<'a> Grower<'a> {
             host: settings.host.as_deref(),
             substrate: self.substrate.as_deref(),
             sun: self.sun,
+            soil: self.soil.as_ref(),
         };
         let output = tools::run(
             program,
@@ -1084,6 +1162,8 @@ impl<'a> Grower<'a> {
             settings.seed,
         )?;
         Timer::lap(timer.as_mut(), &mut time.tools);
+        self.girth
+            .remember_light(&scene, pipes.as_ref(), &output.organ_light);
         if keyframe {
             self.litter.keep(&scene, &self.organ_index);
             self.keyframes.push(snapshot(
@@ -1125,6 +1205,14 @@ impl<'a> Grower<'a> {
             self.end(time);
             return Ok(false);
         }
+        // The soil held this year's growth back by 1 - rs of it.
+        self.lag += (1.0 - output.rs) * settings.dt;
+        self.rs = output.rs;
+        let clock = Clock {
+            lag: self.lag,
+            rs: self.rs,
+            ..clock
+        };
         self.string = self.deriver.derive(&self.string, &output.env, clock)?;
         Timer::lap(timer.as_mut(), &mut time.derive);
         if let Some(times) = &mut self.times {
@@ -1750,6 +1838,38 @@ mod tests {
             }
         }
         assert!(graph.segments[0].radius > 0.004);
+    }
+
+    /// With the pipe tool's `cambium`, the stem lays a ring each year on
+    /// the girth it has, fed by the lit foliage above: the stem grows
+    /// thicker than the pipes alone make it, and the limbs keep the pipes'
+    /// girth, so the plant's form is unchanged.
+    #[test]
+    fn the_stem_lays_rings_on_its_girth_and_limbs_keep_their_pipes() {
+        let grow_with = |cambium: &str| {
+            let source = BUSH.replace(
+                "tool pipe@1 { exponent = 2.5, tip = 0.004 };",
+                &format!("tool pipe@1 {{ exponent = 2.5, tip = 0.004, cambium = {cambium} }};"),
+            );
+            let program = Program::compile(&source).unwrap();
+            let params = program.resolve_params(&BTreeMap::new()).unwrap();
+            grow(&program, &params, &settings(8.0, vec![8.0])).unwrap()
+        };
+        let plain = grow_with("0");
+        let ringed = grow_with("0.05");
+        let (plain, ringed) = (&plain.keyframes[0], &ringed.keyframes[0]);
+        assert_eq!(plain.segments.len(), ringed.segments.len());
+        let mut thicker = 0;
+        for (a, b) in plain.segments.iter().zip(&ringed.segments) {
+            assert_eq!(a.start, b.start, "the form is unchanged");
+            if a.order == 0 {
+                assert!(b.radius >= a.radius);
+                thicker += usize::from(b.radius > a.radius * 1.01);
+            } else {
+                assert_eq!(a.radius, b.radius, "limbs keep the pipes' girth");
+            }
+        }
+        assert!(thicker > 0, "the stem lays rings");
     }
 
     #[test]

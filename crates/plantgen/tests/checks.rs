@@ -84,7 +84,7 @@ const KNOWN: &[(&str, &str, &str)] = &[
     (
         "berberis-aquifolium",
         "height_typical_m",
-        "its hand-set growth (path_half 0.99 m) already grew it to a median 1.76 m against the 0.5 to 1.5 m its records give as usual (a warning); as a shrub of many stems from its base (revision 191), its upright stems reach 1.9 m, past the range's extremes, though within its greatest 2 m",
+        "its hand-set growth (path_half 0.99 m) already grew it to a median 1.76 m against the 0.5 to 1.5 m its records give as usual (a warning); as a shrub of many stems from its base (revision 203), its upright stems reach 1.9 m, past the range's extremes, though within its greatest 2 m",
     ),
     (
         "cornus-nuttallii",
@@ -355,6 +355,16 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "rosa-rugosa",
         "leaf_arrangement",
         "a short shoot of an alternate-leaved plant unfolds its two leaves a year at one point (broadleaf's Q), so where short shoots bear most of the leaves, as on beach rose's crowded laterals, the measure counts two leaves at most nodes and reads them opposite",
+    ),
+    (
+        "sagina-procumbens",
+        "flowering_months",
+        "its program does not open its flowers one after another over its months (the family's flowers have no fruit_below share, which inherit's stage_seasons needs), so its flowers close as its first capsules ripen, in July, against the stated May to September (a model estimate)",
+    ),
+    (
+        "sagina-procumbens",
+        "fruiting_months",
+        "for the same reason its capsules are drawn from the program's own fruit day, August, to October, against the stated June to October (a model estimate)",
     ),
     (
         "sarcandra-glabra",

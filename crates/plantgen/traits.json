@@ -2168,6 +2168,15 @@
       "when": {"rosette": ["basal"]},
       "why": "the leaves of one basal rosette in leaf at once, round the foot of its flowering stem, where floras count them: a sundew's handful; a cushion of many rosettes, a thrift's, counts each"
     },
+    "rosette_scapes": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "count",
+      "range": [1, 200],
+      "optional": true,
+      "when": {"rosette": ["basal"]},
+      "why": "the flowering stems one basal rosette sends up from its middle in a year, where they share it: a dandelion's several scapes from its one rosette on a taproot; a thrift's or a sundew's rosettes each send up one"
+    },
     "flowering_stems": {
       "group": "flowers",
       "organ": "stem",
@@ -2308,6 +2317,35 @@
       "organ": "leaf",
       "type": "colour",
       "why": "a grown leaf's upper side in summer"
+    },
+    "hair_point_length_m": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "number",
+      "unit": "m",
+      "range": [0, 0.005],
+      "optional": true,
+      "when": {"body_plan": ["leafy"]},
+      "why": "a moss leaf's colourless hair-point (awn) beyond its green blade; 0 where the leaf has none"
+    },
+    "leaf_hyaline_share": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "number",
+      "unit": "share",
+      "range": [0, 1],
+      "optional": true,
+      "when": {"body_plan": ["leafy"]},
+      "why": "the share of a moss leaf's blade, from its tip down, whose cells hold no chlorophyll and look white or silvery, as in Bryum argenteum"
+    },
+    "leaf_dry_posture": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["appressed", "imbricate", "flexuose", "crisped", "twisted", "falcate"],
+      "optional": true,
+      "when": {"body_plan": ["leafy"]},
+      "why": "how a moss's leaves lie when it dries out (they spread again when wet): pressed to the stem (appressed), overlapping as when moist (imbricate), wavy (flexuose), curled and contorted (crisped), twisted round the stem (twisted), or curved to one side like a sickle (falcate)"
     },
     "leaf_underside_colour": {
       "group": "leaves",
@@ -3692,6 +3730,47 @@
       "when": {"seta": ["true"]},
       "why": "the seta, from the plant to the capsule"
     },
+    "seta_form": {
+      "group": "fruit_and_cones",
+      "organ": "capsule",
+      "type": "enum",
+      "values": ["straight", "flexuose", "arcuate"],
+      "optional": true,
+      "when": {"seta": ["true"]},
+      "why": "how a moss's seta runs: straight, wavy (flexuose), or bent in a curve (arcuate, as in Grimmia pulvinata) so that its capsule bows back among the leaves"
+    },
+    "seta_colour": {
+      "group": "fruit_and_cones",
+      "organ": "capsule",
+      "type": "colour",
+      "optional": true,
+      "when": {"seta": ["true"]},
+      "why": "a grown seta's colour, often yellow, red or red-brown in mosses"
+    },
+    "capsule_colour": {
+      "group": "fruit_and_cones",
+      "organ": "capsule",
+      "type": "colour",
+      "optional": true,
+      "why": "a ripe capsule's colour, before it sheds its spores; young capsules are green"
+    },
+    "capsule_posture": {
+      "group": "fruit_and_cones",
+      "organ": "capsule",
+      "type": "enum",
+      "values": ["erect", "inclined", "horizontal", "pendent"],
+      "optional": true,
+      "why": "how a ripe moss capsule is held on its seta: upright (erect), leaning (inclined), level (horizontal) or hanging (pendent, nutant)"
+    },
+    "capsule_share": {
+      "group": "fruit_and_cones",
+      "organ": "capsule",
+      "type": "number",
+      "unit": "share",
+      "range": [0, 1],
+      "optional": true,
+      "why": "the share of a moss colony's shoots that bear a capsule in its season: high where a flora calls capsules abundant or usually present, low where they are rare or the species dioicous and seldom fruits"
+    },
     "leaf_out_months": {
       "group": "seasons",
       "organ": "leaf",
@@ -3800,6 +3879,91 @@
       "type": "enum",
       "values": ["intolerant", "intermediate", "tolerant"],
       "why": "how much shade it can grow in, as silvics classes a tree: an intolerant one needs full light and loses what grows in shade"
+    },
+    "seed_dispersal": {
+      "group": "ecology",
+      "organ": "plant",
+      "type": "enums",
+      "values": ["wind", "water", "animal", "unassisted"],
+      "optional": true,
+      "why": "what carries its seed away from the parent, every way a source names: wind (a pappus, wings or hairs), water, animals (eaten, cached or carried on fur and feet) or nothing (it falls near the parent)"
+    },
+    "seedbank": {
+      "group": "ecology",
+      "organ": "plant",
+      "type": "enum",
+      "values": ["transient", "short_term", "long_term"],
+      "optional": true,
+      "why": "how long its seed lives in the soil, in Thompson, Bakker and Bekker's classes: transient (under a year), short-term persistent (one to five years) or long-term persistent (five years or more)"
+    },
+    "trampling_tolerance": {
+      "group": "ecology",
+      "organ": "plant",
+      "type": "enum",
+      "values": ["intolerant", "intermediate", "tolerant"],
+      "optional": true,
+      "why": "how well it lives where it is trodden or driven over: tolerant plants are the weeds of paths, lawns and pavement cracks"
+    },
+    "colony_form": {
+      "group": "form",
+      "organ": "plant",
+      "type": "enum",
+      "values": ["cushion", "turf", "mat", "weft"],
+      "optional": true,
+      "why": "how a bryophyte's many shoots grow together into one colony: a cushion (shoots radiating from a point into a dome), a turf (upright shoots side by side under a level top), a mat (shoots creeping along the surface and branching, pressed to it) or a weft (loose, interwoven ascending shoots)"
+    },
+    "perichaetia": {
+      "group": "architecture",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["acrocarpous", "pleurocarpous"],
+      "optional": true,
+      "when": {"sporangia": ["capsule"]},
+      "why": "where a moss bears its female organs and so its capsules: at the tip of a main upright shoot, which then stops (acrocarpous), or on short side branches of a creeping shoot that keeps growing (pleurocarpous)"
+    },
+    "shoot_width_m": {
+      "group": "size",
+      "organ": "stem",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0002, 0.02],
+      "optional": true,
+      "when": {"body_plan": ["leafy"]},
+      "why": "a moss's or leafy liverwort's leafy shoot from leaf tip to leaf tip across, moist"
+    },
+    "colony_spread_m_per_year": {
+      "group": "size",
+      "organ": "plant",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0001, 0.1],
+      "optional": true,
+      "when": {"body_plan": ["leafy", "thalloid"]},
+      "why": "how far a bryophyte colony's edge moves out over bare surface in a year where it grows well"
+    },
+    "substrates": {
+      "group": "ecology",
+      "organ": "plant",
+      "type": "enums",
+      "values": ["soil", "rock", "built", "bark", "wood"],
+      "optional": true,
+      "why": "the surfaces it grows on, every one a source names: soil, bare rock, built surfaces (mortar, brick, concrete, roof tiles, tarmac), living bark, or dead wood"
+    },
+    "substrate_reaction": {
+      "group": "ecology",
+      "organ": "plant",
+      "type": "enum",
+      "values": ["acid", "any", "basic"],
+      "optional": true,
+      "why": "whether it keeps to acid surfaces (siliceous rock, bark), basic ones (limestone, mortar, concrete), or grows on either"
+    },
+    "desiccation_tolerance": {
+      "group": "ecology",
+      "organ": "plant",
+      "type": "enum",
+      "values": ["low", "intermediate", "high"],
+      "optional": true,
+      "why": "how well its leafy body lives through drying right out and recovers when wetted: high in mosses of sun-baked rock, walls and roofs, low in those of constantly moist shade"
     },
     "architectural_model": {
       "group": "architecture",

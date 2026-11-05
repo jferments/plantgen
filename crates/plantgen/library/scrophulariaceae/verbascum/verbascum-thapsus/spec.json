@@ -113,6 +113,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "seedbank": "long_term",
+    "seed_dispersal": ["unassisted"],
     "flowering_branches": {"min": 0, "max": 2},
     "height_typical_m": {
       "min": 0.3,
@@ -171,6 +173,8 @@
     ]
   },
   "evidence": {
+    "traits.seedbank": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Verbascum thapsus: its seed lives long in the soil."},
+    "traits.seed_dispersal": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Verbascum thapsus: the seed has nothing to carry it far and lands a metre away at the median."},
     "traits.flowering_branches": {
       "evidence": "SourceInferred",
       "source": "britton-brown-1913",
