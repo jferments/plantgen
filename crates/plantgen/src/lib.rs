@@ -1631,7 +1631,7 @@ pub mod venation;
 /// 248 species, none grew and together they hold 14% fewer texels; most
 /// low tiers went from 512 by 550 to 620 texels to 512 by 512.
 ///
-/// 204: the nearest level draws a plant's twigs more than 40 m up
+/// 203: the nearest level draws a plant's twigs more than 40 m up
 /// (`mesh::NEAR_REACH`) with the next level's tube rings and sides
 /// (`mesh::Reach`): the nearest level is drawn within about 30 m, and no
 /// eye on the ground comes nearer them than that. Limbs as thick as the
@@ -1640,4 +1640,4 @@ pub mod venation;
 /// drew 3.25 million triangles of wood on its nearest level, 187 MB of
 /// mesh; it draws 0.6 million, 54 MB. Plants up to 40 m tall are drawn
 /// as before.
-pub const GENERATOR_REVISION: u32 = 204;
+pub const GENERATOR_REVISION: u32 = 203;
