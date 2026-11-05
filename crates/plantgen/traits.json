@@ -2328,6 +2328,14 @@
       "when": {"body_plan": ["leafy"]},
       "why": "a moss leaf's colourless hair-point (awn) beyond its green blade; 0 where the leaf has none"
     },
+    "older_leaf_colour": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "colour",
+      "optional": true,
+      "when": {"body_plan": ["leafy"]},
+      "why": "a moss's older leaves, down its shoots below the green tips: often yellow-brown to dark brown, or tinged red or purple as in Ceratodon purpureus"
+    },
     "leaf_hyaline_share": {
       "group": "leaves",
       "organ": "leaf",
@@ -2337,6 +2345,15 @@
       "optional": true,
       "when": {"body_plan": ["leafy"]},
       "why": "the share of a moss leaf's blade, from its tip down, whose cells hold no chlorophyll and look white or silvery, as in Bryum argenteum"
+    },
+    "dry_branch_posture": {
+      "group": "leaves",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["straight", "curled"],
+      "optional": true,
+      "when": {"body_plan": ["leafy"]},
+      "why": "how a pleurocarpous moss's side branches lie when it dries out: as when moist (straight), or curving up and inward from the surface (curled), straightening again when wet, as in Homalothecium sericeum"
     },
     "leaf_dry_posture": {
       "group": "leaves",

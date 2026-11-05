@@ -517,6 +517,7 @@ Usage:
               [--compress none|quantize|meshopt]
               [--attributes all|wind|none] [--triangles N[,N,N,N]]
               [--max-mib N] [--levels tiers|package] [--glb LEVEL]
+              [--packages DIR [--profile static|motion] [--cards yes|no]]
               [--field SITE.json [--corner X,Z] [--cracks YEARS]
                [--render PNG [--view V] [--size N] [--level N]
                 [--focus X,Y,Z --span M]]]
@@ -553,7 +554,13 @@ Usage:
       each prototype's level LEVEL once and every plant an instance of it
       (EXT_mesh_gpu_instancing), which Blender, Godot, Unity and three.js
       open as they are (Blender and Godot need --compress quantize or
-      none: they do not read meshopt).
+      none: they do not read meshopt). --packages DIR also builds the
+      packages that hold the prototypes the tile places (every one with
+      --prototypes all), one per species, setting and seed with a
+      keyframe at each of their ages, as plantc build builds one
+      (--profile, --cards), into DIR, and lists in DIR/packages.json
+      which package and keyframe draws each prototype (wall climbers
+      have none yet).
   plantc inspect <package.afterplant>
       Check every object of a package and summarise it.
   plantc export <species|spec.json|package.afterplant> [--out DIR]
@@ -6312,6 +6319,9 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
             "focus",
             "span",
             "glb",
+            "packages",
+            "profile",
+            "cards",
         ],
     )?;
     if options.positional.is_empty() {
@@ -6477,6 +6487,18 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
             .ok_or("`--render` draws a tile over a site: give `--field SITE.json`")?;
         render_fill(&options, png, &fill, &plan, field)?;
     }
+    if let Some(dir) = options.flags.get("packages") {
+        // The prototypes the tile places, or with --prototypes all every one.
+        let all = options.flags.get("prototypes").map(String::as_str) == Some("all");
+        let held = if all {
+            Vec::new()
+        } else {
+            plan.prototypes_used()
+        };
+        if all || !held.is_empty() {
+            write_fill_packages(&fill, &held, &options, Path::new(dir))?;
+        }
+    }
     let which = match options.flags.get("prototypes").map(String::as_str) {
         Some("none") => return Ok(()),
         None | Some("used") => plan.prototypes_used(),
@@ -6527,6 +6549,76 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
             path.display()
         );
     }
+    Ok(())
+}
+
+/// The name of the file `plantc fill --packages` lists its packages in.
+const FILL_PACKAGES_FILE: &str = "packages.json";
+
+/// Build the packages that hold the fill's prototypes `which` (every one
+/// when empty) into `dir`, one per growth (`Fill::packages`), as `plantc
+/// build` builds a package (`--quality`, `--day`, `--threads`,
+/// `--profile`, `--cards`), and list in `dir/packages.json` which package
+/// and keyframe draws each prototype.
+fn write_fill_packages(
+    fill: &api::Fill,
+    which: &[u32],
+    options: &Options,
+    dir: &Path,
+) -> Result<(), Failure> {
+    let packages = fill.packages(which).map_err(|error| error.to_string())?;
+    let left_out = fill
+        .prototypes()
+        .iter()
+        .enumerate()
+        .filter(|(index, prototype)| {
+            prototype.key.on_wall
+                && (which.is_empty() || which.contains(&u32::try_from(*index).unwrap_or(u32::MAX)))
+        })
+        .count();
+    let started = Instant::now();
+    let mut listed = Vec::new();
+    for package in &packages {
+        let path = build_package(&package.spec, options, dir)?;
+        let held: Vec<serde_json::Value> = package
+            .prototypes
+            .iter()
+            .map(|&(index, keyframe)| {
+                serde_json::json!({
+                    "index": index,
+                    "stem": fill.prototypes()[index as usize].key.stem(),
+                    "keyframe": keyframe,
+                })
+            })
+            .collect();
+        listed.push(serde_json::json!({
+            "species": package.spec.id,
+            "file": path
+                .file_name()
+                .map(|name| name.to_string_lossy().into_owned())
+                .unwrap_or_default(),
+            "prototypes": held,
+        }));
+    }
+    let list = serde_json::json!({
+        "schema": 1,
+        "generator_revision": plantgen::GENERATOR_REVISION,
+        "packages": listed,
+    });
+    let path = dir.join(FILL_PACKAGES_FILE);
+    let text = serde_json::to_string_pretty(&list).map_err(|error| error.to_string())?;
+    fs::write(&path, text).map_err(|error| format!("{}: {error}", path.display()))?;
+    out!(
+        "built {} packages in {:.1} s{}: {}",
+        packages.len(),
+        started.elapsed().as_secs_f64(),
+        if left_out > 0 {
+            format!(" ({left_out} wall climbers have none yet)")
+        } else {
+            String::new()
+        },
+        path.display()
+    );
     Ok(())
 }
 

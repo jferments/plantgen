@@ -1631,14 +1631,34 @@ pub mod venation;
 /// 248 species, none grew and together they hold 14% fewer texels; most
 /// low tiers went from 512 by 550 to 620 texels to 512 by 512.
 ///
-/// 203: a shrub up to 3 m tall whose taxa do not say how its stems rise
+/// 203: a pine-family shoot's foliage costs what its own light makes it
+/// (`pinidae` revision 19, `shade_own`): a needle grown in its own crown's
+/// shade is cheaper (King 1997; Ishii et al. 2002, specific needle area
+/// rising down an old Douglas-fir's crown), where only a plant shaded all
+/// over paid the shade needle's cost. A Douglas-fir grown 480 years in a
+/// stand holds 992 m² of foliage where it held 663 (Sillett et al. 2018:
+/// about 630 to 1,480), 237 m² of it below 50 m where 136, on a trunk
+/// 142 cm through (Ishii and McDowell 2002: 87 to 154). Every conifer
+/// stays at its reference sizes; junipers, cedars and yews grow as before.
+///
+/// 204: the nearest level draws a plant's twigs more than 40 m up
+/// (`mesh::NEAR_REACH`) with the next level's tube rings and sides
+/// (`mesh::Reach`): the nearest level is drawn within about 30 m, and no
+/// eye on the ground comes nearer them than that. Limbs as thick as the
+/// third level keeps (1.5 cm, 2 cm in draft) keep every ring, and every
+/// twig is still drawn. A 480-year Douglas-fir grown in a stand (63.6 m)
+/// drew 3.25 million triangles of wood on its nearest level, 187 MB of
+/// mesh; it draws 0.6 million, 54 MB. Plants up to 40 m tall are drawn
+/// as before.
+///
+/// 205: a shrub up to 3 m tall whose taxa do not say how its stems rise
 /// (`stem_clump`) sends up many stems from its base, as `stem_clump` many
 /// gives, in place of one stem forking just above the ground (a rule on the
 /// shrub form at the flowering plants); taller shrubs and prostrate mats keep
 /// their forking stem. 32 library shrubs change, and the open
 /// plant-identification judge names them better grown so.
 ///
-/// 204: sixteen shrubs whose specs gave no leaf shape state it from
+/// 206: sixteen shrubs whose specs gave no leaf shape state it from
 /// Abrams' and Britton and Brown's floras (`leaf_shape`), so the shape
 /// rule (the kingdom's `outline`) draws their blades and leaflets: a
 /// trailing blackberry's and a Cascade Oregon grape's leaflets were the
@@ -1646,4 +1666,4 @@ pub mod venation;
 /// `widest`, `base` or `tip` by hand, the hand outline still wins, except
 /// a hardhack's, which drew obovate leaves where Abrams gives elliptical
 /// to oval ones.
-pub const GENERATOR_REVISION: u32 = 204;
+pub const GENERATOR_REVISION: u32 = 206;

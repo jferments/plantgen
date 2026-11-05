@@ -157,6 +157,8 @@ impl Detail {
             max_sides: sides(a.max_sides, b.max_sides).max(min_sides),
             bend: (a.bend + (b.bend - a.bend) * t).clamp(0.0, MAX_BEND),
             cluster,
+            // The wood out of a near eye's reach as the finer level draws it.
+            reach: a.reach,
         };
         Self {
             dial,
