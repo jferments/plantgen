@@ -1630,4 +1630,14 @@ pub mod venation;
 /// edge of those laid before, whichever is lower. Of 498 card tiers of
 /// 248 species, none grew and together they hold 14% fewer texels; most
 /// low tiers went from 512 by 550 to 620 texels to 512 by 512.
-pub const GENERATOR_REVISION: u32 = 202;
+///
+/// 204: the nearest level draws a plant's twigs more than 40 m up
+/// (`mesh::NEAR_REACH`) with the next level's tube rings and sides
+/// (`mesh::Reach`): the nearest level is drawn within about 30 m, and no
+/// eye on the ground comes nearer them than that. Limbs as thick as the
+/// third level keeps (1.5 cm, 2 cm in draft) keep every ring, and every
+/// twig is still drawn. A 480-year Douglas-fir grown in a stand (63.6 m)
+/// drew 3.25 million triangles of wood on its nearest level, 187 MB of
+/// mesh; it draws 0.6 million, 54 MB. Plants up to 40 m tall are drawn
+/// as before.
+pub const GENERATOR_REVISION: u32 = 204;
