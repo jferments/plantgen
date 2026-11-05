@@ -60,6 +60,49 @@ tile's south-west corner (x, z) in the field's frame. Then:
 `east` and `north` are metres from the corner, so `x = corner[0] + east`
 and `z = corner[1] - north`.
 
+Two more things the fill takes from the field:
+
+- **Shallow soil.** A plant whose program has `soil@1` (broadleaves,
+  grasses, herbs) is drawn as that tool grows it on the soil round its
+  foot: `Site::soil_ratio_at(east, north, need, crown_m, height_m)` sums
+  the rooting volume of the field cells within the reach of its roots
+  (cell area times `min(rooting_m, the depth it asks)` times `open_share`),
+  against the volume `SoilNeed::ratio` asks for, and the fill scales the
+  plant by the square root of that share, as `soil@1` holds back its
+  lengths. Deep soil gives 1 and changes nothing. A street tree in a 1 m
+  pit over rock is drawn small, a fir is not (conifers have no `soil@1`
+  yet). `Fill` takes each species' need from `Generator::soil_need`.
+- **Plants in cracks.** `Site::with_colonists(microsites, pool, sources,
+  settings, years)` runs `succession::run` over the tile's pavements and
+  keeps what stands at `years` as `Site::colonists` (`CrackPlant`: species,
+  east, north, age, height, crown). `Fill::tile` draws them after its
+  stands, in the order the site keeps them, each as its species' prototype
+  nearest its age, scaled to its height. Every colonist's species must be
+  one of the fill's (add the crack pool to the fill as a community, with
+  a herb layer); one that is not is an error, not a silent drop.
+- **Climbers on walls and fences.** A community's `climber` members stand
+  at the foot row of each climbable patch (`v` 0) of a `wall` or `fence`
+  host that is not kept clear, rooted in the patch's `root_cell`: one per
+  `CLIMBER_SPACING_M` (3 m) of foot at abundance 1, times that cell's
+  open share, so ivy comes up along a wall on soil and not along one on
+  sound pavement. None stands where the host's foot is more than
+  `CLIMBER_FOOT_M` (0.3 m) above that cell's ground (a gable end, a
+  window, a sign board) or its top less than `CLIMBER_LEAST_HOST_M`
+  (0.5 m) above it (a curb). The instance stands 0.3 m out from the face
+  (where its prototype grew at its wall), turned so the prototype's wall
+  lies on the patch's, and its `extra` is a `WallClip`: the host's top
+  above its foot and how far its run of wall goes each way (the host
+  joined with the hosts of its kind it runs on into along the same line,
+  such as a fence's bays). A renderer drops what stands past the top,
+  past either end, or behind the wall's face, so the climber never hangs
+  in the air beyond its wall.
+- **Herbs on roofs.** Where a herb of a stand falls on a building's
+  footprint (no ground, `plantable_at` 0) under a `roof` patch that holds
+  soil (`soil_m` above 0, facing up, not kept clear), it stands on the
+  roof instead: at the roof's height there, held back by an even layer
+  of `soil_m` (`RoofSoil::soil_ratio`). `Site::roofs()` indexes those
+  patches by field cell once a tile.
+
 Frame: metres, +Y up, +X east, -Z north (growth's frame). With `z_up`,
 the input's +Z is up and its +Y north.
 

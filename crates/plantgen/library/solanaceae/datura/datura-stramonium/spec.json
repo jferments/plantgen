@@ -14,7 +14,8 @@
       "stems": 1,
       "clump_radius": 0.01,
       "stem_radius": 0.009,
-      "first_leaves": 6
+      "first_leaves": 6,
+      "leaf_length": 0.3
     }
   },
   "growth": {
@@ -189,7 +190,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Drawing values no character gives (nightshades, 2026-10-17): one plant from one seed; a stout stem (Britton and Brown) 18 mm at the foot and six leaves below the first fork, by eye from photographs (iNaturalist 54718314)."
+      "note": "Drawing values no character gives (nightshades, 2026-10-17): one plant from one seed; a stout stem (Britton and Brown) 18 mm at the foot and six leaves below the first fork, by eye from photographs (iNaturalist 54718314). The longest leaf card is the traits' longest blade on its longest petiole, 20 cm and 10 cm (leaf_length 0.3, 2026-11-04; the forb rule had drawn 20 cm)."
     },
     "allometry": {
       "evidence": "SourceInferred",

@@ -72,6 +72,10 @@
     "generator.params.pipe_rings": {
       "rule": "0",
       "why": "No yearly rings on living foliage: a conifer's trunk is the pipe model's, its living foliage's pipes plus the disused pipes of the limbs it has shed (Shinozaki et al. 1964). Measured open-grown Douglas-fir (USDA Urban Tree Database, Longview, WA) are 58 cm through at 30 years and 95 cm at 60; the pipe model alone draws 56 and 93 cm, and every yearly ring rate added on top overgrew them (2.5e-5, fitted to McArdle's stands, drew 137 cm at 60 years; the old per-species 3e-5, 147 cm). The rates each species set by hand, 1.2e-6 to 3e-5, are gone."
+    },
+    "generator.params.pipe_cambium": {
+      "rule": "3e-5",
+      "why": "The stem's cambium lays a ring every year on the trunk it has, fed by the foliage above it: 3e-5 m² of ring a year for each m² of foliage times the share of the open sky's light it catches, whether or not the crown still grows. While the crown grows, the pipe model's trunk outgrows one year's ring, so young trees keep the pipe model's girth (open-grown Douglas-fir 96 cm at 60 years, as before; UTD 95); once an old crown stops growing the rings add up, and a 480-year Douglas-fir grown in a stand is 118 cm through (Ishii and McDowell 2002: 87 to 154 cm, mean 117, at 450 years), where the pipe model alone stopped at 74. Fed by light, a crown packed with shaded foliage (a Rocky Mountain juniper's, at a tenth of the sky's light) feeds little. Limbs keep the pipe model's girth."
     }
   },
   "evidence": {
@@ -94,6 +98,11 @@
       "evidence": "SourceInferred",
       "source": "usfs-urban-tree-database-2016",
       "note": "McPherson, van Doorn and Peper (2016), Urban tree database (USDA Forest Service RDS-2016-0005), Pacific Northwest region (Longview, WA), 39 open-grown Douglas-fir 1 to 76 years old: dbh = -1.19688 + 2.36185 age - 0.01267 age² (adjusted r² 0.985), 58 cm at 30 years and 95 at 60; at 72 to 76 years, 88 to 118 cm. Shinozaki, Yoda, Hozumi and Kira (1964), A quantitative analysis of plant form: the pipe model theory: a stem carries a pipe for every unit of foliage above it, and keeps the disused pipes of branches that have died."
+    },
+    "rules.generator.params.pipe_cambium": {
+      "evidence": "SourceInferred",
+      "source": "ishii-mcdowell-2002",
+      "note": "Ishii and McDowell (2002), Forest Ecology and Management 169: 257-270, Table 1: six 450-year Douglas-firs at Wind River, 87 to 154 cm dbh (mean 117), five 40-year trees 30 to 50 cm. Sillett et al. (2010), Forest Ecology and Management 259: 976-994: wood production of the whole tree keeps rising through old age in tall trees, while ring width at the base slows. Shaw et al. (2004), Ecosystems 7: 427: Wind River old growth, basal area 82.9 m2/ha. The rate is fitted to Ishii's mean with the open-grown references (USDA Urban Tree Database, Longview, WA) held."
     }
   }
 }

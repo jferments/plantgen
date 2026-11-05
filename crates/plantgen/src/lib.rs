@@ -1559,11 +1559,32 @@ pub mod venation;
 /// baked to in the plant's cards (`crate::billboards`): its leaves read
 /// as feathery blades, not lines and dots.
 ///
-/// 198: a card tier's texel budget pays for its packed atlas, the room
+/// 197: old conifer trunks (`pinidae` revision 15): a conifer's stem lays a
+/// ring every year on the trunk it has, 3e-5 m² of ring for each m² of
+/// foliage above times the share of the sky's light it catches
+/// (`pipe_cambium`, the pipe tool's `cambium`), so a trunk keeps
+/// thickening once its crown stops growing. The trunk was the pipe model's
+/// alone: a Douglas-fir grown 480 years in a stand was 74 cm through, and
+/// is now 118 (Ishii and McDowell 2002: 87 to 154 cm, mean 117, at 450
+/// years at Wind River). Young trees keep the pipe model's girth, as their
+/// pipes outgrow one year's ring (open-grown Douglas-fir 96 cm at 60
+/// years, as before; UTD 95), and limbs keep theirs, so crowns grow as
+/// before. Fed by light, a crown packed with shaded foliage (a Rocky
+/// Mountain juniper's) feeds little.
+///
+/// 198: six herbs draw their leaves as their floras state them, where
+/// their files drew them otherwise (checked against whole-plant photos
+/// from the side): sheep sorrel's and rusty saxifrage's basal leaves
+/// reach the 8 cm Abrams gives, Arizona lupine's leaf cards its longest
+/// leaflets on their longest petioles, jimsonweed's and the tomato's
+/// longest leaves the floras' longest, and a thread-leaved sundew's leaves
+/// stand erect, as Flora of North America says.
+///
+/// 199: a card tier's texel budget pays for its packed atlas, the room
 /// packing leaves between pictures included, not only for the pictures'
 /// own texels (`crate::billboards`): the pictures are baked at the
 /// densest that packs within it. Pictures pack in rows or along the top
 /// edge of those laid before, whichever is lower. Of 498 card tiers of
 /// 248 species, none grew and together they hold 14% fewer texels; most
 /// low tiers went from 512 by 550 to 620 texels to 512 by 512.
-pub const GENERATOR_REVISION: u32 = 198;
+pub const GENERATOR_REVISION: u32 = 199;
