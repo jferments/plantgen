@@ -63,19 +63,24 @@ and `z = corner[1] - north`.
 Two more things the fill takes from the field:
 
 - **Shallow soil.** A plant whose program has `soil@1` (broadleaves,
-  grasses, herbs) is drawn as that tool grows it on the soil round its
+  conifers, grasses, herbs) is drawn as that tool grows it on the soil round its
   foot: `Site::soil_ratio_at(east, north, need, crown_m, height_m)` sums
   the rooting volume of the field cells within the reach of its roots
   (cell area times `min(rooting_m, the depth it asks)` times `open_share`),
   against the volume `SoilNeed::ratio` asks for, and the fill scales the
   plant by the square root of that share, as `soil@1` holds back its
   lengths. Deep soil gives 1 and changes nothing. A street tree in a 1 m
-  pit over rock is drawn small, a fir is not (conifers have no `soil@1`
-  yet). `Fill` takes each species' need from `Generator::soil_need`.
+  pit over rock is drawn small, and so is a fir on 3 cm of soil over a
+  slab (conifers have `soil@1` from pinidae revision 20, roots down to
+  3.64 m). `Fill` takes each species' need from `Generator::soil_need`.
 - **Plants in cracks.** `Site::with_colonists(microsites, pool, sources,
   settings, years)` runs `succession::run` over the tile's pavements and
   keeps what stands at `years` as `Site::colonists` (`CrackPlant`: species,
-  east, north, age, height, crown). `Fill::tile` draws them after its
+  east, north, age, height, crown). A colonist's roots go as deep as an
+  open-ground plant's of its age, down the crack into the base under the
+  slab, and spread as far as its own held-back crown asks
+  (`Colonist::supply`), so a dandelion in a 2 cm crack grows part way to
+  a lawn dandelion's size, not a few millimetres. `Fill::tile` draws them after its
   stands, in the order the site keeps them, each as its species' prototype
   nearest its age, scaled to its height. Every colonist's species must be
   one of the fill's (add the crack pool to the fill as a community, with

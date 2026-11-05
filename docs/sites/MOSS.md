@@ -208,10 +208,11 @@ height, and `grow` on the same mesh the field was measured from gives the
 tile's cover, which a host keeps beside the tile's instances, draws, or
 reads to tint its own textures (`MossCover::tint`, above). `plantc fill
 --field SITE.json --moss YEARS` does this with the genera the site's
-`mosses` list names (all the library's without one), writes the cover to `DIR/tiles/X_Y.moss.json` and, with
-`--render`, draws it: shoots within a twentieth of the view's span of its
-focus, shells out to the span, patches beyond (`--wet` sets
-`DrawOptions::hydration`). On the test block (DEVELOPERS.md) thirty years
-grow about 45,000 colonies in 15 s on four cores: the shaded north slope
-of the house's roof, toward the street, mossed over in clumps; the sunny
+`mosses` list names (all the library's without one), writes the cover to
+`DIR/tiles/X_Y.moss.json` and, with `--render`, draws it: shoots within a
+twentieth of the view's span of its focus, shells out to the span,
+patches beyond (`--wet` sets `DrawOptions::hydration`). On the test block
+(DEVELOPERS.md), with the eight Pacific Northwest genera its site names,
+thirty years grow about 39,000 colonies in 12 s on four cores: the shaded
+north slope of the house's roof, toward the street, mossed in clumps; the
 south slope spotted; moss along the curb and the fence's feet.
