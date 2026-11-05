@@ -192,12 +192,12 @@ Ok(())
   place in the world, from four layouts each. `Fill::new` reads its
   species on every core and makes a species' `Generator` only when a
   prototype of it is grown, drawn or written, so a fill whose sizes are
-  all kept starts in seconds (3 s for Olympia's 45 species, from 34). `TilePlan::stats` gives the stand
-  numbers to check against plots: stems and trees (5 cm or more at
-  breast height) per hectare, basal area, canopy cover and leaf area
-  index, and edge trees per hectare. `FillSettings::herbs = false`
-  leaves herbs to the ground cover raster for hosts that draw ground
-  cover their own way.
+  all kept starts in seconds (3 s for Olympia's 45 species, from 34).
+  `TilePlan::stats` gives the stand numbers to check against plots:
+  stems and trees (5 cm or more at breast height) per hectare, basal
+  area, canopy cover and leaf area index, and edge trees per hectare.
+  `FillSettings::herbs = false` leaves herbs to the ground cover raster
+  for hosts that draw ground cover their own way.
 - **Pure and local.** A tile's plan depends only on the fill's
   communities, the site, the stand map, the seed and
   `GENERATOR_REVISION`. Its draws are keyed by each stand cell's place in
@@ -220,7 +220,8 @@ Ok(())
   laying out the stand tiles takes about 22 s once, and each tile then
   places its trees and shrubs in 0.04 to 0.1 s on 4 cores (about 30,000
   a square kilometre there, where a sixth of the cells are forest or
-  yard trees).
+  yard trees). How that city's mesh, materials and stand map were made
+  is in [sites/DEVELOPERS.md](sites/DEVELOPERS.md), "A real city tile".
 - **Prototypes** (`fill.prototypes()`) are keyed by species, seed,
   setting and age (`PrototypeKey::age_tenths`, its files named
   `<species>-<setting>-<seed>-<age>y`). `fill.measure(which, threads,
