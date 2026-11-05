@@ -82,6 +82,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its rosette leaves are drawn by hand on a sprig card 0.4 as broad as long, so they read elliptic against the linear leaves Reiche gives",
     ),
     (
+        "berberis-aquifolium",
+        "height_typical_m",
+        "its hand-set growth (path_half 0.99 m) already grew it to a median 1.76 m against the 0.5 to 1.5 m its records give as usual (a warning); as a shrub of many stems from its base (revision 203), its upright stems reach 1.9 m, past the range's extremes, though within its greatest 2 m",
+    ),
+    (
         "cornus-nuttallii",
         "crown_see_through",
         "its photographs show no sky through its crown; drawn four times over (form::MOST_DRAWN) it still shows about 9% between its shoots",

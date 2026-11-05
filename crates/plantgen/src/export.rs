@@ -3564,7 +3564,9 @@ fn metadata(
 /// How a level is drawn, as the files and the index record it: the
 /// quality's level whose features it draws, the dial
 /// ([`crate::budget`]), the thinnest wood it keeps (stems are always
-/// kept), its tubes' ring spacing and most sides, the size of its leaf
+/// kept), its tubes' ring spacing and most sides (and those of the wood
+/// out of a near eye's reach, `crate::mesh::Reach`, null where it draws all
+/// its wood alike), the size of its leaf
 /// clusters (0 for a card per organ), the share of their finest triangles its part
 /// meshes hold and of their spines its solid areoles keep, the share of
 /// its organs and areoles drawn as solids, the share of its areoles drawn
@@ -3579,6 +3581,7 @@ fn level_detail(detail: &Detail) -> Value {
         "max_sides": lod.max_sides,
         "bend": lod.bend,
         "cluster": lod.cluster,
+        "reach": lod.reach,
         "solid_detail": detail.solid_detail,
         "solid_share": detail.solid_share,
         "spine_card_share": detail.spine_cards,

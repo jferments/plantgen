@@ -8,6 +8,8 @@ use plantgen::api::{
     Community, Environment, Fill, FillSettings, Generator, INSTANCE_BYTES, INSTANCE_SCHEMA,
     Instance, Options, PrototypeKey, Site, StandCell, StandMap, TileId,
 };
+use plantgen::package::{self, Inputs};
+use plantgen::quality;
 
 fn forest() -> Community {
     Community::from_json(
@@ -354,6 +356,73 @@ fn shade_tolerant_conifers_that_came_up_under_the_canopy_grow_beneath_it() {
         plant.size.height,
         stand.size.height
     );
+}
+
+#[test]
+fn each_prototype_grows_in_its_package_as_the_fill_measured_it() {
+    // Hemlocks that came up beneath a 160-year Douglas-fir stand, and the
+    // meadow's yarrows: a host that draws packages builds one per growth,
+    // and each keyframe is the prototype as the fill measured it.
+    let community = Community::from_json(
+        r#"{"id": "test-old-forest", "members": [
+            {"species": "pseudotsuga-menziesii"},
+            {"species": "tsuga-heterophylla"}
+        ]}"#,
+    )
+    .expect("community");
+    let mut settings = FillSettings::default();
+    settings.stand_ages = vec![160.0];
+    settings.seeds = 1;
+    settings.edges = false;
+    let old = Fill::new(&[community], &settings).expect("fill");
+    let beneath: Vec<u32> = (0..old.prototypes().len())
+        .filter(|&i| {
+            let key = &old.prototypes()[i].key;
+            key.beneath_m.is_some() && key.age_tenths <= 150
+        })
+        .map(|i| u32::try_from(i).expect("index"))
+        .collect();
+    assert_eq!(beneath.len(), 2, "{:?}", old.prototypes());
+    let yarrows: Vec<u32> = (0..fill().prototypes().len())
+        .filter(|&i| fill().prototypes()[i].key.species == "achillea-millefolium")
+        .map(|i| u32::try_from(i).expect("index"))
+        .collect();
+    assert!(!yarrows.is_empty());
+    old.measure(&beneath, 4, None).expect("measured");
+    for (fill, which) in [(&old, &beneath), (fill(), &yarrows)] {
+        let packages = fill.packages(which).expect("packages");
+        let held: usize = packages.iter().map(|p| p.prototypes.len()).sum();
+        assert_eq!(held, which.len());
+        for package in &packages {
+            assert_eq!(package.spec.variant_list().len(), 1);
+            let inputs = Inputs::new(&package.spec, &quality::DRAFT).expect("inputs");
+            let built = package::build(&inputs, 4, &mut |_| {}).expect("built");
+            let keyframes = &built.manifest.variants[0].keyframes;
+            for &(index, keyframe) in &package.prototypes {
+                let prototype = &fill.prototypes()[index as usize];
+                assert!(
+                    (keyframes[keyframe].age - prototype.age_years).abs() < 1e-9,
+                    "{}",
+                    prototype.key.stem()
+                );
+                // The same plant: its counts equal, its sizes to rounding.
+                let (kept, measured) = (
+                    &keyframes[keyframe].size,
+                    fill.size(index as usize).expect("measured"),
+                );
+                let near = |a: f64, b: f64| (a - b).abs() <= 1e-9 * a.abs().max(1.0);
+                assert!(
+                    kept.segments == measured.segments
+                        && kept.organs == measured.organs
+                        && near(kept.height, measured.height)
+                        && near(kept.crown_radius, measured.crown_radius)
+                        && near(kept.leaf_area, measured.leaf_area),
+                    "{}: {kept:?} in its package, {measured:?} measured",
+                    prototype.key.stem()
+                );
+            }
+        }
+    }
 }
 
 /// The way a placed plant faces: its east turned by its rotation, as an

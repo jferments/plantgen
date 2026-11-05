@@ -367,7 +367,40 @@ pub struct LodSpec {
     /// Organs within one cell of this size merge into one card; 0 keeps
     /// every organ.
     pub cluster: f64,
+    /// Coarser tubes for the wood high on a tall plant, where no eye that
+    /// sees this level comes near it; none where the level draws all its
+    /// wood alike.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub reach: Option<Reach>,
 }
+
+/// How a level draws the wood out of a near eye's reach: an axis that
+/// starts more than `above` metres over the plant's base, thinner there
+/// than `thinner` metres, has its tube's rings and sides as the next level
+/// draws them, though it keeps every branch this level keeps. Limbs at
+/// least `thinner` thick (the wood the level after that still keeps) keep
+/// their rings, so they stay smooth curves for an eye up level with the
+/// crown, on a roof or across a ravine; they are few.
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+pub struct Reach {
+    pub above: f64,
+    pub thinner: f64,
+    pub ring_edge: f64,
+    pub max_sides: u32,
+    pub bend: f64,
+}
+
+/// The height over a plant's base, metres, above which the nearest level
+/// draws its wood with the next level's tubes ([`Reach`]). The nearest
+/// level is drawn only within the near band, about 30 m on After's High
+/// preset (its plant plan's distance bands), and an eye on the ground near
+/// a plant stands within about 10 m of its base's height (up a slope, a
+/// bank or a porch), so wood higher than this is always farther from it
+/// than the near band reaches: as far as the next level is drawn from. A
+/// 480-year Douglas-fir grown in a stand, 63.6 m tall, drew 3.25 million
+/// triangles of wood on its nearest level, most of them rings where its
+/// high twigs barely bend; it draws 0.6 million.
+pub const NEAR_REACH: f64 = 40.0;
 
 /// Plants at least this tall, in metres, use a level's lengths as given;
 /// see [`LodSpec::for_height`].
@@ -404,6 +437,8 @@ impl LodSpec {
     /// 1/100, so each level keeps about the same detail on screen whatever
     /// the plant's size: a grass at LOD1 keeps its culms as a tree keeps its
     /// branches.
+    /// A plant no taller than its [`Reach`] has none: all its wood is
+    /// within an eye's reach.
     #[must_use]
     pub fn for_height(&self, height: f64) -> Self {
         let scale = (height / LOD_REFERENCE_HEIGHT).clamp(0.01, 1.0);
@@ -411,7 +446,48 @@ impl LodSpec {
             min_radius: self.min_radius * scale,
             ring_edge: self.ring_edge * scale,
             cluster: self.cluster * scale,
+            reach: self
+                .reach
+                .filter(|reach| height > reach.above)
+                .map(|reach| Reach {
+                    thinner: reach.thinner * scale,
+                    ring_edge: reach.ring_edge * scale,
+                    ..reach
+                }),
             ..*self
+        }
+    }
+
+    /// This level with `next`'s tubes for the wood above [`NEAR_REACH`]
+    /// thinner than `after` keeps (see [`Reach`]).
+    #[must_use]
+    pub const fn reaching(self, next: Self, after: Self) -> Self {
+        Self {
+            reach: Some(Reach {
+                above: NEAR_REACH,
+                thinner: after.min_radius,
+                ring_edge: next.ring_edge,
+                max_sides: next.max_sides,
+                bend: next.bend,
+            }),
+            ..self
+        }
+    }
+
+    /// This level for an axis that starts `y` metres over the plant's
+    /// base, `radius` metres thick: out of its [`Reach`], with the
+    /// reach's tubes.
+    #[must_use]
+    pub fn for_wood_at(&self, y: f64, radius: f64) -> Self {
+        match self.reach {
+            Some(reach) if y > reach.above && radius < reach.thinner => Self {
+                ring_edge: reach.ring_edge,
+                max_sides: reach.max_sides,
+                bend: reach.bend,
+                reach: None,
+                ..*self
+            },
+            _ => *self,
         }
     }
 }
@@ -1487,6 +1563,8 @@ fn wood(
         if segment.radius < lod.min_radius && !root {
             continue;
         }
+        // Wood out of a near eye's reach has the next level's tubes.
+        let lod = &lod.for_wood_at(segment.start.y, segment.radius);
         let Some(mut kept) = axis_rings(graph, &continuations, &end_radii, start, lod) else {
             continue;
         };
@@ -3899,6 +3977,7 @@ mod tests {
             max_sides: 8,
             bend,
             cluster,
+            reach: None,
         }
     }
 
@@ -3977,6 +4056,117 @@ mod tests {
             detailed.card_mesh().triangle_count(),
             20 * crate::bend::VERTICES as usize / 3
         );
+    }
+
+    /// A 60 m stem with a twig of five nearly straight segments leaving
+    /// it at `low` and another at `high` metres, or none where `None`,
+    /// each `radius` metres thick.
+    fn tall(low: Option<f64>, high: Option<f64>, radius: f64) -> PlantGraph {
+        let up = |y: f64| Vec3::new(0.0, y, 0.0);
+        let mut segments: Vec<GraphSegment> = (0..6_u32)
+            .map(|i| {
+                let y = 10.0 * f64::from(i);
+                let parent = i.checked_sub(1);
+                segment(
+                    parent,
+                    parent.is_none(),
+                    up(y),
+                    up(y + 10.0),
+                    0.6 - 0.1 * f64::from(i),
+                )
+            })
+            .collect();
+        for y in [low, high].into_iter().flatten() {
+            // On the stem segment it leaves, out along x, 2° off straight
+            // at each joint.
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            let on = (y / 10.0).floor() as u32;
+            let mut at = up(y);
+            for k in 0..5 {
+                let turn = math::radians(2.0 * f64::from(k));
+                let next = at + Vec3::new(math::cos(turn), math::sin(turn), 0.0) * 0.3;
+                let parent = if k == 0 {
+                    on
+                } else {
+                    u32::try_from(segments.len() - 1).unwrap()
+                };
+                segments.push(segment(Some(parent), k == 0, at, next, radius));
+                at = next;
+            }
+        }
+        PlantGraph {
+            age: 300.0,
+            height: 60.0,
+            segments,
+            organs: Vec::new(),
+            structures: Vec::new(),
+        }
+    }
+
+    /// The nearest level draws a tall plant's twigs above its reach with
+    /// the next level's tubes: a straight twig high in the crown loses the
+    /// rings along it, while one within reach, a limb as thick as the
+    /// third level keeps, and a plant no taller than the reach keep every
+    /// ring.
+    #[test]
+    fn wood_out_of_reach_takes_the_next_levels_tubes() {
+        let near = crate::quality::STANDARD.lods[0];
+        let reach = near.reach.expect("the nearest level has a reach");
+        assert!((reach.above - NEAR_REACH).abs() < 1e-12);
+        let [_, next, after, _] = crate::quality::STANDARD.lods;
+        assert_eq!(
+            (reach.ring_edge, reach.max_sides, reach.bend),
+            (next.ring_edge, next.max_sides, next.bend)
+        );
+        assert!((reach.thinner - after.min_radius).abs() < 1e-12);
+        // Only a plant taller than the reach keeps it.
+        assert_eq!(near.for_height(NEAR_REACH).reach, None);
+        assert_eq!(near.for_height(60.0).reach, Some(reach));
+        assert_eq!(near.for_wood_at(NEAR_REACH, 0.006), near);
+        assert_eq!(near.for_wood_at(NEAR_REACH + 1.0, reach.thinner), near);
+        let above = near.for_wood_at(NEAR_REACH + 1.0, 0.006);
+        assert_eq!(
+            (above.bend, above.max_sides, above.reach),
+            (next.bend, next.max_sides, None)
+        );
+        assert!(above.min_radius.abs() < 1e-12, "it keeps every branch");
+
+        let without = LodSpec {
+            reach: None,
+            ..near
+        };
+        let draw = |graph: &PlantGraph, lod: &LodSpec| {
+            build_plain(
+                graph,
+                &looks(),
+                &appearance(),
+                &lod.for_height(graph.height),
+            )
+            .wood
+        };
+        // A twig within reach, and a thick limb out of it: the same wood
+        // either way.
+        let low = tall(Some(12.0), None, 0.006);
+        assert_eq!(draw(&low, &near), draw(&low, &without));
+        let limb = tall(Some(12.0), Some(52.0), 0.02);
+        assert_eq!(draw(&limb, &near), draw(&limb, &without));
+        // A twig out of reach: its four rings between its ends go.
+        let both = tall(Some(12.0), Some(52.0), 0.006);
+        let (reached, full) = (draw(&both, &near), draw(&both, &without));
+        let sides = 3 + 1;
+        assert_eq!(reached.vertex_count() + 4 * sides, full.vertex_count());
+        // The wood below the reach is drawn alike.
+        let below = |wood: &Mesh| {
+            let mut kept: Vec<[u32; 3]> = wood
+                .positions
+                .iter()
+                .filter(|p| f64::from(p[1]) < NEAR_REACH)
+                .map(|p| p.map(f32::to_bits))
+                .collect();
+            kept.sort_unstable();
+            kept
+        };
+        assert_eq!(below(&reached), below(&full));
     }
 
     /// A level scaled to a small plant keeps the wood it would drop at a
@@ -4344,6 +4534,7 @@ mod tests {
                 max_sides,
                 bend: 0.0,
                 cluster: 0.0,
+                reach: None,
             };
             let mesh = build_plain(&graph(), &looks(), &appearance(), &lod);
             let sides = max_sides as usize;
