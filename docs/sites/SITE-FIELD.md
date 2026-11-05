@@ -85,10 +85,17 @@ Two more things the fill takes from the field:
   host that is not kept clear, rooted in the patch's `root_cell`: one per
   `CLIMBER_SPACING_M` (3 m) of foot at abundance 1, times that cell's
   open share, so ivy comes up along a wall on soil and not along one on
-  sound pavement. The instance stands 0.3 m out from the face (where its
-  prototype grew at its wall), turned so the prototype's wall lies on the
-  patch's, and its `extra` is the host's top above its foot in
-  decimetres, where a renderer clips it.
+  sound pavement. None stands where the host's foot is more than
+  `CLIMBER_FOOT_M` (0.3 m) above that cell's ground (a gable end, a
+  window, a sign board) or its top less than `CLIMBER_LEAST_HOST_M`
+  (0.5 m) above it (a curb). The instance stands 0.3 m out from the face
+  (where its prototype grew at its wall), turned so the prototype's wall
+  lies on the patch's, and its `extra` is a `WallClip`: the host's top
+  above its foot and how far its run of wall goes each way (the host
+  joined with the hosts of its kind it runs on into along the same line,
+  such as a fence's bays). A renderer drops what stands past the top,
+  past either end, or behind the wall's face, so the climber never hangs
+  in the air beyond its wall.
 - **Herbs on roofs.** Where a herb of a stand falls on a building's
   footprint (no ground, `plantable_at` 0) under a `roof` patch that holds
   soil (`soil_m` above 0, facing up, not kept clear), it stands on the
