@@ -520,7 +520,7 @@ impl Environment {
             // Overtopped in its own stand: its like's crowns around it,
             // as in the interior, and the dominants' crowns 30% taller
             // over it, a layer of shade 0.1 a metre (generator revision
-            // 198). A dense medium from the ground to 30 m, it was, left
+            // 199). A dense medium from the ground to 30 m, it was, left
             // a seedling 0.2% of the sky's light: conifers grew leafless
             // poles, and broadleaves died.
             Self::Suppressed => Neighbourhood {

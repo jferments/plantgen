@@ -40,7 +40,10 @@ use crate::stand_tile;
 
 /// The version of the instance file ([`Instance::to_bytes`]) and of the
 /// tile JSON beside it.
-pub const INSTANCE_SCHEMA: u32 = 2;
+///
+/// 3: a climber's `extra` is its [`WallClip`] (its wall's top and both
+/// ends), no longer its wall's top alone in decimetres.
+pub const INSTANCE_SCHEMA: u32 = 3;
 
 /// Bytes per packed instance.
 pub const INSTANCE_BYTES: usize = 32;
@@ -877,8 +880,8 @@ impl StandMap {
 /// One placed plant, packed into [`INSTANCE_BYTES`] by
 /// [`Instance::to_bytes`]: u32 prototype, f32 x3 position, i16 x4 snorm
 /// rotation quaternion (x, y, z, w), f16 scale, u16 age (tenths of a
-/// year), i8 x2 tint (lightness, hue), u16 extra (a climber's reach clip
-/// in decimetres, otherwise 0); little-endian.
+/// year), i8 x2 tint (lightness, hue), u16 extra (a climber's cut back to
+/// its wall, [`WallClip`], otherwise 0); little-endian.
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Instance {
     pub prototype: u32,
@@ -971,6 +974,77 @@ impl Instance {
             ],
             extra: u16::from_le_bytes(half(30)),
         }
+    }
+}
+
+/// Where a renderer cuts a climber back to the wall it stands at, packed
+/// into its instance's [`Instance::extra`]. Its prototype grew on a wall
+/// wider and taller than most it is set at ([`crate::export::grow_on_wall`]),
+/// so drawn whole it would hang in the air past the wall's ends and top.
+/// In the prototype's frame (growth's: +y up, its wall along x): nothing
+/// above `top_m`, nor further than `back_m` along -x or `ahead_m` along +x
+/// from its foot, is drawn. Packed as bits 0-5 the top in tenths of a
+/// metre (1 to 63, 63 for no top), bits 6-10 and 11-15 back and ahead in
+/// fifths of a metre (0 to 31, 31 for no end); each is rounded down, so
+/// the cut falls on the wall, never past it.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct WallClip {
+    pub top_m: f32,
+    pub back_m: f32,
+    pub ahead_m: f32,
+}
+
+impl WallClip {
+    const TOP_STEP_M: f32 = 0.1;
+    const SIDE_STEP_M: f32 = 0.2;
+
+    /// The packed form, never 0 (an instance that is not clipped).
+    #[must_use]
+    pub fn to_extra(self) -> u16 {
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let code = |metres: f32, step: f32, most: u16| {
+            if metres.is_finite() {
+                ((metres / step + 1.0e-3).floor().max(0.0) as u16).min(most)
+            } else {
+                most
+            }
+        };
+        code(self.top_m, Self::TOP_STEP_M, 63).max(1)
+            | code(self.back_m, Self::SIDE_STEP_M, 31) << 6
+            | code(self.ahead_m, Self::SIDE_STEP_M, 31) << 11
+    }
+
+    /// [`Self::to_extra`] read back: none for 0; an end at its largest
+    /// code is infinite.
+    #[must_use]
+    pub fn from_extra(extra: u16) -> Option<Self> {
+        if extra == 0 {
+            return None;
+        }
+        let read = |code: u16, step: f32, most: u16| {
+            if code >= most {
+                f32::INFINITY
+            } else {
+                f32::from(code) * step
+            }
+        };
+        Some(Self {
+            top_m: read(extra & 63, Self::TOP_STEP_M, 63),
+            back_m: read(extra >> 6 & 31, Self::SIDE_STEP_M, 31),
+            ahead_m: read(extra >> 11, Self::SIDE_STEP_M, 31),
+        })
+    }
+
+    /// Whether `point`, in the prototype's frame, is on the wall's side
+    /// of every cut.
+    #[must_use]
+    /// Behind its wall's face (z = -0.3) is inside the host it is set
+    /// at, and is cut too.
+    pub fn keeps(&self, point: [f32; 3]) -> bool {
+        point[1] <= self.top_m
+            && point[0] >= -self.back_m
+            && point[0] <= self.ahead_m
+            && point[2] >= -0.35
     }
 }
 
@@ -1220,6 +1294,87 @@ struct Climber {
 /// or a fence where the ground at its foot is soil, metres. Hand-set: ivy
 /// and other climbers set or come up every few metres along an old wall.
 pub const CLIMBER_SPACING_M: f64 = 3.0;
+
+/// How far above the ground a wall's or a fence's foot may stand for a
+/// climber to root at it, metres: a footing or a sill, not a gable or a
+/// window.
+pub const CLIMBER_FOOT_M: f64 = 0.3;
+
+/// The least height a wall or a fence stands above the ground at a
+/// climber's foot for one to climb it, metres: not a curb.
+pub const CLIMBER_LEAST_HOST_M: f64 = 0.5;
+
+/// Each host's run of wall or fence along its `u` axis, metres
+/// (`u_axis` · (x, z) at its two ends), for a host with an axis: its own
+/// extent joined with every host it runs on into, of its kind, along the
+/// same line (axes within 8°, faces within 0.3 m), its foot within 0.3 m
+/// and its extent within 0.25 m of the other's: a fence's bays one run,
+/// a house's wall one.
+fn wall_runs(field: &SiteField) -> Vec<Option<[f64; 2]>> {
+    use crate::site_field::Host;
+    let along = |host: &Host, axis: [f64; 3]| {
+        let mut range = [f64::INFINITY, f64::NEG_INFINITY];
+        for x in [host.low[0], host.high[0]] {
+            for z in [host.low[2], host.high[2]] {
+                let s = axis[0] * x + axis[2] * z;
+                range = [range[0].min(s), range[1].max(s)];
+            }
+        }
+        range
+    };
+    let across = |host: &Host, axis: [f64; 3]| {
+        let centre = [
+            (host.low[0] + host.high[0]) / 2.0,
+            (host.low[2] + host.high[2]) / 2.0,
+        ];
+        axis[0] * centre[1] - axis[2] * centre[0]
+    };
+    let hosts = &field.hosts;
+    let mut root: Vec<usize> = (0..hosts.len()).collect();
+    fn find(root: &mut [usize], mut at: usize) -> usize {
+        while root[at] != at {
+            root[at] = root[root[at]];
+            at = root[at];
+        }
+        at
+    }
+    for (i, a) in hosts.iter().enumerate() {
+        let Some(axis) = a.u_axis else { continue };
+        for (j, b) in hosts.iter().enumerate().skip(i + 1) {
+            let Some(other) = b.u_axis else { continue };
+            if a.kind != b.kind
+                || (axis[0] * other[0] + axis[2] * other[2]).abs() < 0.99
+                || (across(a, axis) - across(b, axis)).abs() > 0.3
+                || (a.foot_m - b.foot_m).abs() > 0.3
+            {
+                continue;
+            }
+            let (one, two) = (along(a, axis), along(b, axis));
+            if one[0].max(two[0]) - one[1].min(two[1]) <= 0.25 {
+                let (ra, rb) = (find(&mut root, i), find(&mut root, j));
+                root[ra] = rb;
+            }
+        }
+    }
+    let groups: Vec<usize> = (0..hosts.len()).map(|at| find(&mut root, at)).collect();
+    hosts
+        .iter()
+        .enumerate()
+        .map(|(i, host)| {
+            let axis = host.u_axis?;
+            Some(
+                hosts
+                    .iter()
+                    .zip(&groups)
+                    .filter(|(_, group)| **group == groups[i])
+                    .map(|(other, _)| along(other, axis))
+                    .fold([f64::INFINITY, f64::NEG_INFINITY], |run, range| {
+                        [run[0].min(range[0]), run[1].max(range[1])]
+                    }),
+            )
+        })
+        .collect()
+}
 
 #[derive(Debug, Clone)]
 struct Species {
@@ -2401,9 +2556,12 @@ impl Fill {
     /// the community of the stand cell there stands with the chance its
     /// abundance gives (at abundance 1, one per [`CLIMBER_SPACING_M`] of
     /// foot) times the open share of the ground cell it roots in, so none
-    /// stands on sound pavement. Each is one of its prototypes grown on a
-    /// wall, its wall's face turned onto the patch's, and its reach
-    /// clipped to the host's top (`extra`, decimetres above its foot).
+    /// stands on sound pavement, nor where the host's foot stands above
+    /// the ground ([`CLIMBER_FOOT_M`]) or its top is under
+    /// [`CLIMBER_LEAST_HOST_M`]. Each is one of its prototypes grown on a
+    /// wall, its wall's face turned onto the patch's, and cut back to the
+    /// host's top and to both ends of its run of wall ([`WallClip`] in
+    /// `extra`).
     fn climbers_at(&self, site: &Site, stands: &StandMap, seed: u64) -> Vec<Instance> {
         let mut placed = Vec::new();
         let Some(tile) = &site.field else {
@@ -2414,8 +2572,12 @@ impl Fill {
         }
         let field = &tile.field;
         let patch_m = field.settings.patch_m;
+        let runs = wall_runs(field);
         for (number, patch) in field.patches.iter().enumerate() {
             let Some(host) = field.hosts.get(patch.host as usize) else {
+                continue;
+            };
+            let (Some(axis), Some(run)) = (host.u_axis, runs[patch.host as usize]) else {
                 continue;
             };
             let level = patch.normal[0].hypot(patch.normal[2]);
@@ -2436,7 +2598,13 @@ impl Fill {
                 continue;
             };
             let open = field.ground.open_share[root].clamp(0.0, 1.0);
-            if open <= 0.0 {
+            // A climber roots at the foot of its host: not under a gable
+            // or a window whose foot stands above the ground, nor at a
+            // curb too low to climb.
+            if open <= 0.0
+                || host.foot_m - ground > CLIMBER_FOOT_M
+                || host.high[1] - ground < CLIMBER_LEAST_HOST_M
+            {
                 continue;
             }
             // Its foot 0.3 m out from the face, as it grew at its wall.
@@ -2488,10 +2656,23 @@ impl Fill {
                 // The prototype's face looks south (+z); turn it onto the
                 // patch's, east toward north.
                 let yaw = (-out[1]).atan2(out[0]) + std::f64::consts::FRAC_PI_2;
-                #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-                let clip = ((host.high[1] - ground) * 10.0)
-                    .round()
-                    .clamp(1.0, 65_535.0) as u16;
+                // The prototype's +x along the field, and how far the
+                // wall runs each way from its foot.
+                let along = axis[0] * yaw.cos() - axis[2] * yaw.sin();
+                let foot = axis[0] * x + axis[2] * z;
+                let (before, after) = ((foot - run[0]).max(0.0), (run[1] - foot).max(0.0));
+                let (back, ahead) = if along >= 0.0 {
+                    (before, after)
+                } else {
+                    (after, before)
+                };
+                #[allow(clippy::cast_possible_truncation)]
+                let clip = WallClip {
+                    top_m: (host.high[1] - ground) as f32,
+                    back_m: back as f32,
+                    ahead_m: ahead as f32,
+                }
+                .to_extra();
                 #[allow(clippy::cast_possible_truncation)]
                 placed.push(Instance {
                     prototype,
@@ -2831,6 +3012,33 @@ fn world_cell(site: &Site, stands: &StandMap, col: usize, row: usize) -> [u64; 2
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn a_wall_clip_packs_into_an_instances_extra_rounded_onto_the_wall() {
+        let clip = WallClip {
+            top_m: 2.87,
+            back_m: 0.35,
+            ahead_m: 9.0,
+        };
+        let extra = clip.to_extra();
+        assert_ne!(extra, 0);
+        let back = WallClip::from_extra(extra).unwrap();
+        assert!((back.top_m - 2.8).abs() < 1e-4, "{back:?}");
+        assert!((back.back_m - 0.2).abs() < 1e-4, "{back:?}");
+        assert!(back.ahead_m.is_infinite(), "{back:?}");
+        assert!(back.keeps([1.0, 1.0, 0.0]) && back.keeps([-0.2, 2.8, -0.3]));
+        assert!(!back.keeps([-0.3, 1.0, 0.0]) && !back.keeps([0.0, 2.9, 0.0]));
+        // Behind its wall's face is inside the host.
+        assert!(!back.keeps([0.0, 1.0, -0.5]));
+        // Nothing to its top or ends is still a cut, never 0.
+        let none = WallClip {
+            top_m: 0.0,
+            back_m: 0.0,
+            ahead_m: 0.0,
+        };
+        assert_ne!(none.to_extra(), 0);
+        assert_eq!(WallClip::from_extra(0), None);
+    }
 
     #[test]
     #[allow(clippy::float_cmp)]
