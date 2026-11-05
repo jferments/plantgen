@@ -767,7 +767,7 @@ fn paved_cell(tile: &Pavement, x: f64, z: f64, cell: f64) -> (f64, f64) {
 /// (more near the zenith, as light falls on a level surface), from a
 /// fixed spiral so the same count gives the same rays.
 #[allow(clippy::cast_precision_loss)]
-fn hemisphere(count: u32) -> Vec<Vec3> {
+pub(crate) fn hemisphere(count: u32) -> Vec<Vec3> {
     let count = count.max(1);
     let golden = std::f64::consts::PI * (3.0 - 5.0_f64.sqrt());
     (0..count)
@@ -784,7 +784,7 @@ fn hemisphere(count: u32) -> Vec<Vec3> {
 /// wall searches reach, with each column's top, so that a ray passes over
 /// the columns it clears without testing their triangles. Built once per
 /// field and shared by every thread.
-struct Tracer<'a> {
+pub(crate) struct Tracer<'a> {
     site: &'a SiteMesh,
     /// The lowest column's index, as (x, z).
     low: [i64; 2],
@@ -805,7 +805,7 @@ struct Tracer<'a> {
 impl<'a> Tracer<'a> {
     /// Columns from `low` to `high` (x, z), and `reach` round them.
     #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-    fn new(site: &'a SiteMesh, low: [f64; 2], high: [f64; 2], reach: f64) -> Self {
+    pub(crate) fn new(site: &'a SiteMesh, low: [f64; 2], high: [f64; 2], reach: f64) -> Self {
         let column = SiteMesh::COLUMN_M;
         let index = |v: f64| (v / column).floor() as i64;
         let first = [index(low[0] - reach) - 1, index(low[1] - reach) - 1];
@@ -921,7 +921,7 @@ impl<'a> Tracer<'a> {
     /// in order (Amanatides and Woo 1987), each once, and tests a column's
     /// triangles only where the ray is not yet above the column's top.
     #[allow(clippy::cast_possible_truncation)]
-    fn blocked(&self, from: Vec3, ray: Vec3, reach: f64) -> bool {
+    pub(crate) fn blocked(&self, from: Vec3, ray: Vec3, reach: f64) -> bool {
         let size = SiteMesh::COLUMN_M;
         let mut column = [
             (from.x / size).floor() as i64,
@@ -976,7 +976,7 @@ impl<'a> Tracer<'a> {
     /// Share of `directions` (about +Y) turned to `normal` that leave
     /// `from` without meeting the site within `reach`.
     #[allow(clippy::cast_precision_loss)]
-    fn sky_seen(&self, from: Vec3, normal: Vec3, directions: &[Vec3], reach: f64) -> f64 {
+    pub(crate) fn sky_seen(&self, from: Vec3, normal: Vec3, directions: &[Vec3], reach: f64) -> f64 {
         let (tangent, bitangent) = frame(normal);
         let open = directions
             .iter()
@@ -1033,7 +1033,7 @@ impl<'a> Tracer<'a> {
 
 /// `work` on every index below `count`, over the machine's idle cores,
 /// in the indices' order: no result depends on how many threads ran.
-fn spread<R: Send>(count: usize, work: &(dyn Fn(usize) -> R + Sync)) -> Vec<R> {
+pub(crate) fn spread<R: Send>(count: usize, work: &(dyn Fn(usize) -> R + Sync)) -> Vec<R> {
     const CHUNK: usize = 256;
     let chunks: Vec<usize> = (0..count.div_ceil(CHUNK)).collect();
     let lease = crate::cores::Lease::take(crate::cores::available());
@@ -1047,7 +1047,7 @@ fn spread<R: Send>(count: usize, work: &(dyn Fn(usize) -> R + Sync)) -> Vec<R> {
     .collect()
 }
 
-fn frame(normal: Vec3) -> (Vec3, Vec3) {
+pub(crate) fn frame(normal: Vec3) -> (Vec3, Vec3) {
     let helper = if normal.y.abs() < 0.9 {
         Vec3::Y
     } else {

@@ -2,5 +2,31 @@
   "schema": 1,
   "rank": "family",
   "name": "Bryaceae",
-  "parent": "order/bryales"
+  "parent": "order/bryales",
+  "traits": {
+    "colony_form": {
+      "turf": "usually",
+      "cushion": "sometimes"
+    },
+    "perichaetia": {
+      "acrocarpous": "usually"
+    },
+    "leaf_dry_posture": {
+      "imbricate": "often",
+      "twisted": "often",
+      "crisped": "sometimes"
+    },
+    "capsule_posture": {
+      "pendent": "often",
+      "inclined": "often",
+      "erect": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Bryaceae (Spence; efloras, read 2026-11-05): plants as scattered individuals or open to dense turfs or cushions, acrocarpous; leaves imbricate to contorted or twisted when dry, erect to erect-spreading when moist; capsule erect, inclined or nutant, long-exserted."
+    }
+  }
 }

@@ -1,0 +1,93 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Hypnum",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.003,
+      "max": 0.015,
+      "typical": 0.006
+    },
+    "leaf_length_m": {
+      "min": 0.001,
+      "max": 0.002,
+      "typical": 0.0017
+    },
+    "leaf_width_m": {
+      "min": 0.0005,
+      "max": 0.0008,
+      "typical": 0.0006
+    },
+    "hair_point_length_m": 0,
+    "leaf_colour": [
+      118,
+      128,
+      54
+    ],
+    "leaf_dry_posture": "falcate",
+    "seta_length_m": {
+      "min": 0.01,
+      "max": 0.025
+    },
+    "seta_colour": [
+      150,
+      70,
+      44
+    ],
+    "capsule_length_m": {
+      "min": 0.0018,
+      "max": 0.0025
+    },
+    "capsule_colour": [
+      140,
+      72,
+      44
+    ],
+    "capsule_posture": "inclined",
+    "capsule_share": 0.006,
+    "substrates": [
+      "bark",
+      "wood",
+      "rock",
+      "built"
+    ],
+    "substrate_reaction": "acid",
+    "light": [
+      "part",
+      "shade"
+    ],
+    "moisture": [
+      "wet",
+      "mesic"
+    ],
+    "desiccation_tolerance": "intermediate",
+    "colony_spread_m_per_year": 0.012
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Hypnum (Schofield; efloras, read 2026-11-05): plants yellowish, green or brown, glossy or dull; stems creeping, pinnate or irregularly branched; leaves secund or falcate-secund; seta yellowish to reddish; capsule usually curved. Typical values are H. cupressiforme of roofs, walls and trunks (same volume): rusty, golden or yellow-green; stems 1-8 cm, creeping, irregularly pinnate; leaves 1.5-2 x 0.5-0.8 mm, falcate-secund; seta reddish 1-2.5 cm; capsule slightly inclined, reddish, cylindric, 1.8-2.5 mm; dioicous. Wikipedia, Hypnum cupressiforme (read 2026-11-05): smooth dense mats on trunks, logs, walls and rocks, preferring acid surfaces."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A creeping mat's depth above its surface, not its shoots' length: a few millimetres, as the leaves lie in a few layers over the creeping stems."
+    },
+    "traits.capsule_share": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Dioicous; capsules occasional. Estimate."
+    },
+    "traits.light": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Bryophyte Biology p. 276 (card bryo-p276-4): most bryophytes are plants of shade; H. cupressiforme mats are thickest on the shaded sides of roofs, walls and trunks (general bryological knowledge)."
+    },
+    "traits.colony_spread_m_per_year": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Estimate: pleurocarps add one to two centimetres of shoot a year at the mat's edge. To check against Glime, Bryophyte Ecology, vol. 1, chapter 5."
+    }
+  }
+}
