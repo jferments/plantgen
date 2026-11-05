@@ -1650,4 +1650,11 @@ pub mod venation;
 /// drew 3.25 million triangles of wood on its nearest level, 187 MB of
 /// mesh; it draws 0.6 million, 54 MB. Plants up to 40 m tall are drawn
 /// as before.
-pub const GENERATOR_REVISION: u32 = 204;
+///
+/// 205: a shrub up to 3 m tall whose taxa do not say how its stems rise
+/// (`stem_clump`) sends up many stems from its base, as `stem_clump` many
+/// gives, in place of one stem forking just above the ground (a rule on the
+/// shrub form at the flowering plants); taller shrubs and prostrate mats keep
+/// their forking stem. 32 library shrubs change, and the open
+/// plant-identification judge names them better grown so.
+pub const GENERATOR_REVISION: u32 = 205;
