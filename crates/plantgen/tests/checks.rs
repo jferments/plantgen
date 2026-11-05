@@ -22,11 +22,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its photographs show about 2% sky; drawn four times over (form::MOST_DRAWN), its crown still shows about 8% from the side, where long limbs run bare between its leafy shoots (architecture, not leaf area: the grown leaf area matches the Urban Tree Database)",
     ),
     (
-        "achlys-triphylla",
-        "leaf_arrangement",
-        "Berberidaceae's leaves are alternate and vanilla leaf's rise one to a node from its rhizome, but the measure finds three or more leaves at most of its nodes (seen since B1 stated the family's arrangement)",
-    ),
-    (
         "amaranthus-retroflexus",
         "petiole_length_m",
         "the order's rules draw each leaf's petiole as its stated share of the card and shrink the uppermost leaves as a whole, so the small leaves under the panicle draw petioles of 8 to 9 mm against FNA's 1.5 to 5.5 cm for the stem leaves (inferred: FNA gives one petiole length for all)",
