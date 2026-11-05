@@ -79,18 +79,24 @@ with the shoots.
 Up close every shoot is drawn over a shell that sinks and darkens to the
 shoots' older lower parts:
 
-- Cushions and turfs: upright shoot tips, leaves in a spiral at the
-  golden angle, standing out more when wet, folded, twisted or crisped
-  when dry as the genus's `leaf_dry_posture` says, with their awns.
-- Mats (pleurocarps): creeping, pinnately branched shoots starting all
-  over the mat and wandering outward so that they interweave.
+- Cushions and turfs: crowded upright shoots, a stem every two thirds
+  of a leaf length or so, their tips standing clear of the shell; leaves
+  in a spiral at the golden angle, standing out more when wet, folded,
+  twisted or crisped when dry as the genus's `leaf_dry_posture` says,
+  with their awns; the older leaves down the shoot in the genus's
+  `older_leaf_colour` (Tortula brown below, Ceratodon tinged red).
+- Mats (pleurocarps): creeping, pinnately branched shoots crossing the
+  whole mat and wandering so that they interweave; where the genus's
+  `dry_branch_posture` is curled (Homalothecium), the side branches curl
+  up and in as the mat dries.
 - Capsules on setae (straight or arcuate), in the posture the genus's
   `capsule_posture` gives, on the share of shoots `capsule_share` gives.
 
 Every point is laid on a face of the site within reach: of the faces
 straight above or below it, the outermost (a tile, not the deck under
 it). A colony bridges hollows up to a quarter of its radius, at most a
-12 mm mortar joint. Nothing floats or reaches round a corner.
+12 mm mortar joint, and drapes over a step (a tile's edge) no steeper
+than it runs out. Nothing floats or reaches round a corner.
 
 ### Colour
 
@@ -151,7 +157,7 @@ cargo build --release -p plantc
 `--detail patch|shell|shoots|near` picks the level, `--from north` turns
 the view half round, `--wet 0.1` draws it dry,
 `--capsules no` leaves out the sporophytes. Growing the test wall and shed
-takes about a minute; a close view with shoots, a few million triangles and
+takes about 25 s; a close view with shoots, a few million triangles and
 seconds to tens of seconds.
 
 ## Tests
