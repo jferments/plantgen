@@ -548,6 +548,13 @@ pub struct VariantPlan {
     /// every seed and labelled by its preset ([`crate::conditions`]).
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub conditions: Vec<Conditions>,
+    /// The seeds its parameters' spreads are dealt among
+    /// ([`PlantSpec::seeded_params`]) when not `seeds`: a package that
+    /// keeps a few of a species' seeds (a stands fill's,
+    /// [`crate::fill::Fill::packages`]) grows each as the species' own
+    /// package grows it. Empty: `seeds`.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub dealt_among: Vec<u64>,
 }
 
 /// One variant to grow.
@@ -1687,8 +1694,9 @@ impl PlantSpec {
     /// them for `program`, with each that has a spread
     /// ([`Generator::spreads`]: a character of the whole plant a rule
     /// passes through) drawn from it, and the parameters that follow from
-    /// it following it. The seeds a package grows ([`VariantPlan::seeds`])
-    /// share each spread out as an organ's varieties do
+    /// it following it. The seeds a package grows ([`VariantPlan::seeds`],
+    /// or [`VariantPlan::dealt_among`] where it names them) share each
+    /// spread out as an organ's varieties do
     /// ([`crate::rng::dealt`]), so one seed grows the typical plant and
     /// three draw from the middles of a range's thirds; another seed draws
     /// by its hash. A seed grows the same plant on every machine and in
@@ -1701,8 +1709,13 @@ impl PlantSpec {
     /// that is not dioecious draws no sex and keeps its value.
     #[must_use]
     pub fn seeded_params(&self, program: &Program, params: &[f64], seed: u64) -> Vec<f64> {
-        let share = |name: &str| match self.variants.seeds.iter().position(|own| *own == seed) {
-            Some(index) => crate::rng::dealt(index, self.variants.seeds.len(), name),
+        let dealt = if self.variants.dealt_among.is_empty() {
+            &self.variants.seeds
+        } else {
+            &self.variants.dealt_among
+        };
+        let share = |name: &str| match dealt.iter().position(|own| *own == seed) {
+            Some(index) => crate::rng::dealt(index, dealt.len(), name),
             None => crate::rng::unit(crate::rng::mix64(seed ^ crate::rng::hash_str(name))),
         };
         let mut drawn = self.generator.params.clone();
