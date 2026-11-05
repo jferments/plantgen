@@ -122,6 +122,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "age_max_years": 30,
     "leaf_shape": {"ovate": "usually", "elliptic": "often"},
     "bark_colour": [97, 71, 51],
     "height_max_m": {
@@ -144,6 +145,7 @@
     "fruiting_months": [8, 9]
   },
   "evidence": {
+    "traits.age_max_years": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS species review of oceanspray (Fryer 2010): it rarely lives more than 30 years."},
     "traits.leaf_shape": {"evidence": "SourceInferred", "source": "abrams-1944", "note": "Abrams, Illustrated Flora of the Pacific States vol. II (1944), read 2026-11-04, Holodiscus discolor: \"Leaves broadly ovate or oval, 4-10 cm. long\"."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.38, 0.28, 0.2], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.height_max_m": {

@@ -137,6 +137,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "age_max_years": 100,
     "seed_dispersal": ["wind"],
     "leader": "persistent",
     "bark_colour": [97, 94, 84],
@@ -169,6 +170,7 @@
     "leaf_apex": {"acute": "usually", "obtuse": "often"}
   },
   "evidence": {
+    "traits.age_max_years": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS species review of red alder (Uchytil 1989): it lives a hundred years at most."},
     "traits.seed_dispersal": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Alnus rubra: wind-borne seed in large numbers sows disturbed ground."},
     "traits.leader": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 223, as A. oregona): 'slender somewhat pendulous branches forming a narrow pyramidal head'."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.38, 0.37, 0.33], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},

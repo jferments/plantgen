@@ -102,11 +102,21 @@ impl Member {
 
 /// A plant community: its members and how they share a stand. Built from
 /// JSON (`{"id": ..., "members": [{"species": ..., "layer": ...,
-/// "abundance": ...}]}`, layer and abundance optional).
+/// "abundance": ...}]}`, layer and abundance optional, and `"origin":
+/// "planted"` for a yard's or a street's kept trees).
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Community {
     pub id: String,
     pub members: Vec<Member>,
+    /// How its stands came to be ([`development::Origin`]): natural
+    /// unless given.
+    #[serde(default, skip_serializing_if = "is_natural")]
+    pub origin: development::Origin,
+}
+
+#[allow(clippy::trivially_copy_pass_by_ref)]
+fn is_natural(origin: &development::Origin) -> bool {
+    *origin == development::Origin::Natural
 }
 
 impl Community {
@@ -833,6 +843,12 @@ pub struct StandCell {
     /// building, water).
     pub community: Option<u16>,
     pub years_since_disturbance: f32,
+    /// The ground's moisture, 0 dry to 1 saturated, where the caller knows
+    /// it better than the ground's shape does: a creek's bank or a lake's
+    /// shore that a coarse height model reads as level ground. It takes the
+    /// place of the moisture the site gives ([`Site::site_factors_at`]).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub moisture: Option<f32>,
 }
 
 /// Which community grows where over a tile, cell by cell, row by row from
@@ -863,6 +879,7 @@ impl StandMap {
                 StandCell {
                     community: Some(community),
                     years_since_disturbance: years,
+                    moisture: None,
                 };
                 cols * cols
             ],
@@ -890,6 +907,16 @@ impl StandMap {
             return Err(Error(format!(
                 "stands: community {:?} is not one of the fill's {communities}",
                 cell.community
+            )));
+        }
+        if let Some(moisture) = self
+            .cells
+            .iter()
+            .filter_map(|cell| cell.moisture)
+            .find(|moisture| !(0.0..=1.0).contains(moisture))
+        {
+            return Err(Error(format!(
+                "stands: a cell's moisture must be 0 to 1, found {moisture}"
             )));
         }
         Ok(())
@@ -1716,7 +1743,11 @@ impl Fill {
         };
         for community in 0..fill.communities.len() {
             for age in fill.settings.stand_ages.clone() {
-                let stand = development::develop(&fill.candidates(community, None), age);
+                let stand = development::develop_as(
+                    &fill.candidates(community, None),
+                    age,
+                    fill.communities[community].origin,
+                );
                 let canopy = fill.canopy_m(community);
                 for cohort in &stand.cohorts {
                     let member = &fill.stands[community][cohort.candidate];
@@ -2375,7 +2406,10 @@ impl Fill {
                     (corner[1] - window[1] + 0.5 * layout_m).clamp(0.0, site.tile_m),
                 ]
             };
-            let factors = site.site_factors_at(middle[0], middle[1]);
+            let mut factors = site.site_factors_at(middle[0], middle[1]);
+            if let Some(moisture) = cell.moisture {
+                factors.moisture = f64::from(moisture).clamp(0.0, 1.0);
+            }
             let suits = self.stands[community]
                 .iter()
                 .map(|member| {
@@ -2469,6 +2503,7 @@ impl Fill {
                             Some(StandCell {
                                 community: Some(other),
                                 years_since_disturbance,
+                                ..
                             }) => {
                                 let other = usize::from(other);
                                 if other >= self.communities.len() {
@@ -2939,7 +2974,11 @@ impl Fill {
     #[allow(clippy::too_many_lines)]
     fn lay_out(&self, key: &LayoutKey) -> Result<Layout, Error> {
         let candidates = self.candidates(key.community, Some(&key.suits));
-        let stand = development::develop(&candidates, self.settings.stand_ages[key.age]);
+        let stand = development::develop_as(
+            &candidates,
+            self.settings.stand_ages[key.age],
+            self.communities[key.community].origin,
+        );
         let mut chosen = Vec::new();
         for cohort in &stand.cohorts {
             let member = &self.stands[key.community][cohort.candidate];
