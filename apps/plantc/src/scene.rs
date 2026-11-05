@@ -538,7 +538,13 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
                 "  cohort {id} {} years, weight {:.3}{}",
                 cohort.age,
                 cohort.weight,
-                if cohort.pioneer { ", pioneer" } else { "" }
+                if cohort.pioneer {
+                    ", pioneer"
+                } else if cohort.released {
+                    ", released"
+                } else {
+                    ""
+                }
             );
             #[allow(clippy::cast_precision_loss)]
             let share = cohort.weight / seeds.len().max(1) as f64;

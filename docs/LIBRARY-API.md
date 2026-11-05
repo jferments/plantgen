@@ -221,7 +221,12 @@ Ok(())
   canopy is 19.7 m tall, where a stand of hemlocks its age is 43.6 m. Only
   conifers grow so for now (`fill::BENEATH_PROGRAMS`): grown there, a
   broadleaf sheds every leaf, so a broadleaf's ingrowth grows as in a
-  stand.
+  stand. From 300 years the pioneers' deaths open gaps, and the share of
+  an ingrowth cohort that a gap opened over grows on as in a stand of its
+  like (`development::Cohort::released`), at the age its size matches
+  (`development::RELEASE_CATCH_UP`: its years beneath the canopy count a
+  third): at 500 years, a quarter of Wind River's 240-year hemlocks stand
+  as 120-year trees in a stand, 43.6 m tall.
 - **Parts of tall plants.** A prototype 6 m or taller is also written in
   parts (`FillSettings::parts`, on by default): its bole under the crown
   and its crown in up to four bands sized by its own height, each limb

@@ -53,6 +53,14 @@ pub const PIONEERS_GONE: f64 = 1050.0 / 500.0;
 /// reverse-J of all-aged stands (de Liocourt 1898; Meyer 1952).
 pub const INGROWTH_DECAY: f64 = 0.25;
 
+/// The share of a released tree's years beneath the canopy that count
+/// toward its size once a gap opens over it: it grows on as a tree of its
+/// like in a stand of the age its size matches. The model's choice, from
+/// its own growth: a hemlock grown 120 years beneath a 60 m canopy is
+/// 19.7 m, as tall as one 40 years old in a stand, and one grown 60 years
+/// there, 11.9 m, as one 25.
+pub const RELEASE_CATCH_UP: f64 = 1.0 / 3.0;
+
 /// The canopy cover of a closed stand, [`Stage::Exclusion`]'s (McIntosh et
 /// al. 2009: rarely more than 85%).
 pub const CLOSED: f64 = 0.85;
@@ -179,6 +187,11 @@ pub struct Cohort {
     pub weight: f64,
     /// Of the cohort that established after the disturbance.
     pub pioneer: bool,
+    /// Ingrowth that a gap in the canopy opened over: it grows as in a
+    /// stand of its like, at the age its size matches
+    /// ([`RELEASE_CATCH_UP`]), where the rest of its cohort grows beneath
+    /// the canopy.
+    pub released: bool,
 }
 
 /// A stand of one age: its stage, its cohorts and its layers' cover.
@@ -202,7 +215,13 @@ pub struct Development {
 /// 2. From [`REINITIATION`] of the pioneers' lifespan each shade-tolerant
 ///    tree ([`TOLERANT`]) establishes under the canopy year by year, so it
 ///    stands at every age it can be drawn at up to the years since then,
-///    fewer of the older ([`INGROWTH_DECAY`]).
+///    fewer of the older ([`INGROWTH_DECAY`]). From [`GAPS`] the
+///    pioneers' deaths open gaps, the canopy's share open in step with the
+///    pioneers lost, and the share of a cohort that a gap opened over
+///    since it came up is released ([`Cohort::released`]): it has stood
+///    in the gap for half the years since then, on average, and grows on
+///    as in a stand of its like at the age its size matches
+///    ([`RELEASE_CATCH_UP`]), the nearest it can be drawn at.
 /// 3. Shrubs and herbs stand at the oldest age they can be drawn at, up to
 ///    the stand's, in proportion to their abundance in their layer.
 ///
@@ -245,36 +264,12 @@ pub fn develop(candidates: &[Candidate], age: f64) -> Development {
                     age: nearest(&candidate.ages, age),
                     weight,
                     pioneer: true,
+                    released: false,
                 });
             }
             // Ingrowth under the canopy.
-            let since = age - REINITIATION * lifespan;
-            if candidate.shade_tolerance >= TOLERANT && since > 0.0 {
-                let abundance = candidate.layers[0] + candidate.layers[1];
-                let ages: Vec<f64> = candidate
-                    .ages
-                    .iter()
-                    .copied()
-                    .filter(|a| *a > 0.0 && *a <= since)
-                    .collect();
-                // Each age stands for the years from the one before.
-                let mut before = 0.0;
-                for a in ages {
-                    let span = a - before;
-                    before = a;
-                    let weight = suits
-                        * abundance
-                        * candidate.shade_tolerance
-                        * span
-                        * libm::exp(-a / (INGROWTH_DECAY * lifespan))
-                        / (INGROWTH_DECAY * lifespan);
-                    cohorts.push(Cohort {
-                        candidate: index,
-                        age: a,
-                        weight,
-                        pioneer: false,
-                    });
-                }
+            if candidate.shade_tolerance >= TOLERANT {
+                ingrowth(&mut cohorts, index, candidate, age, lifespan);
             }
         } else {
             let abundance = candidate.layers[2] + candidate.layers[3];
@@ -290,6 +285,7 @@ pub fn develop(candidates: &[Candidate], age: f64) -> Development {
                     age: a,
                     weight: suits * abundance,
                     pioneer: false,
+                    released: false,
                 });
             }
         }
@@ -318,6 +314,72 @@ pub fn develop(candidates: &[Candidate], age: f64) -> Development {
         lifespan,
         cohorts,
         cover,
+    }
+}
+
+/// A shade-tolerant tree's cohorts under the canopy (rule 2 of
+/// [`develop`]), pushed onto `cohorts`: one per age it can be drawn at up
+/// to the years since [`REINITIATION`], and from [`GAPS`] the share of
+/// each that a gap released, at the age its size matches.
+fn ingrowth(
+    cohorts: &mut Vec<Cohort>,
+    index: usize,
+    candidate: &Candidate,
+    age: f64,
+    lifespan: f64,
+) {
+    let suits = candidate.suitability;
+    let since = age - REINITIATION * lifespan;
+    if since > 0.0 {
+        let abundance = candidate.layers[0] + candidate.layers[1];
+        let ages: Vec<f64> = candidate
+            .ages
+            .iter()
+            .copied()
+            .filter(|a| *a > 0.0 && *a <= since)
+            .collect();
+        // Gaps open as the pioneers die, from GAPS of their lifespan, the
+        // canopy's share open in step with their loss; a cohort's share
+        // released is that of the gaps opened since it came up.
+        let gaps_since = age - GAPS * lifespan;
+        let opened = ((age / lifespan - GAPS) / (PIONEERS_GONE - GAPS)).clamp(0.0, 1.0);
+        // Each age stands for the years from the one before.
+        let mut before = 0.0;
+        for a in ages {
+            let span = a - before;
+            before = a;
+            let weight = suits
+                * abundance
+                * candidate.shade_tolerance
+                * span
+                * libm::exp(-a / (INGROWTH_DECAY * lifespan))
+                / (INGROWTH_DECAY * lifespan);
+            let share = if gaps_since > 0.0 {
+                opened * (a / gaps_since).min(1.0)
+            } else {
+                0.0
+            };
+            cohorts.push(Cohort {
+                candidate: index,
+                age: a,
+                weight: weight * (1.0 - share),
+                pioneer: false,
+                released: false,
+            });
+            if share > 0.0 {
+                // On average it has stood in its gap half the years since
+                // gaps could open over it.
+                let free = 0.5 * a.min(gaps_since);
+                let effective = free + (a - free) * RELEASE_CATCH_UP;
+                cohorts.push(Cohort {
+                    candidate: index,
+                    age: nearest(&candidate.ages, effective),
+                    weight: weight * share,
+                    pioneer: false,
+                    released: true,
+                });
+            }
+        }
     }
 }
 
@@ -457,7 +519,7 @@ mod tests {
         let hemlocks: Vec<&Cohort> = old
             .cohorts
             .iter()
-            .filter(|c| c.candidate == 1 && !c.pioneer)
+            .filter(|c| c.candidate == 1 && !c.pioneer && !c.released)
             .collect();
         assert_eq!(
             hemlocks.iter().map(|c| c.age).collect::<Vec<_>>(),
@@ -470,6 +532,40 @@ mod tests {
         assert!(old.cohorts.iter().all(|c| c.candidate != 0 || c.pioneer));
         // The fern stands at its oldest age.
         assert!(old.cohorts.iter().any(|c| c.candidate == 2 && c.age == 8.0));
+    }
+
+    #[test]
+    fn gaps_release_a_share_of_the_ingrowth_that_came_up_before_them() {
+        let pool = [fir(), hemlock(), fern()];
+        // Before the pioneers start to die, no gap releases any.
+        assert!(develop(&pool, 280.0).cohorts.iter().all(|c| !c.released));
+        let old = develop(&pool, 500.0);
+        let hemlock = |pick: &dyn Fn(&Cohort) -> bool| -> f64 {
+            old.cohorts
+                .iter()
+                .filter(|c| c.candidate == 1 && !c.pioneer && pick(c))
+                .map(|c| c.weight)
+                .sum()
+        };
+        // At 500 years the gaps are (1 - 0.6) / (2.1 - 0.6) of the fir
+        // canopy; the younger cohorts saw only some of them open.
+        let opened = (1.0 - GAPS) / (PIONEERS_GONE - GAPS);
+        let share = hemlock(&|c| c.released) / hemlock(&|_| true);
+        assert!(share > 0.05 && share < opened, "{share}");
+        // The 240-year cohort has stood in its gaps 100 years on average,
+        // so it grows on as a 120-year tree in a stand (100 + 140 / 3,
+        // the nearest age it can be drawn at); none grows at its own age.
+        let released: Vec<f64> = old
+            .cohorts
+            .iter()
+            .filter(|c| c.candidate == 1 && c.released)
+            .map(|c| c.age)
+            .collect();
+        assert!(
+            released.contains(&120.0) && !released.contains(&240.0),
+            "{released:?}"
+        );
+        assert!(old.cohorts.iter().all(|c| !(c.released && c.pioneer)));
     }
 
     #[test]
