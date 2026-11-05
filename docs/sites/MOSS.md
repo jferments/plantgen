@@ -34,8 +34,12 @@ year the face stays wet enough to grow.
 
 `grow` walks the years. Each year spores land on every face in the region
 (`arrivals_per_m2`, default 40). Where one lands, a genus is drawn by its
-vigour there and starts a colony with a chance of half its vigour, unless
-a colony already covers the spot. Colonies two years old or more also shed pieces (broken shoots, gemmae,
+vigour there times the spores it sheds (`MossKind::spore_output`, the
+square root of its `capsule_share` against a fiftieth, from 0.3 to 3), so
+the spore rain is mostly of the mosses that fruit freely, and the genus
+starts a colony with a chance of half its vigour, unless a colony already
+covers the spot. A site document may name its region's genera in a
+`mosses` list; spores of the others do not reach it. Colonies two years old or more also shed pieces (broken shoots, gemmae,
 and the spores that fall near their capsule) that lodge a few centimetres
 beyond their rim and take root more readily than a spore, since they need
 no protonema. Most of a moss's realized dispersal is that near, and on walls
@@ -59,7 +63,7 @@ brick's back on its mortar) and faces kept clear carry nothing.
 The result, a `MossCover`, is a list of colonies (kind, centre, normal,
 radius, age, vigour) with the kinds and settings that made it: small
 enough for a host to keep, draw with its own systems, or tint a texture
-with (`MossKind::far_colour`).
+with (`MossCover::tint`).
 
 ## Drawing
 
@@ -90,7 +94,9 @@ shoots' older lower parts:
   `dry_branch_posture` is curled (Homalothecium), the side branches curl
   up and in as the mat dries.
 - Capsules on setae (straight or arcuate), in the posture the genus's
-  `capsule_posture` gives, on the share of shoots `capsule_share` gives.
+  `capsule_posture` gives, on the share of shoots `capsule_share` gives,
+  their lids a short cone, a tall cone or a beak as `operculum_form`
+  says.
 
 Every point is laid on a face of the site within reach: of the faces
 straight above or below it, the outermost (a tile, not the deck under
@@ -111,23 +117,38 @@ rained on) sets the leaf angles and colour: wet moss is darker and a
 deeper green, dry moss paler, duller and yellower, its hair-points and
 hyaline tips greying it the more.
 
-### Lower settings and a texture-only level
+### Tint: the level with no triangles
 
 At a distance even a patch a colony is wasted on a roof that holds
-thousands. The next step, for the site fill, is a level with no
-triangles: the cover tints the host's own surface (its texture or vertex
-colours) by coverage and `MossKind::far_colour`, with the patches or
-shells only within a few tens of metres. A host can do that now from
-the colonies (centre, normal, radius); a helper that bakes coverage into
-a host face's texture is to come with the fill work. Levels between:
-shells merged per face into one heightfield, and shell texturing (a few
-stacked alpha layers, as for fur) where the renderer has alpha.
+thousands. `MossCover::tint(hydration)` gives a `Tint`, which a host
+reads to colour its own surface:
+
+- `Tint::at(p, normal)` gives the moss over a point: its far colour (the
+  shell's) and the share of the surface it hides, 0 to 1. The share
+  follows the colony's ragged rim as its shell draws it, fading over the
+  outer fifth, and is lower where the colony struggles. A host sampling
+  it a texel at a time bakes moss into its roof's or wall's texture.
+- `Tint::paint(mesh, step, low, high)` does the same to a site mesh as
+  drawn: triangles near moss inside the box are split to `step` and
+  every vertex blended toward the moss. `plantc moss ... --detail tint`
+  renders that, with no moss triangles. The split mesh is only a
+  stand-in for a texture, so it is not cheap to draw: about 0.9 million
+  site triangles for the whole test scene at a 4 cm step.
+
+Cushions smaller than the step fade, as in a texture of that texel. The
+patches or shells belong within a few tens of metres. Levels between
+are still to come: shells merged per face into one heightfield, and
+shell texturing (a few stacked alpha layers, as for fur) where the
+renderer has alpha.
 
 ## The genera
 
-Six genera, each in its own rank file under `crates/plantgen/library/`
-with evidence from the *Flora of North America* vols. 27 and 28 and
-*Bryophyte Biology*:
+Nine genera, each in its own rank file under `crates/plantgen/library/`
+with evidence from the *Flora of North America* vols. 27 and 28,
+*Bryophyte Biology* and, for the roofs of western Oregon and Washington,
+Oregon State's rooftop study (nine Willamette Valley roofs: *Dicranoweisia
+cirrata* in 45% of samples, *Bryum capillare* 33%, *Racomitrium canescens*
+var. *ericoides* 11%; cedar shakes carry more moss than asphalt or metal):
 
 | Genus | Family | Form | Where on a building |
 | --- | --- | --- | --- |
@@ -137,6 +158,9 @@ with evidence from the *Flora of North America* vols. 27 and 28 and
 | *Ceratodon* | Ditrichaceae | turfs, red setae | sunny roofs and dry ground |
 | *Hypnum* | Hypnaceae | glossy mats | shaded roofs, wall feet |
 | *Homalothecium* | Brachytheciaceae | golden mats | walls and stone |
+| *Dicranoweisia* | Rhabdoweisiaceae | crisped cushions, freely fruiting, yellow setae | PNW roofs and shakes, trunks |
+| *Niphotrichum* (*Racomitrium* in older books) | Grimmiaceae | mats, hoary when dry | PNW roofs, gravel, rock |
+| *Rosulabryum* (*Bryum capillare*) | Bryaceae | bright green turfs, leaves twisted dry, inclined red-brown capsules | shaded roofs, shakes, rotting wood |
 
 Every value comes from traits that any moss genus may carry; adding a
 genus means adding its rank file with `body_plan` leafy and a
@@ -145,7 +169,7 @@ genus means adding its rank file with `body_plan` leafy and a
 ## Running it
 
 ```bash
-python3 docs/sites/make_moss_wall.py   # rewrites moss-wall.obj and .json
+python3 docs/sites/make_moss_wall.py   # rewrites moss-wall.obj, .json and moss-shakes.json
 cargo build --release -p plantc
 ./target/release/plantc moss docs/sites/moss-wall.json --years 30 --out /tmp/cover.json
 ./target/release/plantc moss docs/sites/moss-wall.json --cover /tmp/cover.json \
@@ -154,10 +178,15 @@ cargo build --release -p plantc
   --render /tmp/moss-close.png --focus -1.583,0.52,0.13 --span 0.07 --view side
 ```
 
-`--detail patch|shell|shoots|near` picks the level, `--from north` turns
+`moss-shakes.json` is the same site with the shed roofed in cedar shakes
+and the genera of western Oregon and Washington; after 30 years its roof
+carries *Dicranoweisia* about half, *Rosulabryum* a third and
+*Niphotrichum* a tenth of the moss, close to the rooftop study's shares.
+
+`--detail tint|patch|shell|shoots|near` picks the level, `--from north` turns
 the view half round, `--wet 0.1` draws it dry,
 `--capsules no` leaves out the sporophytes. Growing the test wall and shed
-takes about 25 s; a close view with shoots, a few million triangles and
+takes about 30 s; a close view with shoots, a few million triangles and
 seconds to tens of seconds.
 
 ## Tests
@@ -166,7 +195,8 @@ seconds to tens of seconds.
 kept off a board kept clear and the slab pressed on it, the shaded side
 of a wall carrying more moss than the sunny one, the same cover every
 time and through JSON, patches far with shells between and shoots near,
-and moss darker and greener wet than dry.
+the roof genera of western Oregon and their spore output, moss darker and greener wet than dry, and a cover tinting the surface
+under it with no triangles of its own.
 
 ## Into the site fill
 

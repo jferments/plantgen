@@ -114,6 +114,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_shape": {"ovate": "usually", "elliptic": "often"},
     "bark_colour": [102, 84, 64],
     "height_max_m": {
       "min": 2,
@@ -138,6 +139,7 @@
     "leaf_apex": {"acuminate": "often", "acute": "often", "obtuse": "sometimes"}
   },
   "evidence": {
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "britton-brown-1913", "note": "Britton and Brown, Illustrated Flora vol. 1 (1913), read 2026-11-04, Corylus rostrata (C. cornuta): \"Leaves ovate or narrowly oval, acuminate at the apex, cordate or obtuse at the base\"."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.4, 0.33, 0.25], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.flowering_months": {
       "evidence": "SourceInferred",
