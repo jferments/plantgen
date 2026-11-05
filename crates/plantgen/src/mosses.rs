@@ -119,6 +119,10 @@ pub struct MossKind {
     /// Linear RGB of the leaves, moist.
     pub colour: [f32; 3],
     pub dry_posture: DryPosture,
+    /// Side branches curl up and inward when dry (trait
+    /// `dry_branch_posture` curled).
+    #[serde(default)]
+    pub branches_curl_dry: bool,
     pub seta_m: f64,
     pub seta_arcuate: bool,
     pub seta_colour: [f32; 3],
@@ -317,6 +321,7 @@ impl MossKind {
                 .and_then(colour)
                 .unwrap_or(linear([90, 120, 50])),
             dry_posture,
+            branches_curl_dry: pick("dry_branch_posture").as_deref() == Some("curled"),
             seta_m: num("seta_length_m").unwrap_or(leaf_length_m * 8.0),
             seta_arcuate: pick("seta_form").as_deref() == Some("arcuate"),
             seta_colour: get("seta_colour")
@@ -1607,7 +1612,11 @@ impl Drawer<'_> {
         let shell_colour = match (shoots, mat) {
             (false, _) => shell_colour,
             (true, true) => scaled(shell_colour, 0.6),
-            (true, false) => blend(scaled(shell_colour, 0.4), scaled(kind.older_colour, 0.7), 0.6),
+            (true, false) => blend(
+                scaled(shell_colour, 0.4),
+                scaled(kind.older_colour, 0.7),
+                0.6,
+            ),
         };
         // Its foot, at the rim, darker still.
         let base_colour = blend([0.07, 0.05, 0.025], shell_colour, 0.35);
@@ -1992,6 +2001,14 @@ impl Drawer<'_> {
             let mut v = r0 * math::sin(a0);
             // Heading: outward from the centre, turned at random.
             let mut heading = a0 + (unit(mix(h, 4)) - 0.5) * 2.2;
+            // The point drawn is the stem's middle, not its start, so the
+            // mat's centre is crossed by stems as much as its edge: it
+            // starts half its length back, where that lies within the mat.
+            let back = reach_of_stem * 0.5 / radius.max(1.0e-6);
+            let (bu, bv) = (u - math::cos(heading) * back, v - math::sin(heading) * back);
+            if (bu * bu + bv * bv).sqrt() < 0.9 * outline(math::atan2(bv, bu)) / radius {
+                (u, v) = (bu, bv);
+            }
             let curl = (unit(mix(h, 2)) - 0.5) * 2.0 / reach_of_stem;
             let mut along = 0.0;
             let mut walked = 0.0;
@@ -2028,10 +2045,25 @@ impl Drawer<'_> {
                         let length = branch * (0.4 + grow * grow) * (1.0 - 0.3 * rho.min(1.0));
                         #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
                         let leaves = (length / (kind.leaf_length_m * 0.25)).ceil() as usize;
+                        // Branches that curl when dry bend up from the
+                        // surface and in over the stem along their length,
+                        // as far as a half turn when quite dry (BBS,
+                        // Homalothecium sericeum: the crowded branches
+                        // curl up when dry, straight again wet).
+                        let curl = if kind.branches_curl_dry {
+                            0.25 + 2.6 * (1.0 - self.options.hydration.clamp(0.0, 1.0))
+                        } else {
+                            0.0
+                        };
+                        let bend_axis = rise.cross(n).normalize_or(any_side(rise));
+                        let mut base = at;
+                        let mut previous = 0.0;
                         for leaf in 0..leaves {
                             #[allow(clippy::cast_precision_loss)]
                             let s = (leaf as f64 + 0.5) / leaves as f64;
-                            let base = at + rise * (length * s);
+                            let rise = rise.rotate_about(bend_axis, curl * s).normalize_or(rise);
+                            base += rise * (length * (s - previous));
+                            previous = s;
                             #[allow(clippy::cast_precision_loss)]
                             let out = n.rotate_about(
                                 rise,
