@@ -287,3 +287,29 @@ fn a_cover_tints_the_surface_under_it_with_no_triangles_of_its_own() {
         .count();
     assert!(changed > 0);
 }
+
+#[test]
+fn a_view_named_for_a_genus_finds_that_genus() {
+    let site = wall_site();
+    let cover = mosses::grow(&site, &library_kinds(), &settings());
+    let mut found = 0;
+    for (index, kind) in cover.kinds.iter().enumerate() {
+        let Some(colony) = cover.showpiece(&kind.genus) else {
+            continue;
+        };
+        found += 1;
+        assert_eq!(usize::from(colony.kind), index, "{}", kind.genus);
+        // Its view point names it back: the nearest colony is itself.
+        let (nearest, _) = cover
+            .nearest(colony.centre)
+            .expect("a cover with colonies has a nearest one");
+        assert_eq!(nearest.kind, colony.kind, "{}", kind.genus);
+        // No colony of the genus is wider and as vigorous.
+        assert!(cover.colonies.iter().all(|other| other.kind != colony.kind
+            || other.age < 3.0
+            || other.radius_m * other.vigour.min(1.0)
+                <= colony.radius_m * colony.vigour.min(1.0) + 1e-12));
+    }
+    assert!(found > 0, "the wall grows some genus");
+    assert!(cover.showpiece("Sphagnum").is_none());
+}

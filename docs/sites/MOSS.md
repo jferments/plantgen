@@ -93,7 +93,10 @@ shoots' older lower parts:
   whole mat and wandering so that they interweave; where the genus's
   `dry_branch_posture` is curled (Homalothecium), the side branches curl
   up and in as the mat dries.
-- Capsules on setae (straight or arcuate), in the posture the genus's
+- Capsules on setae, straight or arcuate (`seta_form`). An arcuate seta
+  bows over 150 degrees dry, its capsule tucked among the leaves, and
+  85 degrees moist, the capsule held out (Wikipedia, *Grimmia pulvinata*;
+  to confirm against Glime). The capsules sit in the posture the genus's
   `capsule_posture` gives, on the share of shoots `capsule_share` gives,
   their lids a short cone, a tall cone or a beak as `operculum_form`
   says.
@@ -175,8 +178,15 @@ cargo build --release -p plantc
 ./target/release/plantc moss docs/sites/moss-wall.json --cover /tmp/cover.json \
   --render /tmp/moss.png --detail shell --focus 0.5,1.2,0 --span 9 --size 1400
 ./target/release/plantc moss docs/sites/moss-wall.json --cover /tmp/cover.json \
-  --render /tmp/moss-close.png --focus -1.583,0.52,0.13 --span 0.07 --view side
+  --render /tmp/grimmia.png --genus Grimmia --span 0.045 --view oblique --wet 0.05
 ```
+
+`--genus G` looks at that genus's widest well-grown colony
+(`MossCover::showpiece`) instead of a `--focus`, and every close render
+prints the genus of the colony it is centred on (`MossCover::nearest`).
+Use it for any view named after a genus, and copy that printed line into
+the caption: round 5 captioned a Tortula cushion as Grimmia because a
+hand-picked focus sat 1.7 cm from the Tortula and 5 cm from the Grimmia.
 
 `moss-shakes.json` is the same site with the shed roofed in cedar shakes
 and the genera of western Oregon and Washington; after 30 years its roof
@@ -195,8 +205,9 @@ seconds to tens of seconds.
 kept off a board kept clear and the slab pressed on it, the shaded side
 of a wall carrying more moss than the sunny one, the same cover every
 time and through JSON, patches far with shells between and shoots near,
-the roof genera of western Oregon and their spore output, moss darker and greener wet than dry, and a cover tinting the surface
-under it with no triangles of its own.
+the roof genera of western Oregon and their spore output, moss darker and greener wet than dry, a cover tinting the surface
+under it with no triangles of its own, and a view named for a genus
+finding a colony of that genus.
 
 ## Changing it
 
@@ -220,8 +231,6 @@ under it with no triangles of its own.
 
 ## Still open
 
-- *Grimmia*'s arcuate setae read as stiff stalks from the side: the
-  capsule should bow back among the leaves.
 - *Dicranoweisia*'s dry crisping barely shows at the size of a cushion.
 - Roof cushions mostly stay separate where the rooftop study found dense
   mats; its mats were on tree-shaded roofs, and the test roof has none.

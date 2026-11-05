@@ -2163,10 +2163,14 @@ impl Drawer<'_> {
         let wet = self.options.hydration;
         let side = any_side(axis).rotate_about(axis, unit(mix(seed, 41)) * std::f64::consts::TAU);
         let length = kind.seta_m * (0.75 + 0.5 * unit(mix(seed, 42)));
-        // An arcuate seta bends right over, its capsule bowed back among
-        // the leaves, the more so when moist (FNA vol. 27, Grimmia).
+        // An arcuate seta bows over in an arc, its capsule among the
+        // leaves (FNA vol. 27, Grimmia: seta arcuate to cygneous; G.
+        // pulvinata: seta arcuate, 3-4 mm). It bends back furthest dry and
+        // stands out when moist (Wikipedia, Grimmia pulvinata: capsules
+        // bend back into the leaves when dry and stand out when moist).
+        // Any genus whose seta_form is arcuate does the same.
         let total_bend = if kind.seta_arcuate {
-            math::radians(110.0 + 40.0 * wet)
+            math::radians(math::lerp(150.0, 85.0, wet.clamp(0.0, 1.0)))
         } else {
             (unit(mix(seed, 43)) - 0.5) * 0.35
         };
@@ -2624,6 +2628,47 @@ impl MossCover {
             }
         }
         out
+    }
+
+    /// The colony whose centre lies nearest `at`, with its distance, for
+    /// naming what a close view shows.
+    #[must_use]
+    pub fn nearest(&self, at: [f64; 3]) -> Option<(&Colony, f64)> {
+        self.colonies
+            .iter()
+            .map(|colony| {
+                let d = (v3(colony.centre) - v3(at)).length();
+                (colony, d)
+            })
+            .min_by(|a, b| a.1.total_cmp(&b.1))
+    }
+
+    /// A genus's showpiece: its widest well-grown colony (radius weighted
+    /// by vigour, age three years at least, so it fruits), for review
+    /// views that must show that genus and no other. `None` when the cover
+    /// holds none of it.
+    #[must_use]
+    pub fn showpiece(&self, genus: &str) -> Option<&Colony> {
+        let kind = self.kinds.iter().position(|kind| kind.genus == genus)?;
+        let score = |colony: &Colony| {
+            colony.radius_m * colony.vigour.clamp(0.0, 1.0) * math::smoothstep(1.0, 3.0, colony.age)
+        };
+        self.colonies
+            .iter()
+            .filter(|colony| usize::from(colony.kind) == kind)
+            .max_by(|a, b| score(a).total_cmp(&score(b)))
+    }
+
+    /// The point a close view of `colony` looks at: its centre raised by
+    /// half its kind's height off the face.
+    #[must_use]
+    pub fn view_point(&self, colony: &Colony) -> [f64; 3] {
+        let height = self
+            .kinds
+            .get(usize::from(colony.kind))
+            .map_or(0.0, |kind| kind.height_m);
+        let at = v3(colony.centre) + v3(colony.normal) * (height * 0.5);
+        [at.x, at.y, at.z]
     }
 
     /// The cover as JSON.
