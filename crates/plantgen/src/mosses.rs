@@ -119,11 +119,18 @@ pub struct MossKind {
     /// Linear RGB of the leaves, moist.
     pub colour: [f32; 3],
     pub dry_posture: DryPosture,
+    /// Side branches curl up and inward when dry (trait
+    /// `dry_branch_posture` curled).
+    #[serde(default)]
+    pub branches_curl_dry: bool,
     pub seta_m: f64,
     pub seta_arcuate: bool,
     pub seta_colour: [f32; 3],
     pub capsule_m: f64,
     pub capsule_colour: [f32; 3],
+    /// The older leaves down a shoot, below its green tip.
+    #[serde(default = "default_older_colour")]
+    pub older_colour: [f32; 3],
     pub capsule_posture: CapsulePosture,
     /// Share of shoots bearing a capsule.
     pub capsule_share: f64,
@@ -144,6 +151,13 @@ pub struct MossKind {
 /// The value a qualified state picks: the state stated as most usual,
 /// the first of those that tie (in the map's order, so the same files
 /// give the same pick).
+/// Older leaves a moss genus gives no colour for: yellow-brown.
+fn default_older_colour() -> [f32; 3] {
+    linear(DEFAULT_OLDER)
+}
+
+const DEFAULT_OLDER: [u8; 3] = [66, 54, 30];
+
 fn usual(value: &Value) -> Option<String> {
     match value {
         Value::String(text) => Some(text.clone()),
@@ -307,6 +321,7 @@ impl MossKind {
                 .and_then(colour)
                 .unwrap_or(linear([90, 120, 50])),
             dry_posture,
+            branches_curl_dry: pick("dry_branch_posture").as_deref() == Some("curled"),
             seta_m: num("seta_length_m").unwrap_or(leaf_length_m * 8.0),
             seta_arcuate: pick("seta_form").as_deref() == Some("arcuate"),
             seta_colour: get("seta_colour")
@@ -316,6 +331,9 @@ impl MossKind {
             capsule_colour: get("capsule_colour")
                 .and_then(colour)
                 .unwrap_or(linear([120, 80, 45])),
+            older_colour: get("older_leaf_colour")
+                .and_then(colour)
+                .unwrap_or_else(default_older_colour),
             capsule_posture,
             capsule_share: num("capsule_share").unwrap_or(0.2),
             spread_m: num("colony_spread_m_per_year").unwrap_or(match form {
@@ -893,6 +911,7 @@ pub fn grow(site: &SiteMesh, kinds: &[MossKind], settings: &MossSettings) -> Mos
                     vigour: fit,
                 });
                 grid.insert(id, p);
+                grid.widest = grid.widest.max(start);
             }
         }
         // Colonies seed the surface about them: broken shoots, gemmae and
@@ -934,14 +953,14 @@ pub fn grow(site: &SiteMesh, kinds: &[MossKind], settings: &MossSettings) -> Mos
                 if !surfaces.open_at(p, face.normal) {
                     continue;
                 }
+                let start = kind.shoot_width_m() * 1.5;
+                if grid.covered(&colonies, p, start) {
+                    continue;
+                }
                 // A piece of shoot needs no protonema to take, so it
                 // takes more readily than a spore.
                 let fit = kind.vigour(&lodged(face, p));
                 if unit(mix(h, 4)) > fit.sqrt() * 0.6 {
-                    continue;
-                }
-                let start = kind.shoot_width_m() * 1.5;
-                if grid.covered(&colonies, p, start) {
                     continue;
                 }
                 let lie = surfaces.lie(p, 0.03, face.normal);
@@ -956,6 +975,7 @@ pub fn grow(site: &SiteMesh, kinds: &[MossKind], settings: &MossSettings) -> Mos
                     vigour: fit,
                 });
                 grid.insert(id, p);
+                grid.widest = grid.widest.max(start);
             }
         }
         // Each colony grows out, as far as its neighbours let it.
@@ -991,7 +1011,7 @@ pub fn grow(site: &SiteMesh, kinds: &[MossKind], settings: &MossSettings) -> Mos
                         radius = colony.radius_m;
                     }
                 }
-                for j in grid.near(at, radius + 0.7) {
+                for j in grid.near(at, radius + grid.widest) {
                     if j == i {
                         continue;
                     }
@@ -1014,6 +1034,7 @@ pub fn grow(site: &SiteMesh, kinds: &[MossKind], settings: &MossSettings) -> Mos
         for (colony, radius) in colonies.iter_mut().zip(grown) {
             colony.radius_m = radius;
             colony.age += 1.0;
+            grid.widest = grid.widest.max(radius);
         }
         // A colony in a poor place may die out.
         let before = colonies.len();
@@ -1030,6 +1051,7 @@ pub fn grow(site: &SiteMesh, kinds: &[MossKind], settings: &MossSettings) -> Mos
             grid = Grid::new(0.08);
             for (id, colony) in colonies.iter().enumerate() {
                 grid.insert(id, v3(colony.centre));
+                grid.widest = grid.widest.max(colony.radius_m);
             }
         }
     }
@@ -1053,6 +1075,9 @@ fn v3(p: [f64; 3]) -> Vec3 {
 struct Grid {
     cell: f64,
     cells: std::collections::HashMap<(i64, i64, i64), Vec<usize>>,
+    /// The widest colony's radius: no colony reaches farther from its
+    /// centre, so a search need go no farther.
+    widest: f64,
 }
 
 impl Grid {
@@ -1060,6 +1085,7 @@ impl Grid {
         Self {
             cell,
             cells: std::collections::HashMap::new(),
+            widest: 0.0,
         }
     }
 
@@ -1097,7 +1123,7 @@ impl Grid {
     }
 
     fn covered(&self, colonies: &[Colony], p: Vec3, gap: f64) -> bool {
-        self.near(p, 0.7).into_iter().any(|id| {
+        self.near(p, self.widest + gap).into_iter().any(|id| {
             let colony = &colonies[id];
             v3(colony.centre).distance(p) < colony.radius_m + gap
         })
@@ -1412,6 +1438,12 @@ struct Drawer<'a> {
 /// and Grimmia cushions look hoary rather than white.
 const HYALINE: [f32; 3] = [0.5, 0.51, 0.49];
 
+/// Hyaline tips and awns massed over a colony, seen from afar, with the
+/// shade among them: a silvery grey about as bright as the green, so
+/// silver moss reads greyer, not brighter, than its neighbours (photos of
+/// Bryum argenteum: as bright as Kindbergia's, less saturated).
+const HYALINE_MASSED: [f32; 3] = [0.2, 0.205, 0.195];
+
 /// How much darker a colony's shell is than its lit leaves: the shade
 /// among the shoots that a shell does not draw.
 const CANOPY_SHADE: f64 = 0.62;
@@ -1475,7 +1507,7 @@ impl Drawer<'_> {
     /// against about 0.13 for a leaf).
     fn shell_colour(&self, kind: &MossKind, vigour: f64) -> [f32; 3] {
         let leaf = scaled(self.leaf_colour(kind, vigour), CANOPY_SHADE);
-        blend(leaf, HYALINE, kind.whiteness(self.options.hydration))
+        blend(leaf, HYALINE_MASSED, kind.whiteness(self.options.hydration))
     }
 
     #[allow(clippy::too_many_lines)]
@@ -1570,12 +1602,14 @@ impl Drawer<'_> {
             0.86 + 0.28 * unit(mix(seed, 3)),
         );
         // Drawn with its shoots, the shell is only the dark depth among
-        // them: a cushion's or turf's sits a little below the tips, a
-        // mat's well down, so its creeping stems lie on it.
+        // them: a mat's well down, so its creeping stems lie on it.
         let mat = matches!(kind.form, ColonyForm::Mat | ColonyForm::Weft);
+        // A cushion's or turf's sits three quarters of a leafy tip below
+        // the tips, so the tips stand clear of it.
+        let tip_length = kind.leaf_length_m * 2.2;
         let sink = match (shoots, mat) {
             (false, _) => 1.0,
-            (true, false) => 0.8,
+            (true, false) => (1.0 - tip_length * 0.75 / height.max(1.0e-6)).clamp(0.3, 0.85),
             (true, true) => 0.3,
         };
         // Among the shoots it shows their older, lower parts: a mat's in
@@ -1584,7 +1618,11 @@ impl Drawer<'_> {
         let shell_colour = match (shoots, mat) {
             (false, _) => shell_colour,
             (true, true) => scaled(shell_colour, 0.6),
-            (true, false) => blend(scaled(shell_colour, 0.4), [0.05, 0.035, 0.014], 0.6),
+            (true, false) => blend(
+                scaled(shell_colour, 0.4),
+                scaled(kind.older_colour, 0.7),
+                0.6,
+            ),
         };
         // Its foot, at the rim, darker still.
         let base_colour = blend([0.07, 0.05, 0.025], shell_colour, 0.35);
@@ -1593,6 +1631,16 @@ impl Drawer<'_> {
             .lifted(centre, normal, reach, bridge)
             .map(|(p, n)| (p + n * (height * profile(0.0) * sink), shell_colour));
         grid.push(tip);
+        // Where the surface steps (a tile's edge), the shell drapes over
+        // the step down, falling no steeper than it runs out, rather than
+        // dropping sheer; at a step up it runs in under the overlapping
+        // edge the same way.
+        let mut floor: Vec<Option<f64>> = vec![
+            surfaces
+                .lifted(centre, normal, reach, bridge)
+                .map(|(p, _)| (p - centre).dot(normal));
+            sectors
+        ];
         for ring in 1..=rings {
             #[allow(clippy::cast_precision_loss)]
             let rho = ring as f64 / rings as f64;
@@ -1601,7 +1649,15 @@ impl Drawer<'_> {
                 let angle = sector as f64 / sectors as f64 * std::f64::consts::TAU;
                 let r = outline(angle) * rho;
                 let q = centre + (t * math::cos(angle) + b * math::sin(angle)) * r;
-                let laid = surfaces.lifted(q, normal, reach, bridge);
+                #[allow(clippy::cast_precision_loss)]
+                let run = outline(angle) / rings as f64;
+                let laid = surfaces.lifted(q, normal, reach, bridge).map(|(p, n)| {
+                    let below = (p - centre).dot(normal);
+                    let inner = floor[sector].unwrap_or(below);
+                    let p = p + normal * (below.clamp(inner - run, inner + run) - below);
+                    floor[sector] = Some((p - centre).dot(normal));
+                    (p, n)
+                });
                 let point = laid.map(|(p, n)| {
                     let h = mix(mix(seed, ring as u64), sector as u64);
                     let speckle = if fine {
@@ -1715,11 +1771,15 @@ impl Drawer<'_> {
             ColonyForm::Mat | ColonyForm::Weft => 0.0,
         };
         // A cushion's dome or a turf's top has more surface than its
-        // footprint, and the shoots' leafy tips crowd and overlap on it,
-        // half as many again as would just touch.
+        // footprint, and its shoots stand crowded on it (FNA vol. 27,
+        // Tortula muralis: shoots crowded), their leaves interleaving with
+        // their neighbours': a stem every two thirds of a leaf length or
+        // so, so a cushion of Tortula holds some fifty shoots a square
+        // centimetre and a turf of Ceratodon a hundred. Estimate.
         let surface = 1.0 + (height / radius.max(1.0e-6)).powi(2);
+        let spacing = (kind.leaf_length_m * 0.7).min(width).max(0.0005);
         #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-        let count = (area * surface * 1.5 / (width * width) * packing).ceil() as usize;
+        let count = (area * surface / (spacing * spacing) * packing).ceil() as usize;
         let mature = math::smoothstep(1.0, 3.0, colony.age);
         let fertile_share = kind.capsule_share * mature * colony.vigour.clamp(0.3, 1.0);
         if matches!(kind.form, ColonyForm::Mat | ColonyForm::Weft) {
@@ -1770,10 +1830,11 @@ impl Drawer<'_> {
             };
             let rise = height * profile(rho);
             // Cushion shoots radiate from the colony's centre, so those at
-            // its edge lean outward; a turf's stand upright.
+            // its edge lean outward; a turf's stand upright but for those
+            // on its edge, which lean out over its side.
             let lean = match kind.form {
                 ColonyForm::Cushion => 0.85 * rho,
-                _ => 0.12 * rho,
+                _ => 0.12 * rho + 0.6 * math::smoothstep(0.7, 1.0, rho),
             };
             let tip =
                 p + n * rise * (0.92 + 0.12 * unit(mix(h, 12))) + radial * (rise * lean * 0.5);
@@ -1787,8 +1848,10 @@ impl Drawer<'_> {
             }
             if fertile {
                 // Setae rise toward the light more steeply than the
-                // shoots they end lean out.
-                self.sporophyte(kind, tip, (axis + n * 1.5).normalize_or(n), h);
+                // shoots they end lean out, and on a wall turn upward
+                // (setae are negatively gravitropic).
+                let up = (Vec3::Y - n * Vec3::Y.dot(n)) * 0.8;
+                self.sporophyte(kind, tip, (axis + n * 1.5 + up).normalize_or(n), h);
             }
         }
     }
@@ -1812,6 +1875,8 @@ impl Drawer<'_> {
             #[allow(clippy::cast_precision_loss)]
             let turn = start + node as f64 * GOLDEN;
             let out = side.rotate_about(axis, turn);
+            #[allow(clippy::cast_precision_loss)]
+            let older = math::smoothstep(2.0, nodes as f64, node as f64);
             self.leaf(
                 kind,
                 colony,
@@ -1819,6 +1884,7 @@ impl Drawer<'_> {
                 axis,
                 out,
                 size,
+                older,
                 mix(seed, 100 + node as u64),
             );
         }
@@ -1835,6 +1901,7 @@ impl Drawer<'_> {
         axis: Vec3,
         out: Vec3,
         size: f64,
+        older: f64,
         seed: u64,
     ) {
         let wet = self.options.hydration.clamp(0.0, 1.0);
@@ -1872,8 +1939,13 @@ impl Drawer<'_> {
         let apex = mid + upper_dir * (length - lower);
         let flat = across.rotate_about(dir, twist * 0.5);
         let keel = dir.cross(flat).normalize_or(axis) * (width * 0.18);
+        // Older leaves down the shoot turn to the genus's older colour.
         let green = scaled(
-            self.leaf_colour(kind, colony.vigour),
+            blend(
+                self.leaf_colour(kind, colony.vigour),
+                kind.older_colour,
+                older * 0.85,
+            ),
             0.9 + 0.2 * unit(mix(seed, 5)),
         );
         let dark = scaled(green, 0.55);
@@ -1953,6 +2025,14 @@ impl Drawer<'_> {
             let mut v = r0 * math::sin(a0);
             // Heading: outward from the centre, turned at random.
             let mut heading = a0 + (unit(mix(h, 4)) - 0.5) * 2.2;
+            // The point drawn is the stem's middle, not its start, so the
+            // mat's centre is crossed by stems as much as its edge: it
+            // starts half its length back, where that lies within the mat.
+            let back = reach_of_stem * 0.5 / radius.max(1.0e-6);
+            let (bu, bv) = (u - math::cos(heading) * back, v - math::sin(heading) * back);
+            if (bu * bu + bv * bv).sqrt() < 0.9 * outline(math::atan2(bv, bu)) / radius {
+                (u, v) = (bu, bv);
+            }
             let curl = (unit(mix(h, 2)) - 0.5) * 2.0 / reach_of_stem;
             let mut along = 0.0;
             let mut walked = 0.0;
@@ -1973,7 +2053,7 @@ impl Drawer<'_> {
                 let forward = (forward_flat - n * forward_flat.dot(n)).normalize_or(forward_flat);
                 // Leaves on the main stem.
                 let out = n.rotate_about(forward, (unit(mix(h, node)) - 0.5) * 2.0);
-                self.leaf(kind, colony, at, forward, out, 0.9, mix(h, 77 + node));
+                self.leaf(kind, colony, at, forward, out, 0.9, 0.2, mix(h, 77 + node));
                 along += step;
                 if along >= spacing {
                     along = 0.0;
@@ -1989,10 +2069,25 @@ impl Drawer<'_> {
                         let length = branch * (0.4 + grow * grow) * (1.0 - 0.3 * rho.min(1.0));
                         #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
                         let leaves = (length / (kind.leaf_length_m * 0.25)).ceil() as usize;
+                        // Branches that curl when dry bend up from the
+                        // surface and in over the stem along their length,
+                        // as far as a half turn when quite dry (BBS,
+                        // Homalothecium sericeum: the crowded branches
+                        // curl up when dry, straight again wet).
+                        let curl = if kind.branches_curl_dry {
+                            0.25 + 2.6 * (1.0 - self.options.hydration.clamp(0.0, 1.0))
+                        } else {
+                            0.0
+                        };
+                        let bend_axis = rise.cross(n).normalize_or(any_side(rise));
+                        let mut base = at;
+                        let mut previous = 0.0;
                         for leaf in 0..leaves {
                             #[allow(clippy::cast_precision_loss)]
                             let s = (leaf as f64 + 0.5) / leaves as f64;
-                            let base = at + rise * (length * s);
+                            let rise = rise.rotate_about(bend_axis, curl * s).normalize_or(rise);
+                            base += rise * (length * (s - previous));
+                            previous = s;
                             #[allow(clippy::cast_precision_loss)]
                             let out = n.rotate_about(
                                 rise,
@@ -2006,6 +2101,7 @@ impl Drawer<'_> {
                                 rise,
                                 out,
                                 size,
+                                0.0,
                                 mix(h, 2000 + node * 64 + leaf as u64),
                             );
                         }
