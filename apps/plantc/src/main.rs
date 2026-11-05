@@ -517,6 +517,7 @@ Usage:
               [--compress none|quantize|meshopt]
               [--attributes all|wind|none] [--triangles N[,N,N,N]]
               [--max-mib N] [--levels tiers|package] [--glb LEVEL]
+              [--glb-cells LEVEL,... [--cell-m N]]
               [--packages DIR [--profile static|motion] [--cards yes|no]]
               [--field SITE.json [--corner X,Z] [--cracks YEARS]
                [--render PNG [--view V] [--size N] [--level N]
@@ -554,7 +555,13 @@ Usage:
       each prototype's level LEVEL once and every plant an instance of it
       (EXT_mesh_gpu_instancing), which Blender, Godot, Unity and three.js
       open as they are (Blender and Godot need --compress quantize or
-      none: they do not read meshopt). --packages DIR also builds the
+      none: they do not read meshopt). --glb-cells LEVEL,... (say
+      0,1,2,3) cuts the tile into cells --cell-m across (20 unless given)
+      and writes each as such a file at every level listed,
+      DIR/tiles/X_Y/c<col>_<row>-lod<N>.glb, with DIR/tiles/X_Y/cells.json
+      saying from how far each level of each cell is enough, so a host
+      that reads only glTF draws near cells fine and far ones coarse.
+      --packages DIR also builds the
       packages that hold the prototypes the tile places (every one with
       --prototypes all), one per species, setting and seed with a
       keyframe at each of their ages, as plantc build builds one
@@ -6319,6 +6326,8 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
             "focus",
             "span",
             "glb",
+            "glb-cells",
+            "cell-m",
             "packages",
             "profile",
             "cards",
@@ -6547,6 +6556,48 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
         out!(
             "wrote the tile as one glTF file at level {level}, {mib:.1} MiB: {}",
             path.display()
+        );
+    }
+    if let Some(list) = options.flags.get("glb-cells") {
+        let levels = list
+            .split(',')
+            .map(|v| match v.trim().parse::<usize>() {
+                Ok(level) if level < export::LEVELS => Ok(level),
+                _ => Err(format!(
+                    "--glb-cells takes levels from 0 to {}, not `{v}`",
+                    export::LEVELS - 1
+                )),
+            })
+            .collect::<Result<Vec<_>, _>>()?;
+        let cell_m = options.number::<f64>("cell-m")?.unwrap_or(20.0);
+        let files = plan
+            .glb_cells(
+                &prototypes,
+                &out.join("prototypes"),
+                cell_m,
+                &levels,
+                compression == export::Compression::Meshopt,
+            )
+            .map_err(|error| error.to_string())?;
+        let tiles = out.join("tiles");
+        let mut bytes = 0;
+        for (name, data) in &files {
+            let path = tiles.join(name);
+            if let Some(parent) = path.parent() {
+                fs::create_dir_all(parent)
+                    .map_err(|error| format!("{}: {error}", parent.display()))?;
+            }
+            fs::write(&path, data).map_err(|error| format!("{}: {error}", path.display()))?;
+            bytes += data.len();
+        }
+        #[allow(clippy::cast_precision_loss)]
+        let mib = bytes as f64 / 1_048_576.0;
+        out!(
+            "wrote the tile as {} files of {cell_m} m cells at levels {list}, {mib:.1} MiB: {}",
+            files.len() - 1,
+            tiles
+                .join(format!("{}_{}/cells.json", tile.x, tile.y))
+                .display()
         );
     }
     Ok(())

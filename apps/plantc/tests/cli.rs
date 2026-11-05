@@ -741,13 +741,22 @@ fn fill_writes_a_tile_and_the_prototypes_it_places() {
     }
     assert!(made.contains("measured 1 prototypes (1 grown"), "{made}");
     // Filling again keeps the prototypes, measures none and writes the
-    // same tile, and --glb writes it as one glTF file too.
+    // same tile, and --glb writes it as one glTF file too, and
+    // --glb-cells as cells at two levels with their index.
     let mut with_glb = args.to_vec();
-    with_glb.extend(["--glb", "3"]);
+    with_glb.extend(["--glb", "3", "--glb-cells", "2,3", "--cell-m", "10"]);
     let again = stdout(&plantc(&with_glb));
     assert!(again.contains("(0 grown"), "{again}");
     assert!(again.contains("wrote the tile as one glTF file"), "{again}");
     assert_eq!(fs::read(out.join("tiles/2_-3.bin")).unwrap(), bin);
     let glb = fs::read(out.join("tiles/2_-3.glb")).unwrap();
     assert_eq!(&glb[..4], b"glTF");
+    assert!(again.contains("m cells at levels 2,3"), "{again}");
+    let cells: serde_json::Value =
+        serde_json::from_slice(&fs::read(out.join("tiles/2_-3/cells.json")).unwrap()).unwrap();
+    let first = &cells["cells"][0]["levels"][1]["file"];
+    assert!(
+        out.join("tiles").join(first.as_str().unwrap()).is_file(),
+        "{first}"
+    );
 }

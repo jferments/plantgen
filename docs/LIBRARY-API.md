@@ -308,6 +308,29 @@ and 3.6 MiB). It draws
 the whole tile at one level; a caller that wants detail by distance reads
 the packed instances and the prototype files as above.
 
+**A tile in cells, each at the detail its distance asks for.** A host
+that reads only glTF can still draw near plants fine and far ones coarse:
+`plantc fill ... --glb-cells 1,2,3 --cell-m 20` (or
+`TilePlan::glb_cells(&prototypes, dir, cell_m, &levels, meshopt)`) cuts
+the tile into cells `cell_m` across and writes each as one such file at
+every level listed, `tiles/X_Y/c<col>_<row>-lod<N>.glb`, each with its
+root at its cell's south-west corner, and an index, `tiles/X_Y/cells.json`.
+For each cell and level the index gives `pixel_m`, the widest a pixel
+may be where it falls, metres, before the level is enough: its triangles
+then cover four pixels each (`TRIANGLE_PIXELS`) over the cell's most
+demanding plant's height times breadth. A host draws a cell at the
+coarsest level whose `pixel_m` is at most `distance x 2 tan(fov_y / 2) /
+pixels_high` at the cell's nearest point; `from_m` is that distance for a
+camera 1080 pixels high and 60 degrees across. A host short of
+triangles lets each cover more pixels: at `k` times as many, every
+`pixel_m` and `from_m` shrinks by the square root of `k`. In 20 m cells of an
+80-year Douglas-fir stand, the high level is enough from 9 m, mid from
+31 m and the cards from 112 m. `docs/examples/cells-viewer.html` draws a
+tile this way with stock three.js: a 120 m tile seen from the ground drew
+8 cells at the high level, 25 at mid and 3 as cards. glTF's own level-of-detail extension,
+`MSFT_lod`, is read by Babylon.js and UnityGLTF but by Blender and
+three.js only through add-ons, so the cells do not rely on it.
+
 Dead wood is not placed yet. A climber member (layer `climber`) has one
 prototype per seed grown at the foot of a 6 m brick wall
 (`Generator::grow_ages_on_wall`, the stem's setting `wall`), to the first

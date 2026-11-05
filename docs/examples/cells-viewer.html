@@ -1,0 +1,65 @@
+<!doctype html>
+<!--
+  Draws a tile written by `plantc fill ... --glb-cells 1,2,3` with stock
+  three.js and no PlantGen code: for each cell it loads the coarsest
+  level the tile's cells.json says is enough at the cell's distance from
+  this camera. Serve the fill's output folder over HTTP and open
+  cells-viewer.html?index=tiles/0_0/cells.json&view=ground
+  (views: ground, roof, above).
+-->
+<html><head><meta charset="utf-8"><title>Tile cells</title>
+<style>body{margin:0;background:#cfe0ea}#info{position:fixed;left:8px;top:8px;font:13px sans-serif;background:#fffc;padding:4px;max-width:90vw}</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/"}}</script></head>
+<body><div id="info">loading</div><script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+const q = new URLSearchParams(location.search);
+const indexUrl = q.get('index') || 'tiles/0_0/cells.json', view = q.get('view') || 'ground';
+const base = indexUrl.slice(0, indexUrl.lastIndexOf('/') + 1).replace(/[^/]+\/$/, '');
+const index = await (await fetch(indexUrl)).json();
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(innerWidth, innerHeight); document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0xcfe0ea);
+scene.add(new THREE.HemisphereLight(0xffffff, 0x445533, 1.6));
+const sun = new THREE.DirectionalLight(0xffffff, 2.2); sun.position.set(30, 60, 20); scene.add(sun);
+const t = index.tile_m, x0 = index.tile.x * t, y0 = index.tile.y * t;
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(t, t), new THREE.MeshLambertMaterial({ color: 0x6b5a3e }));
+ground.rotation.x = -Math.PI / 2; ground.position.set(x0 + t / 2, 0, -(y0 + t / 2)); scene.add(ground);
+const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 5000);
+if (view === 'ground') { camera.position.set(x0 + t * 0.1, 1.7, -(y0 + t * 0.1)); camera.lookAt(x0 + t, 12, -(y0 + t)); }
+else if (view === 'roof') { camera.position.set(x0 - 10, 25, -(y0 - 10)); camera.lookAt(x0 + t, 12, -(y0 + t)); }
+else { camera.position.set(x0 - t * 0.6, t * 0.9, -(y0 - t * 0.6)); camera.lookAt(x0 + t / 2, 0, -(y0 + t / 2)); }
+// A level's from_m is for 1080 pixels high and 60 degrees: scale it to this camera.
+const scale = (innerHeight / index.reference_camera.pixels_high)
+  * Math.tan(THREE.MathUtils.degToRad(index.reference_camera.fov_y_degrees) / 2)
+  / Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2);
+const half = index.cell_m / 2, reach = Math.SQRT2 * half;
+const loader = new GLTFLoader(); loader.setMeshoptDecoder(MeshoptDecoder);
+// Each cell at the coarsest level that is enough at its distance: a level
+// is enough from its from_m, scaled to this camera, past the cell's
+// nearest point. A host that moves its camera re-picks as it moves and
+// loads the file a cell newly needs.
+const shown = {};
+const picked = index.cells.map(cell => {
+  const centre = new THREE.Vector3(x0 + cell.corner[0] + half, 0, -(y0 + cell.corner[1] + half));
+  const distance = Math.max(0, centre.distanceTo(camera.position) - reach);
+  let level = cell.levels[0];
+  for (const l of cell.levels) if ((l.from_m ?? Infinity) * scale <= distance) level = l;
+  return { cell, level, centre };
+});
+await Promise.all(picked.map(async ({ cell, level, centre }) => {
+  const gltf = await loader.loadAsync(base + level.file);
+  gltf.scene.position.set(centre.x - half, 0, centre.z + half);
+  gltf.scene.userData.level = level.level;
+  scene.add(gltf.scene);
+}));
+renderer.render(scene, camera);
+let tris = 0;
+for (const o of scene.children) if (o.userData.level !== undefined) {
+  shown[o.userData.level] = (shown[o.userData.level] || 0) + 1;
+  o.traverse(m => { if (m.isInstancedMesh) { const g = m.geometry; tris += m.count * (g.index ? g.index.count : g.attributes.position.count) / 3; } });
+}
+document.getElementById('info').textContent = `${index.cells.length} cells of ${index.cell_m} m; cells per level drawn: ${JSON.stringify(shown)}; ${(tris / 1e6).toFixed(2)} M triangles (stock three.js GLTFLoader)`;
+window.ready = true;
+</script></body></html>
