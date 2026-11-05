@@ -1572,7 +1572,7 @@ pub mod venation;
 /// before. Fed by light, a crown packed with shaded foliage (a Rocky
 /// Mountain juniper's) feeds little.
 ///
-/// 198: growth in deep shade (`pinidae` revision 16, the light tool's new
+/// 199: growth in deep shade (`pinidae` revision 16, the light tool's new
 /// `top`, the light of the plant's best-lit module): a conifer's leader
 /// floor, `leader_shade`, fades with `top` below half the sky's light, so
 /// on a plant shaded all over the leader's growth saturates with light
@@ -1589,7 +1589,7 @@ pub mod venation;
 /// at 120 years with a living crown. Open- and stand-grown trees grow as
 /// tall as before, with leaf area within 3%.
 ///
-/// 199: shaded foliage costs less (`pinidae` revision 17, `shade_cost`):
+/// 200: shaded foliage costs less (`pinidae` revision 17, `shade_cost`):
 /// the light under which a conifer's apex starves, and its limbs are shed,
 /// is `shade_cost + (1 - shade_cost) top` times what it was, `shade_cost`
 /// = 130 / 315: King (1997) gives an understorey Pacific silver fir's
@@ -1601,4 +1601,4 @@ pub mod venation;
 /// holds 63 m² of foliage at 120 years where it held 46, and Wind River at
 /// 500 years (`plantc fill`, seeds 7-10) a leaf area index of 3.9 where it
 /// had 3.3. Open- and stand-grown trees' leaf area moves by under 2%.
-pub const GENERATOR_REVISION: u32 = 199;
+pub const GENERATOR_REVISION: u32 = 200;
