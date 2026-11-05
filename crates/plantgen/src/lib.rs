@@ -1640,4 +1640,14 @@ pub mod venation;
 /// about 630 to 1,480), 237 m² of it below 50 m where 136, on a trunk
 /// 142 cm through (Ishii and McDowell 2002: 87 to 154). Every conifer
 /// stays at its reference sizes; junipers, cedars and yews grow as before.
-pub const GENERATOR_REVISION: u32 = 203;
+///
+/// 204: the nearest level draws a plant's twigs more than 40 m up
+/// (`mesh::NEAR_REACH`) with the next level's tube rings and sides
+/// (`mesh::Reach`): the nearest level is drawn within about 30 m, and no
+/// eye on the ground comes nearer them than that. Limbs as thick as the
+/// third level keeps (1.5 cm, 2 cm in draft) keep every ring, and every
+/// twig is still drawn. A 480-year Douglas-fir grown in a stand (63.6 m)
+/// drew 3.25 million triangles of wood on its nearest level, 187 MB of
+/// mesh; it draws 0.6 million, 54 MB. Plants up to 40 m tall are drawn
+/// as before.
+pub const GENERATOR_REVISION: u32 = 204;
