@@ -198,6 +198,37 @@ time and through JSON, patches far with shells between and shoots near,
 the roof genera of western Oregon and their spore output, moss darker and greener wet than dry, and a cover tinting the surface
 under it with no triangles of its own.
 
+## Changing it
+
+- **A new genus** is a rank file under `crates/plantgen/library/<family>/<genus>/genus.json`
+  with `body_plan` leafy, a `colony_form` and the moss traits the others
+  carry, each with a note citing its source. No code names a genus.
+  Moss genera have no species, so a change to them needs no
+  `GENERATOR_REVISION` bump.
+- **Leaf colours** are measured from regional photos (imagekit run
+  `moss-colour-2026-11-05`, Washington iNaturalist photos), not chosen by
+  eye: a genus's hue at moss-canopy brightness.
+- **Check a change** on `moss-wall.json` and `moss-shakes.json`: write
+  down what the floras say each view should show, then render the views
+  and mark each point as matching, close or wrong. Renders that change
+  the cover need a fresh `--years 30 --out` first.
+- **Tests:** `cargo test -p plantgen --test mosses`. The full `species`
+  and `checks` suites are heavy; run them alone, not beside renders.
+- Lay points on a face's outermost side; faces pressed against another
+  or kept clear carry nothing; sample big faces at random, not on a
+  lattice.
+
+## Still open
+
+- *Grimmia*'s arcuate setae read as stiff stalks from the side: the
+  capsule should bow back among the leaves.
+- *Dicranoweisia*'s dry crisping barely shows at the size of a cushion.
+- Roof cushions mostly stay separate where the rooftop study found dense
+  mats; its mats were on tree-shaded roofs, and the test roof has none.
+- Growth rates, spread distances, spore output by fruiting and
+  colonisation order are estimates still to check against Glime's
+  *Bryophyte Ecology*.
+
 ## Into the site fill
 
 The cover is made to sit beside the fill as a surface layer, not as

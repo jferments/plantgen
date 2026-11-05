@@ -126,6 +126,12 @@ with every flower, fruit and spine drawn as its own mesh (`--parts on`).*
 - **Ground.** Tiling textures of what plants lay on the ground: needles,
   leaves, thatch, twigs, mosses and grasses, and each canopy species' own
   litter.
+- **Moss on buildings.** Moss genera settle on a site's walls, copings
+  and roofs where light, wetness and the surface suit them, spread year
+  by year, and are drawn as cushions, turfs and mats: shoots close up,
+  shells and patches farther, and a tint with no triangles for a host to
+  bake into its own textures. `plantc moss` runs it on a site; see
+  [docs/sites/MOSS.md](docs/sites/MOSS.md).
 - **Deterministic and offline.** The generator depends only on `libm`,
   `png`, `serde`, `serde_json` and `sha2`. Nothing it runs uses the
   network, another process or AI.

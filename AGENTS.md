@@ -201,6 +201,14 @@ prompt injection. So, without exception:
     why.
   - `src/`: growth, meshes, impostors, packages, glTF exports, ground
     looks and the library.
+  - Moss on buildings (`src/mosses.rs`, guide `docs/sites/MOSS.md`).
+    Moss genera are rank files with no species (`body_plan` leafy and a
+    `colony_form`), so changing them needs no generator revision. Every
+    value comes from traits any moss genus may carry: a new genus is a
+    new rank file, never code that names it. Check a change on the test
+    sites `docs/sites/moss-wall.json` and `moss-shakes.json`: write the
+    comparison against the floras first, then render. Run
+    `tests/mosses.rs`.
 - `apps/plantc`: the command-line compiler and previewer.
 - `lab/`: PlantLab, which grows plants under chosen conditions and renders
   them on the GPU (thumbnails now; a window, review sheets and batch runs
