@@ -893,6 +893,7 @@ pub fn grow(site: &SiteMesh, kinds: &[MossKind], settings: &MossSettings) -> Mos
                     vigour: fit,
                 });
                 grid.insert(id, p);
+                grid.widest = grid.widest.max(start);
             }
         }
         // Colonies seed the surface about them: broken shoots, gemmae and
@@ -934,14 +935,14 @@ pub fn grow(site: &SiteMesh, kinds: &[MossKind], settings: &MossSettings) -> Mos
                 if !surfaces.open_at(p, face.normal) {
                     continue;
                 }
+                let start = kind.shoot_width_m() * 1.5;
+                if grid.covered(&colonies, p, start) {
+                    continue;
+                }
                 // A piece of shoot needs no protonema to take, so it
                 // takes more readily than a spore.
                 let fit = kind.vigour(&lodged(face, p));
                 if unit(mix(h, 4)) > fit.sqrt() * 0.6 {
-                    continue;
-                }
-                let start = kind.shoot_width_m() * 1.5;
-                if grid.covered(&colonies, p, start) {
                     continue;
                 }
                 let lie = surfaces.lie(p, 0.03, face.normal);
@@ -956,6 +957,7 @@ pub fn grow(site: &SiteMesh, kinds: &[MossKind], settings: &MossSettings) -> Mos
                     vigour: fit,
                 });
                 grid.insert(id, p);
+                grid.widest = grid.widest.max(start);
             }
         }
         // Each colony grows out, as far as its neighbours let it.
@@ -991,7 +993,7 @@ pub fn grow(site: &SiteMesh, kinds: &[MossKind], settings: &MossSettings) -> Mos
                         radius = colony.radius_m;
                     }
                 }
-                for j in grid.near(at, radius + 0.7) {
+                for j in grid.near(at, radius + grid.widest) {
                     if j == i {
                         continue;
                     }
@@ -1014,6 +1016,7 @@ pub fn grow(site: &SiteMesh, kinds: &[MossKind], settings: &MossSettings) -> Mos
         for (colony, radius) in colonies.iter_mut().zip(grown) {
             colony.radius_m = radius;
             colony.age += 1.0;
+            grid.widest = grid.widest.max(radius);
         }
         // A colony in a poor place may die out.
         let before = colonies.len();
@@ -1030,6 +1033,7 @@ pub fn grow(site: &SiteMesh, kinds: &[MossKind], settings: &MossSettings) -> Mos
             grid = Grid::new(0.08);
             for (id, colony) in colonies.iter().enumerate() {
                 grid.insert(id, v3(colony.centre));
+                grid.widest = grid.widest.max(colony.radius_m);
             }
         }
     }
@@ -1053,6 +1057,9 @@ fn v3(p: [f64; 3]) -> Vec3 {
 struct Grid {
     cell: f64,
     cells: std::collections::HashMap<(i64, i64, i64), Vec<usize>>,
+    /// The widest colony's radius: no colony reaches farther from its
+    /// centre, so a search need go no farther.
+    widest: f64,
 }
 
 impl Grid {
@@ -1060,6 +1067,7 @@ impl Grid {
         Self {
             cell,
             cells: std::collections::HashMap::new(),
+            widest: 0.0,
         }
     }
 
@@ -1097,7 +1105,7 @@ impl Grid {
     }
 
     fn covered(&self, colonies: &[Colony], p: Vec3, gap: f64) -> bool {
-        self.near(p, 0.7).into_iter().any(|id| {
+        self.near(p, self.widest + gap).into_iter().any(|id| {
             let colony = &colonies[id];
             v3(colony.centre).distance(p) < colony.radius_m + gap
         })
