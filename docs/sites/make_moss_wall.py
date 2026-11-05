@@ -13,6 +13,9 @@ concrete step. The frame is PlantGen's: +Y up, +X east, -Z north, metres.
 Sizes are those of common British bricks (215 x 65 mm, 10 mm joints) and
 plain roof tiles laid at about a 200 mm gauge; the rest by eye.
 
+moss-shakes.json is the same site with the shed roofed in cedar shakes
+(wood) instead of tiles, for the roof mosses of the Pacific Northwest.
+
 Run from the repository's root: python3 docs/sites/make_moss_wall.py
 """
 
@@ -219,8 +222,23 @@ def main():
         "plants": [],
     }
     (HERE / "moss-wall.json").write_text(json.dumps(site, indent=2) + "\n")
+    # The same shed roofed in cedar shakes, as on the roofs of western
+    # Oregon and Washington, which carry more moss than asphalt or metal
+    # (Oregon State rooftop study): shakes are wood, acid, and hold a
+    # little litter between their courses.
+    shakes = json.loads(json.dumps(site))
+    shakes["materials"]["tile"] = {"as": "wood", "soil_m": 0.002, "colour": [0.24, 0.17, 0.11]}
+    shakes["materials"]["ridge"] = {"as": "wood", "colour": [0.22, 0.16, 0.10]}
+    # The mosses of western Oregon and Washington roofs and walls: the
+    # genera of the Oregon State rooftop study and of the Washington photos
+    # (imagekit batch moss-pnw-2026-11-05). Hypnum cupressiforme, the
+    # European roof mat, gave one Washington photo against about twenty
+    # for each of the others, so it is left out.
+    shakes["mosses"] = ["Dicranoweisia", "Rosulabryum", "Niphotrichum", "Homalothecium",
+                        "Ceratodon", "Bryum", "Tortula", "Grimmia"]
+    (HERE / "moss-shakes.json").write_text(json.dumps(shakes, indent=2) + "\n")
     tri_count = sum(len(f) for f in mesh.groups.values())
-    print(f"wrote moss-wall.obj ({len(mesh.v)} vertices, {tri_count} triangles) and moss-wall.json")
+    print(f"wrote moss-wall.obj ({len(mesh.v)} vertices, {tri_count} triangles), moss-wall.json and moss-shakes.json")
 
 
 if __name__ == "__main__":

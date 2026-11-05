@@ -1,0 +1,123 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Niphotrichum",
+  "traits": {
+    "colony_form": "mat",
+    "height_typical_m": {
+      "min": 0.008,
+      "max": 0.04,
+      "typical": 0.015
+    },
+    "leaf_length_m": {
+      "min": 0.002,
+      "max": 0.003,
+      "typical": 0.0025
+    },
+    "leaf_width_m": {
+      "min": 0.0009,
+      "max": 0.0012,
+      "typical": 0.001
+    },
+    "hair_point_length_m": {
+      "min": 0,
+      "max": 0.001,
+      "typical": 0.0005
+    },
+    "leaf_colour": [
+      104,
+      101,
+      48
+    ],
+    "older_leaf_colour": [
+      63,
+      53,
+      34
+    ],
+    "leaf_dry_posture": "appressed",
+    "seta_length_m": {
+      "min": 0.012,
+      "max": 0.015
+    },
+    "seta_colour": [
+      110,
+      50,
+      36
+    ],
+    "capsule_length_m": {
+      "min": 0.0015,
+      "max": 0.002
+    },
+    "capsule_colour": [
+      110,
+      76,
+      42
+    ],
+    "capsule_posture": "erect",
+    "capsule_share": 0.005,
+    "substrates": [
+      "soil",
+      "rock",
+      "built"
+    ],
+    "substrate_reaction": "acid",
+    "light": [
+      "part",
+      "sun"
+    ],
+    "moisture": [
+      "mesic",
+      "dry",
+      "xeric"
+    ],
+    "desiccation_tolerance": "high",
+    "colony_spread_m_per_year": 0.008
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-27",
+      "note": "FNA vol. 27, Niphotrichum (Ochyra and Bednarek-Ochyra; efloras, read 2026-11-05): plants loosely to densely caespitose or in extensive mats or patches, green, yellow- to greyish green, often hoary when dry (Greek nipha, snow, and trichos, hair); stems creeping to erect, often with short tuft-like branches; leaves erect-appressed when dry, usually awned; seta yellowish to blackish red. Typical values are N. ericoides, the roof taxon (Racomitrium canescens var. ericoides; same volume): extensive mats, yellow- or olive green, brown to blackish brown proximally; stems 3-8 cm, prostrate to ascending, pinnate; leaves appressed and slightly twisted dry, 2-3 x 0.9-1.2 mm, awns capillaceous or absent; seta dark to reddish brown 12-15 mm; capsule brown, long-cylindric, 1.5-2 mm; dry or intermittently moist sandy, gravelly soil and soil over rock, mostly non-calcareous. Bryophytes at Oregon State, rooftop study (nine Willamette Valley roofs; read 2026-11-05 as summarised in a search, the site itself blocked here): Dicranoweisia cirrata very abundant (45% occurrence), Bryum capillare abundant (33%), Racomitrium canescens var. ericoides abundant but infrequent (11%), able to form large mats; Dicranoweisia and Bryum capillare the only two species found on cedar shakes; most roofs had fewer than four species."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The depth of a mat of ascending stems 3-8 cm long: one to a few centimetres."
+    },
+    "traits.hair_point_length_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "FNA gives awns but no length for N. ericoides; about a fifth of the leaf. Check against a measured flora."
+    },
+    "traits.older_leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-27",
+      "note": "FNA vol. 27, Niphotrichum ericoides (read 2026-11-05): brown to blackish brown proximally. The colour is ours for that brown."
+    },
+    "traits.capsule_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-27",
+      "note": "FNA vol. 27, Grimmiaceae (read 2026-11-05): capsule usually erect; Niphotrichum seta erect."
+    },
+    "traits.capsule_share": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Dioicous; capsules occasional. Estimate."
+    },
+    "traits.substrates": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "FNA's soil and rock, and roofs from OSU's survey."
+    },
+    "traits.colony_spread_m_per_year": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Estimate for a creeping mat with pinnate branches, below the pleurocarps'; to check against Glime, Bryophyte Ecology."
+    },
+    "traits.leaf_colour": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Hue measured: imagekit run moss-colour-2026-11-05 on batch moss-pnw-2026-11-05 (iNaturalist research-grade photos from Washington, about 20 a taxon, script moss_colour.py): the median linear r/g and b/g of the moss pixels (N. elongatum r/g 1.06, b/g 0.23, masked median only; the roof taxon N. ericoides had no Washington photos in the batch). Photos are exposed brighter than moss is, so only the hue is taken from them; the brightness is a green reflectance of 0.13, a lit leaf's, just above the 0.05-0.11 moss canopies reflect in the visible (Lovelock and Robinson 2002, Plant Cell Environ. 25: 1239, Antarctic Grimmia; moss biocrust albedo about 0.11 against 0.20 for bare soil, Sci. Total Environ. 2020), the canopy's own shade darkening the shell further."
+    }
+  }
+}

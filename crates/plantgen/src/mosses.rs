@@ -419,6 +419,15 @@ impl MossKind {
         light * wet * substrate * reaction * tolerance * habitat.hold
     }
 
+    /// How many spores it sheds, against a moss whose capsules stand on a
+    /// fiftieth of its shoots: as the square root of its share of shoots
+    /// in fruit, from 0.3 (a moss that seldom fruits and spreads mostly by
+    /// pieces of shoot) to 3. Estimate, for the regional spore rain.
+    #[must_use]
+    pub fn spore_output(&self) -> f64 {
+        (self.capsule_share / 0.02).sqrt().clamp(0.3, 3.0)
+    }
+
     /// How well it grows in `habitat`, 0 to 1: its fit, times the share of
     /// the year the surface stays moist. A moss grows only while wet, and
     /// only through moist spells of a day or more, so even the mosses
@@ -877,18 +886,25 @@ pub fn grow(site: &SiteMesh, kinds: &[MossKind], settings: &MossSettings) -> Mos
                 }
                 let habitat = lodged(face, p);
                 let fits: Vec<f64> = kinds.iter().map(|kind| kind.vigour(&habitat)).collect();
-                let total: f64 = fits.iter().sum();
+                // Which kind a spore is, by how many spores each sheds:
+                // the spore rain is mostly of the mosses that fruit freely.
+                let rain: Vec<f64> = kinds
+                    .iter()
+                    .zip(&fits)
+                    .map(|(kind, fit)| fit * kind.spore_output())
+                    .collect();
+                let total: f64 = rain.iter().sum();
                 if total <= 1.0e-6 {
                     continue;
                 }
                 let mut pick = unit(mix(h, 3)) * total;
                 let mut chosen = 0;
-                for (index, fit) in fits.iter().enumerate() {
-                    if pick < *fit {
+                for (index, share) in rain.iter().enumerate() {
+                    if pick < *share {
                         chosen = index;
                         break;
                     }
-                    pick -= fit;
+                    pick -= share;
                     chosen = index;
                 }
                 let fit = fits[chosen];

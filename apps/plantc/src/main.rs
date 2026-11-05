@@ -3225,9 +3225,23 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
             fs::read_to_string(path).map_err(|error| format!("cannot read {path}: {error}"))?;
         MossCover::from_json(&text).map_err(|error| format!("{path}: {error}"))?
     } else {
-        let kinds = mosses::kinds(library())?;
+        let mut kinds = mosses::kinds(library())?;
         if kinds.is_empty() {
             return Err("the library describes no moss genus with a colony_form".into());
+        }
+        // A site may name its region's mosses; spores of the others do
+        // not reach it.
+        if let Some(names) = document.get("mosses").and_then(serde_json::Value::as_array) {
+            let names: Vec<&str> = names.iter().filter_map(serde_json::Value::as_str).collect();
+            if let Some(unknown) = names
+                .iter()
+                .find(|name| !kinds.iter().any(|kind| kind.genus == **name))
+            {
+                return Err(
+                    format!("site names moss genus `{unknown}`, which the library lacks").into(),
+                );
+            }
+            kinds.retain(|kind| names.contains(&kind.genus.as_str()));
         }
         let mut settings = MossSettings::default();
         if let Some(years) = options.number::<u32>("years")? {

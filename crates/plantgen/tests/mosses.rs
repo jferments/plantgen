@@ -95,6 +95,9 @@ fn the_library_describes_wall_mosses_by_genus() {
         "Ceratodon",
         "Hypnum",
         "Homalothecium",
+        "Dicranoweisia",
+        "Niphotrichum",
+        "Rosulabryum",
     ] {
         assert!(names.contains(&genus), "{genus} missing from {names:?}");
     }
@@ -110,6 +113,15 @@ fn the_library_describes_wall_mosses_by_genus() {
     assert_eq!(hypnum.form, ColonyForm::Mat);
     assert!(hypnum.pleurocarpous);
     assert!(hypnum.spread_m > grimmia.spread_m);
+    // The roof mosses of western Oregon (FNA vol. 27, 28): Dicranoweisia
+    // in cushions and fruiting freely, so its spores outnumber those of
+    // Niphotrichum's mats, which seldom fruit; Rosulabryum in turfs.
+    let dicranoweisia = kind("Dicranoweisia");
+    let niphotrichum = kind("Niphotrichum");
+    assert_eq!(dicranoweisia.form, ColonyForm::Cushion);
+    assert_eq!(niphotrichum.form, ColonyForm::Mat);
+    assert_eq!(kind("Rosulabryum").form, ColonyForm::Turf);
+    assert!(dicranoweisia.spore_output() > 2.0 * niphotrichum.spore_output());
 }
 
 #[test]
