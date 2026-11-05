@@ -25,6 +25,11 @@
       101,
       56
     ],
+    "older_leaf_colour": [
+      92,
+      70,
+      34
+    ],
     "leaf_dry_posture": "appressed",
     "seta_length_m": {
       "min": 0.006,
@@ -72,6 +77,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Estimate for small wall cushions; to check against Glime, Bryophyte Ecology, vol. 1, chapter 5."
+    },
+    "traits.older_leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-27",
+      "note": "FNA vol. 27, Tortula muralis (read 2026-11-05): cushions green, yellow-brown to dark brown below. The colour is ours for that brown."
     },
     "traits.leaf_colour": {
       "evidence": "Authored",

@@ -2328,6 +2328,14 @@
       "when": {"body_plan": ["leafy"]},
       "why": "a moss leaf's colourless hair-point (awn) beyond its green blade; 0 where the leaf has none"
     },
+    "older_leaf_colour": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "colour",
+      "optional": true,
+      "when": {"body_plan": ["leafy"]},
+      "why": "a moss's older leaves, down its shoots below the green tips: often yellow-brown to dark brown, or tinged red or purple as in Ceratodon purpureus"
+    },
     "leaf_hyaline_share": {
       "group": "leaves",
       "organ": "leaf",

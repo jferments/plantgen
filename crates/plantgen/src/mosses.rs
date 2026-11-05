@@ -124,6 +124,9 @@ pub struct MossKind {
     pub seta_colour: [f32; 3],
     pub capsule_m: f64,
     pub capsule_colour: [f32; 3],
+    /// The older leaves down a shoot, below its green tip.
+    #[serde(default = "default_older_colour")]
+    pub older_colour: [f32; 3],
     pub capsule_posture: CapsulePosture,
     /// Share of shoots bearing a capsule.
     pub capsule_share: f64,
@@ -144,6 +147,13 @@ pub struct MossKind {
 /// The value a qualified state picks: the state stated as most usual,
 /// the first of those that tie (in the map's order, so the same files
 /// give the same pick).
+/// Older leaves a moss genus gives no colour for: yellow-brown.
+fn default_older_colour() -> [f32; 3] {
+    linear(DEFAULT_OLDER)
+}
+
+const DEFAULT_OLDER: [u8; 3] = [66, 54, 30];
+
 fn usual(value: &Value) -> Option<String> {
     match value {
         Value::String(text) => Some(text.clone()),
@@ -316,6 +326,9 @@ impl MossKind {
             capsule_colour: get("capsule_colour")
                 .and_then(colour)
                 .unwrap_or(linear([120, 80, 45])),
+            older_colour: get("older_leaf_colour")
+                .and_then(colour)
+                .unwrap_or_else(default_older_colour),
             capsule_posture,
             capsule_share: num("capsule_share").unwrap_or(0.2),
             spread_m: num("colony_spread_m_per_year").unwrap_or(match form {
@@ -1578,12 +1591,14 @@ impl Drawer<'_> {
             0.86 + 0.28 * unit(mix(seed, 3)),
         );
         // Drawn with its shoots, the shell is only the dark depth among
-        // them: a cushion's or turf's sits a little below the tips, a
-        // mat's well down, so its creeping stems lie on it.
+        // them: a mat's well down, so its creeping stems lie on it.
         let mat = matches!(kind.form, ColonyForm::Mat | ColonyForm::Weft);
+        // A cushion's or turf's sits three quarters of a leafy tip below
+        // the tips, so the tips stand clear of it.
+        let tip_length = kind.leaf_length_m * 2.2;
         let sink = match (shoots, mat) {
             (false, _) => 1.0,
-            (true, false) => 0.8,
+            (true, false) => (1.0 - tip_length * 0.75 / height.max(1.0e-6)).clamp(0.3, 0.85),
             (true, true) => 0.3,
         };
         // Among the shoots it shows their older, lower parts: a mat's in
@@ -1592,7 +1607,7 @@ impl Drawer<'_> {
         let shell_colour = match (shoots, mat) {
             (false, _) => shell_colour,
             (true, true) => scaled(shell_colour, 0.6),
-            (true, false) => blend(scaled(shell_colour, 0.4), [0.05, 0.035, 0.014], 0.6),
+            (true, false) => blend(scaled(shell_colour, 0.4), scaled(kind.older_colour, 0.7), 0.6),
         };
         // Its foot, at the rim, darker still.
         let base_colour = blend([0.07, 0.05, 0.025], shell_colour, 0.35);
@@ -1723,11 +1738,15 @@ impl Drawer<'_> {
             ColonyForm::Mat | ColonyForm::Weft => 0.0,
         };
         // A cushion's dome or a turf's top has more surface than its
-        // footprint, and the shoots' leafy tips crowd and overlap on it,
-        // half as many again as would just touch.
+        // footprint, and its shoots stand crowded on it (FNA vol. 27,
+        // Tortula muralis: shoots crowded), their leaves interleaving with
+        // their neighbours': a stem every two thirds of a leaf length or
+        // so, so a cushion of Tortula holds some fifty shoots a square
+        // centimetre and a turf of Ceratodon a hundred. Estimate.
         let surface = 1.0 + (height / radius.max(1.0e-6)).powi(2);
+        let spacing = (kind.leaf_length_m * 0.7).min(width).max(0.0005);
         #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-        let count = (area * surface * 1.5 / (width * width) * packing).ceil() as usize;
+        let count = (area * surface / (spacing * spacing) * packing).ceil() as usize;
         let mature = math::smoothstep(1.0, 3.0, colony.age);
         let fertile_share = kind.capsule_share * mature * colony.vigour.clamp(0.3, 1.0);
         if matches!(kind.form, ColonyForm::Mat | ColonyForm::Weft) {
@@ -1778,10 +1797,11 @@ impl Drawer<'_> {
             };
             let rise = height * profile(rho);
             // Cushion shoots radiate from the colony's centre, so those at
-            // its edge lean outward; a turf's stand upright.
+            // its edge lean outward; a turf's stand upright but for those
+            // on its edge, which lean out over its side.
             let lean = match kind.form {
                 ColonyForm::Cushion => 0.85 * rho,
-                _ => 0.12 * rho,
+                _ => 0.12 * rho + 0.6 * math::smoothstep(0.7, 1.0, rho),
             };
             let tip =
                 p + n * rise * (0.92 + 0.12 * unit(mix(h, 12))) + radial * (rise * lean * 0.5);
@@ -1795,8 +1815,10 @@ impl Drawer<'_> {
             }
             if fertile {
                 // Setae rise toward the light more steeply than the
-                // shoots they end lean out.
-                self.sporophyte(kind, tip, (axis + n * 1.5).normalize_or(n), h);
+                // shoots they end lean out, and on a wall turn upward
+                // (setae are negatively gravitropic).
+                let up = (Vec3::Y - n * Vec3::Y.dot(n)) * 0.8;
+                self.sporophyte(kind, tip, (axis + n * 1.5 + up).normalize_or(n), h);
             }
         }
     }
@@ -1820,6 +1842,8 @@ impl Drawer<'_> {
             #[allow(clippy::cast_precision_loss)]
             let turn = start + node as f64 * GOLDEN;
             let out = side.rotate_about(axis, turn);
+            #[allow(clippy::cast_precision_loss)]
+            let older = math::smoothstep(2.0, nodes as f64, node as f64);
             self.leaf(
                 kind,
                 colony,
@@ -1827,6 +1851,7 @@ impl Drawer<'_> {
                 axis,
                 out,
                 size,
+                older,
                 mix(seed, 100 + node as u64),
             );
         }
@@ -1843,6 +1868,7 @@ impl Drawer<'_> {
         axis: Vec3,
         out: Vec3,
         size: f64,
+        older: f64,
         seed: u64,
     ) {
         let wet = self.options.hydration.clamp(0.0, 1.0);
@@ -1880,8 +1906,13 @@ impl Drawer<'_> {
         let apex = mid + upper_dir * (length - lower);
         let flat = across.rotate_about(dir, twist * 0.5);
         let keel = dir.cross(flat).normalize_or(axis) * (width * 0.18);
+        // Older leaves down the shoot turn to the genus's older colour.
         let green = scaled(
-            self.leaf_colour(kind, colony.vigour),
+            blend(
+                self.leaf_colour(kind, colony.vigour),
+                kind.older_colour,
+                older * 0.85,
+            ),
             0.9 + 0.2 * unit(mix(seed, 5)),
         );
         let dark = scaled(green, 0.55);
@@ -1981,7 +2012,7 @@ impl Drawer<'_> {
                 let forward = (forward_flat - n * forward_flat.dot(n)).normalize_or(forward_flat);
                 // Leaves on the main stem.
                 let out = n.rotate_about(forward, (unit(mix(h, node)) - 0.5) * 2.0);
-                self.leaf(kind, colony, at, forward, out, 0.9, mix(h, 77 + node));
+                self.leaf(kind, colony, at, forward, out, 0.9, 0.2, mix(h, 77 + node));
                 along += step;
                 if along >= spacing {
                     along = 0.0;
@@ -2014,6 +2045,7 @@ impl Drawer<'_> {
                                 rise,
                                 out,
                                 size,
+                                0.0,
                                 mix(h, 2000 + node * 64 + leaf as u64),
                             );
                         }
