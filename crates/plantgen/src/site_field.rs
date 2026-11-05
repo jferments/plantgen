@@ -976,7 +976,13 @@ impl<'a> Tracer<'a> {
     /// Share of `directions` (about +Y) turned to `normal` that leave
     /// `from` without meeting the site within `reach`.
     #[allow(clippy::cast_precision_loss)]
-    pub(crate) fn sky_seen(&self, from: Vec3, normal: Vec3, directions: &[Vec3], reach: f64) -> f64 {
+    pub(crate) fn sky_seen(
+        &self,
+        from: Vec3,
+        normal: Vec3,
+        directions: &[Vec3],
+        reach: f64,
+    ) -> f64 {
         let (tangent, bitangent) = frame(normal);
         let open = directions
             .iter()

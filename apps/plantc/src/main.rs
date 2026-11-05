@@ -3212,7 +3212,9 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
                 if values.len() == count {
                     Ok(values)
                 } else {
-                    Err(format!("`--{name}` expects {count} numbers, found `{text}`"))
+                    Err(format!(
+                        "`--{name}` expects {count} numbers, found `{text}`"
+                    ))
                 }
             })
             .transpose()
@@ -3253,7 +3255,8 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
         out!("  {genus:<14} {count:>6} colonies, {:.3} m2", area);
     }
     if let Some(path) = options.flags.get("out") {
-        fs::write(path, cover.to_json()?).map_err(|error| format!("cannot write {path}: {error}"))?;
+        fs::write(path, cover.to_json()?)
+            .map_err(|error| format!("cannot write {path}: {error}"))?;
         out!("wrote {path}");
     }
     let Some(render) = options.flags.get("render") else {
@@ -3265,12 +3268,14 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
         None | Some("near") => Detail::Near,
         Some("shell") => Detail::Shell,
         Some("shoots") => Detail::Shoots,
-        Some(other) => return Err(format!("unknown detail `{other}`; use shell, shoots or near").into()),
+        Some(other) => {
+            return Err(format!("unknown detail `{other}`; use shell, shoots or near").into());
+        }
     };
     let draw = DrawOptions {
         hydration: options.number::<f64>("wet")?.unwrap_or(0.4).clamp(0.0, 1.0),
         detail,
-        near: focus.map(|at| (at, span * 0.75)),
+        near: focus.map(|at| (at, span)),
         capsules: options.flags.get("capsules").is_none_or(|v| v != "no"),
     };
     let mut moss = cover.draw(&site, &draw);
@@ -3281,7 +3286,11 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
         }
         None => site.bounds(),
     };
-    let mut ground = site.drawn(low - Vec3::new(1.0, 1.0, 1.0), high + Vec3::new(1.0, 1.0, 1.0), Vec3::ZERO);
+    let mut ground = site.drawn(
+        low - Vec3::new(1.0, 1.0, 1.0),
+        high + Vec3::new(1.0, 1.0, 1.0),
+        Vec3::ZERO,
+    );
     // Seen from the north: the scene turned half round about the focus.
     let north = match options.flags.get("from").map(String::as_str) {
         None | Some("south") => false,
@@ -3336,8 +3345,12 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
             fit_plant: false,
         },
     );
-    let png = raster::encode_png(image.width, image.height, &image.to_srgb8(Some(preview::SKY)))
-        .map_err(|error| format!("cannot encode PNG: {error}"))?;
+    let png = raster::encode_png(
+        image.width,
+        image.height,
+        &image.to_srgb8(Some(preview::SKY)),
+    )
+    .map_err(|error| format!("cannot encode PNG: {error}"))?;
     fs::write(render, png).map_err(|error| format!("cannot write {render}: {error}"))?;
     out!(
         "wrote {render}: {} triangles of moss, {} of site",
@@ -3346,7 +3359,6 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
     );
     Ok(())
 }
-
 
 /// `plantc field`: a site's field, measured once (plantgen::site_field).
 fn field_command(args: &[String]) -> Result<(), Failure> {

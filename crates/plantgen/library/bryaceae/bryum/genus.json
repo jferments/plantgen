@@ -45,7 +45,7 @@
       30
     ],
     "capsule_posture": "pendent",
-    "capsule_share": 0.01,
+    "capsule_share": 0.003,
     "substrates": [
       "soil",
       "built",
@@ -72,7 +72,7 @@
     "traits.capsule_share": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "B. argenteum is dioicous; in towns it fruits only here and there. Estimate."
+      "note": "B. argenteum is dioicous; in towns it fruits only here and there, a few capsules a colony. Estimate."
     },
     "traits.leaf_colour": {
       "evidence": "Authored",

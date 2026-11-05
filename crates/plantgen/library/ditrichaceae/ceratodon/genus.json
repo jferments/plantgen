@@ -40,7 +40,7 @@
       40
     ],
     "capsule_posture": "inclined",
-    "capsule_share": 0.05,
+    "capsule_share": 0.02,
     "substrates": [
       "soil",
       "rock",
