@@ -24,6 +24,7 @@
       101,
       52
     ],
+    "dry_branch_posture": "curled",
     "leaf_dry_posture": "appressed",
     "seta_length_m": {
       "min": 0.01,
@@ -77,6 +78,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Estimate as for other pleurocarp mats; to check against Glime, Bryophyte Ecology."
+    },
+    "traits.dry_branch_posture": {
+      "evidence": "SourceInferred",
+      "source": "bbs-species-finder",
+      "note": "BBS species finder, Homalothecium sericeum (read 2026-11-05, as summarised in a search): when dry, the distinctive curled-up look of the crowded secondary branches makes this common species easy to identify; H. lutescens keeps straight branches when dry. NatureSpot: the side branches curve upwards and inwards when dry and straighten again on wetting. FNA vol. 28: branches curved and secund from the surface."
     },
     "traits.leaf_colour": {
       "evidence": "Authored",

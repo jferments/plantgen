@@ -20,6 +20,11 @@
       101,
       44
     ],
+    "older_leaf_colour": [
+      96,
+      46,
+      48
+    ],
     "leaf_dry_posture": "crisped",
     "seta_length_m": {
       "min": 0.01,
@@ -79,6 +84,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Estimate for a pioneer turf on open ground; to check against Glime, Bryophyte Ecology."
+    },
+    "traits.older_leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-27",
+      "note": "FNA vol. 27, Ceratodon purpureus (read 2026-11-05): plants in open to dense tufts or turfs, green to yellowish, often tinged reddish brown or purple. The colour is ours for that tinge, on the older leaves below the green tips."
     },
     "traits.leaf_colour": {
       "evidence": "Authored",
