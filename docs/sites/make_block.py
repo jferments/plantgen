@@ -222,7 +222,8 @@ def main():
     tiles.append("block-walk.json")
     mesh.solid("curb", box(X0, -0.1, 3.0, X1, WALK_TOP + 0.03, WALK[0]))
 
-    # The old house: walls, a gable roof (its south side mossy), windows
+    # The old house: walls, a gable roof (grit gathered on its south side;
+    # `plantc fill --moss` grows the moss on both), windows
     # and a door kept clear.
     hx0, hx1, hz0, hz1, eave, ridge = -12.0, -4.0, 9.0, 15.0, 2.8, 5.0
     mesh.solid("render", box(hx0, -0.2, hz0, hx1, eave, hz1))
@@ -306,7 +307,7 @@ def main():
             "curb": {"as": "built", "colour": [0.45, 0.44, 0.41]},
             "render": {"as": "built", "colour": [0.62, 0.57, 0.48]},
             "roof": {"as": "built", "colour": [0.22, 0.22, 0.24]},
-            "roof-moss": {"as": "built", "soil_m": 0.04, "colour": [0.20, 0.24, 0.12]},
+            "roof-moss": {"as": "built", "soil_m": 0.04, "colour": [0.22, 0.22, 0.24]},
             "glass": {"as": "built", "thin_m": 0.02, "clear": True, "colour": [0.30, 0.38, 0.42]},
             "door": {"as": "wood", "thin_m": 0.04, "clear": True, "colour": [0.28, 0.17, 0.11]},
             "fence": {"as": "wood", "colour": [0.70, 0.68, 0.62]},

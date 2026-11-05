@@ -200,9 +200,13 @@ python3 docs/sites/make_block_fill.py
 ./target/release/plantc fill docs/sites/block-fill/woodland.json \
   docs/sites/block-fill/yard.json --tile 0,0 --tile-m 40 --corner -20,18 \
   --field docs/sites/block.json --stands docs/sites/block-fill/stands.json \
-  --ages 8,60 --seeds 2 --cracks 10 --prototypes none --out /tmp/block-fill \
-  --render /tmp/block-fill.png --size 1600
+  --ages 8,60 --seeds 2 --cracks 10 --moss 30 --prototypes none \
+  --out /tmp/block-fill --render /tmp/block-fill.png --size 1600
 ```
+
+`--moss 30` grows thirty years of moss over the tile and draws it with
+the plants (MOSS.md, "Into the site fill"); leave it out for the plants
+alone.
 
 Add `--focus X,Y,Z --span M --level 0` for a close view: the house is
 about `-8,2.5,12` (span 14), the most broken stretch of street

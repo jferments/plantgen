@@ -170,7 +170,17 @@ and moss darker and greener wet than dry.
 
 ## Into the site fill
 
-The cover is made to sit beside the fill as a surface layer, not as
-plant instances: a fill tile can grow a cover over its host patches
-(walls, roofs) and draw it, or hand its colonies to a host to tint its
-textures. That step is to come, with the sites work.
+The cover sits beside the fill as a surface layer, not as plant
+instances. A fill tile over a site field grows its own:
+`MossSettings::over_tile(corner, tile_m, years, seed)` is the box of the
+tile whose south-west corner `Site::from_field` was given, at every
+height, and `grow` on the same mesh the field was measured from gives the
+tile's cover, which a host keeps beside the tile's instances, draws, or
+reads to tint its own textures. `plantc fill --field SITE.json --moss
+YEARS` does this, writes the cover to `DIR/tiles/X_Y.moss.json` and, with
+`--render`, draws it: shoots within a twentieth of the view's span of its
+focus, shells out to the span, patches beyond (`--wet` sets
+`DrawOptions::hydration`). On the test block (DEVELOPERS.md) thirty years
+grow about 45,000 colonies in 15 s on four cores: the shaded north slope
+of the house's roof, toward the street, mossed over in clumps; the sunny
+south slope spotted; moss along the curb and the fence's feet.

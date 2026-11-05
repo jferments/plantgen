@@ -1666,4 +1666,9 @@ pub mod venation;
 /// `widest`, `base` or `tip` by hand, the hand outline still wins, except
 /// a hardhack's, which drew obovate leaves where Abrams gives elliptical
 /// to oval ones.
-pub const GENERATOR_REVISION: u32 = 206;
+///
+/// 207: conifers are held back by their soil (`soil@1` in the pinidae
+/// program, its revision 20) as broadleaf trees, herbs and grasses are:
+/// one rooted in a crack or a thin soil grows as a shaded one does. Grown
+/// with no rooting limits, as every package is, a conifer grows as before.
+pub const GENERATOR_REVISION: u32 = 207;

@@ -24,7 +24,8 @@
 //! 4. **Growth.** Each plant grows as its kind does in open ground, held
 //!    back by its soil as `soil@1` holds a growing plant: its size is the
 //!    open-ground size at its age less the years its soil has cost it, its
-//!    lengths times the square root of its supply ratio.
+//!    lengths times the square root of its supply ratio. Its roots go as
+//!    deep as an open-ground plant's of that age ([`Colonist::supply`]).
 //! 5. **Death.** Annuals die after they seed and biennials in their second
 //!    year; others die at a base rate, more where their soil runs short,
 //!    where they are trodden on, under a taller crown and wherever the
@@ -354,18 +355,34 @@ impl Colonist {
     /// effective years old, its lengths held to the square root of the
     /// share as `soil@1` holds them: a few rounds toward the fixed point,
     /// starting from `guess`.
+    ///
+    /// Its roots go as deep as an open-ground plant's of that age, and
+    /// spread as far as its own held-back crown asks. A plant short of
+    /// water or nutrients puts a larger share of its growth into its roots
+    /// (Poorter et al. 2012, *New Phytologist* 193: 30-50), and a
+    /// seedling's root goes down before its leaves spread: a dandelion's
+    /// taproot is 15 cm to 30 cm deep in its first year. Rooted only as
+    /// deep as its stunted height, a plant in a crack would root no deeper
+    /// than a few centimetres, never reach the base under the slab and
+    /// shrink to nothing: the fixed point a small plant's shallow roots
+    /// give is the empty one.
     #[must_use]
     pub fn supply(&self, site: &Microsite, age: f64, guess: f64) -> (f64, f64, f64) {
         let (height, crown) = self.size_at(age.max(0.0));
         let Some(need) = self.soil else {
             return (1.0, height, crown);
         };
+        // What it asks rises with its crown's area, so with the share
+        // itself: each round steps to the geometric mean of the last
+        // share and the next, which settles where a plain round would
+        // swing between two.
         let mut rs = guess.clamp(0.0, 1.0);
-        for _ in 0..4 {
+        for _ in 0..6 {
             let scale = rs.sqrt();
-            rs = need.ratio(crown * scale, height * scale, |reach, depth| {
+            let next = need.ratio_rooted(crown * scale, height, |reach, depth| {
                 Some(site.rooting.volume(reach, depth))
             });
+            rs = (rs * next).sqrt();
         }
         let scale = rs.sqrt();
         (rs, height * scale, crown * scale)

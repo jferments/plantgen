@@ -760,9 +760,15 @@ mod on_a_site_field {
             smaller += usize::from(s.scale < 0.9 * d.scale);
         }
         assert!(smaller > 0, "no plant was held back by 3 cm of soil");
-        // Firs have no `soil@1`, so only the herbs count for less.
-        assert!(shallow.stats.basal_area_m2_per_ha <= deep.stats.basal_area_m2_per_ha);
-        assert!(shallow.stats.canopy_cover <= deep.stats.canopy_cover);
+        // The firs too: 3 cm of soil holds a conifer back as it does a
+        // herb.
+        assert!(
+            shallow.stats.basal_area_m2_per_ha < 0.9 * deep.stats.basal_area_m2_per_ha,
+            "{} {}",
+            shallow.stats.basal_area_m2_per_ha,
+            deep.stats.basal_area_m2_per_ha
+        );
+        assert!(shallow.stats.canopy_cover < deep.stats.canopy_cover);
     }
 
     /// Ground 40 m across under a slab with one 2 cm crack across it, east
