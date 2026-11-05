@@ -137,6 +137,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "age_max_years": 800,
     "height_max_m": {
       "min": 23,
       "max": 30,
@@ -191,6 +192,7 @@
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     },
+    "traits.age_max_years": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS species review of mountain hemlock (Tesky 1992): it grows slowly on cold, snowy sites, sometimes reaching more than 800 years."},
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",

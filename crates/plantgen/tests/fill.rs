@@ -129,6 +129,7 @@ fn a_stand_map_finer_than_a_stand_tile_reads_windows_of_one() {
                     Some(0)
                 },
                 years_since_disturbance: 120.0,
+                moisture: None,
             })
             .collect(),
     };
@@ -171,6 +172,31 @@ fn a_stand_map_finer_than_a_stand_tile_reads_windows_of_one() {
 }
 
 #[test]
+fn a_cells_own_moisture_sets_which_species_suit_it() {
+    let fill = fill();
+    let site = Site::flat(TileId { x: 0, y: 0 }, 80.0).expect("site");
+    let mut stands = StandMap::uniform(80.0, 0, 40.0);
+    // The south-west cell is a saturated bank, past Douglas-fir's niche
+    // (gone by 0.8); the rest keep the site's middling moisture.
+    stands.cells[0].moisture = Some(0.95);
+    let plan = fill.tile(&site, &stands, 1).expect("tile");
+    let firs_in = |west: bool, south: bool| {
+        plan.instances
+            .iter()
+            .filter(|i| (i.position[0] < 40.0) == west && (i.position[1] < 40.0) == south)
+            .filter(|i| {
+                fill.prototypes()[i.prototype as usize].key.species == "pseudotsuga-menziesii"
+            })
+            .count()
+    };
+    assert_eq!(firs_in(true, true), 0, "no fir on the saturated bank");
+    assert!(firs_in(false, true) > 0 && firs_in(true, false) > 0);
+    // A moisture outside 0 to 1 is refused.
+    stands.cells[0].moisture = Some(1.5);
+    assert!(fill.tile(&site, &stands, 1).is_err());
+}
+
+#[test]
 fn one_tile_holds_many_communities_and_bare_cells() {
     let fill = fill();
     let site = Site::flat(TileId { x: 0, y: 0 }, 80.0).expect("site");
@@ -179,6 +205,7 @@ fn one_tile_holds_many_communities_and_bare_cells() {
     stands.cells[2] = StandCell {
         community: None,
         years_since_disturbance: 0.0,
+        moisture: None,
     };
     let plan = fill.tile(&site, &stands, 1).expect("tile");
     assert!(
@@ -498,6 +525,7 @@ fn bare() -> StandCell {
     StandCell {
         community: None,
         years_since_disturbance: 0.0,
+        moisture: None,
     }
 }
 
@@ -571,6 +599,7 @@ fn a_stands_first_row_beside_a_road_grows_as_an_edge_facing_it() {
     young.cells[1] = StandCell {
         community: Some(0),
         years_since_disturbance: 40.0,
+        moisture: None,
     };
     let closed = fill.tile(&site, &young, 3).expect("tile");
     assert!(closed.instances.iter().all(|i| !is_edge(fill, i)));

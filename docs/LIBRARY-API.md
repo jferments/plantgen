@@ -205,7 +205,12 @@ Ok(())
   be filled alone, on any thread (`Fill` is `Send + Sync`).
 - **Many communities per tile.** The `StandMap` gives each cell a
   community (or none: pavement, building, water) and the years since it
-  was disturbed or abandoned. A city's map changes every few metres (a
+  was disturbed or abandoned, and may give the ground's `moisture` (0 dry
+  to 1 saturated) where the caller knows it better than the ground's
+  shape: a coarse height model reads a creek's bank or a lake's shore as
+  level ground (0.5), too dry for red alder or Pacific willow, so a city
+  that maps its water gives its bank cells their own (Olympia's: 0.95 at
+  the water's edge to 0.7 at 15 m). A city's map changes every few metres (a
   yard, a verge, a bed by a house), finer than a crown: a cell under
   `STAND_CELL_M` (40 m) reads its window of one stand tile laid out for
   its block of cells about 40 m across (`fill::cells_per_layout`), the
@@ -348,7 +353,13 @@ subcanopy, shrub, herb, ground, climber) that keeps it to that layer
 in place of its niche's, the `environments` it grows in (interior, edge,
 open, suppressed; all four when left out) and an `abundance` (a share
 against the others, 1 when left out). A species without a niche needs
-its layer. It gives no density: how many stems a cell holds comes from
+its layer, suits every site and stands half tolerant of shade (`plantc
+fill` names such members). A community is `"origin": "natural"` unless
+it says `"planted"`: a natural stand develops as after a fire (its
+first trees by their intolerance of shade, the tolerant ones coming up
+beneath them later), while a planted one (a yard's, a street's or a
+park's kept trees) holds each tree in proportion to its abundance from
+the start, with nothing coming up beneath. It gives no density: how many stems a cell holds comes from
 the fill, from the site and the stand's age, not from the caller.
 
 Any plant can be grown past its spec's years to its old ages (doubling
