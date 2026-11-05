@@ -454,7 +454,7 @@ pub enum Environment {
     Edge,
     /// Inside a closed stand of the same age.
     Interior,
-    /// Under an older, taller canopy.
+    /// Overtopped in a closed stand: under taller crowns than its own.
     Suppressed,
 }
 
@@ -498,13 +498,16 @@ impl Environment {
                 ..stand
             },
             Self::Interior => stand,
+            // Overtopped in its own stand: its like's crowns around it,
+            // as in the interior, and the dominants' crowns 30% taller
+            // over it, a layer of shade 0.1 a metre (generator revision
+            // 199). A dense medium from the ground to 30 m, it was, left
+            // a seedling 0.2% of the sky's light: conifers grew leafless
+            // poles, and broadleaves died.
             Self::Suppressed => Neighbourhood {
-                density: 0.15,
-                relative_height: 1.0,
-                canopy: 30.0,
-                spacing: 5.0,
-                one_sided: false,
-                like: 0.0,
+                density: 0.1,
+                relative_height: 1.3,
+                ..stand
             },
         }
     }

@@ -1579,4 +1579,21 @@ pub mod venation;
 /// leaflets on their longest petioles, jimsonweed's and the tomato's
 /// longest leaves the floras' longest, and a thread-leaved sundew's leaves
 /// stand erect, as Flora of North America says.
-pub const GENERATOR_REVISION: u32 = 198;
+///
+/// 199: growth in deep shade (`pinidae` revision 16, the light tool's new
+/// `top`, the light of the plant's best-lit module): a conifer's leader
+/// floor, `leader_shade`, fades with `top` below half the sky's light, so
+/// on a plant shaded all over the leader's growth saturates with light
+/// and is nothing in the dark, where the floor kept it rising at a share
+/// of its open rate in any shade; a shoot starves by its light against
+/// `top` (correlative inhibition), and under a floor of a quarter of
+/// `shade_death` however shaded the whole plant. Under a closed canopy a
+/// hemlock was a bare pole rising at half its open rate; in 5% light it
+/// is now 4.2 m at 60 years with limbs from 2 m. And the `suppressed`
+/// setting is a tree overtopped in its own stand (its like's crowns
+/// around it as `interior`'s, and crowns 30% taller over it), where it
+/// was a dense medium to 30 m from the ground, in which a conifer grew a
+/// leafless pole and a broadleaf died: a suppressed Douglas-fir is 30 m
+/// at 120 years with a living crown. Open- and stand-grown trees grow as
+/// tall as before, with leaf area within 3%.
+pub const GENERATOR_REVISION: u32 = 199;
