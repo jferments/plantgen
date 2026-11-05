@@ -55,7 +55,8 @@
       "mesic",
       "dry"
     ],
-    "colony_spread_m_per_year": 0.002
+    "colony_spread_m_per_year": 0.002,
+    "operculum_form": "long_conic"
   },
   "evidence": {
     "traits": {
@@ -77,6 +78,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Estimate for small wall cushions; to check against Glime, Bryophyte Ecology, vol. 1, chapter 5."
+    },
+    "traits.operculum_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-27",
+      "note": "FNA vol. 27, Tortula: operculum long-conic, occasionally shortly rostrate. (efloras, read 2026-11-05)"
     },
     "traits.older_leaf_colour": {
       "evidence": "SourceInferred",

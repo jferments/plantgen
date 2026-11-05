@@ -1650,4 +1650,20 @@ pub mod venation;
 /// drew 3.25 million triangles of wood on its nearest level, 187 MB of
 /// mesh; it draws 0.6 million, 54 MB. Plants up to 40 m tall are drawn
 /// as before.
-pub const GENERATOR_REVISION: u32 = 204;
+///
+/// 205: a shrub up to 3 m tall whose taxa do not say how its stems rise
+/// (`stem_clump`) sends up many stems from its base, as `stem_clump` many
+/// gives, in place of one stem forking just above the ground (a rule on the
+/// shrub form at the flowering plants); taller shrubs and prostrate mats keep
+/// their forking stem. 32 library shrubs change, and the open
+/// plant-identification judge names them better grown so.
+///
+/// 206: sixteen shrubs whose specs gave no leaf shape state it from
+/// Abrams' and Britton and Brown's floras (`leaf_shape`), so the shape
+/// rule (the kingdom's `outline`) draws their blades and leaflets: a
+/// trailing blackberry's and a Cascade Oregon grape's leaflets were the
+/// shape the compound template guesses. Where a spec sets a blade's
+/// `widest`, `base` or `tip` by hand, the hand outline still wins, except
+/// a hardhack's, which drew obovate leaves where Abrams gives elliptical
+/// to oval ones.
+pub const GENERATOR_REVISION: u32 = 206;
