@@ -1631,6 +1631,13 @@ pub mod venation;
 /// 248 species, none grew and together they hold 14% fewer texels; most
 /// low tiers went from 512 by 550 to 620 texels to 512 by 512.
 ///
+/// 203: a shrub up to 3 m tall whose taxa do not say how its stems rise
+/// (`stem_clump`) sends up many stems from its base, as `stem_clump` many
+/// gives, in place of one stem forking just above the ground (a rule on the
+/// shrub form at the flowering plants); taller shrubs and prostrate mats keep
+/// their forking stem. 32 library shrubs change, and the open
+/// plant-identification judge names them better grown so.
+///
 /// 204: sixteen shrubs whose specs gave no leaf shape state it from
 /// Abrams' and Britton and Brown's floras (`leaf_shape`), so the shape
 /// rule (the kingdom's `outline`) draws their blades and leaflets: a
