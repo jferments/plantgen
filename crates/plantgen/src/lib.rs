@@ -1666,4 +1666,12 @@ pub mod venation;
 /// `widest`, `base` or `tip` by hand, the hand outline still wins, except
 /// a hardhack's, which drew obovate leaves where Abrams gives elliptical
 /// to oval ones.
-pub const GENERATOR_REVISION: u32 = 206;
+///
+/// 207: a Scotch broom flowers from short shoots in the axils all along
+/// its twigs (`short_shoots`), as Abrams gives its flowers "solitary or 2
+/// or 3 together in the axils of the leaves", where only a few spur tips
+/// flowered; and a rubber rabbitbrush's heads are drawn from its flora's
+/// five yellow disc florets (`disc_florets`, `disc_colour`), in place of a
+/// hand-set cluster of twelve. The open plant-identification judge names
+/// both better.
+pub const GENERATOR_REVISION: u32 = 207;
