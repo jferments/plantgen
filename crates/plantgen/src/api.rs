@@ -58,8 +58,8 @@ pub use crate::export::{
 pub use crate::fill::{
     CLIMBER_SPACING_M, CanopyCell, Community, Cover, CoverKind, CrackPlant, FieldTile, Fill,
     FillSettings, INSTANCE_BYTES, INSTANCE_SCHEMA, Instance, Layer, Member, PROTOTYPES_FILE,
-    Prototype, PrototypeFiles, PrototypeKey, RoofSoil, Roofs, STAND_AGES, STAND_CELL_M,
-    STAND_SCALE, Site, StandCell, StandMap, TileId, TilePlan, TileStats, WallClip,
+    Prototype, PrototypeFiles, PrototypeKey, PrototypePackage, RoofSoil, Roofs, STAND_AGES,
+    STAND_CELL_M, STAND_SCALE, Site, StandCell, StandMap, TileId, TilePlan, TileStats, WallClip,
     moisture_from_wetness,
 };
 pub use crate::package::Measurements;
