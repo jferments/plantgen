@@ -1630,4 +1630,10 @@ pub mod venation;
 /// edge of those laid before, whichever is lower. Of 498 card tiers of
 /// 248 species, none grew and together they hold 14% fewer texels; most
 /// low tiers went from 512 by 550 to 620 texels to 512 by 512.
-pub const GENERATOR_REVISION: u32 = 202;
+///
+/// 203: two herbs drawn as their floras state them: a common mullein in
+/// flower stands 1-2 m (Gleason and Cronquist), Jepson's 30 cm kept as
+/// the rare low, where one plant in three was drawn under 1 m; and a
+/// vanilla leaf's stalk bears one leaf of three leaflets, not three such
+/// leaves, its leaflets Flora of North America's 4-11 by 4-8 cm.
+pub const GENERATOR_REVISION: u32 = 203;

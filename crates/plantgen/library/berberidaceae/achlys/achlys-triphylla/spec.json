@@ -20,9 +20,9 @@
       "stem_radius": 0.0015,
       "wiggle": 1.5,
       "nodes": 1,
-      "leaves_per_node": 3,
+      "leaves_per_node": 1,
       "bare": 0.8,
-      "leaf_length": 0.15,
+      "leaf_length": 0.14,
       "leaf_peak": 0.5,
       "leaf_top": 1,
       "leaf_base": 1,
@@ -99,8 +99,8 @@
     "leaf_habit": "deciduous",
     "rosette": "basal",
     "perennation": "rhizome",
-    "leaf_length_m": {"min": 0.1, "max": 0.25},
-    "leaf_width_m": {"min": 0.15, "max": 0.35},
+    "leaf_length_m": {"min": 0.04, "max": 0.11},
+    "leaf_width_m": {"min": 0.04, "max": 0.08},
     "inflorescence_length_m": {"min": 0.025, "max": 0.05},
     "flowering_months": [4, 5, 6, 7],
     "fruit_size_m": {"min": 0.003, "max": 0.004},
@@ -122,7 +122,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a carpet-forming herb: each stalk holds a flat leaf of three broad, fan-shaped leaflets, with a slender spike of tiny white flowers above. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a carpet-forming herb: each stalk holds a flat leaf of three broad, fan-shaped leaflets, with a slender spike of tiny white flowers above. Not fitted to measurements. Each stalk bears one leaf of three leaflets (Abrams 1944 p. 219: the single leaf; FNA: leaflets 3), so one leaf at the node, not three trifoliate leaves; the leaf from the node 0.14 m, FNA's petiole to 3 cm and central leaflet to 11 cm (2026-11-05)."
     },
     "allometry": {
       "evidence": "Authored",
@@ -204,8 +204,8 @@
     "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2617402), as no source read gives it."},
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2617402), as no source read gives it."},
     "traits.perennation": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2617402), as no source read gives it."},
-    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2617402), as no source read gives it."},
-    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2617402), as no source read gives it."},
+    "traits.leaf_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Achlys triphylla (read on SEINet, 2026-11-05): central leaflet blade 4-11 cm long; the length of a palmate leaf's blade is its leaflets'. Replaces a model estimate of 10-25 cm."},
+    "traits.leaf_width_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Achlys triphylla (read on SEINet, 2026-11-05): central leaflet blade 4-8 cm wide. Replaces a model estimate of 15-35 cm, which was the whole leaf's spread."},
     "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2617402), as no source read gives it."},
     "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2617402), as no source read gives it."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2617402), as no source read gives it."},
