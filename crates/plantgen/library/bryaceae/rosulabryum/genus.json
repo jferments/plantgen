@@ -1,0 +1,128 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Rosulabryum",
+  "traits": {
+    "colony_form": "turf",
+    "height_typical_m": {
+      "min": 0.005,
+      "max": 0.015,
+      "typical": 0.008
+    },
+    "leaf_length_m": {
+      "min": 0.0005,
+      "max": 0.0025,
+      "typical": 0.002
+    },
+    "leaf_width_m": 0.0008,
+    "hair_point_length_m": 0.0002,
+    "leaf_colour": [
+      96,
+      101,
+      34
+    ],
+    "leaf_dry_posture": "twisted",
+    "seta_length_m": {
+      "min": 0.01,
+      "max": 0.03,
+      "typical": 0.02
+    },
+    "seta_colour": [
+      128,
+      62,
+      36
+    ],
+    "capsule_length_m": {
+      "min": 0.003,
+      "max": 0.005
+    },
+    "capsule_colour": [
+      104,
+      52,
+      36
+    ],
+    "capsule_posture": "inclined",
+    "capsule_share": 0.02,
+    "substrates": [
+      "soil",
+      "wood",
+      "bark",
+      "built"
+    ],
+    "substrate_reaction": "acid",
+    "light": [
+      "shade",
+      "part"
+    ],
+    "moisture": [
+      "wet",
+      "mesic"
+    ],
+    "desiccation_tolerance": "intermediate",
+    "colony_spread_m_per_year": 0.003,
+    "capsule_shape": "cylindric",
+    "operculum_form": "conic"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Rosulabryum (Spence; efloras, read 2026-11-05): plants in open to dense low turfs, green to red-green; stems 0.3-6 cm, usually rosulate; leaves contorted to spirally twisted around the stem when dry; costa usually excurrent in an awn; dioicous mostly; seta straight; capsule nutant to inclined, 2-6 mm. Typical values are R. capillare (Bryum capillare; same volume): small, bright green; stems 0.5-1.5 cm; leaves spirally twisted around the stem dry, obovate, 0.5-2.5 mm, costa long-excurrent, awn sometimes hyaline; capsule inclined, red-brown, cylindric, 3-5 mm; moist shaded soil, soil banks, rotting wood. Bryophytes at Oregon State, rooftop study (nine Willamette Valley roofs; read 2026-11-05 as summarised in a search, the site itself blocked here): Dicranoweisia cirrata very abundant (45% occurrence), Bryum capillare abundant (33%), Racomitrium canescens var. ericoides abundant but infrequent (11%), able to form large mats; Dicranoweisia and Bryum capillare the only two species found on cedar shakes; most roofs had fewer than four species."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Obovate leaves about two fifths as wide as long."
+    },
+    "traits.hair_point_length_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "FNA: costa long-excurrent, the awn only sometimes hyaline; the colourless part drawn short, so the turf reads bright green, not silvery."
+    },
+    "traits.seta_length_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "FNA gives no seta length for R. capillare; 1-3 cm as in Bryum (seta 1-2 cm in B. argenteum). Check against a measured flora."
+    },
+    "traits.capsule_share": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Dioicous but often fruiting; estimate."
+    },
+    "traits.substrates": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "FNA's soil and rotting wood, roofs and cedar shakes from OSU's survey, bark as in European floras (general bryological knowledge)."
+    },
+    "traits.light": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "FNA's moist shaded soil: shade to part shade."
+    },
+    "traits.substrate_reaction": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "FNA's rotting wood and OSU's cedar shakes; FNA names no calcareous habitat for R. capillare."
+    },
+    "traits.colony_spread_m_per_year": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "As Bryum; to check against Glime, Bryophyte Ecology."
+    },
+    "traits.capsule_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Rosulabryum capillare: capsule cylindric to elongate-pyriform. (efloras, read 2026-11-05)"
+    },
+    "traits.operculum_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Rosulabryum: operculum short-conic to umbonate. (efloras, read 2026-11-05)"
+    },
+    "traits.leaf_colour": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Hue measured: imagekit run moss-colour-2026-11-05 on batch moss-pnw-2026-11-05 (iNaturalist research-grade photos from Washington, about 20 a taxon, script moss_colour.py): the median linear r/g and b/g of the moss pixels (R. capillare r/g 0.90, b/g 0.12, masked median only). Photos are exposed brighter than moss is, so only the hue is taken from them; the brightness is a green reflectance of 0.13, a lit leaf's, just above the 0.05-0.11 moss canopies reflect in the visible (Lovelock and Robinson 2002, Plant Cell Environ. 25: 1239, Antarctic Grimmia; moss biocrust albedo about 0.11 against 0.20 for bare soil, Sci. Total Environ. 2020), the canopy's own shade darkening the shell further."
+    }
+  }
+}
