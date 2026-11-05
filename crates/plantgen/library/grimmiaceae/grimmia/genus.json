@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Grimmia",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.005,
+      "max": 0.04,
+      "typical": 0.012
+    },
+    "leaf_length_m": {
+      "min": 0.001,
+      "max": 0.0017,
+      "typical": 0.0013
+    },
+    "leaf_width_m": {
+      "min": 0.0003,
+      "max": 0.0006,
+      "typical": 0.00045
+    },
+    "hair_point_length_m": {
+      "min": 0,
+      "max": 0.0015,
+      "typical": 0.0006
+    },
+    "leaf_colour": [
+      86,
+      104,
+      60
+    ],
+    "leaf_dry_posture": "flexuose",
+    "seta_length_m": {
+      "min": 0.003,
+      "max": 0.004
+    },
+    "seta_form": "arcuate",
+    "capsule_length_m": 0.0012,
+    "capsule_colour": [
+      120,
+      92,
+      52
+    ],
+    "capsule_share": 0.08,
+    "substrates": [
+      "rock",
+      "built",
+      "bark"
+    ],
+    "substrate_reaction": "any",
+    "colony_spread_m_per_year": 0.0015
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-27",
+      "note": "FNA vol. 27, Grimmia (Hastings and Greven; efloras, read 2026-11-05): plants 5-40(-70) mm, in dense cushions to loose mats, olivaceous to dark black-green; muticous to long-awned, awns rarely longer than the blade; seta straight or arcuate; capsule erect. The typical values are the commonest Grimmia of walls and roofs, G. pulvinata (same volume): hemispherical hoary grey-green cushions, stems 1-3 cm, leaves 1-1.7 x 0.3-0.6 mm, flexuose when dry and erect when moist, abruptly narrowed to a short to long awn; seta arcuate 3-4 mm; capsule usually present, exserted, ellipsoid, brownish; on acid to basic rock, old mortar and tree trunks. Wikipedia, Grimmia pulvinata (read 2026-11-05): cushions 1-2 cm tall."
+    },
+    "traits.capsule_length_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "FNA gives no capsule length for G. pulvinata; about its leaf's length, as drawn in floras' plates of the species. Check against a measured flora."
+    },
+    "traits.capsule_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-27",
+      "note": "FNA vol. 27, Grimmia pulvinata (read 2026-11-05): capsule brownish when empty and dry."
+    },
+    "traits.capsule_share": {
+      "evidence": "SourceInferred",
+      "source": "fna-27",
+      "note": "FNA vol. 27, Grimmia pulvinata (read 2026-11-05): capsules usually present, its cushions easily known by their abundant capsules; autoicous. The share is of shoots, not of cushions: a cushion of some hundreds of shoots bears tens of capsules. Our reading of 'usually present' and 'abundant'."
+    },
+    "traits.hair_point_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-27",
+      "note": "FNA vol. 27, Grimmia pulvinata (read 2026-11-05): short to long awn. Wikipedia and the UBC bryophyte pages (as summarised in a search, read 2026-11-05): the hair-point a third to a half of the leaf, at times as long as it. Typical about half the leaf."
+    },
+    "traits.leaf_colour": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Olive grey-green, as FNA's 'olivaceous' and 'grayish green' (Grimmiaceae, G. pulvinata); the grey of the cushion comes from the hyaline awns, drawn separately."
+    },
+    "traits.colony_spread_m_per_year": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Estimate: a G. pulvinata cushion reaches 2 to 4 cm across over one to two decades on a wall top. To check against Glime, Bryophyte Ecology, vol. 1, chapter 5 (growth)."
+    }
+  }
+}
