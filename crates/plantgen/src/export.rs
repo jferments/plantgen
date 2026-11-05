@@ -821,6 +821,38 @@ pub fn grow_seed_ages(
     grow_chosen(inputs, listed.unwrap_or(variants.len()), &chosen, ages)
 }
 
+/// [`grow_seed_ages`] for a plant come up beneath a closed canopy
+/// `canopy_m` tall, as a stand's ingrowth does
+/// ([`PlantSpec::neighbourhood_beneath`](crate::spec::PlantSpec::neighbourhood_beneath)):
+/// its `seed` grown in its like's stand under the canopy's shade, never
+/// one of the variants its package keeps.
+///
+/// # Errors
+///
+/// As [`grow_seed_ages`], and when `canopy_m` is not above 0.
+pub fn grow_beneath(
+    inputs: &Inputs,
+    canopy_m: f64,
+    seed: u64,
+    ages: &[f64],
+) -> Result<Vec<Plant>, PackageError> {
+    let spec = &inputs.spec;
+    if !(canopy_m.is_finite() && canopy_m > 0.0) {
+        return Err(format_error(format!(
+            "{}: a canopy must be above 0 m high, found {canopy_m}",
+            spec.id
+        )));
+    }
+    let chosen = crate::spec::Variant {
+        environment: Environment::Suppressed,
+        seed,
+        neighbourhood: spec.neighbourhood_beneath(canopy_m),
+        class: None,
+        substrate: None,
+    };
+    grow_chosen(inputs, spec.variant_list().len(), &chosen, ages)
+}
+
 /// How high the wall a climber's fill prototype climbs stands, metres
 /// ([`grow_on_wall`]): two storeys. A fill draws it clipped to the height
 /// of the wall or fence it stands at.

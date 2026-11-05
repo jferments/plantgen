@@ -275,9 +275,28 @@
 # 4.2 m at 60 years with limbs from 2 m. Open- and stand-grown trees grow
 # as tall as before, with leaf area within 3%.
 #
+# Revision 17 (shaded foliage costs less): a needle grown in shade carries
+# less mass per area than one grown in the sun, and a sapling shaded all
+# over pays for its foliage with less light. King (1997, Tree Physiology
+# 17:251-258) gives an understorey Pacific silver fir's needle mass per
+# area as 130 + 185 times the share of the sky's diffuse light at its
+# apex, g/m², and the growth that just keeps its foliage as that mass
+# over the foliage's share of the growth and its needles' life (the
+# saplings' compensation rate). So the light under which an apex starves,
+# and limb_light's and limb_tip's, is now shade_cost + (1 - shade_cost)
+# top times what it was, shade_cost = 130 / 315: unchanged on a plant
+# whose top is in the full sky, 0.59 times it at a top of 0.3. Needle
+# life is left alone: King's understorey silver firs kept theirs 8.8
+# years, as the genus's 8 to 10 (Ishii et al. 2009, Tree Physiology
+# 29:989-998: in Wind River's understorey, silver fir about twice
+# hemlock's, as Abies' 9 against hemlock's 5).
+# A hemlock grown beneath a 60 m canopy holds 63 m² of foliage at 120
+# years where it held 46, and 60 at 240 where it held 39; open- and
+# stand-grown trees' leaf area moves by under 2%.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem pinidae 16;
+lsystem pinidae 17;
 
 # Height of the leader over time: a Chapman-Richards curve,
 # height = height_max * (1 - exp(-height_rate * age))^height_shape.
@@ -324,6 +343,7 @@ param apex_whorl = 0;          # side shoots a branch apex spreads round itself 
 param min_shoot = 0.005;       # an apex dies once its shoot would be shorter (revision 11; 0.025 before)
 param shade_death = 0.1;       # light, as a share of the plant's best-lit module's (top), below which an apex starves
 param shade_floor = 0.25 * shade_death;  # light below which an apex starves however shaded its whole plant
+param shade_cost = 130 / 315;  # on a plant shaded all over (top 0), the share of the light its foliage needs on an open-grown one: shade needles are cheaper, so the light under which a shoot starves and a limb is shed is shade_cost + (1 - shade_cost) top times shade_death's and shade_floor's (revision 17; King 1997, Pacific silver fir)
 param shade_years = 3;         # years in a row an apex survives starving
 param bud_area = 0.01;         # leaf area a living tip shades with while the leader rises fastest, m² (revision 14)
 param bud_keep = 1;            # the least share of bud_area a tip keeps as the leader's yearly rise falls below its fastest (revision 14); 1: bud_area always
@@ -436,18 +456,18 @@ interpret N -> &(0.5 * nod * max(0, 1 - age / nod_years));
 # drooping branch reaches the ground. Its shoot shortens with the wood
 # between it and the stem (revision 5).
 rule C(o, v, s, w, a, n) : sd < ground_gap + 0.05 -> ;
-rule C(o, v, s, w, a, n) : light < max(shade_floor, shade_death * top) && s + 1 >= shade_years -> ;
+rule C(o, v, s, w, a, n) : light < max(shade_floor, shade_death * top) * (shade_cost + (1 - shade_cost) * min(1, top)) && s + 1 >= shade_years -> ;
 rule C(o, v, s, w, a, n) : o > 1 && side_years > 0 && age >= side_years -> ;
 rule C(o, v, s, w, a, n) : o > side_order && twig_years > 0 && age >= twig_years -> ;
 rule C(o, v, s, w, a, n) : v * pow(side_growth, o - 1) * (apical > 0 ? max((floor_reach > 0 ? max(floor_keep, 1 - w / (floor_reach * height)) : 1) * (o > 1 ? max(branch_floor, side_floor) : branch_floor) * (floor_ramp > 0 ? min(1, (height - py) / (floor_ramp * height)) : 1), apical * (apical_light > 0 ? min(1, light / (apical_light * max(0.01, top) * pow(min(1, shade_death / 0.1), 6))) : 1) * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth) / (1 + pow(w / branch_reach, 2))
                      * (0.3 + 0.7 * light) < min_shoot -> ;
 rule C(o, v, s, w, a, n) : seg_min > 0 && height - py > (top_ramp * max(0.05, (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape)) / dt)) && a + v * pow(side_growth, o - 1) * (apical > 0 ? max((floor_reach > 0 ? max(floor_keep, 1 - w / (floor_reach * height)) : 1) * (o > 1 ? max(branch_floor, side_floor) : branch_floor) * (floor_ramp > 0 ? min(1, (height - py) / (floor_ramp * height)) : 1), apical * (apical_light > 0 ? min(1, light / (apical_light * max(0.01, top) * pow(min(1, shade_death / 0.1), 6))) : 1) * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth) / (1 + pow(w / branch_reach, 2)) * (top_ramp > 0 ? min(1, max(0.1, (height - py) / (top_ramp * max(0.05, (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape)) / dt)))) : 1) * (0.3 + 0.7 * light) < seg_min ->
-    C(o, v, light < max(shade_floor, shade_death * top) ? s + 1 : 0, w + v * pow(side_growth, o - 1) * (apical > 0 ? max((floor_reach > 0 ? max(floor_keep, 1 - w / (floor_reach * height)) : 1) * (o > 1 ? max(branch_floor, side_floor) : branch_floor) * (floor_ramp > 0 ? min(1, (height - py) / (floor_ramp * height)) : 1), apical * (apical_light > 0 ? min(1, light / (apical_light * max(0.01, top) * pow(min(1, shade_death / 0.1), 6))) : 1) * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth) / (1 + pow(w / branch_reach, 2)) * (top_ramp > 0 ? min(1, max(0.1, (height - py) / (top_ramp * max(0.05, (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape)) / dt)))) : 1) * (0.3 + 0.7 * light), a + v * pow(side_growth, o - 1) * (apical > 0 ? max((floor_reach > 0 ? max(floor_keep, 1 - w / (floor_reach * height)) : 1) * (o > 1 ? max(branch_floor, side_floor) : branch_floor) * (floor_ramp > 0 ? min(1, (height - py) / (floor_ramp * height)) : 1), apical * (apical_light > 0 ? min(1, light / (apical_light * max(0.01, top) * pow(min(1, shade_death / 0.1), 6))) : 1) * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth) / (1 + pow(w / branch_reach, 2)) * (top_ramp > 0 ? min(1, max(0.1, (height - py) / (top_ramp * max(0.05, (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape)) / dt)))) : 1) * (0.3 + 0.7 * light), n + 1);
+    C(o, v, light < max(shade_floor, shade_death * top) * (shade_cost + (1 - shade_cost) * min(1, top)) ? s + 1 : 0, w + v * pow(side_growth, o - 1) * (apical > 0 ? max((floor_reach > 0 ? max(floor_keep, 1 - w / (floor_reach * height)) : 1) * (o > 1 ? max(branch_floor, side_floor) : branch_floor) * (floor_ramp > 0 ? min(1, (height - py) / (floor_ramp * height)) : 1), apical * (apical_light > 0 ? min(1, light / (apical_light * max(0.01, top) * pow(min(1, shade_death / 0.1), 6))) : 1) * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth) / (1 + pow(w / branch_reach, 2)) * (top_ramp > 0 ? min(1, max(0.1, (height - py) / (top_ramp * max(0.05, (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape)) / dt)))) : 1) * (0.3 + 0.7 * light), a + v * pow(side_growth, o - 1) * (apical > 0 ? max((floor_reach > 0 ? max(floor_keep, 1 - w / (floor_reach * height)) : 1) * (o > 1 ? max(branch_floor, side_floor) : branch_floor) * (floor_ramp > 0 ? min(1, (height - py) / (floor_ramp * height)) : 1), apical * (apical_light > 0 ? min(1, light / (apical_light * max(0.01, top) * pow(min(1, shade_death / 0.1), 6))) : 1) * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth) / (1 + pow(w / branch_reach, 2)) * (top_ramp > 0 ? min(1, max(0.1, (height - py) / (top_ramp * max(0.05, (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape)) / dt)))) : 1) * (0.3 + 0.7 * light), n + 1);
 rule C(o, v, s, w, a, n) -> G(o, a + v * pow(side_growth, o - 1) * (apical > 0 ? max((floor_reach > 0 ? max(floor_keep, 1 - w / (floor_reach * height)) : 1) * (o > 1 ? max(branch_floor, side_floor) : branch_floor) * (floor_ramp > 0 ? min(1, (height - py) / (floor_ramp * height)) : 1), apical * (apical_light > 0 ? min(1, light / (apical_light * max(0.01, top) * pow(min(1, shade_death / 0.1), 6))) : 1) * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth) / (1 + pow(w / branch_reach, 2)) * (top_ramp > 0 ? min(1, max(0.1, (height - py) / (top_ramp * max(0.05, (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape)) / dt)))) : 1) * (0.3 + 0.7 * light),
                         needle_years * 2 / (1 + needle_low) * (1 + (needle_low - 1) * max(0, 1 - py / max(height, 0.1))),
                         w - a, n + 1)
                       Z(light)
-                      C(o, v, light < max(shade_floor, shade_death * top) ? s + 1 : 0, w + v * pow(side_growth, o - 1) * (apical > 0 ? max((floor_reach > 0 ? max(floor_keep, 1 - w / (floor_reach * height)) : 1) * (o > 1 ? max(branch_floor, side_floor) : branch_floor) * (floor_ramp > 0 ? min(1, (height - py) / (floor_ramp * height)) : 1), apical * (apical_light > 0 ? min(1, light / (apical_light * max(0.01, top) * pow(min(1, shade_death / 0.1), 6))) : 1) * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth) / (1 + pow(w / branch_reach, 2)) * (top_ramp > 0 ? min(1, max(0.1, (height - py) / (top_ramp * max(0.05, (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape)) / dt)))) : 1) * (0.3 + 0.7 * light), 0, 0);
+                      C(o, v, light < max(shade_floor, shade_death * top) * (shade_cost + (1 - shade_cost) * min(1, top)) ? s + 1 : 0, w + v * pow(side_growth, o - 1) * (apical > 0 ? max((floor_reach > 0 ? max(floor_keep, 1 - w / (floor_reach * height)) : 1) * (o > 1 ? max(branch_floor, side_floor) : branch_floor) * (floor_ramp > 0 ? min(1, (height - py) / (floor_ramp * height)) : 1), apical * (apical_light > 0 ? min(1, light / (apical_light * max(0.01, top) * pow(min(1, shade_death / 0.1), 6))) : 1) * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth) / (1 + pow(w / branch_reach, 2)) * (top_ramp > 0 ? min(1, max(0.1, (height - py) / (top_ramp * max(0.05, (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape)) / dt)))) : 1) * (0.3 + 0.7 * light), 0, 0);
 
 # One year's leader shoot: its foliage, with the interwhorl branches halfway.
 # A nodding leader (revision 12) carries its foliage in two sprays, one at
@@ -584,5 +604,5 @@ decompose B(n) -> ;
 # scales with shade_death, so a shade-tolerant
 # crown keeps its dim limbs longer. This rule goes last so the draws above
 # keep their sites.
-rule S : limb_light > 0 && age > limb_age && qsum < limb_light * max(shade_floor, shade_death * top) / 0.1 * nseg -> K;
-rule S : limb_tip > 0 && age > limb_age && qsum < limb_tip * max(shade_floor, shade_death * top) * ntip -> K;
+rule S : limb_light > 0 && age > limb_age && qsum < limb_light * max(shade_floor, shade_death * top) * (shade_cost + (1 - shade_cost) * min(1, top)) / 0.1 * nseg -> K;
+rule S : limb_tip > 0 && age > limb_age && qsum < limb_tip * max(shade_floor, shade_death * top) * (shade_cost + (1 - shade_cost) * min(1, top)) * ntip -> K;
