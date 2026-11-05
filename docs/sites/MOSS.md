@@ -86,8 +86,9 @@ shoots' older lower parts:
 - Cushions and turfs: crowded upright shoots, a stem every two thirds
   of a leaf length or so, their tips standing clear of the shell; leaves
   in a spiral at the golden angle, standing out more when wet, folded,
-  twisted or crisped when dry as the genus's `leaf_dry_posture` says,
-  with their awns; the older leaves down the shoot in the genus's
+  twisted or crisped when dry as the genus's `leaf_dry_posture` says
+  (a crisped blade is drawn in pieces that curl in toward the stem and
+  twist, so it coils dry and straightens moist), with their awns; the older leaves down the shoot in the genus's
   `older_leaf_colour` (Tortula brown below, Ceratodon tinged red).
 - Mats (pleurocarps): creeping, pinnately branched shoots crossing the
   whole mat and wandering so that they interweave; where the genus's
@@ -231,7 +232,9 @@ finding a colony of that genus.
 
 ## Still open
 
-- *Dicranoweisia*'s dry crisping barely shows at the size of a cushion.
+- Dry *Ceratodon* turf opens gaps between its coiled shoots; FNA calls
+  its leaves only "somewhat crisped", so it may want a weaker coil than
+  *Dicranoweisia*'s, which needs a trait for how strongly a leaf crisps.
 - Roof cushions mostly stay separate where the rooftop study found dense
   mats; its mats were on tree-shaded roofs, and the test roof has none.
 - Growth rates, spread distances, spore output by fruiting and

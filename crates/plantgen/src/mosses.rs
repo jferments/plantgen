@@ -1992,6 +1992,19 @@ impl Drawer<'_> {
         let dark = scaled(green, 0.55);
         let tip_colour = blend(green, HYALINE, kind.hyaline_share * 1.6);
         let mid_colour = blend(green, HYALINE, (kind.hyaline_share - 0.4).max(0.0) * 1.5);
+        if matches!(kind.dry_posture, DryPosture::Crisped) {
+            self.crisped_blade(
+                base,
+                dir,
+                across,
+                length,
+                width,
+                dry,
+                [dark, mid_colour, tip_colour],
+                seed,
+            );
+            return;
+        }
         let left = mid + flat * (width * 0.5);
         let right = mid - flat * (width * 0.5);
         let centre = mid + keel;
@@ -2020,6 +2033,74 @@ impl Drawer<'_> {
                 [HYALINE, HYALINE, HYALINE],
                 true,
             );
+        }
+    }
+
+    /// A crisped leaf's blade (trait `leaf_dry_posture: crisped`): dry, its
+    /// outer part curls in toward the stem a little more at every piece
+    /// and twists its own way, so the leaf coils (FNA vol. 27,
+    /// Dicranoweisia cirrata: leaves crisped and incurved when dry;
+    /// Ceratodon purpureus: contorted or somewhat crisped when dry);
+    /// moist, it straightens and spreads. Lanceolate: widest about a third
+    /// of the way up, tapering to the apex.
+    #[allow(clippy::too_many_arguments)]
+    fn crisped_blade(
+        &mut self,
+        base: Vec3,
+        dir: Vec3,
+        across: Vec3,
+        length: f64,
+        width: f64,
+        dry: f64,
+        [dark, mid_colour, tip_colour]: [[f32; 3]; 3],
+        seed: u64,
+    ) {
+        const PIECES: u32 = 5;
+        // Negative turns the blade toward the stem (incurved).
+        let curl = 0.12 * (1.0 - dry) - dry * (1.8 + 1.4 * unit(mix(seed, 7)));
+        let spin = dry * (unit(mix(seed, 3)) - 0.5) * 3.2;
+        let lower = 0.3;
+        let half_width = |s: f64| {
+            if s < lower {
+                width * 0.5 * (0.65 + 0.35 * s / lower)
+            } else {
+                width * 0.5 * ((1.0 - s) / (1.0 - lower)).powf(0.8)
+            }
+        };
+        let colour = |s: f64| {
+            if s < lower {
+                blend(dark, mid_colour, s / lower)
+            } else {
+                blend(mid_colour, tip_colour, (s - lower) / (1.0 - lower))
+            }
+        };
+        // The midrib: straight to a third of the way up, then the pieces.
+        let mut rib: Vec<(Vec3, Vec3, f64)> = vec![(base, across, 0.0)];
+        let mut at = base + dir * (length * lower);
+        rib.push((at, across, lower));
+        let mut heading = dir;
+        for piece in 1..=PIECES {
+            let f = f64::from(piece) / f64::from(PIECES);
+            let turn_axis = across.rotate_about(dir, spin * f);
+            heading = heading
+                .rotate_about(turn_axis, curl / f64::from(PIECES))
+                .normalize_or(heading);
+            at += heading * (length * (1.0 - lower) / f64::from(PIECES));
+            let s = lower + (1.0 - lower) * f;
+            let flat = turn_axis.rotate_about(heading, spin * f * 0.5);
+            rib.push((at, flat, s));
+        }
+        for pair in rib.windows(2) {
+            let (a, fa, sa) = pair[0];
+            let (b, fb, sb) = pair[1];
+            let (wa, wb) = (half_width(sa), half_width(sb));
+            let (ca, cb) = (colour(sa), colour(sb));
+            let (a_left, a_right) = (a + fa * wa, a - fa * wa);
+            let (b_left, b_right) = (b + fb * wb, b - fb * wb);
+            self.tri([a_left, b_left, a_right], [ca, cb, ca], true);
+            if wb > 1.0e-9 {
+                self.tri([a_right, b_left, b_right], [ca, cb, cb], true);
+            }
         }
     }
 
