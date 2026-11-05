@@ -151,5 +151,15 @@
    "seed": 1,
    "years": 12
   }
+ ],
+ "mosses": [
+  "Dicranoweisia",
+  "Rosulabryum",
+  "Niphotrichum",
+  "Homalothecium",
+  "Ceratodon",
+  "Bryum",
+  "Tortula",
+  "Grimmia"
  ]
 }

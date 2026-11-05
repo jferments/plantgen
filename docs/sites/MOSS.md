@@ -206,8 +206,9 @@ instances. A fill tile over a site field grows its own:
 tile whose south-west corner `Site::from_field` was given, at every
 height, and `grow` on the same mesh the field was measured from gives the
 tile's cover, which a host keeps beside the tile's instances, draws, or
-reads to tint its own textures. `plantc fill --field SITE.json --moss
-YEARS` does this, writes the cover to `DIR/tiles/X_Y.moss.json` and, with
+reads to tint its own textures (`MossCover::tint`, above). `plantc fill
+--field SITE.json --moss YEARS` does this with the genera the site's
+`mosses` list names (all the library's without one), writes the cover to `DIR/tiles/X_Y.moss.json` and, with
 `--render`, draws it: shoots within a twentieth of the view's span of its
 focus, shells out to the span, patches beyond (`--wet` sets
 `DrawOptions::hydration`). On the test block (DEVELOPERS.md) thirty years

@@ -549,8 +549,9 @@ Usage:
       on shallow soil, herbs on roofs that hold soil, climbers at the feet
       of walls and fences. --cracks YEARS adds what comes up in its
       pavements in those years among the fill's species of the pavement
-      pool. --moss YEARS grows the library's mosses over the tile for
-      those years (docs/sites/MOSS.md) and writes DIR/tiles/X_Y.moss.json.
+      pool. --moss YEARS grows mosses over the tile for those years
+      (the genera the mosses list of the site names, or the library's;
+      docs/sites/MOSS.md) and writes DIR/tiles/X_Y.moss.json.
       --render draws the filled tile on its mesh, each prototype at
       --level (1 unless given), and its moss, as wet as --wet (0 dry to 1
       just rained on, 0.4 unless given). --glb LEVEL (0 nearest to 3 farthest)
@@ -3236,24 +3237,7 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
             fs::read_to_string(path).map_err(|error| format!("cannot read {path}: {error}"))?;
         MossCover::from_json(&text).map_err(|error| format!("{path}: {error}"))?
     } else {
-        let mut kinds = mosses::kinds(library())?;
-        if kinds.is_empty() {
-            return Err("the library describes no moss genus with a colony_form".into());
-        }
-        // A site may name its region's mosses; spores of the others do
-        // not reach it.
-        if let Some(names) = document.get("mosses").and_then(serde_json::Value::as_array) {
-            let names: Vec<&str> = names.iter().filter_map(serde_json::Value::as_str).collect();
-            if let Some(unknown) = names
-                .iter()
-                .find(|name| !kinds.iter().any(|kind| kind.genus == **name))
-            {
-                return Err(
-                    format!("site names moss genus `{unknown}`, which the library lacks").into(),
-                );
-            }
-            kinds.retain(|kind| names.contains(&kind.genus.as_str()));
-        }
+        let kinds = site_moss_kinds(&document)?;
         let mut settings = MossSettings::default();
         if let Some(years) = options.number::<u32>("years")? {
             settings.years = years;
@@ -6682,6 +6666,8 @@ fn write_fill_packages(
 
 /// A fill's tile over a site document's mesh (`plantc fill --field`).
 struct FieldSite {
+    /// The site document.
+    document: serde_json::Value,
     mesh: plantgen::site::SiteMesh,
     site: api::Site,
     /// The tile's south-west corner, (x, z) in the mesh's frame.
@@ -6787,7 +6773,12 @@ fn field_site(
             started.elapsed().as_secs_f64()
         );
     }
-    Ok(FieldSite { mesh, site, corner })
+    Ok(FieldSite {
+        document,
+        mesh,
+        site,
+        corner,
+    })
 }
 
 /// `plant` (in growth's frame: +Y up, -Z north) placed as `instance` says
@@ -6875,8 +6866,34 @@ fn placed_instance(
     out
 }
 
+/// The moss genera that grow on the site `document`: the library's, or
+/// only those its `mosses` list names (its region's mosses; spores of the
+/// others do not reach it).
+fn site_moss_kinds(
+    document: &serde_json::Value,
+) -> Result<Vec<plantgen::mosses::MossKind>, Failure> {
+    let mut kinds = plantgen::mosses::kinds(library())?;
+    if kinds.is_empty() {
+        return Err("the library describes no moss genus with a colony_form".into());
+    }
+    if let Some(names) = document.get("mosses").and_then(serde_json::Value::as_array) {
+        let names: Vec<&str> = names.iter().filter_map(serde_json::Value::as_str).collect();
+        if let Some(unknown) = names
+            .iter()
+            .find(|name| !kinds.iter().any(|kind| kind.genus == **name))
+        {
+            return Err(
+                format!("site names moss genus `{unknown}`, which the library lacks").into(),
+            );
+        }
+        kinds.retain(|kind| names.contains(&kind.genus.as_str()));
+    }
+    Ok(kinds)
+}
+
 /// The mosses `years` grow over the tile of `field` (`plantc fill
-/// --moss YEARS`): every genus of the library, from `seed`.
+/// --moss YEARS`): the genera its site names, or every genus of the
+/// library, from `seed`.
 fn tile_moss(
     field: &FieldSite,
     tile_m: f64,
@@ -6885,10 +6902,7 @@ fn tile_moss(
 ) -> Result<plantgen::mosses::MossCover, Failure> {
     use plantgen::mosses::{self, MossSettings};
     let started = Instant::now();
-    let kinds = mosses::kinds(library())?;
-    if kinds.is_empty() {
-        return Err("the library describes no moss genus with a colony_form".into());
-    }
+    let kinds = site_moss_kinds(&field.document)?;
     let settings = MossSettings::over_tile(field.corner, tile_m, years, seed);
     let cover = mosses::grow(&field.mesh, &kinds, &settings);
     out!(

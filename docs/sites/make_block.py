@@ -6,7 +6,7 @@ the site field (`plantc field`, plantgen::site_field) and stands on it.
 North of a cracked two-lane street, a strip of woodland on uneven ground
 that falls away northward, with boulders and a fallen log. South of it, a
 cracked sidewalk behind a curb, a picket fence, two utility poles with
-their wires, an old house with a mossy south roof (soil gathered on it),
+their wires, an old house whose roofs gather soil for moss,
 windows and a door kept clear, a hollow where water gathers, and a rocky
 knoll to the south-east with boulders half sunk in it.
 
@@ -324,6 +324,10 @@ def main():
             {"species": "lonicera-ciliosa", "at": [-15.0, 5.85], "seed": 1, "years": 6},
             {"species": "alnus-rubra", "at": [-4.0, -9.0], "seed": 1, "years": 12},
         ],
+        # The block is in the Pacific Northwest, so its mosses are that
+        # region's (the same list as moss-shakes.json; see make_moss_wall.py).
+        "mosses": ["Dicranoweisia", "Rosulabryum", "Niphotrichum", "Homalothecium",
+                   "Ceratodon", "Bryum", "Tortula", "Grimmia"],
     }
     (HERE / "block.json").write_text(json.dumps(site, indent=1) + "\n")
     print(f"wrote block.obj ({len(mesh.v)} corners), {len(tiles)} crack tiles, block.json")
