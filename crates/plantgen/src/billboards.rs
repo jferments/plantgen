@@ -346,10 +346,14 @@ impl CardPlant {
         if total > 0.0 { weighted / total } else { 0.0 }
     }
 
-    /// The pictures packed in rows (tallest first) into one texture as
-    /// wide as a power of two, the least square one that holds them. A
-    /// plant with no pictures (a bare snag, all wood) gets one empty
-    /// texel, since an image cannot be zero high.
+    /// The pictures packed into one texture as wide as a power of two,
+    /// the least square one that holds them. Each width is packed two
+    /// ways, tallest first: in rows ([`shelf_places`]), and each picture
+    /// at the lowest place along the pictures' top edge where it fits
+    /// ([`skyline_places`]), which fills the room left under shorter
+    /// pictures in a row. The fewer texels wins. A plant with no pictures
+    /// (a bare snag, all wood) gets one empty texel, since an image
+    /// cannot be zero high.
     #[must_use]
     pub fn atlas(&self) -> Atlas {
         if self.pictures.is_empty() {
@@ -359,40 +363,127 @@ impl CardPlant {
                 places: Vec::new(),
             };
         }
-        let mut order: Vec<usize> = (0..self.pictures.len()).collect();
-        order
-            .sort_by_key(|&i| std::cmp::Reverse((self.pictures[i].height, self.pictures[i].width)));
-        let widest = self.pictures.iter().map(|p| p.width).max().unwrap_or(1);
-        let mut best = Atlas::default();
-        let mut width = widest.next_power_of_two();
-        loop {
-            let mut places = vec![(0, 0); self.pictures.len()];
-            let (mut x, mut y, mut row) = (0, 0, 0);
-            for &i in &order {
-                let p = &self.pictures[i];
-                if x + p.width > width {
-                    (x, y, row) = (0, y + row, 0);
+        let sizes: Vec<(usize, usize)> =
+            self.pictures.iter().map(|p| (p.width, p.height)).collect();
+        pack(&sizes)
+    }
+}
+
+/// Pictures of `sizes` (width, height), at least one, packed as
+/// [`CardPlant::atlas`] packs them.
+fn pack(sizes: &[(usize, usize)]) -> Atlas {
+    let mut order: Vec<usize> = (0..sizes.len()).collect();
+    order.sort_by_key(|&i| std::cmp::Reverse((sizes[i].1, sizes[i].0)));
+    let widest = sizes.iter().map(|s| s.0).max().unwrap_or(1);
+    let mut best = Atlas::default();
+    let mut width = widest.next_power_of_two();
+    loop {
+        let atlas = [
+            shelf_places(sizes, &order, width),
+            skyline_places(sizes, &order, width),
+        ]
+        .into_iter()
+        .map(|(places, height)| Atlas {
+            width,
+            height,
+            places,
+        })
+        .min_by_key(|a| a.height)
+        .unwrap_or_default();
+        let square = atlas.height <= width;
+        let side = |a: &Atlas| a.width.max(a.height);
+        if best.places.is_empty() || side(&atlas) < side(&best) {
+            best = atlas;
+        }
+        if square {
+            return best;
+        }
+        width *= 2;
+    }
+}
+
+/// `sizes` (width, height) laid in `order` in rows across `width`: each
+/// picture right of the one before, a new row over the row's tallest
+/// when it would spill. The places and the height they reach.
+fn shelf_places(
+    sizes: &[(usize, usize)],
+    order: &[usize],
+    width: usize,
+) -> (Vec<(usize, usize)>, usize) {
+    let mut places = vec![(0, 0); sizes.len()];
+    let (mut x, mut y, mut row) = (0, 0, 0);
+    for &i in order {
+        let (w, h) = sizes[i];
+        if x + w > width {
+            (x, y, row) = (0, y + row, 0);
+        }
+        places[i] = (x, y);
+        x += w;
+        row = row.max(h);
+    }
+    (places, y + row)
+}
+
+/// `sizes` (width, height) laid in `order` across `width`, each at the
+/// lowest place (then the leftmost) along the top edge of those laid
+/// before where its width fits, so a short picture drops into the room
+/// beside or under a taller row. The places and the height they reach.
+fn skyline_places(
+    sizes: &[(usize, usize)],
+    order: &[usize],
+    width: usize,
+) -> (Vec<(usize, usize)>, usize) {
+    // The top edge: runs of (x, width, height) left to right.
+    let mut sky: Vec<(usize, usize, usize)> = vec![(0, width, 0)];
+    let mut places = vec![(0, 0); sizes.len()];
+    let mut top = 0;
+    for &i in order {
+        let (w, h) = sizes[i];
+        let mut best: Option<(usize, usize)> = None;
+        for k in 0..sky.len() {
+            let x = sky[k].0;
+            if x + w > width {
+                break;
+            }
+            let (mut y, mut covered) = (0, 0);
+            for run in &sky[k..] {
+                if covered >= w {
+                    break;
                 }
-                places[i] = (x, y);
-                x += p.width;
-                row = row.max(p.height);
+                y = y.max(run.2);
+                covered += run.1;
             }
-            let height = y + row;
-            let atlas = Atlas {
-                width,
-                height,
-                places,
-            };
-            let side = |a: &Atlas| a.width.max(a.height);
-            if best.places.is_empty() || side(&atlas) < side(&best) {
-                best = atlas;
+            if best.is_none_or(|b| (y, x) < b) {
+                best = Some((y, x));
             }
-            if height <= width {
-                return best;
+        }
+        let (y, x) = best.unwrap_or((top, 0));
+        places[i] = (x, y);
+        top = top.max(y + h);
+        let mut next = Vec::with_capacity(sky.len() + 2);
+        for &(rx, rw, ry) in &sky {
+            if rx + rw <= x || rx >= x + w {
+                next.push((rx, rw, ry));
+                continue;
             }
-            width *= 2;
+            if rx < x {
+                next.push((rx, x - rx, ry));
+            }
+            if rx + rw > x + w {
+                next.push((x + w, rx + rw - x - w, ry));
+            }
+        }
+        next.push((x, w, y + h));
+        next.sort_unstable();
+        sky.clear();
+        for run in next {
+            match sky.last_mut() {
+                Some(last) if last.2 == run.2 && last.0 + last.1 == run.0 => last.1 += run.1,
+                _ => sky.push(run),
+            }
         }
     }
+    (places, top)
 }
 
 /// Something a card is baked from: an organ card or a segment of thin
@@ -2713,39 +2804,59 @@ pub fn build_from(
     // the eye costs no memory. Kept as sharp, a yarrow's, an ivy's and a
     // saguaro's low-card pictures took three to four times the texels.
     let budget = tier.texels(height);
-    let mut tile_density = density;
-    for _ in 0..8 {
-        let total: usize = planes
+    // Every picture the tier will bake at `tile_density` texels a metre,
+    // as many times as it is paid for, and the leaves' own: the budget
+    // pays for their packed atlas, the room packing leaves between them
+    // too.
+    let packed = |tile_density: f64| -> usize {
+        let sizes: Vec<(usize, usize)> = planes
             .iter()
-            .map(|p| {
+            .filter(|p| !p.views) // drawn solid ([`solid_head`]): no texels
+            .flat_map(|p| {
                 let (w, h) = (p.high.0 - p.low.0, p.high.1 - p.low.1);
-                if p.views {
-                    // Drawn solid ([`solid_head`]): no texels.
-                    0
+                let paid = if p.heights.is_some() && !turning {
+                    HEIGHTS.len()
                 } else {
-                    let (tw, th) = tile(w, h, tile_density, tier.most_texels);
-                    let paid = if p.heights.is_some() && !turning {
-                        HEIGHTS.len()
-                    } else {
-                        1
-                    };
-                    tw * th * paid
-                }
+                    1
+                };
+                std::iter::repeat_n(tile(w, h, tile_density, tier.most_texels), paid)
             })
-            .sum::<usize>()
-            + lace_pictures(&lace)
-                .map(|leaf| {
-                    let ((x0, x1), (y0, y1)) = leaf.flat;
-                    let (tw, th) = tile(x1 - x0, y1 - y0, tile_density, tier.most_texels);
-                    tw * th
-                })
-                .sum::<usize>();
+            .chain(lace_pictures(&lace).map(|leaf| {
+                let ((x0, x1), (y0, y1)) = leaf.flat;
+                tile(x1 - x0, y1 - y0, tile_density, tier.most_texels)
+            }))
+            .collect();
+        if sizes.is_empty() {
+            0
+        } else {
+            let atlas = pack(&sizes);
+            atlas.width * atlas.height
+        }
+    };
+    // The densest that fits: shrink until it does, then halve the gap
+    // to the last that did not. Packing in rows makes the atlas's height
+    // jump as pictures drop into a row, so shrinking alone overshoots.
+    let mut tile_density = density;
+    let mut over = None;
+    for _ in 0..12 {
+        let total = packed(tile_density);
         if total <= budget {
             break;
         }
+        over = Some(tile_density);
         #[allow(clippy::cast_precision_loss)]
         let shrink = (budget as f64 / total as f64).sqrt() * 0.98;
         tile_density *= shrink;
+    }
+    if let Some(mut high) = over {
+        for _ in 0..8 {
+            let mid = f64::midpoint(tile_density, high);
+            if packed(mid) <= budget {
+                tile_density = mid;
+            } else {
+                high = mid;
+            }
+        }
     }
     let mut out = CardPlant {
         wood,
@@ -4889,6 +5000,49 @@ pub fn tone(items: &[(&Mesh, Material)], templates: &Templates, size: usize) -> 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn packing_fills_the_room_under_a_shorter_row() {
+        // One tall picture and many short ones: in rows the short ones
+        // start a row over the tall one; along the top edge they stack
+        // beside it.
+        let mut sizes = vec![(64, 128)];
+        sizes.extend(std::iter::repeat_n((64, 32), 4));
+        let atlas = pack(&sizes);
+        assert_eq!((atlas.width, atlas.height), (128, 128));
+        let mut order: Vec<usize> = (0..sizes.len()).collect();
+        order.sort_by_key(|&i| std::cmp::Reverse((sizes[i].1, sizes[i].0)));
+        assert!(shelf_places(&sizes, &order, 128).1 > 128);
+    }
+
+    #[test]
+    fn packed_pictures_never_overlap_or_spill() {
+        // Sizes from a fixed sequence, many shapes.
+        let mut x: u64 = 7;
+        let mut next = |most: u64| {
+            x = x.wrapping_mul(6_364_136_223_846_793_005).wrapping_add(1);
+            usize::try_from((x >> 33) % most + 1).unwrap_or(1)
+        };
+        for _ in 0..20 {
+            let n = next(60);
+            let sizes: Vec<(usize, usize)> = (0..n).map(|_| (next(90), next(90))).collect();
+            let atlas = pack(&sizes);
+            let rects: Vec<_> = sizes
+                .iter()
+                .zip(&atlas.places)
+                .map(|(&(w, h), &(x, y))| (x, y, x + w, y + h))
+                .collect();
+            for (i, a) in rects.iter().enumerate() {
+                assert!(a.2 <= atlas.width && a.3 <= atlas.height, "{a:?} spills");
+                for b in &rects[i + 1..] {
+                    assert!(
+                        a.2 <= b.0 || b.2 <= a.0 || a.3 <= b.1 || b.3 <= a.1,
+                        "{a:?} {b:?}"
+                    );
+                }
+            }
+        }
+    }
 
     #[test]
     fn smallest_axis_finds_a_sheets_normal() {
