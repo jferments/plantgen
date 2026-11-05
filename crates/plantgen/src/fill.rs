@@ -165,6 +165,18 @@ pub const STAND_SCALE: [f64; 2] = [0.7, 1.0];
 /// stand differ even before each is turned and shifted.
 pub const LAYOUTS: u64 = 4;
 
+/// A neighbouring stand whose canopy stands under this share of a cell's
+/// own height opens an edge beside it, as a clearcut or a young stand
+/// does beside an old one. Chen, Franklin and Spies (1992, Ecological
+/// Applications 2: 387-396) measured old-growth Douglas-fir edges beside
+/// clearcuts of 10-15 years; the share is this model's choice.
+pub const EDGE_HEIGHT_SHARE: f64 = 0.5;
+
+/// How far an edge tree's yaw strays either side of square to the
+/// opening, radians: its crown is fullest toward the light, not ruled
+/// along the edge. This model's choice.
+const EDGE_YAW_SPREAD: f64 = 0.35;
+
 /// How a [`Fill`] chooses its prototypes. Start from
 /// [`FillSettings::default`] and set what you choose.
 #[derive(Debug, Clone, PartialEq)]
@@ -187,6 +199,11 @@ pub struct FillSettings {
     /// ground cover its own way: a hectare of herbs is tens of thousands
     /// of instances.
     pub herbs: bool,
+    /// Whether a stand's first row of trees beside open ground grows as
+    /// an edge ([`Environment::Edge`]), its crown free toward the
+    /// opening. Open ground is a bare cell or a stand whose canopy stands
+    /// under half as tall ([`EDGE_HEIGHT_SHARE`]).
+    pub edges: bool,
 }
 
 impl Default for FillSettings {
@@ -197,6 +214,7 @@ impl Default for FillSettings {
             options: Options::default(),
             parts: true,
             herbs: true,
+            edges: true,
         }
     }
 }
@@ -1093,7 +1111,11 @@ pub struct CanopyCell {
     pub height_m: f32,
     /// Share of the cell under crowns, 0 to 1.
     pub cover: f32,
-    /// Linear RGB of the canopy seen from above.
+    /// Linear RGB of the canopy seen from above: its canopy and
+    /// subcanopy trees' foliage in full light (each species'
+    /// `appearance.foliage`), weighed by their crowns' area, so a maple
+    /// stand reads lighter than a fir one from afar; a dark conifer green
+    /// where the cell has no tree crowns, black where it has no stand.
     pub colour: [f32; 3],
 }
 
@@ -1114,6 +1136,10 @@ pub struct TileStats {
     pub canopy_cover: f64,
     /// One-sided leaf area over ground area.
     pub leaf_area_index: f64,
+    /// Trees grown as an edge beside open ground
+    /// ([`FillSettings::edges`]), per hectare.
+    #[serde(default)]
+    pub edge_trees_per_ha: f64,
 }
 
 /// A filled tile: every placed plant, the ground cover and the far
@@ -1237,6 +1263,9 @@ pub struct Fill {
     climbers: Vec<Vec<Climber>>,
     /// Each prototype's index by its key.
     index: HashMap<PrototypeKey, u32>,
+    /// Each prototype's twin grown as a stand edge, for a tree grown in a
+    /// closed stand when the settings draw edges.
+    edge_twins: Vec<Option<u32>>,
     /// Each prototype's size, once measured or written.
     sizes: Arc<Vec<OnceLock<Measurements>>>,
     /// The stand tiles laid out so far.
@@ -1496,6 +1525,10 @@ struct Layout {
     canopy_cover: f64,
     /// Mean height of its canopy layer, metres.
     canopy_height: f64,
+    /// Its tree crowns' colour seen from above, linear RGB: each canopy
+    /// and subcanopy tree's species' foliage in full light, weighed by
+    /// its crown's area ([`CANOPY_COLOUR`] where it has none).
+    canopy_colour: [f32; 3],
     /// Share of the ground under herbs.
     herb_cover: f64,
 }
@@ -1587,37 +1620,66 @@ impl Fill {
             stands,
             climbers,
             index: HashMap::new(),
+            edge_twins: Vec::new(),
             sizes: Arc::new(Vec::new()),
             laid: Arc::new(Mutex::new(HashMap::new())),
         };
         for community in 0..fill.communities.len() {
-            for age in &fill.settings.stand_ages {
-                let stand = development::develop(&fill.candidates(community, None), *age);
+            for age in fill.settings.stand_ages.clone() {
+                let stand = development::develop(&fill.candidates(community, None), age);
                 for cohort in &stand.cohorts {
                     let member = &fill.stands[community][cohort.candidate];
+                    let (layer, edges) = (
+                        member.layer,
+                        fill.settings.edges
+                            && member.candidate.tree()
+                            && member.environments.contains(&Environment::Edge),
+                    );
                     for key in fill.cohort_keys(member, cohort, stand.stage) {
-                        if fill.index.contains_key(&key) {
-                            continue;
+                        let interior = key.environment == Environment::Interior;
+                        let edge_key = PrototypeKey {
+                            environment: Environment::Edge,
+                            ..key.clone()
+                        };
+                        let index = fill.add_prototype(key, cohort.age, layer)?;
+                        if edges && interior {
+                            let twin = fill.add_prototype(edge_key, cohort.age, layer)?;
+                            fill.edge_twins.resize(fill.prototypes.len(), None);
+                            fill.edge_twins[index as usize] = Some(twin);
                         }
-                        let index = u32::try_from(fill.prototypes.len())
-                            .map_err(|_| Error("fill: too many prototypes".into()))?;
-                        fill.index.insert(key.clone(), index);
-                        fill.prototypes.push(Prototype {
-                            key,
-                            age_years: cohort.age,
-                            layer: member.layer,
-                        });
                     }
                 }
             }
         }
         fill.add_climber_prototypes()?;
+        fill.edge_twins.resize(fill.prototypes.len(), None);
         fill.sizes = Arc::new(
             (0..fill.prototypes.len())
                 .map(|_| OnceLock::new())
                 .collect(),
         );
         Ok(fill)
+    }
+
+    /// The index of the prototype `key`, added if it is new.
+    fn add_prototype(
+        &mut self,
+        key: PrototypeKey,
+        age_years: f64,
+        layer: Option<Layer>,
+    ) -> Result<u32, Error> {
+        if let Some(index) = self.index.get(&key) {
+            return Ok(*index);
+        }
+        let index = u32::try_from(self.prototypes.len())
+            .map_err(|_| Error("fill: too many prototypes".into()))?;
+        self.index.insert(key.clone(), index);
+        self.prototypes.push(Prototype {
+            key,
+            age_years,
+            layer,
+        });
+        Ok(index)
     }
 
     /// Each climber's prototypes: one per seed, grown on a wall
@@ -2033,17 +2095,63 @@ impl Fill {
     /// stand cell is drawn from its community's stand at the stand age
     /// nearest its years since disturbance, on the site factors at its
     /// middle ([`Site::site_factors_at`]), and keeps each plant with the
-    /// share [`Site::plantable_at`] gives where it stands.
+    /// share [`Site::plantable_at`] gives where it stands. A stand's first
+    /// row of trees beside open ground grows as an edge
+    /// ([`FillSettings::edges`]); the cells past the map's sides are not
+    /// known here, so a tree there is grown as inside its stand (see
+    /// [`Fill::tile_among`]).
     ///
     /// # Errors
     ///
     /// When the stand map does not cover the site or names a community
     /// the fill does not have, or a prototype a stand needs has not been
     /// measured ([`Fill::measure`]).
-    #[allow(clippy::too_many_lines)]
     pub fn tile(&self, site: &Site, stands: &StandMap, seed: u64) -> Result<TilePlan, Error> {
+        self.tile_among(site, stands, &|_, _| None, seed)
+    }
+
+    /// [`Fill::tile`], with `outside(col, row)` giving the stand cells
+    /// just past the map's sides (`col` -1 or `cols`, `row` -1 or the
+    /// rows; never a corner), as the neighbouring tiles' maps hold them,
+    /// or `None` where not known. With them, a stand's edge beside a
+    /// neighbouring tile's opening grows as it would were the two one
+    /// tile: a tile filled whole or in quarters places the same plants.
+    ///
+    /// A tree is grown as an edge when its stem stands within its crown's
+    /// width of a side of its cell that opens: no crown of its stand
+    /// stands between it and the light. It is turned to face the opening,
+    /// the side [`crate::conditions::LayoutKind::Edge`] grows free.
+    ///
+    /// # Errors
+    ///
+    /// As [`Fill::tile`]; and when a cell `outside` gives names a
+    /// community the fill does not have.
+    #[allow(clippy::too_many_lines)]
+    pub fn tile_among(
+        &self,
+        site: &Site,
+        stands: &StandMap,
+        outside: &dyn Fn(i64, i64) -> Option<StandCell>,
+        seed: u64,
+    ) -> Result<TilePlan, Error> {
         stands.check(site, self.communities.len())?;
         let cell_m = stands.cell_m;
+        let rows = stands.cells.len() / stands.cols.max(1);
+        let (cols_i, rows_i) = (
+            i64::try_from(stands.cols).unwrap_or(i64::MAX),
+            i64::try_from(rows).unwrap_or(i64::MAX),
+        );
+        // The cell at (col, row), in the map or past its sides.
+        let cell_at = |col: i64, row: i64| -> Option<StandCell> {
+            if (0..cols_i).contains(&col) && (0..rows_i).contains(&row) {
+                usize::try_from(row * cols_i + col)
+                    .ok()
+                    .map(|at| stands.cells[at])
+            } else {
+                outside(col, row)
+            }
+        };
+        let mut edge_trees = 0_usize;
         let mut instances = Vec::new();
         let mut cover = Vec::with_capacity(stands.cells.len());
         let mut canopy = Vec::with_capacity(stands.cells.len());
@@ -2080,17 +2188,60 @@ impl Fill {
                 })
                 .collect();
             let draw = |salt: u64| rng::hash_words(&[seed, world[0], world[1], salt]);
+            let age = nearest_age(
+                &self.settings.stand_ages,
+                f64::from(cell.years_since_disturbance),
+            );
             let layout = self.layout(LayoutKey {
                 community,
-                age: nearest_age(
-                    &self.settings.stand_ages,
-                    f64::from(cell.years_since_disturbance),
-                ),
+                age,
                 suits,
                 cell_bits: cell_m.to_bits(),
                 seed,
                 layout: draw(1) % LAYOUTS,
             })?;
+            // Which of its sides, west, east, south and north, open onto
+            // ground its canopy overtops.
+            let mut opens = [false; 4];
+            if self.settings.edges {
+                let own = self.stand_height(community, age, cell_m, seed)?;
+                if own > 0.0 {
+                    #[allow(clippy::cast_possible_wrap)]
+                    let (col, row) = (col as i64, row as i64);
+                    let beside = [
+                        (col - 1, row),
+                        (col + 1, row),
+                        (col, row - 1),
+                        (col, row + 1),
+                    ];
+                    for (side, (c, r)) in beside.into_iter().enumerate() {
+                        opens[side] = match cell_at(c, r) {
+                            None => false,
+                            Some(StandCell {
+                                community: None, ..
+                            }) => true,
+                            Some(StandCell {
+                                community: Some(other),
+                                years_since_disturbance,
+                            }) => {
+                                let other = usize::from(other);
+                                if other >= self.communities.len() {
+                                    return Err(Error(format!(
+                                        "stands: community {other} beside the tile is not one of the fill's {}",
+                                        self.communities.len()
+                                    )));
+                                }
+                                let age = nearest_age(
+                                    &self.settings.stand_ages,
+                                    f64::from(years_since_disturbance),
+                                );
+                                self.stand_height(other, age, cell_m, seed)?
+                                    < EDGE_HEIGHT_SHARE * own
+                            }
+                        };
+                    }
+                }
+            }
             // The cell's own turn and shift of the wrapping stand tile.
             let turn = draw(2) % 4;
             let shift = [rng::unit(draw(3)) * cell_m, rng::unit(draw(4)) * cell_m];
@@ -2149,8 +2300,36 @@ impl Fill {
                 kept_herbs += usize::from(herb);
                 let lean = turned_vector(plant.lean, turn);
                 #[allow(clippy::cast_precision_loss)]
-                let yaw = plant.yaw + turn as f64 * std::f64::consts::FRAC_PI_2;
-                if let Some(size) = size {
+                let mut yaw = plant.yaw + turn as f64 * std::f64::consts::FRAC_PI_2;
+                let mut index = plant.prototype;
+                // A tree of the first row beside an opening grows as an
+                // edge, facing it: the nearest open side within its
+                // crown's width.
+                if let Some(twin) = self.edge_twins[index as usize].filter(|_| tree) {
+                    let width = 2.0 * (plant.crown_m2 / std::f64::consts::PI).sqrt();
+                    let gaps = [at[0], cell_m - at[0], at[1], cell_m - at[1]];
+                    if let Some(side) = (0..4)
+                        .filter(|side| opens[*side] && gaps[*side] < width)
+                        .min_by(|a, b| gaps[*a].total_cmp(&gaps[*b]))
+                    {
+                        const FACING: [f64; 4] = [
+                            std::f64::consts::PI,
+                            0.0,
+                            -std::f64::consts::FRAC_PI_2,
+                            std::f64::consts::FRAC_PI_2,
+                        ];
+                        index = twin;
+                        yaw = FACING[side] + (pick(4) - 0.5) * 2.0 * EDGE_YAW_SPREAD;
+                        edge_trees += 1;
+                    }
+                }
+                // The twin's own size, at the plant's (soil) scale.
+                let (prototype, measured) = if index == plant.prototype {
+                    (prototype, size)
+                } else {
+                    (&self.prototypes[index as usize], self.size(index as usize))
+                };
+                if let Some(size) = measured {
                     let dbh = size.dbh.unwrap_or(0.0) * scale;
                     if dbh >= 0.05 {
                         trees += 1;
@@ -2160,7 +2339,7 @@ impl Fill {
                 }
                 #[allow(clippy::cast_possible_truncation)]
                 instances.push(Instance {
-                    prototype: plant.prototype,
+                    prototype: index,
                     position: [east as f32, north as f32, up as f32],
                     rotation: Instance::lean(yaw, lean),
                     scale: scale as f32,
@@ -2198,7 +2377,7 @@ impl Fill {
             canopy.push(CanopyCell {
                 height_m: layout.canopy_height as f32,
                 cover: canopy_cover as f32,
-                colour: CANOPY_COLOUR,
+                colour: layout.canopy_colour,
             });
         }
         // Plants that came up by themselves in the pavements, in the order
@@ -2258,6 +2437,7 @@ impl Fill {
             basal_area_m2_per_ha: basal / area_ha,
             canopy_cover: crowns / area_m2,
             leaf_area_index: leaf_m2 / area_m2,
+            edge_trees_per_ha: edge_trees as f64 / area_ha,
         };
         Ok(TilePlan {
             tile: site.tile,
@@ -2269,6 +2449,29 @@ impl Fill {
             cover,
             canopy,
         })
+    }
+
+    /// The mean height of community `community`'s canopy at stand age
+    /// `age` (an index into the settings' stand ages) on a site that
+    /// suits all its members: what an edge's neighbours are compared by,
+    /// the same wherever the cell stands.
+    fn stand_height(
+        &self,
+        community: usize,
+        age: usize,
+        cell_m: f64,
+        seed: u64,
+    ) -> Result<f64, Error> {
+        Ok(self
+            .layout(LayoutKey {
+                community,
+                age,
+                suits: vec![4; self.stands[community].len()],
+                cell_bits: cell_m.to_bits(),
+                seed,
+                layout: 0,
+            })?
+            .canopy_height)
     }
 
     /// The climbers of a field's tile: at the foot of each climbable
@@ -2495,10 +2698,10 @@ impl Fill {
             .map(|(.., size, _)| size.height)
             .fold(0.0_f64, f64::max);
         let mut has_herbs = false;
-        let members: Vec<stand_tile::Member> = chosen
+        let (members, foliage): (Vec<stand_tile::Member>, Vec<[f32; 3]>) = chosen
             .iter()
-            .map(
-                |(index, candidate, share, size, species)| stand_tile::Member {
+            .map(|(index, candidate, share, size, species)| {
+                let member = stand_tile::Member {
                     id: *index,
                     layer: development::layer_of(&candidates[*candidate], size.height, top),
                     share: *share,
@@ -2506,14 +2709,18 @@ impl Fill {
                     crown_base_m: size.crown_base.unwrap_or(0.0),
                     crown_radius_m: size.crown_radius,
                     light_needed: self.species[*species].light_needed,
-                },
-            )
-            .filter(|member| {
+                };
+                (
+                    member,
+                    self.species[*species].generator.spec().appearance.foliage,
+                )
+            })
+            .filter(|(member, _)| {
                 let herb = member.layer == niche::Layer::Herb;
                 has_herbs |= herb;
                 self.settings.herbs || !herb
             })
-            .collect();
+            .unzip();
         let tile_m = f64::from_bits(key.cell_bits);
         let rules = stand_tile::Rules {
             tile_m,
@@ -2546,6 +2753,7 @@ impl Fill {
             stand.cover[3]
         };
         let (mut heights, mut count) = (0.0, 0.0);
+        let (mut colour, mut crowns) = ([0.0_f64; 3], 0.0);
         let plants = placed
             .iter()
             .map(|plant| {
@@ -2564,6 +2772,13 @@ impl Fill {
                     [0.0, 0.0]
                 };
                 let radius = member.crown_radius_m * plant.scale;
+                if matches!(member.layer, niche::Layer::Canopy | niche::Layer::Subcanopy) {
+                    let area = radius * radius;
+                    for (sum, part) in colour.iter_mut().zip(foliage[plant.member]) {
+                        *sum += area * f64::from(part);
+                    }
+                    crowns += area;
+                }
                 Laid {
                     prototype: member.id,
                     at: plant.at_m,
@@ -2579,13 +2794,19 @@ impl Fill {
             plants,
             canopy_cover,
             canopy_height: if count > 0.0 { heights / count } else { 0.0 },
+            #[allow(clippy::cast_possible_truncation)]
+            canopy_colour: if crowns > 0.0 {
+                colour.map(|sum| (sum / crowns) as f32)
+            } else {
+                CANOPY_COLOUR
+            },
             herb_cover,
         })
     }
 }
 
-/// The far canopy's colour seen from above, linear RGB: a dark conifer
-/// green until each species gives its own.
+/// The far canopy's colour seen from above where a stand cell has no
+/// tree crowns, linear RGB: a dark conifer green.
 const CANOPY_COLOUR: [f32; 3] = [0.08, 0.12, 0.06];
 
 /// The record a written prototype keeps beside its files.

@@ -163,8 +163,22 @@ Ok(())
   the ground, falling to 70% in old growth's gaps; from a fifth of the
   pioneers' lifespan shade-tolerant trees establish under them, fewer of
   the older. Shrubs and herbs fill their layers' cover where enough light
-  reaches them. How many stems a cell holds follows from the crowns, so
-  a stand of narrow crowns holds more than one of wide ones.
+  reaches them, and herbs take the ground an open canopy leaves: 90% of
+  a meadow or a stand just after its disturbance. How many stems a cell
+  holds follows from the crowns, so a stand of narrow crowns holds more
+  than one of wide ones.
+- **Edges.** A stand's first row of trees beside open ground (a bare
+  cell, or a stand whose canopy stands under half as tall: a clearcut or
+  a young stand beside an old one) grows as an `edge`, its crown free
+  toward the opening and turned to face it (`FillSettings::edges`, on by
+  default). A tree is in the first row when its stem stands within its
+  crown's width of the cell's open side. `fill.tile` does not know the
+  cells past the tile's sides, so it grows no edge there;
+  `fill.tile_among(&site, &stands, &outside, seed)` takes them from
+  `outside(col, row)` (the neighbouring tiles' maps), and a tile filled
+  whole or in quarters then places the same plants.
+
+  ![A 160-year stand either side of a 40 m clearing, edges off and on](images/stands/clearing-edges.jpg)
 - **Site-aware.** Each cell reads the site factors at its middle
   (`Site::site_factors_at`: moisture, heat load, elevation, slope); each
   species' share follows how well its niche suits them, and a site no
@@ -178,8 +192,9 @@ Ok(())
   world, from four layouts each. `TilePlan::stats` gives the stand
   numbers to check against plots: stems and trees (5 cm or more at
   breast height) per hectare, basal area, canopy cover and leaf area
-  index. `FillSettings::herbs = false` leaves herbs to the ground cover
-  raster for hosts that draw ground cover their own way.
+  index, and edge trees per hectare. `FillSettings::herbs = false`
+  leaves herbs to the ground cover raster for hosts that draw ground
+  cover their own way.
 - **Pure and local.** A tile's plan depends only on the fill's
   communities, the site, the stand map, the seed and
   `GENERATOR_REVISION`. Its draws are keyed by each stand cell's place in
@@ -217,9 +232,13 @@ Ok(())
 - **Ground cover and far canopy** come per stand cell in the plan
   (`cover`: kind and fraction; `canopy`: height, cover, colour), for
   hosts that draw ground cover and far forest with their own systems.
+  The canopy's colour is its trees' foliage in full light, linear RGB,
+  each species' weighed by its crowns' area, so a maple stand reads
+  lighter than a fir one from afar.
 
 From the command line, `plantc fill` does the same (`--ages` chooses the
-stand ages, `--herbs no` leaves herbs to the ground cover) and also
+stand ages, `--herbs no` leaves herbs to the ground cover, `--edges no`
+grows no edges) and also
 measures every prototype and exports each one the tile places (both
 cached by key, so the next tile only grows and draws the ones it adds):
 
