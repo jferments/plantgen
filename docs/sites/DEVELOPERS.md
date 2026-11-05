@@ -104,7 +104,9 @@ patches.
    shared edges into parts, low woody and thin parts within 0.12 m joined
    (`join_near`, so a fence is one part), each part classified, then cut
    into hosts and binned into patches by (u, v, side). Their sky goes
-   through the tracer too.
+   through the tracer too. Only the parts that reach the field's grid are
+   kept, so a mesh made for a whole town can be measured a tile at a time:
+   over a 1 km Olympia mesh a 512 m tile's field took 11 s, not 40.
 
 ### How a part is classified
 

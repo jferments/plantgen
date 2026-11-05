@@ -188,8 +188,11 @@ Ok(())
   a site field (`docs/sites/SITE-FIELD.md`).
 - **Fast over a city.** Each community, stand age, site class and cell
   size is laid out once as a wrapping stand tile and stamped over every
-  cell that shares it, turned and shifted by the cell's place in the
-  world, from four layouts each. `TilePlan::stats` gives the stand
+  cell that shares it, turned and shifted by the cell's (or its block's)
+  place in the world, from four layouts each. `Fill::new` reads its
+  species on every core and makes a species' `Generator` only when a
+  prototype of it is grown, drawn or written, so a fill whose sizes are
+  all kept starts in seconds (3 s for Olympia's 45 species, from 34). `TilePlan::stats` gives the stand
   numbers to check against plots: stems and trees (5 cm or more at
   breast height) per hectare, basal area, canopy cover and leaf area
   index, and edge trees per hectare. `FillSettings::herbs = false`
@@ -202,7 +205,22 @@ Ok(())
   be filled alone, on any thread (`Fill` is `Send + Sync`).
 - **Many communities per tile.** The `StandMap` gives each cell a
   community (or none: pavement, building, water) and the years since it
-  was disturbed or abandoned.
+  was disturbed or abandoned. A city's map changes every few metres (a
+  yard, a verge, a bed by a house), finer than a crown: a cell under
+  `STAND_CELL_M` (40 m) reads its window of one stand tile laid out for
+  its block of cells about 40 m across (`fill::cells_per_layout`), the
+  site's factors read at the block's middle. Crowns are laid out whole,
+  and the cells of one stand in a block continue one pattern: a 40 m
+  tile mapped in 4 m cells of one stand places the very plants one 40 m
+  cell does, and a bare 4 m strip through it takes out only the plants
+  whose stems stand in it. `fill.tile` lays out every stand tile a tile
+  needs on every core before it places a plant, and keeps them for the
+  next tile. Over a square kilometre of Olympia, Washington (four 512 m
+  tiles, 4 m cells mapped from ESA WorldCover, Overture Maps and SRTM),
+  laying out the stand tiles takes about 22 s once, and each tile then
+  places its trees and shrubs in 0.04 to 0.1 s on 4 cores (about 30,000
+  a square kilometre there, where a sixth of the cells are forest or
+  yard trees).
 - **Prototypes** (`fill.prototypes()`) are keyed by species, seed,
   setting and age (`PrototypeKey::age_tenths`, its files named
   `<species>-<setting>-<seed>-<age>y`). `fill.measure(which, threads,
