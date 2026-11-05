@@ -126,6 +126,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_shape": {"obovate": "usually"},
     "bark_colour": [107, 92, 76],
     "height_max_m": {
       "min": 0.9,
@@ -164,6 +165,7 @@
     "sexual_system": "hermaphrodite"
   },
   "evidence": {
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "abrams-1944", "note": "Abrams, Illustrated Flora of the Pacific States vol. II (1944), read 2026-11-04, Purshia tridentata: \"Leaves cuneate in outline, 5-30 mm. long, 3-lobed at the apex\" (a wedge, widest toward its tip)."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.42, 0.36, 0.3], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "taxon": {
       "evidence": "Authored",

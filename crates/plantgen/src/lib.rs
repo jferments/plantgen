@@ -1657,4 +1657,13 @@ pub mod venation;
 /// shrub form at the flowering plants); taller shrubs and prostrate mats keep
 /// their forking stem. 32 library shrubs change, and the open
 /// plant-identification judge names them better grown so.
-pub const GENERATOR_REVISION: u32 = 205;
+///
+/// 206: sixteen shrubs whose specs gave no leaf shape state it from
+/// Abrams' and Britton and Brown's floras (`leaf_shape`), so the shape
+/// rule (the kingdom's `outline`) draws their blades and leaflets: a
+/// trailing blackberry's and a Cascade Oregon grape's leaflets were the
+/// shape the compound template guesses. Where a spec sets a blade's
+/// `widest`, `base` or `tip` by hand, the hand outline still wins, except
+/// a hardhack's, which drew obovate leaves where Abrams gives elliptical
+/// to oval ones.
+pub const GENERATOR_REVISION: u32 = 206;

@@ -45,7 +45,7 @@
       "adult_age": 2,
       "bloom_size": 0.14,
       "bloom_angle": 5,
-      "leaf_area": 0.186,
+      "leaf_area": 0.248,
       "bloom_area": 0.186,
       "path_half": 0.915
     }
@@ -67,9 +67,6 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "widest": 0.6,
-          "tip": 0.3,
-          "base": 0.2,
           "petiole": 0.04
         }
       },
@@ -109,6 +106,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_shape": {"elliptic": "usually", "oblong": "often"},
     "bark_colour": [107, 64, 38],
     "height_max_m": {
       "min": 0.61,
@@ -129,6 +127,7 @@
     "fruiting_months": [8, 9]
   },
   "evidence": {
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "abrams-1944", "note": "Abrams, Illustrated Flora of the Pacific States vol. II (1944), read 2026-11-04, Spiraea Douglasii: \"Leaves short-petioled, elliptical to oval or oblong-cuneate, 3-10 cm. long, usually acute at both ends\"."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.42, 0.25, 0.15], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.height_max_m": {
       "evidence": "SourceInferred",
