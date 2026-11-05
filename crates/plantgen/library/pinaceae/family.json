@@ -90,6 +90,18 @@
     "generator.params.ring_share": {
       "rule": "0.5",
       "why": "Once the leader passes half its full height, each square metre of foliage lays down less trunk wood, as (half the full height / height) squared, as taller trees grow less stem for their leaf area (Ryan and Yoder 1997, hydraulic limitation): with the same ring area per leaf at every height, 300-year open-grown trees drew trunks two to three times the floras' (Douglas-fir 5.2 m against Abrams' 1 to 3.5 m and FEIS's 1.5 to 1.8 m common in old growth; grand fir 3.0 m against 1 to 1.5 m, up to 2). Tried at 0.45 and 0.6, 300-year Douglas-fir drew 3.1 and 3.8 m, grand fir 1.7 and 2.1 m, Sitka spruce 2.1 and 2.7 m (to 5 m, Abrams), and the 60-year sizes stayed within 4% of before; 0.5 is between them."
+    },
+    "generator.params.stem_epi": {
+      "rule": "0.1",
+      "why": "Old trees renew their crowns from dormant buds on the trunk: in 450-year Douglas-firs the lower crown is mostly epicormic branches, several from one small patch of stem, younger and smaller than the original limbs about them, which reiterate the tree's young form (Ishii and McDowell 2002). A stem bud left at each whorl sprouts with chance 0.1 a year once the leader's rise is under a quarter of its fastest, where a twentieth of the open sky's light reaches it, as a limb three times a young limb's vigour. Genera whose limbs' buds do not sprout (epi_chance 0, the pines) keep none on the stem either."
+    },
+    "generator.params.stem_epi_light": {
+      "rule": "0.05",
+      "why": "A stem bud sprouts where a twentieth of the open sky's light reaches it: the lower crown of an old Douglas-fir is mostly epicormic (Ishii and McDowell 2002), in deep shade under its own crown."
+    },
+    "generator.params.stem_epi_vigour": {
+      "rule": "3",
+      "why": "A stem sprout repeats the young tree's form (reiteration; Ishii and McDowell 2002), growing three times as fast as a limb of the old crown would; fitted so a 480-year Douglas-fir grown in a stand holds Sillett et al.'s (2018) foliage."
     }
   },
   "evidence": {
@@ -122,6 +134,11 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 151, 152, 153, family Pinaceae: reproduction cones; read as \"cones\"."
+    },
+    "rules.generator.params.stem_epi": {
+      "evidence": "SourceInferred",
+      "source": "ishii-mcdowell-2002",
+      "note": "Ishii and McDowell (2002), Forest Ecology and Management 169: 257-270: in 450-year Wind River Douglas-firs the lower crown is extended by epicormic branches from the main stem, 13 to 57.5% of the lower half's branch volume; several arise from a small patch of stem and are younger and smaller than the original branches near them. Chance, light and vigour fitted to Sillett et al. (2018) Table 7 (about 630 m2 a Douglas-fir at 480 years, 1,240-1,480 at 550-650)."
     }
   }
 }

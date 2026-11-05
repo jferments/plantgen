@@ -294,9 +294,19 @@
 # years where it held 46, and 60 at 240 where it held 39; open- and
 # stand-grown trees' leaf area moves by under 2%.
 #
+# Revision 18 (old crowns renew from the stem): a dormant bud left on the
+# stem at each whorl sprouts a new limb with chance stem_epi a year once
+# the leader's yearly rise is under stem_epi_rise of its fastest, where
+# stem_epi_light reaches it; the sprout grows with stem_epi_vigour times a
+# young limb's vigour, repeating the young tree's form (reiteration), and
+# the bud stays to sprout again. Ishii and McDowell (2002) find the lower
+# crown of 450-year Douglas-firs mostly such epicormic branches. Only
+# plants whose limbs' buds sprout (epi_chance > 0) keep stem buds. With
+# stem_epi 0, the default, a plant grows as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem pinidae 17;
+lsystem pinidae 18;
 
 # Height of the leader over time: a Chapman-Richards curve,
 # height = height_max * (1 - exp(-height_rate * age))^height_shape.
@@ -356,6 +366,10 @@ param epi_delay = 5;           # years a branch's dormant bud waits before it ma
 param epi_light = 0.3;         # light a dormant bud needs to sprout
 param epi_chance = 0.03;       # chance a year that a waiting bud in the light sprouts
 param epi_years = 300;         # years a dormant bud lives
+param stem_epi = 0;            # chance a year that a dormant bud on the stem, left at each whorl, sprouts a new limb once the tree's rise has slowed (revision 18); 0: no stem buds
+param stem_epi_rise = 0.25;    # the leader's yearly rise, as a share of its fastest, under which stem buds may sprout
+param stem_epi_light = 0.05;   # light a stem bud needs to sprout
+param stem_epi_vigour = 3;     # a stem sprout's vigour, as a young limb's (1) multiple: it repeats the tree's young form (reiteration)
 param epi_order = 0;           # highest branch order whose shoots keep a dormant bud; 0: side_order
 param spray_base = 0.2;        # foliage spray length on the shortest shoot
 param spray_length = 1.3;      # and how much longer per metre of shoot
@@ -404,6 +418,7 @@ module V(order, wood, n, l);            # side shoots still to spread round a br
 module E(order, wood) queries light, position, substrate;  # a dormant bud where a branch shoot starts, watching the ground
 module H queries substrate;             # where a branch shoot starts, its bud spent, watching the ground
 module Q(n, s);                         # a branch shoot's short shoots: n more years to leaf out, a spray s long
+module D queries light;                 # a dormant bud on the stem (stem_epi)
 module B(n);                            # n stems still to start
 
 organ spray foliage area spray_area;
@@ -441,6 +456,7 @@ decompose W(n, m) : n > 0 ->
     [ /(360 * n / m + uniform(-20, 20)) &(branch_angle + uniform(-8, 8))
       T(0, 1, 0, upturn) S C(1, 1, 0, 0, 0, 0) ]
     W(n - 1, m);
+decompose W(n, m) : stem_epi > 0 && epi_chance > 0 -> D;
 decompose W(n, m) -> ;
 decompose I(n) : n > 0 ->
     [ /(uniform(0, 360)) &(branch_angle + uniform(-8, 8))
@@ -565,6 +581,11 @@ rule E(o, w) : o > (epi_order > 0 ? epi_order : side_order) && py > ground_watch
 rule E(o, w) : sd < ground_gap -> %;
 rule E(o, w) : (epi_delay <= 0 || age >= epi_years || o > (epi_order > 0 ? epi_order : side_order)) && py > ground_watch + 2 -> ;
 rule E(o, w) : epi_delay <= 0 || age >= epi_years || o > (epi_order > 0 ? epi_order : side_order) -> H;
+rule D : age >= epi_delay && light >= stem_epi_light
+         && (richards(t + 1, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))
+            / (height_max * height_rate * (height_shape > 1 ? pow(1 - 1 / height_shape, height_shape - 1) : 1)) < stem_epi_rise
+         && rand() < stem_epi ->
+    [ /(uniform(0, 360)) &(branch_angle + uniform(-8, 8)) T(0, 1, 0, upturn) S C(1, stem_epi_vigour, 0, 0, 0, 0) ] D;
 rule E(o, w) : w > 0 && age >= epi_delay && light >= epi_light && rand() < epi_chance ->
     [ /(uniform(0, 360)) &(side_angle) S C(o + 1, 1, 0, w, 0, 0) ] H;
 

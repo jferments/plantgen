@@ -1568,8 +1568,8 @@ mod tests {
         assert!((nearest(0.4) - Layout::LEAST_SPACING_M).abs() < 1e-9);
         // Past the yield tables' ages it opens as old growth does.
         assert!((nearest_at(40.0, 160.0) - 4.6).abs() < 1e-9);
-        assert!((nearest_at(40.0, 450.0) - 0.204 * 40.0).abs() < 1e-9);
-        assert!((nearest_at(40.0, 850.0) - 0.204 * 40.0).abs() < 1e-9);
+        assert!((nearest_at(40.0, 450.0) - 0.27 * 40.0).abs() < 1e-9);
+        assert!((nearest_at(40.0, 850.0) - 0.27 * 40.0).abs() < 1e-9);
     }
 
     #[test]
