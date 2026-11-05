@@ -102,6 +102,10 @@
     "generator.params.stem_epi_vigour": {
       "rule": "3",
       "why": "A stem sprout repeats the young tree's form (reiteration; Ishii and McDowell 2002), growing three times as fast as a limb of the old crown would; fitted so a 480-year Douglas-fir grown in a stand holds Sillett et al.'s (2018) foliage."
+    },
+    "generator.params.shade_own": {
+      "rule": "1",
+      "why": "A needle grown in shade carries less mass per area than one in the sun, by the light at its own shoot: down an old Douglas-fir's crown its specific needle area rises steadily with depth, and its shaded lower-crown and epicormic shoots are the cheapest (Ishii et al. 2002), as an understorey silver fir's needle mass per area falls with the light at its apex (King 1997). So a shoot shaded by its own crown, not only one on a plant shaded all over, pays the shade needle's lower cost, and an old crown keeps foliage deeper down."
     }
   },
   "evidence": {
@@ -139,6 +143,11 @@
       "evidence": "SourceInferred",
       "source": "ishii-mcdowell-2002",
       "note": "Ishii and McDowell (2002), Forest Ecology and Management 169: 257-270: in 450-year Wind River Douglas-firs the lower crown is extended by epicormic branches from the main stem, 13 to 57.5% of the lower half's branch volume; several arise from a small patch of stem and are younger and smaller than the original branches near them. Chance, light and vigour fitted to Sillett et al. (2018) Table 7 (about 630 m2 a Douglas-fir at 480 years, 1,240-1,480 at 550-650)."
+    },
+    "rules.generator.params.shade_own": {
+      "evidence": "SourceInferred",
+      "source": "ishii-ford-2002",
+      "note": "Ishii et al. (2002), Tree Physiology 22: 31-40: in old-growth Wind River Douglas-firs, specific needle area increased linearly with decreasing height in the crown, about 0.95 cm2/g per metre, and epicormic shoots carried the highest; foliage is renewed in the lower crown by epicormic shoots. The cost's form is King (1997, Tree Physiology 17: 251-258; pinidae revision 17's shade_cost): needle mass per area 130 + 185 times the light at the apex, g/m2. Checked against Ishii and McDowell (2002): 450-year crowns' live crown ratio 0.64."
     }
   }
 }

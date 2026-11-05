@@ -1613,4 +1613,14 @@ pub mod venation;
 /// held 364 (Sillett et al. 2018: about 630 to 1,480), on a trunk 133 cm
 /// through (Ishii and McDowell: 87 to 154); every conifer's young sizes
 /// grow as before.
-pub const GENERATOR_REVISION: u32 = 200;
+///
+/// 201: a pine-family shoot's foliage costs what its own light makes it
+/// (`pinidae` revision 19, `shade_own`): a needle grown in its own crown's
+/// shade is cheaper (King 1997; Ishii et al. 2002, specific needle area
+/// rising down an old Douglas-fir's crown), where only a plant shaded all
+/// over paid the shade needle's cost. A Douglas-fir grown 480 years in a
+/// stand holds 992 m² of foliage where it held 663 (Sillett et al. 2018:
+/// about 630 to 1,480), 237 m² of it below 50 m where 136, on a trunk
+/// 142 cm through (Ishii and McDowell 2002: 87 to 154). Every conifer
+/// stays at its reference sizes; junipers, cedars and yews grow as before.
+pub const GENERATOR_REVISION: u32 = 201;
