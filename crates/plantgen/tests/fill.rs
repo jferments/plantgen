@@ -533,7 +533,7 @@ mod on_a_site_field {
     use std::sync::LazyLock;
 
     use super::{StandMap, TileId, fill};
-    use plantgen::api::{Community, CrackPlant, FieldSettings, Fill, FillSettings, Site};
+    use plantgen::api::{Community, CrackPlant, FieldSettings, Fill, FillSettings, Site, WallClip};
     use plantgen::math::Vec3;
     use plantgen::pavement::{Crack, CrackTile, Hole, Pavement};
     use plantgen::site::{SiteMesh, Surface};
@@ -754,7 +754,7 @@ mod on_a_site_field {
 
     /// Soil 1 m deep over rock, 40 m across, and a brick shed 10 m by 10 m
     /// and 3 m high from x = -10 to 0 and z = -5 to 5, 4 cm of soil
-    /// gathered on its flat roof.
+    /// gathered on its flat roof; a curb and a raised sign board apart.
     fn yard() -> SiteMesh {
         let mut parts = (Vec::new(), Vec::new(), Vec::new());
         cuboid(
@@ -775,9 +775,24 @@ mod on_a_site_field {
             BUILT,
             &mut parts,
         );
+        let shed = parts.2.len() - 12;
+        // A curb too low to climb, and a sign board whose foot stands
+        // 2 m above the ground.
+        cuboid(
+            Vec3::new(5.0, -0.1, 10.0),
+            Vec3::new(15.0, 0.2, 10.2),
+            BUILT,
+            &mut parts,
+        );
+        cuboid(
+            Vec3::new(5.0, 2.0, -15.0),
+            Vec3::new(15.0, 4.0, -14.7),
+            BUILT,
+            &mut parts,
+        );
         let mut surfaces: Vec<Surface> = parts.2.iter().map(|m| Surface::solid(*m)).collect();
         // The shed's top: its fourth face, triangles 6 and 7 of its 12.
-        let top = surfaces.len() - 12 + 6;
+        let top = shed + 6;
         for surface in &mut surfaces[top..top + 2] {
             surface.soil_m = 0.04;
         }
@@ -834,7 +849,8 @@ mod on_a_site_field {
             if prototype.key.on_wall {
                 ivy += 1;
                 assert_eq!(prototype.key.species, "hedera-helix");
-                assert_eq!(instance.extra, 30, "clipped at the 3 m wall's top");
+                let clip = WallClip::from_extra(instance.extra).expect("a climber is cut");
+                assert!((clip.top_m - 3.0).abs() < 0.01, "cut at the 3 m wall's top");
                 // 0.3 m out from one of the shed's faces, its own face
                 // (the prototype's south) turned onto the wall's.
                 let x = f64::from(east) - 20.0;
@@ -859,6 +875,36 @@ mod on_a_site_field {
                     (facing[0] - out[0]).abs() < 1e-3 && (facing[1] - out[1]).abs() < 1e-3,
                     "faces {facing:?}, the wall {out:?}"
                 );
+                // Cut at both ends of its wall, never past them: the
+                // prototype's +x along the field (x, z), and how far the
+                // shed's wall runs that way from the foot.
+                let ahead = turned(instance.rotation, [1.0, 0.0, 0.0]);
+                let ahead = [ahead[0], -ahead[1]];
+                let to_end = |d: [f64; 2]| {
+                    if d[0] > 0.5 {
+                        -x
+                    } else if d[0] < -0.5 {
+                        x + 10.0
+                    } else if d[1] > 0.5 {
+                        5.0 - z
+                    } else {
+                        z + 5.0
+                    }
+                };
+                for (cut, end) in [
+                    (clip.ahead_m, to_end(ahead)),
+                    (clip.back_m, to_end([-ahead[0], -ahead[1]])),
+                ] {
+                    if cut.is_finite() {
+                        let cut = f64::from(cut);
+                        assert!(
+                            cut <= end + 1e-3 && cut >= end - 0.2 - 1e-3,
+                            "cut {cut:.2} m out, the wall ends {end:.2} m out"
+                        );
+                    } else {
+                        assert!(end >= 6.2 - 1e-3, "uncut, the wall ends {end:.2} m out");
+                    }
+                }
                 assert!(up.abs() < 0.05);
             } else if shed(east, north) {
                 assert!((up - 3.0).abs() < 0.05, "a herb inside the shed at {up} m");

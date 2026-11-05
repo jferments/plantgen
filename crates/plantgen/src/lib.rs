@@ -1572,4 +1572,12 @@ pub mod venation;
 /// years, as before; UTD 95), and limbs keep theirs, so crowns grow as
 /// before. Fed by light, a crown packed with shaded foliage (a Rocky
 /// Mountain juniper's) feeds little.
-pub const GENERATOR_REVISION: u32 = 197;
+///
+/// 198: six herbs draw their leaves as their floras state them, where
+/// their files drew them otherwise (checked against whole-plant photos
+/// from the side): sheep sorrel's and rusty saxifrage's basal leaves
+/// reach the 8 cm Abrams gives, Arizona lupine's leaf cards its longest
+/// leaflets on their longest petioles, jimsonweed's and the tomato's
+/// longest leaves the floras' longest, and a thread-leaved sundew's leaves
+/// stand erect, as Flora of North America says.
+pub const GENERATOR_REVISION: u32 = 198;

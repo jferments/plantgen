@@ -22,7 +22,8 @@
       "raceme": 0.03,
       "flowers": 1,
       "flower_angle": 0,
-      "pedicel": 0
+      "pedicel": 0,
+      "basal_length": 0.065
     }
   },
   "growth": {
@@ -315,7 +316,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Set by hand for rusty saxifrage from its sources and the photos the traits cite: the herb program's structure (stems, nodes, basal leaves, how the flowers are borne). Its inflorescence is drawn as one cluster at each stem's tip, sized by the traits, so the stem ends where the cluster begins. The rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+      "note": "Set by hand for rusty saxifrage from its sources and the photos the traits cite: the herb program's structure (stems, nodes, basal leaves, how the flowers are borne). Its inflorescence is drawn as one cluster at each stem's tip, sized by the traits, so the stem ends where the cluster begins. The rest of its growth comes from the library's rules for the form. Not fitted to measurements. Its leaves, mostly basal, span the 2 cm to 8 cm Abrams gives: basal_length 0.065, each leaf 0.75 to 1.25 of it, so the largest is 8 cm (2026-11-04; the forb rule's middle length had drawn none over 6.2 cm)."
     },
     "allometry": {
       "evidence": "Authored",

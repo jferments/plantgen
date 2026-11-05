@@ -6641,7 +6641,7 @@ fn field_site(
 /// on a tile whose south-west corner is `corner` in the mesh's frame,
 /// moved by `offset`: turned by its rotation (z up, x east, y north),
 /// scaled, and its foot set at its position; a climber's wood and cards
-/// above its reach clip (`extra`, decimetres) left out.
+/// past its wall's top and ends (`extra`, [`api::WallClip`]) left out.
 fn placed_instance(
     plant: &PlantMesh,
     instance: &api::Instance,
@@ -6680,26 +6680,26 @@ fn placed_instance(
             t[2] * scale + foot[2],
         ]
     };
-    let clip = if climber && instance.extra > 0 {
-        f32::from(instance.extra) / 10.0
+    let clip = if climber {
+        api::WallClip::from_extra(instance.extra)
     } else {
-        f32::INFINITY
+        None
     };
     let mut out = plant.clone();
-    if clip.is_finite() {
+    if let Some(clip) = clip {
         let positions = &plant.wood.positions;
         let mut kept = Vec::with_capacity(out.wood.indices.len());
         for triangle in plant.wood.indices.as_chunks::<3>().0 {
             if triangle
                 .iter()
-                .all(|index| positions[*index as usize][1] <= clip)
+                .all(|index| clip.keeps(positions[*index as usize]))
             {
                 kept.extend_from_slice(triangle);
             }
         }
         out.wood.indices = kept;
-        out.cards.retain(|card| card.base[1] <= clip);
-        out.tufts.retain(|tuft| tuft.position[1] <= clip);
+        out.cards.retain(|card| clip.keeps(card.base));
+        out.tufts.retain(|tuft| clip.keeps(tuft.position));
     }
     out.wood.positions.iter_mut().for_each(|p| *p = point(*p));
     out.wood.normals.iter_mut().for_each(|n| *n = turn(*n));
