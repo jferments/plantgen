@@ -88,6 +88,19 @@ pub enum DryPosture {
     Falcate,
 }
 
+/// A capsule's outline (trait `capsule_shape`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum CapsuleShape {
+    /// Widest at its middle: ovoid, ellipsoid.
+    #[default]
+    Ovoid,
+    /// Straight-sided from a short neck.
+    Cylindric,
+    /// Widening from a narrow neck toward the mouth: pyriform, clavate.
+    Pyriform,
+}
+
 /// How a ripe capsule is held (trait `capsule_posture`).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -136,6 +149,9 @@ pub struct MossKind {
     /// `operculum_form`: conic 0.1, long_conic 0.2, rostrate 0.3).
     #[serde(default = "default_lid")]
     pub lid_share: f64,
+    /// The capsule's outline (trait `capsule_shape`).
+    #[serde(default)]
+    pub capsule_shape: CapsuleShape,
     /// Share of shoots bearing a capsule.
     pub capsule_share: f64,
     /// Metres a colony's edge moves out in a good year.
@@ -345,6 +361,11 @@ impl MossKind {
                 .and_then(colour)
                 .unwrap_or_else(default_older_colour),
             capsule_posture,
+            capsule_shape: match pick("capsule_shape") {
+                Some(text) => serde_json::from_value(Value::String(text))
+                    .map_err(|error| format!("{genus}: capsule_shape: {error}"))?,
+                None => CapsuleShape::Ovoid,
+            },
             lid_share: match pick("operculum_form").as_deref() {
                 Some("conic") => 0.1,
                 Some("rostrate") => 0.3,
@@ -2188,9 +2209,16 @@ impl Drawer<'_> {
         for ring in 0..=rings {
             let s = f64::from(ring) / f64::from(rings);
             // A neck tapering into the seta, the urn, then the mouth.
+            let neck = if s < 0.2 { 0.6 + 2.0 * s } else { 1.0 };
             let r = radius
-                * math::sin(std::f64::consts::PI * (0.12 + 0.82 * s)).max(0.25)
-                * if s < 0.2 { 0.6 + 2.0 * s } else { 1.0 };
+                * neck
+                * match kind.capsule_shape {
+                    CapsuleShape::Ovoid => {
+                        math::sin(std::f64::consts::PI * (0.12 + 0.82 * s)).max(0.25)
+                    }
+                    CapsuleShape::Cylindric => 0.82 + 0.18 * math::smoothstep(0.0, 0.3, s),
+                    CapsuleShape::Pyriform => 0.45 + 0.55 * math::smoothstep(0.05, 0.75, s),
+                };
             let c = start + cap_dir * (length * s);
             last_centre = c;
             let ring_points: Vec<Vec3> = (0..sides)

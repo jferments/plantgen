@@ -3779,6 +3779,14 @@
       "optional": true,
       "why": "how a ripe moss capsule is held on its seta: upright (erect), leaning (inclined), level (horizontal) or hanging (pendent, nutant)"
     },
+    "capsule_shape": {
+      "group": "fruit_and_cones",
+      "organ": "capsule",
+      "type": "enum",
+      "values": ["ovoid", "cylindric", "pyriform"],
+      "optional": true,
+      "why": "a moss capsule's outline: widest at its middle (ovoid, ellipsoid), straight-sided (cylindric), or widening toward the mouth from a narrow neck (pyriform, clavate)"
+    },
     "operculum_form": {
       "group": "fruit_and_cones",
       "organ": "capsule",

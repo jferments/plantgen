@@ -63,6 +63,7 @@
     ],
     "desiccation_tolerance": "high",
     "colony_spread_m_per_year": 0.002,
+    "capsule_shape": "ovoid",
     "operculum_form": "rostrate"
   },
   "evidence": {
@@ -115,6 +116,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Estimate for a small acrocarp cushion, as Grimmia; to check against Glime, Bryophyte Ecology."
+    },
+    "traits.capsule_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-27",
+      "note": "FNA vol. 27, Dicranoweisia: capsule elliptic to short-cylindric. (efloras, read 2026-11-05)"
     },
     "traits.operculum_form": {
       "evidence": "SourceInferred",

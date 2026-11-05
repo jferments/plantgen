@@ -52,6 +52,7 @@
     ],
     "desiccation_tolerance": "high",
     "colony_spread_m_per_year": 0.008,
+    "capsule_shape": "cylindric",
     "operculum_form": "long_conic"
   },
   "evidence": {
@@ -79,6 +80,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Estimate as for other pleurocarp mats; to check against Glime, Bryophyte Ecology."
+    },
+    "traits.capsule_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Homalothecium sericeum: capsule cylindric, straight or slightly curved. (efloras, read 2026-11-05)"
     },
     "traits.operculum_form": {
       "evidence": "SourceInferred",

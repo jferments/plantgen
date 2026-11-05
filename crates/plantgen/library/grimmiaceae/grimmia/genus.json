@@ -48,6 +48,7 @@
     ],
     "substrate_reaction": "any",
     "colony_spread_m_per_year": 0.0015,
+    "capsule_shape": "ovoid",
     "operculum_form": "rostrate"
   },
   "evidence": {
@@ -85,6 +86,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Estimate: a G. pulvinata cushion reaches 2 to 4 cm across over one to two decades on a wall top. To check against Glime, Bryophyte Ecology, vol. 1, chapter 5 (growth)."
+    },
+    "traits.capsule_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-27",
+      "note": "FNA vol. 27, Grimmia pulvinata: capsule ellipsoid to obloid. (efloras, read 2026-11-05)"
     },
     "traits.operculum_form": {
       "evidence": "SourceInferred",

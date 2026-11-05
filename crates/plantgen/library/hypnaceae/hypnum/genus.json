@@ -62,6 +62,7 @@
     ],
     "desiccation_tolerance": "intermediate",
     "colony_spread_m_per_year": 0.012,
+    "capsule_shape": "cylindric",
     "operculum_form": "conic"
   },
   "evidence": {
@@ -89,6 +90,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Estimate: pleurocarps add one to two centimetres of shoot a year at the mat's edge. To check against Glime, Bryophyte Ecology, vol. 1, chapter 5."
+    },
+    "traits.capsule_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Hypnum cupressiforme: capsule cylindric. (efloras, read 2026-11-05)"
     },
     "traits.operculum_form": {
       "evidence": "SourceInferred",
