@@ -1,0 +1,77 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Tortula",
+  "traits": {
+    "colony_form": "cushion",
+    "height_typical_m": {
+      "min": 0.003,
+      "max": 0.02,
+      "typical": 0.007
+    },
+    "leaf_length_m": {
+      "min": 0.001,
+      "max": 0.004,
+      "typical": 0.002
+    },
+    "leaf_width_m": 0.0008,
+    "hair_point_length_m": {
+      "min": 0,
+      "max": 0.002,
+      "typical": 0.001
+    },
+    "leaf_colour": [
+      104,
+      138,
+      58
+    ],
+    "leaf_dry_posture": "appressed",
+    "seta_length_m": {
+      "min": 0.006,
+      "max": 0.015
+    },
+    "seta_form": "straight",
+    "capsule_length_m": {
+      "min": 0.0015,
+      "max": 0.0027
+    },
+    "capsule_posture": "erect",
+    "capsule_share": 0.07,
+    "substrates": [
+      "rock",
+      "built"
+    ],
+    "substrate_reaction": "basic",
+    "light": [
+      "sun",
+      "part"
+    ],
+    "moisture": [
+      "mesic",
+      "dry"
+    ],
+    "colony_spread_m_per_year": 0.002
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-27",
+      "note": "FNA vol. 27, Tortula (Zander and Eckel; efloras, read 2026-11-05): plants forming cushions, green, yellow-brown to dark brown below; stems usually to 2 cm; leaves appressed-incurved to lax when dry, spreading when moist, obovate to elliptic, 1-4(-6) mm; costa short- to long-excurrent as an awn; Tortula species delicate, characteristically light green, with smooth awns. Typical values are T. muralis, the wall moss (same volume): leaves short- to long-awned; seta 0.6-1.5 cm; capsule cylindric, erect, urn 1.5-2.7 mm; calcareous rock, often bricks or walls. Wikipedia, Tortula muralis (read 2026-11-05): greyish-green cushions no more than 1 cm tall; on concrete, brick walls, rock."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About two fifths of the leaf's length, as FNA's obovate to elliptic blades (Tortula)."
+    },
+    "traits.capsule_share": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "T. muralis is autoicous and its sporophytes are commonly seen on walls (FNA vol. 27); the share, of shoots, is an estimate."
+    },
+    "traits.colony_spread_m_per_year": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Estimate for small wall cushions; to check against Glime, Bryophyte Ecology, vol. 1, chapter 5."
+    }
+  }
+}

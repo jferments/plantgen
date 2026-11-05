@@ -2,5 +2,23 @@
   "schema": 1,
   "rank": "family",
   "name": "Ditrichaceae",
-  "parent": "order/pottiales"
+  "parent": "order/pottiales",
+  "traits": {
+    "colony_form": {
+      "turf": "usually"
+    },
+    "perichaetia": {
+      "acrocarpous": "usually"
+    },
+    "substrates": [
+      "soil"
+    ]
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-27",
+      "note": "FNA vol. 27, Ditrichaceae (Seppelt; efloras, read 2026-11-05): plants gregarious or loosely to densely tufted, stems erect; species usually colonise soil, rarely wood."
+    }
+  }
 }

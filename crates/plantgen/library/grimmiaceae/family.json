@@ -2,5 +2,43 @@
   "schema": 1,
   "rank": "family",
   "name": "Grimmiaceae",
-  "parent": "order/grimmiales"
+  "parent": "order/grimmiales",
+  "traits": {
+    "colony_form": {
+      "cushion": "usually",
+      "turf": "sometimes",
+      "mat": "rarely"
+    },
+    "perichaetia": {
+      "acrocarpous": "usually"
+    },
+    "leaf_dry_posture": {
+      "appressed": "often",
+      "crisped": "sometimes"
+    },
+    "capsule_posture": {
+      "erect": "usually"
+    },
+    "substrates": [
+      "rock",
+      "built"
+    ],
+    "light": [
+      "sun",
+      "part"
+    ],
+    "moisture": [
+      "mesic",
+      "dry",
+      "xeric"
+    ],
+    "desiccation_tolerance": "high"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-27",
+      "note": "FNA vol. 27, Grimmiaceae (Hastings and Ochyra; efloras, read 2026-11-05): plants acrocarpous or cladocarpous, olivaceous to blackish green, in rigid cushions, tufts, mats or patches; leaves erect and tightly appressed to crisped when dry, spreading when wet, typically with a hyaline awn; capsule usually erect. Most species are xerophytes colonising bare, dry, exposed rock and stones as dark cushions; few on soil, few epiphytes. Built surfaces (old mortar, walls) as for the genera below."
+    }
+  }
 }
