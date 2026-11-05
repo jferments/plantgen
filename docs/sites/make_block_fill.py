@@ -42,7 +42,7 @@ YARD = {"id": "block-yard", "members": [
     {"species": "plantago-major", "layer": "herb", "environments": ["open"], "abundance": 0.5},
     {"species": "trifolium-repens", "layer": "herb", "environments": ["open"], "abundance": 0.6},
     {"species": "erigeron-canadensis", "layer": "herb", "environments": ["open"], "abundance": 0.3},
-    {"species": "hedera-helix", "layer": "climber", "abundance": 0.8},
+    {"species": "hedera-helix", "layer": "climber", "abundance": 2.0},
 ]}
 
 
