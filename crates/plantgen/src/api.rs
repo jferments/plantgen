@@ -59,7 +59,8 @@ pub use crate::fill::{
     CLIMBER_SPACING_M, CanopyCell, Community, Cover, CoverKind, CrackPlant, FieldTile, Fill,
     FillSettings, INSTANCE_BYTES, INSTANCE_SCHEMA, Instance, Layer, Member, PROTOTYPES_FILE,
     Prototype, PrototypeFiles, PrototypeKey, RoofSoil, Roofs, STAND_AGES, STAND_CELL_M,
-    STAND_SCALE, Site, StandCell, StandMap, TileId, TilePlan, TileStats, moisture_from_wetness,
+    STAND_SCALE, Site, StandCell, StandMap, TileId, TilePlan, TileStats, WallClip,
+    moisture_from_wetness,
 };
 pub use crate::package::Measurements;
 pub use crate::quality::Quality;
@@ -271,6 +272,24 @@ impl Generator {
             seed,
             ages,
         )?)
+    }
+
+    /// Plant `seed` come up beneath a closed canopy `canopy_m` tall, as a
+    /// stand's shade-tolerant ingrowth does, kept at each of `ages`
+    /// (rising) from one growth ([`export::grow_beneath`]): its like's
+    /// crowns around it as in [`Environment::Interior`], and the canopy's
+    /// shade over it ([`crate::spec::UNDERSTOREY_DEPTH`]).
+    ///
+    /// # Errors
+    ///
+    /// As [`Self::grow_ages_in`], and when `canopy_m` is not above 0.
+    pub fn grow_ages_beneath(
+        &self,
+        canopy_m: f64,
+        seed: u64,
+        ages: &[f64],
+    ) -> Result<Vec<Plant>, Error> {
+        Ok(export::grow_beneath(&self.inputs, canopy_m, seed, ages)?)
     }
 
     /// A climber's `seed` grown at the foot of a wall `wall_m` high and

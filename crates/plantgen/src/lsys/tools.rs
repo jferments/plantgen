@@ -612,10 +612,22 @@ pub fn run(
         soil_supply(scene, surroundings, &values)
     });
 
+    // The plant's best-lit module this step (`top`).
+    let top = scene
+        .queries
+        .iter()
+        .zip(&query_light)
+        .filter(|(query, _)| {
+            matches!(program.symbols[usize::from(query.symbol)].kind,
+                SymbolKind::Module { queries } if queries & Query::Light.bit() != 0)
+        })
+        .fold(0.0_f64, |top, (_, light)| top.max(*light));
+
     let mut env = Vec::with_capacity(scene.queries.len());
     for (index, query) in scene.queries.iter().enumerate() {
         let mut values = [0.0; ENV_FIELDS];
         values[EnvField::Light as usize] = query_light[index];
+        values[EnvField::Top as usize] = top;
         if let Some(from) = &light_from {
             values[EnvField::Lx as usize] = from[index].x;
             values[EnvField::Ly as usize] = from[index].y;
@@ -4147,6 +4159,31 @@ mod tests {
         let far = output.env[1].1[EnvField::Light as usize];
         assert!(low < 0.95, "bud under foliage gets {low}");
         assert!((far - 1.0).abs() < 1e-12, "bud in the open gets {far}");
+        // Every module reads the plant's best light as `top`, the shaded
+        // bud too, and a module that queries no light counts for none.
+        for (_, values) in &output.env {
+            assert!((values[EnvField::Top as usize] - far).abs() < 1e-12);
+        }
+    }
+
+    #[test]
+    fn top_is_the_best_lit_light_querying_module() {
+        // Two buds under foliage; a module that queries only its
+        // position sits in the open above them.
+        let setup = setup(
+            "lsystem p 1; module B queries light; module P queries position;
+             organ leaf foliage area 0.5;
+             tool light@1 { cell = 0.5, extinction = 1 };
+             axiom [ B ] F(1) [ B ] F(1) [ leaf(1) leaf(1) leaf(1) ] F(4) P;",
+        );
+        let output = tools(&setup, &Neighbourhood::OPEN);
+        let lower = output.env[0].1[EnvField::Light as usize];
+        let upper = output.env[1].1[EnvField::Light as usize];
+        let best = lower.max(upper);
+        assert!(best < 0.99, "both buds are shaded: {lower}, {upper}");
+        for (_, values) in &output.env {
+            assert!((values[EnvField::Top as usize] - best).abs() < 1e-12);
+        }
     }
 
     #[test]

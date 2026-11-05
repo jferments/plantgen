@@ -40,7 +40,10 @@ use crate::stand_tile;
 
 /// The version of the instance file ([`Instance::to_bytes`]) and of the
 /// tile JSON beside it.
-pub const INSTANCE_SCHEMA: u32 = 2;
+///
+/// 3: a climber's `extra` is its [`WallClip`] (its wall's top and both
+/// ends), no longer its wall's top alone in decimetres.
+pub const INSTANCE_SCHEMA: u32 = 3;
 
 /// Bytes per packed instance.
 pub const INSTANCE_BYTES: usize = 32;
@@ -229,12 +232,19 @@ pub struct PrototypeKey {
     /// ([`Generator::grow_ages_on_wall`]), not in its environment.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub on_wall: bool,
+    /// The height in whole metres of the closed canopy it came up beneath,
+    /// for a shade-tolerant tree that established under its stand's
+    /// crowns (ingrowth), grown with [`Generator::grow_ages_beneath`]; its
+    /// `environment` is then [`Environment::Suppressed`].
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub beneath_m: Option<u16>,
 }
 
 impl PrototypeKey {
     /// The common name of its files: `<species>-<setting>-<seed>-<age>y`,
     /// as [`Generator::export`] names a plant; a climber's setting on a
-    /// wall is `wall`.
+    /// wall is `wall`, and a tree's come up beneath a canopy 60 m tall
+    /// `beneath60m`.
     #[must_use]
     pub fn stem(&self) -> String {
         let age = if self.age_tenths.is_multiple_of(10) {
@@ -243,9 +253,11 @@ impl PrototypeKey {
             format!("{}.{}", self.age_tenths / 10, self.age_tenths % 10)
         };
         let setting = if self.on_wall {
-            "wall"
+            "wall".to_string()
+        } else if let Some(canopy) = self.beneath_m {
+            format!("beneath{canopy}m")
         } else {
-            self.environment.name()
+            self.environment.name().to_string()
         };
         format!("{}-{setting}-{}-{age}y", self.species, self.seed)
     }
@@ -868,8 +880,8 @@ impl StandMap {
 /// One placed plant, packed into [`INSTANCE_BYTES`] by
 /// [`Instance::to_bytes`]: u32 prototype, f32 x3 position, i16 x4 snorm
 /// rotation quaternion (x, y, z, w), f16 scale, u16 age (tenths of a
-/// year), i8 x2 tint (lightness, hue), u16 extra (a climber's reach clip
-/// in decimetres, otherwise 0); little-endian.
+/// year), i8 x2 tint (lightness, hue), u16 extra (a climber's cut back to
+/// its wall, [`WallClip`], otherwise 0); little-endian.
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Instance {
     pub prototype: u32,
@@ -962,6 +974,77 @@ impl Instance {
             ],
             extra: u16::from_le_bytes(half(30)),
         }
+    }
+}
+
+/// Where a renderer cuts a climber back to the wall it stands at, packed
+/// into its instance's [`Instance::extra`]. Its prototype grew on a wall
+/// wider and taller than most it is set at ([`crate::export::grow_on_wall`]),
+/// so drawn whole it would hang in the air past the wall's ends and top.
+/// In the prototype's frame (growth's: +y up, its wall along x): nothing
+/// above `top_m`, nor further than `back_m` along -x or `ahead_m` along +x
+/// from its foot, is drawn. Packed as bits 0-5 the top in tenths of a
+/// metre (1 to 63, 63 for no top), bits 6-10 and 11-15 back and ahead in
+/// fifths of a metre (0 to 31, 31 for no end); each is rounded down, so
+/// the cut falls on the wall, never past it.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct WallClip {
+    pub top_m: f32,
+    pub back_m: f32,
+    pub ahead_m: f32,
+}
+
+impl WallClip {
+    const TOP_STEP_M: f32 = 0.1;
+    const SIDE_STEP_M: f32 = 0.2;
+
+    /// The packed form, never 0 (an instance that is not clipped).
+    #[must_use]
+    pub fn to_extra(self) -> u16 {
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let code = |metres: f32, step: f32, most: u16| {
+            if metres.is_finite() {
+                ((metres / step + 1.0e-3).floor().max(0.0) as u16).min(most)
+            } else {
+                most
+            }
+        };
+        code(self.top_m, Self::TOP_STEP_M, 63).max(1)
+            | code(self.back_m, Self::SIDE_STEP_M, 31) << 6
+            | code(self.ahead_m, Self::SIDE_STEP_M, 31) << 11
+    }
+
+    /// [`Self::to_extra`] read back: none for 0; an end at its largest
+    /// code is infinite.
+    #[must_use]
+    pub fn from_extra(extra: u16) -> Option<Self> {
+        if extra == 0 {
+            return None;
+        }
+        let read = |code: u16, step: f32, most: u16| {
+            if code >= most {
+                f32::INFINITY
+            } else {
+                f32::from(code) * step
+            }
+        };
+        Some(Self {
+            top_m: read(extra & 63, Self::TOP_STEP_M, 63),
+            back_m: read(extra >> 6 & 31, Self::SIDE_STEP_M, 31),
+            ahead_m: read(extra >> 11, Self::SIDE_STEP_M, 31),
+        })
+    }
+
+    /// Whether `point`, in the prototype's frame, is on the wall's side
+    /// of every cut.
+    #[must_use]
+    /// Behind its wall's face (z = -0.3) is inside the host it is set
+    /// at, and is cut too.
+    pub fn keeps(&self, point: [f32; 3]) -> bool {
+        point[1] <= self.top_m
+            && point[0] >= -self.back_m
+            && point[0] <= self.ahead_m
+            && point[2] >= -0.35
     }
 }
 
@@ -1212,6 +1295,87 @@ struct Climber {
 /// and other climbers set or come up every few metres along an old wall.
 pub const CLIMBER_SPACING_M: f64 = 3.0;
 
+/// How far above the ground a wall's or a fence's foot may stand for a
+/// climber to root at it, metres: a footing or a sill, not a gable or a
+/// window.
+pub const CLIMBER_FOOT_M: f64 = 0.3;
+
+/// The least height a wall or a fence stands above the ground at a
+/// climber's foot for one to climb it, metres: not a curb.
+pub const CLIMBER_LEAST_HOST_M: f64 = 0.5;
+
+/// Each host's run of wall or fence along its `u` axis, metres
+/// (`u_axis` · (x, z) at its two ends), for a host with an axis: its own
+/// extent joined with every host it runs on into, of its kind, along the
+/// same line (axes within 8°, faces within 0.3 m), its foot within 0.3 m
+/// and its extent within 0.25 m of the other's: a fence's bays one run,
+/// a house's wall one.
+fn wall_runs(field: &SiteField) -> Vec<Option<[f64; 2]>> {
+    use crate::site_field::Host;
+    let along = |host: &Host, axis: [f64; 3]| {
+        let mut range = [f64::INFINITY, f64::NEG_INFINITY];
+        for x in [host.low[0], host.high[0]] {
+            for z in [host.low[2], host.high[2]] {
+                let s = axis[0] * x + axis[2] * z;
+                range = [range[0].min(s), range[1].max(s)];
+            }
+        }
+        range
+    };
+    let across = |host: &Host, axis: [f64; 3]| {
+        let centre = [
+            (host.low[0] + host.high[0]) / 2.0,
+            (host.low[2] + host.high[2]) / 2.0,
+        ];
+        axis[0] * centre[1] - axis[2] * centre[0]
+    };
+    let hosts = &field.hosts;
+    let mut root: Vec<usize> = (0..hosts.len()).collect();
+    fn find(root: &mut [usize], mut at: usize) -> usize {
+        while root[at] != at {
+            root[at] = root[root[at]];
+            at = root[at];
+        }
+        at
+    }
+    for (i, a) in hosts.iter().enumerate() {
+        let Some(axis) = a.u_axis else { continue };
+        for (j, b) in hosts.iter().enumerate().skip(i + 1) {
+            let Some(other) = b.u_axis else { continue };
+            if a.kind != b.kind
+                || (axis[0] * other[0] + axis[2] * other[2]).abs() < 0.99
+                || (across(a, axis) - across(b, axis)).abs() > 0.3
+                || (a.foot_m - b.foot_m).abs() > 0.3
+            {
+                continue;
+            }
+            let (one, two) = (along(a, axis), along(b, axis));
+            if one[0].max(two[0]) - one[1].min(two[1]) <= 0.25 {
+                let (ra, rb) = (find(&mut root, i), find(&mut root, j));
+                root[ra] = rb;
+            }
+        }
+    }
+    let groups: Vec<usize> = (0..hosts.len()).map(|at| find(&mut root, at)).collect();
+    hosts
+        .iter()
+        .enumerate()
+        .map(|(i, host)| {
+            let axis = host.u_axis?;
+            Some(
+                hosts
+                    .iter()
+                    .zip(&groups)
+                    .filter(|(_, group)| **group == groups[i])
+                    .map(|(other, _)| along(other, axis))
+                    .fold([f64::INFINITY, f64::NEG_INFINITY], |run, range| {
+                        [run[0].min(range[0]), run[1].max(range[1])]
+                    }),
+            )
+        })
+        .collect()
+}
+
 #[derive(Debug, Clone)]
 struct Species {
     id: String,
@@ -1225,7 +1389,22 @@ struct Species {
     /// What its roots ask of the soil, where its program says
     /// ([`Site::soil_ratio_at`]).
     soil: Option<SoilNeed>,
+    /// How tall its crowns stand in a stand's canopy, metres: the low end
+    /// of the tallest it commonly grows (`height_max_m`), where its traits
+    /// state it.
+    canopy_m: Option<f64>,
+    /// Whether its program grows it beneath a canopy as a shade-suppressed
+    /// tree grows ([`BENEATH_PROGRAMS`]).
+    grows_beneath: bool,
 }
+
+/// The programs whose trees grow beneath a closed canopy as
+/// shade-suppressed trees do, slowly and keeping their limbs (`pinidae`
+/// from its revision 16), so a stand's shade-tolerant ingrowth of them
+/// grows beneath its canopy ([`PrototypeKey::beneath_m`]). A broadleaf's
+/// program has no such growth yet: grown there, a bigleaf maple sheds
+/// every leaf, so a broadleaf's ingrowth grows as in a stand.
+pub const BENEATH_PROGRAMS: [&str; 1] = ["pinidae"];
 
 impl Species {
     fn new(id: &str, settings: &FillSettings) -> Result<Self, Error> {
@@ -1242,6 +1421,12 @@ impl Species {
         }
         let light_needed = niche.as_ref().map_or(0.0, development::light_needed);
         let soil = generator.soil_need();
+        let canopy_m = crate::library::Library::builtin()
+            .traits_of(id)
+            .ok()
+            .and_then(|traits| traits.get("height_max_m").and_then(crate::traits::least))
+            .filter(|height| *height > 0.0);
+        let grows_beneath = BENEATH_PROGRAMS.contains(&generator.spec().generator.program.as_str());
         Ok(Self {
             id: id.to_string(),
             generator,
@@ -1249,6 +1434,8 @@ impl Species {
             seeds,
             light_needed,
             soil,
+            canopy_m,
+            grows_beneath,
         })
     }
 }
@@ -1323,7 +1510,9 @@ impl StandMember {
     /// The setting a cohort of it is grown in: a tree in a closed stand
     /// grows as in one ([`Environment::Interior`]), before its stand's
     /// crowns close as in the open; a shrub or herb as in the open. A
-    /// member kept to other settings takes the first of them.
+    /// member kept to other settings takes the first of them. A
+    /// shade-tolerant tree that came up beneath the canopy grows beneath
+    /// it instead ([`Fill::cohort_keys`]).
     fn environment(&self, stage: Stage) -> Environment {
         let preferred = if self.candidate.tree() && stage != Stage::Establishment {
             Environment::Interior
@@ -1472,6 +1661,7 @@ impl Fill {
         for community in 0..fill.communities.len() {
             for age in fill.settings.stand_ages.clone() {
                 let stand = development::develop(&fill.candidates(community, None), age);
+                let canopy = fill.canopy_m(community);
                 for cohort in &stand.cohorts {
                     let member = &fill.stands[community][cohort.candidate];
                     let (layer, edges) = (
@@ -1480,7 +1670,7 @@ impl Fill {
                             && member.candidate.tree()
                             && member.environments.contains(&Environment::Edge),
                     );
-                    for key in fill.cohort_keys(member, cohort, stand.stage) {
+                    for key in fill.cohort_keys(member, cohort, stand.stage, canopy) {
                         let interior = key.environment == Environment::Interior;
                         let edge_key = PrototypeKey {
                             environment: Environment::Edge,
@@ -1553,6 +1743,7 @@ impl Fill {
                         environment: Environment::Open,
                         age_tenths,
                         on_wall: true,
+                        beneath_m: None,
                     };
                     let index = if let Some(index) = self.index.get(&key) {
                         *index
@@ -1588,15 +1779,51 @@ impl Fill {
             .collect()
     }
 
-    /// The keys of a cohort's prototypes, one per seed.
+    /// How tall the canopy of `community`'s stands stands, whole metres:
+    /// as tall as the tallest of its trees commonly grows
+    /// ([`Species::canopy_m`]), whatever the site and the stand's age, so a
+    /// prototype's key does not hang on them. None where none of its
+    /// trees states it.
+    fn canopy_m(&self, community: usize) -> Option<u16> {
+        let tallest = self.stands[community]
+            .iter()
+            .filter(|member| member.candidate.tree())
+            .filter_map(|member| self.species[member.species].canopy_m)
+            .fold(0.0_f64, f64::max);
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        (tallest >= 1.0).then(|| tallest.round().min(f64::from(u16::MAX)) as u16)
+    }
+
+    /// The keys of a cohort's prototypes, one per seed. A shade-tolerant
+    /// tree that came up under its stand's crowns (ingrowth, not its
+    /// pioneers) grows beneath a canopy `canopy` metres tall
+    /// ([`PrototypeKey::beneath_m`]) where its program grows it there
+    /// ([`BENEATH_PROGRAMS`]) and its member is not kept from
+    /// [`Environment::Suppressed`]: a western hemlock that came up 120
+    /// years ago beneath Wind River's 60 m canopy is 19.7 m tall, not the
+    /// 43.6 m of a stand of hemlocks its age. The share of it a gap
+    /// released ([`development::Cohort::released`]) grows as in a stand, at
+    /// the age its size matches.
     fn cohort_keys(
         &self,
         member: &StandMember,
         cohort: &development::Cohort,
         stage: Stage,
+        canopy: Option<u16>,
     ) -> Vec<PrototypeKey> {
         let species = &self.species[member.species];
-        let environment = member.environment(stage);
+        let beneath_m = canopy.filter(|_| {
+            species.grows_beneath
+                && member.candidate.tree()
+                && !cohort.pioneer
+                && !cohort.released
+                && member.environments.contains(&Environment::Suppressed)
+        });
+        let environment = if beneath_m.is_some() {
+            Environment::Suppressed
+        } else {
+            member.environment(stage)
+        };
         #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
         let age_tenths = (cohort.age * 10.0).round() as u32;
         species
@@ -1608,6 +1835,7 @@ impl Fill {
                 environment,
                 age_tenths,
                 on_wall: false,
+                beneath_m,
             })
             .collect()
     }
@@ -1655,24 +1883,28 @@ impl Fill {
             .get(index)
             .ok_or_else(|| Error(format!("fill: no prototype {index}")))?;
         let generator = self.species_of(prototype).generator.clone();
-        let plant = if prototype.key.on_wall {
-            generator
-                .grow_ages_on_wall(
-                    prototype.key.seed,
-                    &[prototype.age_years],
-                    crate::export::WALL_M,
-                )?
-                .pop()
-                .ok_or_else(|| Error(format!("fill: {} kept no plant", prototype.key.stem())))?
-        } else {
-            generator.grow_in(
-                prototype.key.environment,
-                prototype.key.seed,
-                prototype.age_years,
-            )?
-        };
+        let plant = Self::grow_ages(&generator, &prototype.key, &[prototype.age_years])?
+            .pop()
+            .ok_or_else(|| Error(format!("fill: {} kept no plant", prototype.key.stem())))?;
         let _ = self.sizes[index].set(plant.size.clone());
         Ok((generator, plant))
+    }
+
+    /// A prototype `key` of `generator`'s species grown and kept at each
+    /// of `ages` (rising): at the foot of a wall, beneath its stand's
+    /// canopy, or in its environment.
+    fn grow_ages(
+        generator: &Generator,
+        key: &PrototypeKey,
+        ages: &[f64],
+    ) -> Result<Vec<Plant>, Error> {
+        Ok(if key.on_wall {
+            generator.grow_ages_on_wall(key.seed, ages, crate::export::WALL_M)?
+        } else if let Some(canopy) = key.beneath_m {
+            generator.grow_ages_beneath(f64::from(canopy), key.seed, ages)?
+        } else {
+            generator.grow_ages_in(key.environment, key.seed, ages)?
+        })
     }
 
     /// The prototypes `which` names (every one when empty), sorted.
@@ -1693,14 +1925,22 @@ impl Fill {
         Ok(wanted)
     }
 
-    /// `indices` in growths: one per species, setting and seed, its ages
-    /// rising; the oldest growths first, so the longest start soonest.
+    /// `indices` in growths: one per species, setting (and canopy over
+    /// it) and seed, its ages rising; the oldest growths first, so the
+    /// longest start soonest.
     fn growths(&self, indices: &[u32]) -> Vec<Vec<u32>> {
-        let mut groups: BTreeMap<(&str, Environment, bool, u64), Vec<u32>> = BTreeMap::new();
+        type Growth<'a> = (&'a str, Environment, bool, Option<u16>, u64);
+        let mut groups: BTreeMap<Growth, Vec<u32>> = BTreeMap::new();
         for &index in indices {
             let key = &self.prototypes[index as usize].key;
             groups
-                .entry((key.species.as_str(), key.environment, key.on_wall, key.seed))
+                .entry((
+                    key.species.as_str(),
+                    key.environment,
+                    key.on_wall,
+                    key.beneath_m,
+                    key.seed,
+                ))
                 .or_default()
                 .push(index);
         }
@@ -1793,12 +2033,7 @@ impl Fill {
             .iter()
             .map(|index| self.prototypes[*index as usize].age_years)
             .collect();
-        let generator = &self.species_of(prototype).generator;
-        if prototype.key.on_wall {
-            generator.grow_ages_on_wall(prototype.key.seed, &ages, crate::export::WALL_M)
-        } else {
-            generator.grow_ages_in(prototype.key.environment, prototype.key.seed, &ages)
-        }
+        Self::grow_ages(&self.species_of(prototype).generator, &prototype.key, &ages)
     }
 
     /// Prototype `index`'s size as a measure or a write left it in `dir`
@@ -2324,9 +2559,12 @@ impl Fill {
     /// the community of the stand cell there stands with the chance its
     /// abundance gives (at abundance 1, one per [`CLIMBER_SPACING_M`] of
     /// foot) times the open share of the ground cell it roots in, so none
-    /// stands on sound pavement. Each is one of its prototypes grown on a
-    /// wall, its wall's face turned onto the patch's, and its reach
-    /// clipped to the host's top (`extra`, decimetres above its foot).
+    /// stands on sound pavement, nor where the host's foot stands above
+    /// the ground ([`CLIMBER_FOOT_M`]) or its top is under
+    /// [`CLIMBER_LEAST_HOST_M`]. Each is one of its prototypes grown on a
+    /// wall, its wall's face turned onto the patch's, and cut back to the
+    /// host's top and to both ends of its run of wall ([`WallClip`] in
+    /// `extra`).
     fn climbers_at(&self, site: &Site, stands: &StandMap, seed: u64) -> Vec<Instance> {
         let mut placed = Vec::new();
         let Some(tile) = &site.field else {
@@ -2337,8 +2575,12 @@ impl Fill {
         }
         let field = &tile.field;
         let patch_m = field.settings.patch_m;
+        let runs = wall_runs(field);
         for (number, patch) in field.patches.iter().enumerate() {
             let Some(host) = field.hosts.get(patch.host as usize) else {
+                continue;
+            };
+            let (Some(axis), Some(run)) = (host.u_axis, runs[patch.host as usize]) else {
                 continue;
             };
             let level = patch.normal[0].hypot(patch.normal[2]);
@@ -2359,7 +2601,13 @@ impl Fill {
                 continue;
             };
             let open = field.ground.open_share[root].clamp(0.0, 1.0);
-            if open <= 0.0 {
+            // A climber roots at the foot of its host: not under a gable
+            // or a window whose foot stands above the ground, nor at a
+            // curb too low to climb.
+            if open <= 0.0
+                || host.foot_m - ground > CLIMBER_FOOT_M
+                || host.high[1] - ground < CLIMBER_LEAST_HOST_M
+            {
                 continue;
             }
             // Its foot 0.3 m out from the face, as it grew at its wall.
@@ -2411,10 +2659,23 @@ impl Fill {
                 // The prototype's face looks south (+z); turn it onto the
                 // patch's, east toward north.
                 let yaw = (-out[1]).atan2(out[0]) + std::f64::consts::FRAC_PI_2;
-                #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-                let clip = ((host.high[1] - ground) * 10.0)
-                    .round()
-                    .clamp(1.0, 65_535.0) as u16;
+                // The prototype's +x along the field, and how far the
+                // wall runs each way from its foot.
+                let along = axis[0] * yaw.cos() - axis[2] * yaw.sin();
+                let foot = axis[0] * x + axis[2] * z;
+                let (before, after) = ((foot - run[0]).max(0.0), (run[1] - foot).max(0.0));
+                let (back, ahead) = if along >= 0.0 {
+                    (before, after)
+                } else {
+                    (after, before)
+                };
+                #[allow(clippy::cast_possible_truncation)]
+                let clip = WallClip {
+                    top_m: (host.high[1] - ground) as f32,
+                    back_m: back as f32,
+                    ahead_m: ahead as f32,
+                }
+                .to_extra();
                 #[allow(clippy::cast_possible_truncation)]
                 placed.push(Instance {
                     prototype,
@@ -2492,7 +2753,7 @@ impl Fill {
         let mut chosen = Vec::new();
         for cohort in &stand.cohorts {
             let member = &self.stands[key.community][cohort.candidate];
-            let keys = self.cohort_keys(member, cohort, stand.stage);
+            let keys = self.cohort_keys(member, cohort, stand.stage, self.canopy_m(key.community));
             #[allow(clippy::cast_precision_loss)]
             let share = cohort.weight * member.abundance / keys.len().max(1) as f64;
             for prototype_key in keys {
@@ -2756,6 +3017,33 @@ mod tests {
     use super::*;
 
     #[test]
+    fn a_wall_clip_packs_into_an_instances_extra_rounded_onto_the_wall() {
+        let clip = WallClip {
+            top_m: 2.87,
+            back_m: 0.35,
+            ahead_m: 9.0,
+        };
+        let extra = clip.to_extra();
+        assert_ne!(extra, 0);
+        let back = WallClip::from_extra(extra).unwrap();
+        assert!((back.top_m - 2.8).abs() < 1e-4, "{back:?}");
+        assert!((back.back_m - 0.2).abs() < 1e-4, "{back:?}");
+        assert!(back.ahead_m.is_infinite(), "{back:?}");
+        assert!(back.keeps([1.0, 1.0, 0.0]) && back.keeps([-0.2, 2.8, -0.3]));
+        assert!(!back.keeps([-0.3, 1.0, 0.0]) && !back.keeps([0.0, 2.9, 0.0]));
+        // Behind its wall's face is inside the host.
+        assert!(!back.keeps([0.0, 1.0, -0.5]));
+        // Nothing to its top or ends is still a cut, never 0.
+        let none = WallClip {
+            top_m: 0.0,
+            back_m: 0.0,
+            ahead_m: 0.0,
+        };
+        assert_ne!(none.to_extra(), 0);
+        assert_eq!(WallClip::from_extra(0), None);
+    }
+
+    #[test]
     #[allow(clippy::float_cmp)]
     fn an_instance_packs_into_32_bytes_and_back() {
         let half = std::f32::consts::FRAC_1_SQRT_2;
@@ -2820,6 +3108,7 @@ mod tests {
             environment: Environment::Interior,
             age_tenths: 305,
             on_wall: false,
+            beneath_m: None,
         };
         assert_eq!(key.stem(), "x-interior-2-30.5y");
         let climber = PrototypeKey {
@@ -2827,6 +3116,12 @@ mod tests {
             ..key.clone()
         };
         assert_eq!(climber.stem(), "x-wall-2-30.5y");
+        let beneath = PrototypeKey {
+            environment: Environment::Suppressed,
+            beneath_m: Some(60),
+            ..key.clone()
+        };
+        assert_eq!(beneath.stem(), "x-beneath60m-2-30.5y");
         let whole = PrototypeKey {
             age_tenths: 4800,
             ..key

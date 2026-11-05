@@ -415,17 +415,19 @@ pub const STAND_SPACING: f64 = 0.115;
 
 /// How a stand of the same age opens past the yield tables' ages, as its
 /// relative spacing at stand ages in years: [`STAND_SPACING`] to 160 years
-/// (McArdle et al. 1961), then the spacing of old-growth Douglas-fir. In
-/// Cascade Range Douglas-fir-western hemlock stands, Douglas-fir stands 124
-/// a hectare at 250 years and 60 at 450 (Franklin et al. 1981, Table 6), 9.0
-/// and 12.9 m apart; over the dominants' height between McArdle's site
-/// classes II and III (59.1 m at 250 years and 63.1 m at 440, McArdle et
-/// al. 1961, Figure 2, extended by Meyer) that is 0.152 and 0.204. The
-/// spacing holds after 450 years: by 850 only 8 Douglas-fir a hectare
-/// remain among younger shade-tolerant trees, a stand this model's stand
-/// of one plant's like does not describe.
-pub const STAND_THINNING: [(f64, f64); 3] =
-    [(160.0, STAND_SPACING), (250.0, 0.152), (450.0, 0.204)];
+/// (McArdle et al. 1961), then opening as the canopy trees die and gaps
+/// fill with shade-tolerant trees below them, to the old-growth
+/// Douglas-fir's spacing at 450 years. At Wind River's 500-year forest 35
+/// Douglas-fir a hectare stand among western hemlock and other younger
+/// trees of half their height (Shaw et al. 2004, Ecosystems 7: 427), 16.9 m
+/// apart, 0.27 of their 62 m; Franklin et al. (1981, Table 6) count 60 a
+/// hectare at 450 years in other Cascade stands (0.204). Opened to 0.204,
+/// a 480-year Douglas-fir held 364 m² of foliage, a third to a half of
+/// Sillett et al.'s (2018) old trees; at 0.27, with its stem sprouts, about
+/// 800. The spacing holds after 450 years: by 850 only 8 Douglas-fir a
+/// hectare remain among younger shade-tolerant trees, a stand this model's
+/// stand of one plant's like does not describe.
+pub const STAND_THINNING: [(f64, f64); 2] = [(160.0, STAND_SPACING), (450.0, 0.27)];
 
 /// The relative spacing of a stand of the same age at `age_years`, from
 /// [`STAND_THINNING`], straight between its ages.
@@ -444,6 +446,23 @@ pub fn stand_spacing(age_years: f64) -> f64 {
     last.1
 }
 
+/// The shade of the crowns over a tree that came up beneath its stand's
+/// canopy, as a stand's ingrowth does ([`PlantSpec::neighbourhood_beneath`]):
+/// its optical depth from the canopy's top to the ground. A depth of 1
+/// leaves 17% of the sky's light at the ground, as the light tool weighs
+/// an overcast sky, and more toward the canopy: the 10-20% western hemlock
+/// regeneration needs to grow (Carter and Klinka 1992, Forest Ecology and
+/// Management 55: 87-105). The floor under old-growth Douglas-fir and
+/// hemlock is darker, 0.5% of the diffuse light (Canham et al. 1990,
+/// Canadian Journal of Forest Research 20: 620-631), but the trees that
+/// stand beneath the canopy are those that grew in its brighter patches.
+/// Grown beneath a 60 m canopy with its like around it, a western hemlock
+/// is 19.7 m tall at 120 years and 24 m at 240, where Wind River's
+/// hemlocks average 19 m (Shaw et al. 2004, Ecosystems 7: 427-439); at a
+/// depth of 1.4 it was 12-14 m from 120 to 320 years, its crown dying
+/// back.
+pub const UNDERSTOREY_DEPTH: f64 = 1.0;
+
 /// The synthetic stand a variant grows in.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -454,7 +473,7 @@ pub enum Environment {
     Edge,
     /// Inside a closed stand of the same age.
     Interior,
-    /// Under an older, taller canopy.
+    /// Overtopped in a closed stand: under taller crowns than its own.
     Suppressed,
 }
 
@@ -498,13 +517,16 @@ impl Environment {
                 ..stand
             },
             Self::Interior => stand,
+            // Overtopped in its own stand: its like's crowns around it,
+            // as in the interior, and the dominants' crowns 30% taller
+            // over it, a layer of shade 0.1 a metre (generator revision
+            // 199). A dense medium from the ground to 30 m, it was, left
+            // a seedling 0.2% of the sky's light: conifers grew leafless
+            // poles, and broadleaves died.
             Self::Suppressed => Neighbourhood {
-                density: 0.15,
-                relative_height: 1.0,
-                canopy: 30.0,
-                spacing: 5.0,
-                one_sided: false,
-                like: 0.0,
+                density: 0.1,
+                relative_height: 1.3,
+                ..stand
             },
         }
     }
@@ -1775,6 +1797,22 @@ impl PlantSpec {
         }
     }
 
+    /// The neighbourhood of this plant come up beneath a closed canopy
+    /// `canopy_m` tall, as a stand's ingrowth does: its like's crowns
+    /// around it as in a stand ([`Environment::Interior`]), and over it the
+    /// canopy's shade, [`UNDERSTOREY_DEPTH`] spread evenly from the ground
+    /// to the canopy's top. Its light rises as it climbs, and a tree that
+    /// grows through the canopy stands in the sun.
+    #[must_use]
+    pub fn neighbourhood_beneath(&self, canopy_m: f64) -> Neighbourhood {
+        Neighbourhood {
+            density: UNDERSTOREY_DEPTH / canopy_m.max(1.0),
+            relative_height: 0.0,
+            canopy: canopy_m,
+            ..self.neighbourhood(Environment::Interior)
+        }
+    }
+
     /// The old ages a stand may hold this plant at, past its keyframes:
     /// each twice the one before, from twice its oldest keyframe, while
     /// its lifespan (`growth.lifespan`) and [`OLDEST_AGE`] allow. None for
@@ -1868,9 +1906,9 @@ mod tests {
     fn a_stand_opens_past_the_yield_tables_as_old_growth_does() {
         assert_eq!(stand_spacing(0.0), STAND_SPACING);
         assert_eq!(stand_spacing(160.0), STAND_SPACING);
-        assert!((stand_spacing(205.0) - (STAND_SPACING + 0.152) / 2.0).abs() < 1e-12);
-        assert!((stand_spacing(250.0) - 0.152).abs() < 1e-12);
-        assert!((stand_spacing(1000.0) - 0.204).abs() < 1e-12);
+        assert!((stand_spacing(305.0) - (STAND_SPACING + 0.27) / 2.0).abs() < 1e-12);
+        assert!((stand_spacing(450.0) - 0.27).abs() < 1e-12);
+        assert!((stand_spacing(1000.0) - 0.27).abs() < 1e-12);
     }
 
     use super::*;

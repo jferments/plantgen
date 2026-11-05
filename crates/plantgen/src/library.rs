@@ -1040,6 +1040,28 @@ impl Library {
         self.ranks.get(file)
     }
 
+    /// The traits the rank file `file` states and those it inherits from
+    /// the files above it, each from the nearest file that states it (a
+    /// genus's own over its family's). For taxa drawn from their rank
+    /// files alone, as the mosses of `crate::mosses` are.
+    ///
+    /// # Errors
+    ///
+    /// On a file the library lacks, or a chain [`inherit::chain`] refuses.
+    pub fn rank_traits(&self, file: &str) -> Result<serde_json::Map<String, Value>, String> {
+        let found = inherit::chain(&self.ranks, file)?;
+        if found.is_empty() {
+            return Err(format!("no rank file {file} in the library"));
+        }
+        let mut traits = serde_json::Map::new();
+        for rank in found.iter().rev() {
+            for (key, value) in &rank.shared.traits {
+                traits.insert(key.clone(), value.clone());
+            }
+        }
+        Ok(traits)
+    }
+
     /// The folder the library was read from; `None` for the built-in one.
     #[must_use]
     pub fn root(&self) -> Option<&Path> {

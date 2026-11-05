@@ -2,5 +2,30 @@
   "schema": 1,
   "rank": "family",
   "name": "Pottiaceae",
-  "parent": "order/pottiales"
+  "parent": "order/pottiales",
+  "traits": {
+    "colony_form": {
+      "turf": "usually",
+      "cushion": "often"
+    },
+    "perichaetia": {
+      "acrocarpous": "usually"
+    },
+    "leaf_dry_posture": {
+      "crisped": "usually",
+      "appressed": "often"
+    },
+    "leaf_length_m": {
+      "min": 0.0015,
+      "max": 0.0035
+    },
+    "desiccation_tolerance": "high"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-27",
+      "note": "FNA vol. 27, Pottiaceae (Zander; efloras, read 2026-11-05): plants usually turf-forming or loosely cespitose, green distally and brown proximally; stem leaves usually appressed and often contorted when dry, spreading when wet, mostly about 1.5-3.5 mm; costa often excurrent as an awn; perigonia and perichaetia terminal. Bryophyte Biology p. 268 (card bryo-p268-1): Tortula and its kin among the mosses of sun-baked soil and rock that spend much of their time dry."
+    }
+  }
 }

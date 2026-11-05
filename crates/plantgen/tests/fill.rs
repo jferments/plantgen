@@ -284,6 +284,78 @@ fn every_prototype_is_a_cohort_of_a_stand_in_each_seed() {
     );
 }
 
+#[test]
+fn shade_tolerant_conifers_that_came_up_under_the_canopy_grow_beneath_it() {
+    // A 160-year stand of Douglas-fir, with western hemlock and bigleaf
+    // maple that came up under it from its 100th year.
+    let community = Community::from_json(
+        r#"{"id": "test-old-forest", "members": [
+            {"species": "pseudotsuga-menziesii"},
+            {"species": "tsuga-heterophylla"},
+            {"species": "acer-macrophyllum"}
+        ]}"#,
+    )
+    .expect("community");
+    let mut settings = FillSettings::default();
+    settings.stand_ages = vec![160.0];
+    settings.seeds = 1;
+    settings.edges = false;
+    let fill = Fill::new(&[community], &settings).expect("fill");
+    let keys: Vec<&PrototypeKey> = fill.prototypes().iter().map(|p| &p.key).collect();
+    let of = |species: &str| -> Vec<&PrototypeKey> {
+        keys.iter()
+            .copied()
+            .filter(|key| key.species == species)
+            .collect()
+    };
+    // The pioneers grow in their stand; the hemlocks that came up under
+    // it beneath a canopy as tall as Douglas-fir commonly grows (60 m),
+    // at every age to the 60 years since; the maples, whose program does
+    // not grow them beneath a canopy yet, in the stand.
+    assert!(
+        of("pseudotsuga-menziesii")
+            .iter()
+            .all(|key| key.environment == Environment::Interior && key.beneath_m.is_none())
+    );
+    let beneath: Vec<u32> = of("tsuga-heterophylla")
+        .iter()
+        .filter(|key| key.beneath_m == Some(60))
+        .map(|key| {
+            assert_eq!(key.environment, Environment::Suppressed);
+            key.age_tenths
+        })
+        .collect();
+    assert_eq!(beneath, [50, 150, 300, 600], "{keys:?}");
+    assert!(
+        of("acer-macrophyllum")
+            .iter()
+            .all(|key| key.beneath_m.is_none() && key.environment == Environment::Interior),
+        "{keys:?}"
+    );
+    let young = fill
+        .prototypes()
+        .iter()
+        .position(|p| p.key.beneath_m.is_some() && p.key.age_tenths == 150)
+        .expect("a 15-year hemlock beneath");
+    assert_eq!(
+        fill.prototypes()[young].key.stem(),
+        "tsuga-heterophylla-beneath60m-1-15y"
+    );
+    // Beneath the canopy a 15-year hemlock is a sapling, under half the
+    // height of one in a stand of its own age.
+    let (_, plant) = fill.grow_prototype(young).expect("grown");
+    let stand = Generator::new("tsuga-heterophylla", &Options::default())
+        .expect("hemlock")
+        .grow_in(Environment::Interior, 1, 15.0)
+        .expect("grown");
+    assert!(
+        plant.size.height < 0.5 * stand.size.height,
+        "{} m beneath, {} m in a stand",
+        plant.size.height,
+        stand.size.height
+    );
+}
+
 /// The way a placed plant faces: its east turned by its rotation, as an
 /// angle from east toward north.
 fn facing(instance: &Instance) -> f64 {
@@ -533,7 +605,7 @@ mod on_a_site_field {
     use std::sync::LazyLock;
 
     use super::{StandMap, TileId, fill};
-    use plantgen::api::{Community, CrackPlant, FieldSettings, Fill, FillSettings, Site};
+    use plantgen::api::{Community, CrackPlant, FieldSettings, Fill, FillSettings, Site, WallClip};
     use plantgen::math::Vec3;
     use plantgen::pavement::{Crack, CrackTile, Hole, Pavement};
     use plantgen::site::{SiteMesh, Surface};
@@ -754,7 +826,7 @@ mod on_a_site_field {
 
     /// Soil 1 m deep over rock, 40 m across, and a brick shed 10 m by 10 m
     /// and 3 m high from x = -10 to 0 and z = -5 to 5, 4 cm of soil
-    /// gathered on its flat roof.
+    /// gathered on its flat roof; a curb and a raised sign board apart.
     fn yard() -> SiteMesh {
         let mut parts = (Vec::new(), Vec::new(), Vec::new());
         cuboid(
@@ -775,9 +847,24 @@ mod on_a_site_field {
             BUILT,
             &mut parts,
         );
+        let shed = parts.2.len() - 12;
+        // A curb too low to climb, and a sign board whose foot stands
+        // 2 m above the ground.
+        cuboid(
+            Vec3::new(5.0, -0.1, 10.0),
+            Vec3::new(15.0, 0.2, 10.2),
+            BUILT,
+            &mut parts,
+        );
+        cuboid(
+            Vec3::new(5.0, 2.0, -15.0),
+            Vec3::new(15.0, 4.0, -14.7),
+            BUILT,
+            &mut parts,
+        );
         let mut surfaces: Vec<Surface> = parts.2.iter().map(|m| Surface::solid(*m)).collect();
         // The shed's top: its fourth face, triangles 6 and 7 of its 12.
-        let top = surfaces.len() - 12 + 6;
+        let top = shed + 6;
         for surface in &mut surfaces[top..top + 2] {
             surface.soil_m = 0.04;
         }
@@ -834,7 +921,8 @@ mod on_a_site_field {
             if prototype.key.on_wall {
                 ivy += 1;
                 assert_eq!(prototype.key.species, "hedera-helix");
-                assert_eq!(instance.extra, 30, "clipped at the 3 m wall's top");
+                let clip = WallClip::from_extra(instance.extra).expect("a climber is cut");
+                assert!((clip.top_m - 3.0).abs() < 0.01, "cut at the 3 m wall's top");
                 // 0.3 m out from one of the shed's faces, its own face
                 // (the prototype's south) turned onto the wall's.
                 let x = f64::from(east) - 20.0;
@@ -859,6 +947,36 @@ mod on_a_site_field {
                     (facing[0] - out[0]).abs() < 1e-3 && (facing[1] - out[1]).abs() < 1e-3,
                     "faces {facing:?}, the wall {out:?}"
                 );
+                // Cut at both ends of its wall, never past them: the
+                // prototype's +x along the field (x, z), and how far the
+                // shed's wall runs that way from the foot.
+                let ahead = turned(instance.rotation, [1.0, 0.0, 0.0]);
+                let ahead = [ahead[0], -ahead[1]];
+                let to_end = |d: [f64; 2]| {
+                    if d[0] > 0.5 {
+                        -x
+                    } else if d[0] < -0.5 {
+                        x + 10.0
+                    } else if d[1] > 0.5 {
+                        5.0 - z
+                    } else {
+                        z + 5.0
+                    }
+                };
+                for (cut, end) in [
+                    (clip.ahead_m, to_end(ahead)),
+                    (clip.back_m, to_end([-ahead[0], -ahead[1]])),
+                ] {
+                    if cut.is_finite() {
+                        let cut = f64::from(cut);
+                        assert!(
+                            cut <= end + 1e-3 && cut >= end - 0.2 - 1e-3,
+                            "cut {cut:.2} m out, the wall ends {end:.2} m out"
+                        );
+                    } else {
+                        assert!(end >= 6.2 - 1e-3, "uncut, the wall ends {end:.2} m out");
+                    }
+                }
                 assert!(up.abs() < 0.05);
             } else if shed(east, north) {
                 assert!((up - 3.0).abs() < 0.05, "a herb inside the shed at {up} m");

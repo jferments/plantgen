@@ -79,7 +79,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let campanulids = "(clade campanulids: _ranks/clade/campanulids.json)";
     assert!(
         built_in.starts_with(&format!(
-            "Rules, by their home (1039):\n  appearance.organs.*.inflorescence.branch.kind  {flowering}\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
+            "Rules, by their home (1042):\n  appearance.organs.*.inflorescence.branch.kind  {flowering}\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
         )),
         "{built_in}"
     );
@@ -200,7 +200,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let library = dir.to_str().unwrap();
     let rules = stdout(&plantc(&["--library", library, "rules"]));
     assert!(
-        rules.starts_with("Rules, by their home (1040):\n"),
+        rules.starts_with("Rules, by their home (1043):\n"),
         "{rules}"
     );
     assert!(
@@ -366,13 +366,18 @@ fn a_library_folder_replaces_built_in_species() {
 
 #[test]
 fn grow_says_when_a_plant_has_died() {
-    // Under a 30 m canopy the bigleaf maple sheds everything within five
-    // years; the sizes would otherwise read as a row of zeros.
+    // Under a dense 30 m canopy (the suppressed setting's before generator
+    // revision 199, 0.1% of the sky's light at the ground) the bigleaf
+    // maple sheds everything within five years; the sizes would otherwise
+    // read as a row of zeros.
     let grown = stdout(&plantc(&[
         "grow",
         "acer-macrophyllum",
         "--env",
         "suppressed",
+        "--conditions",
+        r#"{"schema": 1, "neighbours": {"version": 1, "density": 0.15,
+            "relative_height": 1, "canopy": 30, "spacing": 5, "one_sided": false}}"#,
         "--years",
         "5",
     ]));

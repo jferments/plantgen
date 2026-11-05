@@ -69,6 +69,7 @@ pub mod math;
 pub mod mechanics;
 pub mod mesh;
 pub mod meshopt;
+pub mod mosses;
 pub mod motion;
 pub mod niche;
 pub mod occlusion;
@@ -1579,4 +1580,54 @@ pub mod venation;
 /// leaflets on their longest petioles, jimsonweed's and the tomato's
 /// longest leaves the floras' longest, and a thread-leaved sundew's leaves
 /// stand erect, as Flora of North America says.
-pub const GENERATOR_REVISION: u32 = 198;
+///
+/// 199: growth in deep shade (`pinidae` revision 16, the light tool's new
+/// `top`, the light of the plant's best-lit module): a conifer's leader
+/// floor, `leader_shade`, fades with `top` below half the sky's light, so
+/// on a plant shaded all over the leader's growth saturates with light
+/// and is nothing in the dark, where the floor kept it rising at a share
+/// of its open rate in any shade; a shoot starves by its light against
+/// `top` (correlative inhibition), and under a floor of a quarter of
+/// `shade_death` however shaded the whole plant. Under a closed canopy a
+/// hemlock was a bare pole rising at half its open rate; in 5% light it
+/// is now 4.2 m at 60 years with limbs from 2 m. And the `suppressed`
+/// setting is a tree overtopped in its own stand (its like's crowns
+/// around it as `interior`'s, and crowns 30% taller over it), where it
+/// was a dense medium to 30 m from the ground, in which a conifer grew a
+/// leafless pole and a broadleaf died: a suppressed Douglas-fir is 30 m
+/// at 120 years with a living crown. Open- and stand-grown trees grow as
+/// tall as before, with leaf area within 3%.
+///
+/// 200: shaded foliage costs less (`pinidae` revision 17, `shade_cost`):
+/// the light under which a conifer's apex starves, and its limbs are shed,
+/// is `shade_cost + (1 - shade_cost) top` times what it was, `shade_cost`
+/// = 130 / 315: King (1997) gives an understorey Pacific silver fir's
+/// needle mass per area as 130 g/m² plus 185 times the share of the sky's
+/// light at its apex, and the growth that keeps its foliage in proportion
+/// to it.
+/// A plant whose top is in the full sky grows as before; one shaded all
+/// over keeps more of its shoots: a hemlock grown beneath a 60 m canopy
+/// holds 63 m² of foliage at 120 years where it held 46, and Wind River at
+/// 500 years (`plantc fill`, seeds 7-10) a leaf area index of 3.9 where it
+/// had 3.3. Open- and stand-grown trees' leaf area moves by under 2%.
+///
+/// 201: old conifer crowns fill out (`pinidae` revision 18). A stand of a
+/// plant's like opens past 160 years to 0.27 of its height at 450
+/// (`spec::STAND_THINNING`; Wind River's 35 Douglas-fir a hectare, Shaw et
+/// al. 2004), where it opened to 0.204 (Franklin et al. 1981's 60); and a
+/// fir's, spruce's, hemlock's, larch's or Douglas-fir's stem keeps a
+/// dormant bud at each whorl that sprouts a vigorous new limb once the
+/// tree's rise has slowed (`stem_epi`, Ishii and McDowell 2002). A
+/// Douglas-fir grown 480 years in a stand holds 663 m² of foliage where it
+/// held 364 (Sillett et al. 2018: about 630 to 1,480), on a trunk 133 cm
+/// through (Ishii and McDowell: 87 to 154); every conifer's young sizes
+/// grow as before.
+///
+/// 202: a card tier's texel budget pays for its packed atlas, the room
+/// packing leaves between pictures included, not only for the pictures'
+/// own texels (`crate::billboards`): the pictures are baked at the
+/// densest that packs within it. Pictures pack in rows or along the top
+/// edge of those laid before, whichever is lower. Of 498 card tiers of
+/// 248 species, none grew and together they hold 14% fewer texels; most
+/// low tiers went from 512 by 550 to 620 texels to 512 by 512.
+pub const GENERATOR_REVISION: u32 = 202;
