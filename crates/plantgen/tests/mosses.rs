@@ -255,3 +255,35 @@ fn moss_is_darker_and_greener_wet_than_dry() {
     assert!(luminance(wet) < luminance(dry), "wet {wet:?} dry {dry:?}");
     assert!(wet[1] / wet[0] > dry[1] / dry[0], "wet {wet:?} dry {dry:?}");
 }
+
+#[test]
+fn a_cover_tints_the_surface_under_it_with_no_triangles_of_its_own() {
+    let site = wall_site();
+    let cover = mosses::grow(&site, &library_kinds(), &settings());
+    let tint = cover.tint(0.5);
+    // At a colony's centre the moss hides the surface; far from any colony
+    // there is none.
+    let colony = cover
+        .colonies
+        .iter()
+        .max_by(|a, b| a.radius_m.total_cmp(&b.radius_m))
+        .unwrap();
+    let at = Vec3::new(colony.centre[0], colony.centre[1], colony.centre[2]);
+    let normal = Vec3::new(colony.normal[0], colony.normal[1], colony.normal[2]);
+    let (colour, share) = tint.at(at, normal).unwrap();
+    assert!(share > 0.6, "share {share}");
+    assert!(colour[1] > colour[2], "moss is green, not blue: {colour:?}");
+    assert!(tint.at(Vec3::new(50.0, 50.0, 50.0), Vec3::Y).is_none());
+    // The site painted: the triangles near moss split, the far ones kept,
+    // and some vertices greener than the bare surface.
+    let (low, high) = site.bounds();
+    let bare = site.drawn(low, high, Vec3::ZERO);
+    let painted = tint.paint(&bare, 0.02, low, high);
+    assert!(painted.indices.len() > bare.indices.len());
+    let changed = painted
+        .colors
+        .iter()
+        .filter(|c| !bare.colors.iter().any(|b| b[..3] == c[..3]))
+        .count();
+    assert!(changed > 0);
+}

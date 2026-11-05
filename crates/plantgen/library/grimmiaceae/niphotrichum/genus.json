@@ -71,7 +71,8 @@
       "xeric"
     ],
     "desiccation_tolerance": "high",
-    "colony_spread_m_per_year": 0.008
+    "colony_spread_m_per_year": 0.008,
+    "operculum_form": "rostrate"
   },
   "evidence": {
     "traits": {
@@ -113,6 +114,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Estimate for a creeping mat with pinnate branches, below the pleurocarps'; to check against Glime, Bryophyte Ecology."
+    },
+    "traits.operculum_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-27",
+      "note": "FNA vol. 27, Niphotrichum: operculum very long-subulate, straight. (efloras, read 2026-11-05)"
     },
     "traits.leaf_colour": {
       "evidence": "Authored",

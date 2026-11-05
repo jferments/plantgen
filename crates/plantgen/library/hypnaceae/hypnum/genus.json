@@ -61,7 +61,8 @@
       "mesic"
     ],
     "desiccation_tolerance": "intermediate",
-    "colony_spread_m_per_year": 0.012
+    "colony_spread_m_per_year": 0.012,
+    "operculum_form": "conic"
   },
   "evidence": {
     "traits": {
@@ -88,6 +89,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Estimate: pleurocarps add one to two centimetres of shoot a year at the mat's edge. To check against Glime, Bryophyte Ecology, vol. 1, chapter 5."
+    },
+    "traits.operculum_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Hypnum: operculum conic to rounded-mammillate (H. cupressiforme conic to rostrate). (efloras, read 2026-11-05)"
     },
     "traits.leaf_colour": {
       "evidence": "Authored",

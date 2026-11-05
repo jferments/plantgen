@@ -63,7 +63,7 @@ brick's back on its mortar) and faces kept clear carry nothing.
 The result, a `MossCover`, is a list of colonies (kind, centre, normal,
 radius, age, vigour) with the kinds and settings that made it: small
 enough for a host to keep, draw with its own systems, or tint a texture
-with (`MossKind::far_colour`).
+with (`MossCover::tint`).
 
 ## Drawing
 
@@ -94,7 +94,9 @@ shoots' older lower parts:
   `dry_branch_posture` is curled (Homalothecium), the side branches curl
   up and in as the mat dries.
 - Capsules on setae (straight or arcuate), in the posture the genus's
-  `capsule_posture` gives, on the share of shoots `capsule_share` gives.
+  `capsule_posture` gives, on the share of shoots `capsule_share` gives,
+  their lids a short cone, a tall cone or a beak as `operculum_form`
+  says.
 
 Every point is laid on a face of the site within reach: of the faces
 straight above or below it, the outermost (a tile, not the deck under
@@ -115,17 +117,29 @@ rained on) sets the leaf angles and colour: wet moss is darker and a
 deeper green, dry moss paler, duller and yellower, its hair-points and
 hyaline tips greying it the more.
 
-### Lower settings and a texture-only level
+### Tint: the level with no triangles
 
 At a distance even a patch a colony is wasted on a roof that holds
-thousands. The next step, for the site fill, is a level with no
-triangles: the cover tints the host's own surface (its texture or vertex
-colours) by coverage and `MossKind::far_colour`, with the patches or
-shells only within a few tens of metres. A host can do that now from
-the colonies (centre, normal, radius); a helper that bakes coverage into
-a host face's texture is to come with the fill work. Levels between:
-shells merged per face into one heightfield, and shell texturing (a few
-stacked alpha layers, as for fur) where the renderer has alpha.
+thousands. `MossCover::tint(hydration)` gives a `Tint`, which a host
+reads to colour its own surface:
+
+- `Tint::at(p, normal)` gives the moss over a point: its far colour (the
+  shell's) and the share of the surface it hides, 0 to 1. The share
+  follows the colony's ragged rim as its shell draws it, fading over the
+  outer fifth, and is lower where the colony struggles. A host sampling
+  it a texel at a time bakes moss into its roof's or wall's texture.
+- `Tint::paint(mesh, step, low, high)` does the same to a site mesh as
+  drawn: triangles near moss inside the box are split to `step` and
+  every vertex blended toward the moss. `plantc moss ... --detail tint`
+  renders that, with no moss triangles. The split mesh is only a
+  stand-in for a texture, so it is not cheap to draw: about 0.9 million
+  site triangles for the whole test scene at a 4 cm step.
+
+Cushions smaller than the step fade, as in a texture of that texel. The
+patches or shells belong within a few tens of metres. Levels between
+are still to come: shells merged per face into one heightfield, and
+shell texturing (a few stacked alpha layers, as for fur) where the
+renderer has alpha.
 
 ## The genera
 
@@ -169,7 +183,7 @@ and the genera of western Oregon and Washington; after 30 years its roof
 carries *Dicranoweisia* about half, *Rosulabryum* a third and
 *Niphotrichum* a tenth of the moss, close to the rooftop study's shares.
 
-`--detail patch|shell|shoots|near` picks the level, `--from north` turns
+`--detail tint|patch|shell|shoots|near` picks the level, `--from north` turns
 the view half round, `--wet 0.1` draws it dry,
 `--capsules no` leaves out the sporophytes. Growing the test wall and shed
 takes about 30 s; a close view with shoots, a few million triangles and
@@ -181,7 +195,8 @@ seconds to tens of seconds.
 kept off a board kept clear and the slab pressed on it, the shaded side
 of a wall carrying more moss than the sunny one, the same cover every
 time and through JSON, patches far with shells between and shoots near,
-the roof genera of western Oregon and their spore output, and moss darker and greener wet than dry.
+the roof genera of western Oregon and their spore output, moss darker and greener wet than dry, and a cover tinting the surface
+under it with no triangles of its own.
 
 ## Into the site fill
 

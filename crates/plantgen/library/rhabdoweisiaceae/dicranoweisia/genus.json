@@ -62,7 +62,8 @@
       "dry"
     ],
     "desiccation_tolerance": "high",
-    "colony_spread_m_per_year": 0.002
+    "colony_spread_m_per_year": 0.002,
+    "operculum_form": "rostrate"
   },
   "evidence": {
     "traits": {
@@ -114,6 +115,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Estimate for a small acrocarp cushion, as Grimmia; to check against Glime, Bryophyte Ecology."
+    },
+    "traits.operculum_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-27",
+      "note": "FNA vol. 27, Dicranoweisia: operculum rostrate, beak straight or oblique. (efloras, read 2026-11-05)"
     },
     "traits.leaf_colour": {
       "evidence": "Authored",

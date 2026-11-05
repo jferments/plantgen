@@ -37,9 +37,9 @@
       "max": 0.005
     },
     "capsule_colour": [
-      120,
+      104,
       52,
-      34
+      36
     ],
     "capsule_posture": "inclined",
     "capsule_share": 0.02,
@@ -59,7 +59,8 @@
       "mesic"
     ],
     "desiccation_tolerance": "intermediate",
-    "colony_spread_m_per_year": 0.003
+    "colony_spread_m_per_year": 0.003,
+    "operculum_form": "conic"
   },
   "evidence": {
     "traits": {
@@ -106,6 +107,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "As Bryum; to check against Glime, Bryophyte Ecology."
+    },
+    "traits.operculum_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Rosulabryum: operculum short-conic to umbonate. (efloras, read 2026-11-05)"
     },
     "traits.leaf_colour": {
       "evidence": "Authored",

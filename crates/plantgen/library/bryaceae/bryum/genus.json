@@ -61,7 +61,8 @@
       "dry"
     ],
     "desiccation_tolerance": "high",
-    "colony_spread_m_per_year": 0.003
+    "colony_spread_m_per_year": 0.003,
+    "operculum_form": "conic"
   },
   "evidence": {
     "traits": {
@@ -83,6 +84,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Estimate for a pavement and roof turf that spreads also by bulbils; to check against Glime, Bryophyte Ecology."
+    },
+    "traits.operculum_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Bryum: operculum weakly convex, short-conic, not rostrate. (efloras, read 2026-11-05)"
     }
   }
 }

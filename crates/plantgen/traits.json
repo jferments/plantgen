@@ -3779,6 +3779,14 @@
       "optional": true,
       "why": "how a ripe moss capsule is held on its seta: upright (erect), leaning (inclined), level (horizontal) or hanging (pendent, nutant)"
     },
+    "operculum_form": {
+      "group": "fruit_and_cones",
+      "organ": "capsule",
+      "type": "enum",
+      "values": ["conic", "long_conic", "rostrate"],
+      "optional": true,
+      "why": "the moss capsule's lid: a short cone or dome (conic), a tall cone (long_conic), or drawn out into a beak (rostrate)"
+    },
     "capsule_share": {
       "group": "fruit_and_cones",
       "organ": "capsule",

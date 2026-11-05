@@ -132,6 +132,10 @@ pub struct MossKind {
     #[serde(default = "default_older_colour")]
     pub older_colour: [f32; 3],
     pub capsule_posture: CapsulePosture,
+    /// The capsule lid's length against the capsule's (trait
+    /// `operculum_form`: conic 0.1, long_conic 0.2, rostrate 0.3).
+    #[serde(default = "default_lid")]
+    pub lid_share: f64,
     /// Share of shoots bearing a capsule.
     pub capsule_share: f64,
     /// Metres a colony's edge moves out in a good year.
@@ -148,9 +152,12 @@ pub struct MossKind {
     pub tolerance: f64,
 }
 
-/// The value a qualified state picks: the state stated as most usual,
-/// the first of those that tie (in the map's order, so the same files
-/// give the same pick).
+/// A capsule lid unstated in the traits: a tall cone, between the short
+/// cones of Bryum and the beaks of Grimmia (FNA vols. 27-28).
+fn default_lid() -> f64 {
+    0.2
+}
+
 /// Older leaves a moss genus gives no colour for: yellow-brown.
 fn default_older_colour() -> [f32; 3] {
     linear(DEFAULT_OLDER)
@@ -158,6 +165,9 @@ fn default_older_colour() -> [f32; 3] {
 
 const DEFAULT_OLDER: [u8; 3] = [66, 54, 30];
 
+/// The value a qualified state picks: the state stated as most usual,
+/// the first of those that tie (in the map's order, so the same files
+/// give the same pick).
 fn usual(value: &Value) -> Option<String> {
     match value {
         Value::String(text) => Some(text.clone()),
@@ -335,6 +345,11 @@ impl MossKind {
                 .and_then(colour)
                 .unwrap_or_else(default_older_colour),
             capsule_posture,
+            lid_share: match pick("operculum_form").as_deref() {
+                Some("conic") => 0.1,
+                Some("rostrate") => 0.3,
+                _ => default_lid(),
+            },
             capsule_share: num("capsule_share").unwrap_or(0.2),
             spread_m: num("colony_spread_m_per_year").unwrap_or(match form {
                 ColonyForm::Cushion => 0.0015,
@@ -450,11 +465,7 @@ impl MossKind {
     /// moss as a tint ([`MossCover::tint`]).
     #[must_use]
     pub fn far_colour(&self) -> [f32; 3] {
-        blend(
-            scaled(self.colour, CANOPY_SHADE),
-            HYALINE,
-            self.whiteness(0.5),
-        )
+        shell_colour(self, 1.0, 0.5)
     }
 
     /// How much the hair-points and hyaline tips whiten a colony seen from
@@ -1505,13 +1516,7 @@ impl Drawer<'_> {
     /// woolly Racomitrium light grey dry, dark green moist). A struggling
     /// colony is yellower and browner.
     fn leaf_colour(&self, kind: &MossKind, vigour: f64) -> [f32; 3] {
-        let c = kind.colour;
-        let grey = 0.3 * c[0] + 0.6 * c[1] + 0.1 * c[2];
-        let wet = [c[0] * 0.8, c[1] * 0.86, c[2] * 0.8];
-        let dry = blend(blend(c, [grey; 3], 0.45), [0.13, 0.11, 0.06], 0.25);
-        let dry = scaled(dry, 1.08);
-        let c = blend(dry, wet, self.options.hydration);
-        blend([0.1, 0.08, 0.035], c, 0.45 + 0.55 * vigour)
+        leaf_colour(kind, vigour, self.options.hydration)
     }
 
     /// The colour a shell shows from afar: the leaves, whitened by the
@@ -1522,8 +1527,7 @@ impl Drawer<'_> {
     /// (canopy 0.05-0.11 in the visible, Lovelock and Robinson 2002,
     /// against about 0.13 for a leaf).
     fn shell_colour(&self, kind: &MossKind, vigour: f64) -> [f32; 3] {
-        let leaf = scaled(self.leaf_colour(kind, vigour), CANOPY_SHADE);
-        blend(leaf, HYALINE_MASSED, kind.whiteness(self.options.hydration))
+        shell_colour(kind, vigour, self.options.hydration)
     }
 
     #[allow(clippy::too_many_lines)]
@@ -2213,7 +2217,7 @@ impl Drawer<'_> {
         }
         // The lid, a short cone.
         if let Some(prev) = previous {
-            let lid_tip = last_centre + cap_dir * (length * 0.28);
+            let lid_tip = last_centre + cap_dir * (length * kind.lid_share);
             let lid = blend(kind.capsule_colour, [0.35, 0.12, 0.05], 0.4);
             for k in 0..sides {
                 let k1 = (k + 1) % sides;
@@ -2275,6 +2279,245 @@ impl Drawer<'_> {
             self.tri([p[k], q[k], q[k1]], [colour; 3], false);
             self.tri([p[k], q[k1], p[k1]], [colour; 3], false);
         }
+    }
+}
+
+/// The leaf colour of `kind` at `hydration` (see `Drawer::leaf_colour`).
+fn leaf_colour(kind: &MossKind, vigour: f64, hydration: f64) -> [f32; 3] {
+    let c = kind.colour;
+    let grey = 0.3 * c[0] + 0.6 * c[1] + 0.1 * c[2];
+    let wet = [c[0] * 0.8, c[1] * 0.86, c[2] * 0.8];
+    let dry = blend(blend(c, [grey; 3], 0.45), [0.13, 0.11, 0.06], 0.25);
+    let dry = scaled(dry, 1.08);
+    let c = blend(dry, wet, hydration);
+    blend([0.1, 0.08, 0.035], c, 0.45 + 0.55 * vigour)
+}
+
+/// The colour a colony shows from afar at `hydration` (see
+/// `Drawer::shell_colour`).
+fn shell_colour(kind: &MossKind, vigour: f64, hydration: f64) -> [f32; 3] {
+    let leaf = scaled(leaf_colour(kind, vigour, hydration), CANOPY_SHADE);
+    blend(leaf, HYALINE_MASSED, kind.whiteness(hydration))
+}
+
+/// A colony's ragged outline: its radius at `angle`, as its shell draws
+/// it (the colony's lobes, and finer the clumps of shoots at its edge).
+fn outline_radius(form: ColonyForm, radius: f64, seed: u64, angle: f64) -> f64 {
+    let (lobes, roughness) = match form {
+        ColonyForm::Cushion => (3, 0.12),
+        ColonyForm::Turf => (5, 0.22),
+        ColonyForm::Mat | ColonyForm::Weft => (7, 0.35),
+    };
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+    let fine_lobes = ((std::f64::consts::TAU * radius / 0.006) as u32).clamp(6, 40);
+    radius
+        * (1.0
+            + roughness * ring_noise(seed, angle, lobes)
+            + 0.1 * ring_noise(mix(seed, 77), angle, fine_lobes))
+}
+
+/// Moss as a tint over the site's own surfaces, with no triangles of its
+/// own: the level below [`Detail::Patch`], for far views and the lowest
+/// settings, where a host colours its roof's or wall's texture by the
+/// moss over it ([`MossCover::tint`]).
+pub struct Tint<'a> {
+    cover: &'a MossCover,
+    hydration: f64,
+    cell: f64,
+    cells: std::collections::HashMap<(i64, i64, i64), Vec<u32>>,
+}
+
+impl MossCover {
+    /// The cover as a [`Tint`] at `hydration` (0 dry to 1 just rained on).
+    #[must_use]
+    pub fn tint(&self, hydration: f64) -> Tint<'_> {
+        let widest = self
+            .colonies
+            .iter()
+            .map(|colony| colony.radius_m)
+            .fold(0.0, f64::max);
+        let cell = (widest * 1.4).max(0.05);
+        let mut cells: std::collections::HashMap<(i64, i64, i64), Vec<u32>> =
+            std::collections::HashMap::new();
+        for (index, colony) in self.colonies.iter().enumerate() {
+            cells
+                .entry(cell_of(v3(colony.centre), cell))
+                .or_default()
+                .push(u32::try_from(index).unwrap_or(u32::MAX));
+        }
+        Tint {
+            cover: self,
+            hydration: hydration.clamp(0.0, 1.0),
+            cell,
+            cells,
+        }
+    }
+}
+
+#[allow(clippy::cast_possible_truncation)]
+fn cell_of(p: Vec3, cell: f64) -> (i64, i64, i64) {
+    (
+        (p.x / cell).floor() as i64,
+        (p.y / cell).floor() as i64,
+        (p.z / cell).floor() as i64,
+    )
+}
+
+impl Tint<'_> {
+    /// The moss at `p` on a surface facing `normal`: its far colour
+    /// (linear RGB) and the share of the surface it hides, 0 to 1. The
+    /// share falls off over the outer fifth of the colony's ragged rim
+    /// and is less where the colony struggles (its shoots stand thinner).
+    #[must_use]
+    #[allow(clippy::many_single_char_names)]
+    pub fn at(&self, p: Vec3, normal: Vec3) -> Option<([f32; 3], f64)> {
+        let (cx, cy, cz) = cell_of(p, self.cell);
+        let mut best: Option<([f32; 3], f64)> = None;
+        for dx in -1..=1 {
+            for dy in -1..=1 {
+                for dz in -1..=1 {
+                    let Some(list) = self.cells.get(&(cx + dx, cy + dy, cz + dz)) else {
+                        continue;
+                    };
+                    for &index in list {
+                        let colony = &self.cover.colonies[index as usize];
+                        let Some(kind) = self.cover.kinds.get(usize::from(colony.kind)) else {
+                            continue;
+                        };
+                        let n = v3(colony.normal);
+                        if n.dot(normal) < 0.3 {
+                            continue;
+                        }
+                        let d = p - v3(colony.centre);
+                        // Over a step or two of tiles below its plane.
+                        if d.dot(n).abs() > (colony.radius_m * 0.6).max(0.035) {
+                            continue;
+                        }
+                        let flat = d - n * d.dot(n);
+                        let rho = flat.length();
+                        if rho > colony.radius_m * 1.5 {
+                            continue;
+                        }
+                        let (t, b) = frame(n);
+                        let angle = flat.dot(b).atan2(flat.dot(t));
+                        let seed = hash_words(&[
+                            self.cover.settings.seed,
+                            hash_str("colony"),
+                            u64::from(index),
+                        ]);
+                        let edge = outline_radius(kind.form, colony.radius_m, seed, angle);
+                        let share = math::smoothstep(edge, edge * 0.8, rho)
+                            * (0.7 + 0.3 * colony.vigour.clamp(0.0, 1.0));
+                        if share > best.map_or(0.0, |(_, s)| s) {
+                            best = Some((shell_colour(kind, colony.vigour, self.hydration), share));
+                        }
+                    }
+                }
+            }
+        }
+        best
+    }
+
+    /// `mesh` (a site as drawn, its colours linear RGB) tinted by the
+    /// moss: its triangles near moss split until no edge is longer than
+    /// `step`, and every vertex's colour blended toward the moss over it.
+    /// What a host does to its surface's texture, at `step` a texel.
+    /// Only triangles reaching into the box `low` to `high` are split.
+    #[must_use]
+    #[allow(clippy::many_single_char_names)]
+    pub fn paint(&self, mesh: &Mesh, step: f64, low: Vec3, high: Vec3) -> Mesh {
+        let step = step.max(1.0e-4);
+        let mut out = Mesh::default();
+        let position = |i: u32| {
+            let p = mesh.positions[i as usize];
+            Vec3::new(f64::from(p[0]), f64::from(p[1]), f64::from(p[2]))
+        };
+        let mut stack: Vec<([Vec3; 3], [[f32; 4]; 3], Vec3)> = Vec::new();
+        for first in (0..mesh.indices.len() / 3).map(|t| t * 3) {
+            let tri = &mesh.indices[first..first + 3];
+            let corners = [position(tri[0]), position(tri[1]), position(tri[2])];
+            let colours = [
+                mesh.colors[tri[0] as usize],
+                mesh.colors[tri[1] as usize],
+                mesh.colors[tri[2] as usize],
+            ];
+            let n = mesh.normals[tri[0] as usize];
+            let normal = Vec3::new(f64::from(n[0]), f64::from(n[1]), f64::from(n[2]));
+            stack.push((corners, colours, normal));
+            while let Some((p, c, normal)) = stack.pop() {
+                let edges = [
+                    p[0].distance(p[1]),
+                    p[1].distance(p[2]),
+                    p[2].distance(p[0]),
+                ];
+                let longest = edges.iter().copied().fold(0.0, f64::max);
+                let (l, h) = (p[0].min(p[1]).min(p[2]), p[0].max(p[1]).max(p[2]));
+                let inside = l.x <= high.x
+                    && l.y <= high.y
+                    && l.z <= high.z
+                    && h.x >= low.x
+                    && h.y >= low.y
+                    && h.z >= low.z;
+                if longest > step && inside && self.near(p, longest) {
+                    let k = (0..3)
+                        .max_by(|a, b| edges[*a].total_cmp(&edges[*b]))
+                        .unwrap_or(0);
+                    let (a, b) = (k, (k + 1) % 3);
+                    let m = (p[a] + p[b]) * 0.5;
+                    let mc = [
+                        f32::midpoint(c[a][0], c[b][0]),
+                        f32::midpoint(c[a][1], c[b][1]),
+                        f32::midpoint(c[a][2], c[b][2]),
+                        c[a][3],
+                    ];
+                    let mut first = p;
+                    let mut first_c = c;
+                    first[b] = m;
+                    first_c[b] = mc;
+                    let mut second = p;
+                    let mut second_c = c;
+                    second[a] = m;
+                    second_c[a] = mc;
+                    stack.push((first, first_c, normal));
+                    stack.push((second, second_c, normal));
+                    continue;
+                }
+                let base = u32::try_from(out.positions.len()).unwrap_or(u32::MAX);
+                for k in 0..3 {
+                    let mut colour = [c[k][0], c[k][1], c[k][2]];
+                    if let Some((moss, share)) = self.at(p[k], normal) {
+                        colour = blend(colour, moss, share);
+                    }
+                    out.push(Vertex::plain(p[k], normal, colour));
+                }
+                out.indices.extend([base, base + 1, base + 2]);
+            }
+        }
+        out
+    }
+
+    /// Whether any colony lies within `reach` of the triangle `p`.
+    fn near(&self, p: [Vec3; 3], reach: f64) -> bool {
+        let centre = (p[0] + p[1] + p[2]) * (1.0 / 3.0);
+        let span = reach + self.cell;
+        #[allow(clippy::cast_possible_truncation)]
+        let cells = (span / self.cell).ceil() as i64;
+        let (cx, cy, cz) = cell_of(centre, self.cell);
+        if (2 * cells + 1).pow(3) > i64::try_from(self.cells.len()).unwrap_or(i64::MAX) {
+            return self.cells.keys().any(|&(x, y, z)| {
+                (x - cx).abs() <= cells && (y - cy).abs() <= cells && (z - cz).abs() <= cells
+            });
+        }
+        for dx in -cells..=cells {
+            for dy in -cells..=cells {
+                for dz in -cells..=cells {
+                    if self.cells.contains_key(&(cx + dx, cy + dy, cz + dz)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        false
     }
 }
 

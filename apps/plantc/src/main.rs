@@ -3278,15 +3278,19 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
     };
     let focus = numbers("focus", 3)?.map(|v| Vec3::new(v[0], v[1], v[2]));
     let span: f64 = options.number("span")?.unwrap_or(2.0);
+    // `tint`: no moss triangles; the site's own surfaces coloured by the
+    // moss over them, as a host tints a roof's or wall's texture.
+    let tinted = options.flags.get("detail").map(String::as_str) == Some("tint");
     let detail = match options.flags.get("detail").map(String::as_str) {
-        None | Some("near") => Detail::Near,
+        None | Some("near" | "tint") => Detail::Near,
         Some("patch") => Detail::Patch,
         Some("shell") => Detail::Shell,
         Some("shoots") => Detail::Shoots,
         Some(other) => {
-            return Err(
-                format!("unknown detail `{other}`; use patch, shell, shoots or near").into(),
-            );
+            return Err(format!(
+                "unknown detail `{other}`; use tint, patch, shell, shoots or near"
+            )
+            .into());
         }
     };
     let draw = DrawOptions {
@@ -3295,7 +3299,11 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
         near: focus.map(|at| (at, span)),
         capsules: options.flags.get("capsules").is_none_or(|v| v != "no"),
     };
-    let mut moss = cover.draw(&site, &draw);
+    let mut moss = if tinted {
+        plantgen::mesh::Mesh::default()
+    } else {
+        cover.draw(&site, &draw)
+    };
     let (low, high) = match focus {
         Some(at) => {
             let half = Vec3::new(span, span, span) * 1.5;
@@ -3308,6 +3316,13 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
         high + Vec3::new(1.0, 1.0, 1.0),
         Vec3::ZERO,
     );
+    if tinted {
+        // A texel about three pixels across, and 5 mm at the finest.
+        let across = focus.map_or_else(|| (high - low).length(), |_| span * 2.0);
+        let pixels: f64 = options.number("size")?.unwrap_or(1200.0);
+        let step = (across / pixels * 3.0).max(0.005);
+        ground = cover.tint(draw.hydration).paint(&ground, step, low, high);
+    }
     // Seen from the north: the scene turned half round about the focus.
     let north = match options.flags.get("from").map(String::as_str) {
         None | Some("south") => false,
