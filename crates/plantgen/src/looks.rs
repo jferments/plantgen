@@ -1841,6 +1841,35 @@ pub struct Compound {
     pub tip: Option<f64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub base: Option<f64>,
+    /// Each leaflet's tip and foot, as a simple blade's are drawn
+    /// ([`Simple::apex_taper`], [`Simple::apex_point`],
+    /// [`Simple::apex_notch`], [`Simple::base_taper`]): a compound leaf's
+    /// apex and base words are its leaflets'. An obcordate leaflet (a
+    /// wood sorrel's) is notched deep at its broad tip.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub apex_taper: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub apex_point: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub apex_notch: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub base_taper: Option<f64>,
+    /// Each leaflet drawn as a fan (flabellate): straight sides spreading
+    /// from its foot to a far edge that is an arc about it, as broad as
+    /// `leaflet_width` says (up to a half circle at 2), its teeth or lobes
+    /// on that far edge alone. A vanilla leaf's three leaflets are fans
+    /// that close into a near circle, "distal margins 3-4-lobed, proximal
+    /// margins entire" (Flora of North America). It takes the place of
+    /// the leaflet's outline, `widest`, `tip` and `base`.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub flabellate: Option<bool>,
+    /// How lopsided each lateral leaflet is: its half toward the leaf's
+    /// foot (basiscopic) is `1 + oblique` times as broad as it would be,
+    /// its half toward the tip `1 - oblique` (on a fan, the angle each
+    /// half spans). A bean's or a vanilla leaf's side leaflets are
+    /// oblique; a terminal leaflet never is. Unset or 0 for even halves.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub oblique: Option<f64>,
     /// Each leaflet's stalk, as a share of its length.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub petiolule: Option<f64>,
@@ -1906,6 +1935,12 @@ impl Default for Compound {
             widest: None,
             tip: None,
             base: None,
+            apex_taper: None,
+            apex_point: None,
+            apex_notch: None,
+            base_taper: None,
+            flabellate: None,
+            oblique: None,
             petiolule: None,
             blade_width: None,
             lace: None,
@@ -3838,7 +3873,7 @@ impl Shape {
                 ..s.clone()
             }),
             Self::Compound(s) => Self::Compound(Compound {
-                leaflet_width: wide(s.leaflet_width, 0.01, 1.0, 0.2, 0.15),
+                leaflet_width: wide(s.leaflet_width, 0.01, MOST_LEAFLET_WIDTH, 0.2, 0.15),
                 ..s.clone()
             }),
             Self::Sprig(s) => {
@@ -4402,7 +4437,18 @@ impl Palmate {
     }
 }
 
+/// The broadest a leaflet is drawn for its length: a fan spread to a
+/// half circle, twice as broad as long. A vanilla leaf's and a wood
+/// sorrel's leaflets are broader than long.
+pub const MOST_LEAFLET_WIDTH: f64 = 2.0;
+
 impl Compound {
+    /// Whether each leaflet is drawn as a fan ([`Compound::flabellate`]).
+    #[must_use]
+    pub fn fanned(&self) -> bool {
+        self.flabellate.unwrap_or(false)
+    }
+
     /// Each leaflet's lobes a side and their depth, where its leaflets
     /// are lobed.
     #[must_use]
@@ -4492,7 +4538,7 @@ impl Compound {
         if form.segments > 0 {
             inner("segments", form.segments)?;
         }
-        check("leaflet_width", self.leaflet_width, 0.01, 1.0)?;
+        check("leaflet_width", self.leaflet_width, 0.01, MOST_LEAFLET_WIDTH)?;
         if self.teeth > 30 {
             return Err(format!(
                 "compound teeth must be between 0 and 30, found {}",
@@ -4521,6 +4567,11 @@ impl Compound {
             ("widest", self.widest, 0.15, 0.85),
             ("tip", self.tip, 0.0, 1.0),
             ("base", self.base, 0.0, 1.0),
+            ("apex_taper", self.apex_taper, 0.05, 4.0),
+            ("base_taper", self.base_taper, 0.05, 4.0),
+            ("apex_point", self.apex_point, 0.0, 0.3),
+            ("apex_notch", self.apex_notch, 0.0, 0.3),
+            ("oblique", self.oblique, 0.0, 0.6),
             ("petiolule", self.petiolule, 0.0, 0.5),
             ("blade_width", self.blade_width, 0.02, 3.0),
             ("lift", self.lift, -90.0, 90.0),
@@ -6786,6 +6837,10 @@ mod tests {
                         assert!(with(field, red).is_ok(), "{at}");
                         assert!(with(field, 2.5.into()).is_err(), "{at} takes a number");
                     }
+                    Field::Flag => {
+                        assert!(with(field, true.into()).is_ok(), "{at}");
+                        assert!(with(field, 2.5.into()).is_err(), "{at} takes a number");
+                    }
                 }
             }
             // Every field the template writes is listed.
@@ -6839,7 +6894,9 @@ mod tests {
                     let error = with("none".into()).unwrap_err().to_string();
                     assert!(error.contains("unknown variant"), "{key}: {error}");
                 }
-                Field::Outline | Field::Colour => panic!("{key} takes no outline or colour"),
+                Field::Outline | Field::Colour | Field::Flag => {
+                    panic!("{key} takes no outline, colour or flag")
+                }
             }
         }
     }

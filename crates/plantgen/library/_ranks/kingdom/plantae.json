@@ -20,7 +20,7 @@
     },
     "appearance.organs.leaf.shape.width": {
       "template": ["simple", "sprig", "lobed"],
-      "map": {"leaf_shape": {"linear": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.08)"}, "lanceolate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.25)"}, "oblanceolate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.25)"}, "elliptic": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.57)"}, "oblong": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.4)"}, "ovate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.6)"}, "obovate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.6)"}, "orbicular": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.95)"}, "spatulate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.35)"}, "cordate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.8)"}, "reniform": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 1.3)"}, "deltate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.9)"}}},
+      "map": {"leaf_shape": {"linear": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.08)"}, "lanceolate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.25)"}, "oblanceolate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.25)"}, "elliptic": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.57)"}, "oblong": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.4)"}, "ovate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.6)"}, "obovate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.6)"}, "orbicular": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.95)"}, "spatulate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.35)"}, "cordate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.8)"}, "reniform": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 1.3)"}, "deltate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.9)"}, "flabellate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 1.3)"}, "obcordate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.85)"}}},
       "else": {"rule": "clamp(leaf_width_m / leaf_length_m, 0.005, 1.5)"},
       "between": true,
       "why": "A blade is as broad for its length as its flora measures it, the middle of each range, from a two-hundredth as broad as long (a thread-leaved sundew's leaf) up to one and a half times as broad, the broadest a card draws; where it gives no measures, as its shape word says; between two words, between their breadths."
@@ -33,22 +33,22 @@
     },
     "appearance.organs.basal.shape.width": {
       "template": ["simple", "sprig", "lobed"],
-      "map": {"leaf_shape": {"linear": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.08)"}, "lanceolate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.25)"}, "oblanceolate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.25)"}, "elliptic": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.57)"}, "oblong": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.4)"}, "ovate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.6)"}, "obovate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.6)"}, "orbicular": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.95)"}, "spatulate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.35)"}, "cordate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.8)"}, "reniform": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 1.3)"}, "deltate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.9)"}}},
+      "map": {"leaf_shape": {"linear": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.08)"}, "lanceolate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.25)"}, "oblanceolate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.25)"}, "elliptic": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.57)"}, "oblong": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.4)"}, "ovate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.6)"}, "obovate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.6)"}, "orbicular": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.95)"}, "spatulate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.35)"}, "cordate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.8)"}, "reniform": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 1.3)"}, "deltate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.9)"}, "flabellate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 1.3)"}, "obcordate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.005, 1.5), 0.85)"}}},
       "else": {"rule": "clamp(leaf_width_m / leaf_length_m, 0.005, 1.5)"},
       "between": true,
       "why": "A rosette's leaves are the species' leaves, unless their own are stated: a blade is as broad for its length as its flora measures it, the middle of each range, from a two-hundredth as broad as long (a thread-leaved sundew's leaf) up to one and a half times as broad, the broadest a card draws; where it gives no measures, as its shape word says; between two words, between their breadths."
     },
     "appearance.organs.leaf.shape.leaflet_width": {
       "template": "compound",
-      "map": {"leaf_shape": {"linear": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 1), 0.08)"}, "lanceolate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 1), 0.25)"}, "oblanceolate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 1), 0.25)"}, "elliptic": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 1), 0.57)"}, "oblong": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 1), 0.4)"}, "ovate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 1), 0.6)"}, "obovate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 1), 0.6)"}, "orbicular": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 1), 0.95)"}, "spatulate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 1), 0.35)"}, "cordate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 1), 0.8)"}, "reniform": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 1), 1.3)"}, "deltate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 1), 0.9)"}}},
-      "else": {"rule": "clamp(leaflet_width_m / leaflet_length_m, 0.01, 1)"},
+      "map": {"leaf_shape": {"linear": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 2), 0.08)"}, "lanceolate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 2), 0.25)"}, "oblanceolate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 2), 0.25)"}, "elliptic": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 2), 0.57)"}, "oblong": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 2), 0.4)"}, "ovate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 2), 0.6)"}, "obovate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 2), 0.6)"}, "orbicular": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 2), 0.95)"}, "spatulate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 2), 0.35)"}, "cordate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 2), 0.8)"}, "reniform": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 2), 1.3)"}, "deltate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 2), 0.9)"}, "flabellate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 2), 1.6)"}, "obcordate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 2), 1.0)"}}},
+      "else": {"rule": "clamp(leaflet_width_m / leaflet_length_m, 0.01, 2)"},
       "between": true,
       "why": "A leaflet is as broad for its length as its flora measures it, the middle of each range, up to as broad as long, the broadest a compound card draws its leaflets; where it gives no measures, as the compound leaf's shape word, which is its leaflets', says."
     },
     "appearance.organs.basal.shape.leaflet_width": {
       "template": "compound",
-      "map": {"leaf_shape": {"linear": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 1), 0.08)"}, "lanceolate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 1), 0.25)"}, "oblanceolate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 1), 0.25)"}, "elliptic": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 1), 0.57)"}, "oblong": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 1), 0.4)"}, "ovate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 1), 0.6)"}, "obovate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 1), 0.6)"}, "orbicular": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 1), 0.95)"}, "spatulate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 1), 0.35)"}, "cordate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 1), 0.8)"}, "reniform": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 1), 1.3)"}, "deltate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 1), 0.9)"}}},
-      "else": {"rule": "clamp(leaflet_width_m / leaflet_length_m, 0.01, 1)"},
+      "map": {"leaf_shape": {"linear": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 2), 0.08)"}, "lanceolate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 2), 0.25)"}, "oblanceolate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 2), 0.25)"}, "elliptic": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 2), 0.57)"}, "oblong": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 2), 0.4)"}, "ovate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 2), 0.6)"}, "obovate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 2), 0.6)"}, "orbicular": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 2), 0.95)"}, "spatulate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 2), 0.35)"}, "cordate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 2), 0.8)"}, "reniform": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 2), 1.3)"}, "deltate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 2), 0.9)"}, "flabellate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 2), 1.6)"}, "obcordate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.01, 2), 1.0)"}}},
+      "else": {"rule": "clamp(leaflet_width_m / leaflet_length_m, 0.01, 2)"},
       "between": true,
       "why": "A rosette's leaves are the species' leaves, unless their own are stated: a leaflet is as broad for its length as its flora measures it, the middle of each range, up to as broad as long, the broadest a compound card draws its leaflets; where it gives no measures, as the compound leaf's shape word, which is its leaflets', says."
     },
@@ -67,7 +67,9 @@
           "spatulate": [[0, 0.08], [0.02, 0.09], [0.05, 0.1], [0.1, 0.11], [0.2, 0.13], [0.3, 0.16], [0.4, 0.21], [0.5, 0.34], [0.6, 0.53], [0.7, 0.81], [0.8, 1], [0.9, 0.95], [0.95, 0.74], [0.98, 0.43], [1, 0]],
           "cordate": [[0, 0.9], [0.02, 0.94], [0.05, 0.97], [0.1, 0.99], [0.2, 1], [0.3, 0.97], [0.4, 0.9], [0.5, 0.8], [0.6, 0.67], [0.7, 0.52], [0.8, 0.36], [0.9, 0.19], [0.95, 0.1], [0.98, 0.04], [1, 0]],
           "reniform": [[0, 0.95], [0.02, 0.97], [0.05, 0.99], [0.1, 1], [0.2, 1], [0.3, 0.98], [0.4, 0.95], [0.5, 0.9], [0.6, 0.82], [0.7, 0.71], [0.8, 0.57], [0.9, 0.38], [0.95, 0.25], [0.98, 0.14], [1, 0]],
-          "deltate": [[0, 0.9], [0.02, 0.97], [0.05, 1], [0.1, 0.97], [0.2, 0.88], [0.3, 0.77], [0.4, 0.66], [0.5, 0.55], [0.6, 0.44], [0.7, 0.33], [0.8, 0.22], [0.9, 0.11], [0.95, 0.055], [0.98, 0.022], [1, 0]]
+          "deltate": [[0, 0.9], [0.02, 0.97], [0.05, 1], [0.1, 0.97], [0.2, 0.88], [0.3, 0.77], [0.4, 0.66], [0.5, 0.55], [0.6, 0.44], [0.7, 0.33], [0.8, 0.22], [0.9, 0.11], [0.95, 0.055], [0.98, 0.022], [1, 0]],
+          "flabellate": [[0, 0], [0.02, 0.03], [0.05, 0.09], [0.1, 0.17], [0.2, 0.35], [0.3, 0.52], [0.4, 0.7], [0.5, 0.87], [0.6, 1], [0.7, 0.87], [0.8, 0.73], [0.9, 0.53], [0.95, 0.38], [0.98, 0.24], [1, 0]],
+          "obcordate": [[0, 0], [0.02, 0.06], [0.05, 0.15], [0.1, 0.3], [0.2, 0.52], [0.3, 0.68], [0.4, 0.8], [0.5, 0.9], [0.6, 0.97], [0.7, 1], [0.8, 0.98], [0.9, 0.9], [0.95, 0.78], [0.98, 0.6], [1, 0]]
         }
       },
       "between": true,
@@ -88,7 +90,9 @@
           "spatulate": [[0, 0.08], [0.02, 0.09], [0.05, 0.1], [0.1, 0.11], [0.2, 0.13], [0.3, 0.16], [0.4, 0.21], [0.5, 0.34], [0.6, 0.53], [0.7, 0.81], [0.8, 1], [0.9, 0.95], [0.95, 0.74], [0.98, 0.43], [1, 0]],
           "cordate": [[0, 0.9], [0.02, 0.94], [0.05, 0.97], [0.1, 0.99], [0.2, 1], [0.3, 0.97], [0.4, 0.9], [0.5, 0.8], [0.6, 0.67], [0.7, 0.52], [0.8, 0.36], [0.9, 0.19], [0.95, 0.1], [0.98, 0.04], [1, 0]],
           "reniform": [[0, 0.95], [0.02, 0.97], [0.05, 0.99], [0.1, 1], [0.2, 1], [0.3, 0.98], [0.4, 0.95], [0.5, 0.9], [0.6, 0.82], [0.7, 0.71], [0.8, 0.57], [0.9, 0.38], [0.95, 0.25], [0.98, 0.14], [1, 0]],
-          "deltate": [[0, 0.9], [0.02, 0.97], [0.05, 1], [0.1, 0.97], [0.2, 0.88], [0.3, 0.77], [0.4, 0.66], [0.5, 0.55], [0.6, 0.44], [0.7, 0.33], [0.8, 0.22], [0.9, 0.11], [0.95, 0.055], [0.98, 0.022], [1, 0]]
+          "deltate": [[0, 0.9], [0.02, 0.97], [0.05, 1], [0.1, 0.97], [0.2, 0.88], [0.3, 0.77], [0.4, 0.66], [0.5, 0.55], [0.6, 0.44], [0.7, 0.33], [0.8, 0.22], [0.9, 0.11], [0.95, 0.055], [0.98, 0.022], [1, 0]],
+          "flabellate": [[0, 0], [0.02, 0.03], [0.05, 0.09], [0.1, 0.17], [0.2, 0.35], [0.3, 0.52], [0.4, 0.7], [0.5, 0.87], [0.6, 1], [0.7, 0.87], [0.8, 0.73], [0.9, 0.53], [0.95, 0.38], [0.98, 0.24], [1, 0]],
+          "obcordate": [[0, 0], [0.02, 0.06], [0.05, 0.15], [0.1, 0.3], [0.2, 0.52], [0.3, 0.68], [0.4, 0.8], [0.5, 0.9], [0.6, 0.97], [0.7, 1], [0.8, 0.98], [0.9, 0.9], [0.95, 0.78], [0.98, 0.6], [1, 0]]
         }
       },
       "between": true,
@@ -508,6 +512,26 @@
       "map": {"leaf_lobe_apex": {"acute": 0, "obtuse": 0.5, "rounded": 1}},
       "why": "A lobed blade's lobes end in points, blunt tips or round ones, as stated; rounded where no flora says."
     },
+    "appearance.organs.leaf.shape.flabellate": {
+      "template": ["compound"],
+      "map": {"leaf_shape": {"flabellate": true}},
+      "why": "A compound leaf stated with fan-shaped leaflets draws each as a fan: straight sides from its foot to a far edge that is an arc about it, its teeth or lobes on that edge alone, and fans set edge to edge where no spread is stated; a vanilla leaf's three close into a near circle."
+    },
+    "appearance.organs.leaf.shape.oblique": {
+      "template": ["compound"],
+      "map": {"lateral_leaflets": {"symmetric": 0, "asymmetric": 0.3}},
+      "why": "A compound leaf's side leaflets stated asymmetric are drawn with the half toward the leaf's foot 1.3 times as broad as the other is narrow, 0.7: the broad half of a vanilla leaf's side leaflet fills in beside the petiole."
+    },
+    "appearance.organs.basal.shape.flabellate": {
+      "template": ["compound"],
+      "map": {"leaf_shape": {"flabellate": true}},
+      "why": "A rosette's leaves are the species' leaves, unless their own are stated: A compound leaf stated with fan-shaped leaflets draws each as a fan: straight sides from its foot to a far edge that is an arc about it, its teeth or lobes on that edge alone, and fans set edge to edge where no spread is stated; a vanilla leaf's three close into a near circle."
+    },
+    "appearance.organs.basal.shape.oblique": {
+      "template": ["compound"],
+      "map": {"lateral_leaflets": {"symmetric": 0, "asymmetric": 0.3}},
+      "why": "A rosette's leaves are the species' leaves, unless their own are stated: A compound leaf's side leaflets stated asymmetric are drawn with the half toward the leaf's foot 1.3 times as broad as the other is narrow, 0.7: the broad half of a vanilla leaf's side leaflet fills in beside the petiole."
+    },
     "appearance.organs.leaf.shape.lobes": {
       "template": ["compound"],
       "map": {"leaflet_incision": {"none": 0, "lobed": 3, "cleft": 3}},
@@ -758,6 +782,26 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "How PlantGen draws a stated leaf margin, a choice of the model's (visual forms, 2026-10-16), the words as the trait defines them: serrate teeth point forward, dentate outward, crenate are rounded, spiny end in spines. The counts and depths are calibrated on the curated species whose leaves are drawn toothed (25 simple and sprig leaves: 2 to 18 teeth a side, about 9 in the middle; tooth depth about 0.03 of the blade's length in the middle; Garry oak's rounded lobes 0.8 round, tanoak's teeth 0.3). A species' own drawn teeth win over these."
+    },
+    "rules.appearance.organs.leaf.shape.flabellate": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a fan-shaped leaflet, a choice of the model's (leaf outlines, 2026-11-05): flabellate as Harris and Harris define it, fan-shaped, broadest across a rounded far edge; drawn as a sector of a circle about the leaflet's foot, as broad as its width says, so that its lobes and teeth stand on the arc where floras put them (Achlys, Flora of North America vol. 3: proximal margins entire, distal margins lobed)."
+    },
+    "rules.appearance.organs.leaf.shape.oblique": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a lopsided side leaflet, a choice of the model's (leaf outlines, 2026-11-05): floras say 'asymmetric' or 'oblique' without a measure; 0.3 makes the broad half nearly twice the narrow (1.3 against 0.7), as a vanilla leaf's side leaflets are in photographs."
+    },
+    "rules.appearance.organs.basal.shape.flabellate": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a fan-shaped leaflet, a choice of the model's (leaf outlines, 2026-11-05): flabellate as Harris and Harris define it, fan-shaped, broadest across a rounded far edge; drawn as a sector of a circle about the leaflet's foot, as broad as its width says, so that its lobes and teeth stand on the arc where floras put them (Achlys, Flora of North America vol. 3: proximal margins entire, distal margins lobed)."
+    },
+    "rules.appearance.organs.basal.shape.oblique": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a lopsided side leaflet, a choice of the model's (leaf outlines, 2026-11-05): floras say 'asymmetric' or 'oblique' without a measure; 0.3 makes the broad half nearly twice the narrow (1.3 against 0.7), as a vanilla leaf's side leaflets are in photographs."
     },
     "rules.appearance.organs.leaf.shape.lobes": {
       "evidence": "Authored",

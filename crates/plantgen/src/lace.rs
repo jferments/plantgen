@@ -439,8 +439,8 @@ impl<'a> Lace<'a> {
             let half = |t: f64| {
                 0.5 * self.c.leaflet_width
                     * blade
-                    * crate::templates::outline_profile(
-                        self.c.outline.as_deref(),
+                    * crate::templates::leaflet_profile(
+                        self.c,
                         t,
                         form.widest,
                         form.base,

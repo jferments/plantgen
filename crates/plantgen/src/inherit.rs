@@ -689,6 +689,8 @@ pub enum Field {
     /// A colour, red, green and blue from 0 to 1: a fruit's seeds, a
     /// flower's calyx or stigma lobes.
     Colour,
+    /// True or false: a compound leaf's leaflets drawn as fans.
+    Flag,
 }
 
 /// The fields of a card that replace others where set, and those they
@@ -1022,7 +1024,7 @@ fn every_look(
 /// the template may set inside a look's `shape`. The looks module's tests
 /// hold this to the templates.
 pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
-    use Field::{Colour, Count, Number, Outline, Word};
+    use Field::{Colour, Count, Flag, Number, Outline, Word};
     [
         (
             "needles",
@@ -1117,6 +1119,12 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("widest", Number),
                 ("tip", Number),
                 ("base", Number),
+                ("apex_taper", Number),
+                ("apex_point", Number),
+                ("apex_notch", Number),
+                ("base_taper", Number),
+                ("flabellate", Flag),
+                ("oblique", Number),
                 ("petiolule", Number),
                 ("blade_width", Number),
                 ("lace", Count),
@@ -3325,6 +3333,7 @@ fn fits(field: Option<Field>, value: &Value) -> Result<(), String> {
         Some(Field::Count) => (value.is_u64(), "a whole number, 0 or more"),
         Some(Field::Number) => (value.is_number(), "a number"),
         Some(Field::Word) => (value.is_string(), "a word"),
+        Some(Field::Flag) => (value.is_boolean(), "true or false"),
         Some(Field::Colour) => (
             value.as_array().is_some_and(|rgb| {
                 rgb.len() == 3

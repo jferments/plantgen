@@ -34,8 +34,8 @@
       "fruit_below": 0,
       "buds_above": 1,
       "nod": 0,
-      "leaf_area": 0.473,
-      "basal_area": 0.381,
+      "leaf_area": 0.72,
+      "basal_area": 0.66,
       "basal_piece_area": 0.235,
       "flower_area": 0.06,
       "bud_area": 0.0,
@@ -58,7 +58,7 @@
     "variation": 0.2,
     "organs": {
       "leaf": {
-        "shape": { "template": "compound", "leaflet_width": 0.95, "petiole": 0.3, "spread": 190, "lowest": 0.95, "outline": [[0, 0.05], [0.2, 0.3], [0.4, 0.52], [0.6, 0.74], [0.8, 0.93], [0.9, 1], [0.97, 0.85], [0.995, 0.5], [1, 0]] },
+        "shape": { "template": "compound", "petiole": 0.3, "lowest": 1.0 },
         "face_up": 0.7
       },
       "flower": {
@@ -85,6 +85,9 @@
   "tier": "procedural_proxy",
   "traits": {
     "leaf_margin": "dentate",
+    "leaf_shape": "flabellate",
+    "lateral_leaflets": "asymmetric",
+    "leaflet_incision": "lobed",
     "height_typical_m": {
       "min": 0.25,
       "max": 0.4
@@ -114,7 +117,7 @@
       "source": "plantgen-authors",
       "note": "The leaf area its `bud` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows: the bud is now its flower closed, where before it drew the fruit ovoid."
     },
-    "generator.params.basal_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The area its `basal` look draws on an organ 1 m long (visual forms leaf blades, 2026-10-15; plantc atlas), so it shades with what it shows: its rosette leaves now take the species' leaf rules and draw its compound leaf, where before they drew the generic simple card (0.235)."},
+    "generator.params.basal_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The area its `basal` look draws on an organ 1 m long (visual forms leaf blades, 2026-10-15; plantc atlas), so it shades with what it shows: its rosette leaves now take the species' leaf rules and draw its compound leaf, where before they drew the generic simple card (0.235). Since 2026-11-05 its leaflets are fans, lopsided at the sides and lobed on the far edge, drawn from its characters: leaf 0.473 to 0.72, basal 0.381 to 0.66."},
     "traits.height_typical_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1944",
@@ -198,8 +201,11 @@
     "appearance.organs.leaf.shape": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "The leaf drawn as a palmately compound leaf of three leaflets (spec rework P4), set from its characters by the rules at the flowering plants; before, one round blade stood in for it. By eye from photographs: the side leaflets held out level, 190 degrees apart, each leaflet a fan widening from a narrow foot to a broad, flat, toothed edge. The card now holds a stub of the stalk, so the leaf is drawn 15 cm long where its blade was 11 cm."
+      "note": "The leaf drawn as a palmately compound leaf of three leaflets (spec rework P4), set from its characters by the rules at the flowering plants: fans (its leaf shape), lopsided side leaflets and lobes on the far edge (2026-11-05). By hand only the stub of stalk the card holds (0.3 of it) and side leaflets as long as the middle one (lowest 1), by eye from photographs. Before 2026-11-05 a hand-drawn wedge outline 0.95 as broad as long, set 190 degrees apart, left wide gaps between narrow leaflets with fine teeth all along them, which looked nothing like the plant."
     },
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Achlys (genus, read on SEINet 2026-11-05): leaf blade orbiculate in gross outline; leaflet blades fan-shaped, entire or lobed, lateral leaflet blades strongly asymmetric, margins entire to coarsely sinuate; venation palmate. Achlys triphylla: central leaflet blade 4-11 x 4-8 cm, proximal margins entire, distal margins (1-)3-4(-8)-lobed. Fan-shaped is flabellate."},
+    "traits.lateral_leaflets": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Achlys (genus, read on SEINet 2026-11-05): leaf blade orbiculate in gross outline; leaflet blades fan-shaped, entire or lobed, lateral leaflet blades strongly asymmetric, margins entire to coarsely sinuate; venation palmate. Achlys triphylla: central leaflet blade 4-11 x 4-8 cm, proximal margins entire, distal margins (1-)3-4(-8)-lobed."},
+    "traits.leaflet_incision": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Achlys (genus, read on SEINet 2026-11-05): leaf blade orbiculate in gross outline; leaflet blades fan-shaped, entire or lobed, lateral leaflet blades strongly asymmetric, margins entire to coarsely sinuate; venation palmate. Achlys triphylla: central leaflet blade 4-11 x 4-8 cm, proximal margins entire, distal margins (1-)3-4(-8)-lobed. Coarse lobes on the far edge are lobed, not cleft."},
     "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2617402), as no source read gives it."},
     "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2617402), as no source read gives it."},
     "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2617402), as no source read gives it."},
