@@ -10,7 +10,9 @@
   },
   "growth_form": "forb",
   "generator": {
-    "params": {}
+    "params": {
+      "basal_angle": 15
+    }
   },
   "growth": {
     "years": 4,
@@ -328,6 +330,11 @@
       "evidence": "SourceInferred",
       "source": "flora-of-china",
       "note": "As for round-leaved sundew, no other value having been found for Drosera filiformis: Flora of China vol. 8 (2001), Droseraceae family account (eFloras, read 2026-10-19): rosulate basal leaves; spiral as in the order's default."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its leaves stand erect, as Flora of North America says (traits.leaf_posture): basal leaves 15 degrees from the vertical, each 0.6 to 1.4 of it, not the herb default of 35, which spread them out to nearly 50 (2026-11-04)."
     },
     "traits.leaf_posture": {
       "evidence": "SourceInferred",
