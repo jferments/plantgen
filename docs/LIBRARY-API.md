@@ -227,6 +227,19 @@ Ok(())
   (`development::RELEASE_CATCH_UP`: its years beneath the canopy count a
   third): at 500 years, a quarter of Wind River's 240-year hemlocks stand
   as 120-year trees in a stand, 43.6 m tall.
+- **Prototypes as packages.** A host that draws packages (Project
+  After does, with motion and card tiers) takes `fill.packages(which)`:
+  one `PrototypePackage` per species, setting and seed, its `spec`
+  holding that one variant with a keyframe at each of its prototypes'
+  ages. Build it as any package (`package::Inputs::new(&spec, &quality)`,
+  then `with_motion` or `with_cards` as you like), and draw prototype
+  `prototypes[k].0` as the package's variant at keyframe
+  `prototypes[k].1`: the same plant, at the same size, as `fill.measure`
+  grows. A tree come up beneath a canopy keeps the canopy as its
+  variant's neighbourhood, and an old tree grows on past its spec's
+  years. A climber grown at a wall's foot has no package yet.
+  `plantc fill ... --packages DIR` builds them and lists in
+  `DIR/packages.json` which package and keyframe draws each prototype.
 - **Parts of tall plants.** A prototype 6 m or taller is also written in
   parts (`FillSettings::parts`, on by default): its bole under the crown
   and its crown in up to four bands sized by its own height, each limb

@@ -35,7 +35,7 @@ use crate::niche::{self, Niche, SiteFactors};
 use crate::package::Measurements;
 use crate::rng;
 use crate::site_field::SiteField;
-use crate::spec::Environment;
+use crate::spec::{Environment, PlantSpec};
 use crate::stand_tile;
 
 /// The version of the instance file ([`Instance::to_bytes`]) and of the
@@ -289,6 +289,25 @@ pub struct PrototypeFiles {
     /// empty for a plant drawn whole.
     #[serde(default)]
     pub parts: Vec<PartRecord>,
+}
+
+/// The package that holds one growth of a fill's prototypes
+/// ([`Fill::packages`]): a species in one setting from one seed, kept at
+/// each of its prototypes' ages. A host that draws packages (After)
+/// builds it from `spec` as it builds any species' package
+/// ([`crate::package::Inputs::new`], with motion or card tiers as it
+/// likes), and draws prototype `prototypes[k].0` as the package's only
+/// variant at keyframe `prototypes[k].1`: the same plant, of the same
+/// size, as [`Fill::measure`] grows.
+#[derive(Debug, Clone)]
+pub struct PrototypePackage {
+    /// The species' spec, with one variant (the growth's setting and
+    /// seed) and a keyframe at each of its prototypes' ages, grown to the
+    /// oldest of them.
+    pub spec: PlantSpec,
+    /// Each prototype it holds ([`Fill::prototypes`]) and its keyframe in
+    /// the package, ages rising.
+    pub prototypes: Vec<(u32, usize)>,
 }
 
 #[derive(Serialize)]
@@ -1959,6 +1978,67 @@ impl Fill {
         };
         growths.sort_by(|a, b| oldest(b).total_cmp(&oldest(a)));
         growths
+    }
+
+    /// The packages that hold the prototypes `which` (indices into
+    /// [`Fill::prototypes`]; every one when empty): one per species,
+    /// setting (and canopy over it) and seed, as [`Fill::measure`] grows
+    /// them, the oldest growths first. A tree come up beneath a canopy
+    /// grows as [`Generator::grow_ages_beneath`] grows it, its variant's
+    /// neighbourhood the canopy's; an old plant past its spec's years
+    /// grows on to its age, as a grown-old spec does
+    /// ([`PlantSpec::grown_old`]). A climber grown at the foot of a wall
+    /// has no package yet (a spec states no wall to grow on), so the
+    /// prototypes of one are left out.
+    ///
+    /// # Errors
+    ///
+    /// When an index is not a prototype.
+    pub fn packages(&self, which: &[u32]) -> Result<Vec<PrototypePackage>, Error> {
+        let wanted = self.wanted(which)?;
+        let mut packages = Vec::new();
+        for growth in self.growths(&wanted) {
+            let first = &self.prototypes[growth[0] as usize];
+            if first.key.on_wall {
+                continue;
+            }
+            let ages: Vec<f64> = growth
+                .iter()
+                .map(|index| self.prototypes[*index as usize].age_years)
+                .collect();
+            let mut spec = self.species_of(first).generator.spec().clone();
+            let key = &first.key;
+            // Its reference sizes are its setting's: none beneath a
+            // canopy, where no yield table measured it.
+            if let Some(canopy) = key.beneath_m {
+                let beneath = spec.neighbourhood_beneath(f64::from(canopy));
+                spec.variants
+                    .neighbourhoods
+                    .insert(key.environment, beneath);
+                spec.allometry.clear();
+            } else {
+                spec.allometry
+                    .retain(|point| point.environment == key.environment);
+            }
+            spec.variants.environments = vec![key.environment];
+            // Its parameters dealt as among the species' own seeds.
+            spec.variants.dealt_among = std::mem::take(&mut spec.variants.seeds);
+            spec.variants.seeds = vec![key.seed];
+            spec.variants.conditions.clear();
+            if let Some(&oldest) = ages.last() {
+                spec.growth.years = spec.growth.years.max(oldest);
+            }
+            spec.growth.keyframes = ages;
+            packages.push(PrototypePackage {
+                spec,
+                prototypes: growth
+                    .iter()
+                    .enumerate()
+                    .map(|(keyframe, index)| (*index, keyframe))
+                    .collect(),
+            });
+        }
+        Ok(packages)
     }
 
     /// Grow the prototypes `which` (indices into [`Fill::prototypes`];
