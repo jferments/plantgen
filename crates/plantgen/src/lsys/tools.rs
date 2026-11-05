@@ -3352,6 +3352,13 @@ pub struct Pipes {
     /// as heartwood (`heartwood` > 0); otherwise only limbs shed from the
     /// bole do.
     pub heartwood: bool,
+    /// Ring area each stem segment (order 0) lays down per unit of time on
+    /// the girth it already has, per m² of leaf area above it times that
+    /// foliage's light (`cambium`): the stem's cambium adds a ring every
+    /// year, fed by what the foliage above makes, whether or not the pipes
+    /// above grow, so a trunk whose crown has stopped growing keeps
+    /// thickening. Limbs keep the pipe model's girth. 0: off.
+    pub cambium: f64,
 }
 
 /// The pipe model: a segment's radius `r` satisfies
@@ -3365,14 +3372,19 @@ pub struct Pipes {
 /// of area `rings · leaf area above` to every segment (Pressler's law: ring
 /// area is proportional to the foliage above), so stems keep thickening
 /// after their crowns stop growing. A segment's radius is the larger of
-/// the two, and never shrinks. The growth loop also keeps the pipes of
+/// the two, and never shrinks. With `cambium`, each step also lays a ring
+/// of area `cambium · Σ leaf area above × its light at the last step` on
+/// the girth each stem segment has
+/// (limbs keep the pipes' girth, so crowns grow and bend as before): while
+/// the pipes grow faster it is one ring on them, and once they stall (an
+/// old crown that no longer grows) the rings add up. The growth loop also keeps the pipes of
 /// shed limbs in the stem below them (Shinozaki et al.'s disused pipes).
 ///
 /// # Errors
 ///
 /// Fails on invalid settings.
 pub fn pipe(scene: &Scene, organ_area: &[f64], values: &[f64]) -> Result<Pipes, GrowthError> {
-    let [exponent, tip, organ, rings, heartwood] = values[..] else {
+    let [exponent, tip, organ, rings, heartwood, cambium] = values[..] else {
         return Err(invalid("pipe", "wrong number of settings".into()));
     };
     // Written so that NaN settings fail too.
@@ -3380,12 +3392,14 @@ pub fn pipe(scene: &Scene, organ_area: &[f64], values: &[f64]) -> Result<Pipes, 
         && tip > 0.0
         && organ >= 0.0
         && rings >= 0.0
-        && rings.is_finite();
+        && rings.is_finite()
+        && cambium >= 0.0
+        && cambium.is_finite();
     if !valid {
         return Err(invalid(
             "pipe",
             format!(
-                "exponent must be 1 to 4, tip positive, organ and rings not negative; found {exponent}, {tip}, {organ} and {rings}"
+                "exponent must be 1 to 4, tip positive, organ, rings and cambium not negative; found {exponent}, {tip}, {organ}, {rings} and {cambium}"
             ),
         ));
     }
@@ -3441,6 +3455,7 @@ pub fn pipe(scene: &Scene, organ_area: &[f64], values: &[f64]) -> Result<Pipes, 
         ring_rate: rings,
         exponent,
         heartwood: heartwood > 0.0,
+        cambium,
     })
 }
 
@@ -4461,7 +4476,7 @@ mod tests {
             "lsystem p 1; module A queries position; tool pipe@1 { exponent = 2, tip = 0.01 };
              axiom F(1) [ F(1) A ] [ F(1) A ] F(1) A;",
         );
-        let pipes = pipe(&setup.scene, &[], &[2.0, 0.01, 0.0, 0.0, 0.0]).unwrap();
+        let pipes = pipe(&setup.scene, &[], &[2.0, 0.01, 0.0, 0.0, 0.0, 0.0]).unwrap();
         // Three tips above the base: r = sqrt(3) * 0.01.
         assert!((pipes.radii[0] - 3.0_f64.sqrt() * 0.01).abs() < 1e-12);
         assert!((pipes.radii[1] - 0.01).abs() < 1e-12);

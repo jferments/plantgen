@@ -48,7 +48,7 @@ use sha2::{Digest, Sha256};
 
 use crate::export;
 use crate::library::Library;
-use crate::package::{self, Inputs, Measurements};
+use crate::package::{self, Inputs};
 use crate::quality;
 
 pub use crate::export::{
@@ -56,10 +56,12 @@ pub use crate::export::{
     crown_regions,
 };
 pub use crate::fill::{
-    CanopyCell, Community, Cover, CoverKind, Fill, FillSettings, INSTANCE_BYTES, INSTANCE_SCHEMA,
-    Instance, Layer, Member, PROTOTYPES_FILE, Prototype, PrototypeFiles, PrototypeKey,
-    STAND_CELL_M, Site, StandCell, StandMap, TileId, TilePlan, TileStats,
+    CLIMBER_SPACING_M, CanopyCell, Community, Cover, CoverKind, CrackPlant, FieldTile, Fill,
+    FillSettings, INSTANCE_BYTES, INSTANCE_SCHEMA, Instance, Layer, Member, PROTOTYPES_FILE,
+    Prototype, PrototypeFiles, PrototypeKey, RoofSoil, Roofs, STAND_AGES, STAND_CELL_M,
+    STAND_SCALE, Site, StandCell, StandMap, TileId, TilePlan, TileStats, moisture_from_wetness,
 };
+pub use crate::package::Measurements;
 pub use crate::quality::Quality;
 pub use crate::spec::{Environment, PlantSpec};
 
@@ -70,8 +72,13 @@ pub use crate::spec::{Environment, PlantSpec};
 /// break nothing; [`Variants`] draws tiers unless chosen. 3: [`Level`]
 /// gained `cards`, the baked-card tier a level is drawn as. 4: [`Level`]
 /// gained `parts`, its share in each region of
-/// [`Generator::export_parts`].
-pub const API_VERSION: u32 = 4;
+/// [`Generator::export_parts`]. 5: a [`Fill`] develops its stands at
+/// [`FillSettings::stand_ages`] in place of age classes, keys a
+/// [`PrototypeKey`] by its age (`age_tenths`) and is measured
+/// ([`Fill::measure`]) before [`Fill::tile`]; [`FillSettings`] is no
+/// longer `Copy` and [`TileStats`] is non-exhaustive; a plant grows past
+/// its spec's years to its old ages.
+pub const API_VERSION: u32 = 5;
 
 /// The name of the file listing a set of variants ([`VariantSet`]).
 pub const VARIANTS_FILE: &str = "variants.json";
@@ -191,6 +198,18 @@ impl Generator {
         &self.inputs.spec
     }
 
+    /// What the species' roots ask of the soil (its program's `soil@1`
+    /// settings with its first seed's parameters), or `None` when its
+    /// program has no soil tool or does not compile.
+    #[must_use]
+    pub fn soil_need(&self) -> Option<crate::lsys::tools::SoilNeed> {
+        let spec = &self.inputs.spec;
+        let (program, params) = spec.program_in(self.library).ok()?;
+        let seed = spec.variants.seeds.first().copied().unwrap_or(1);
+        let params = spec.seeded_params(&program, &params, seed);
+        crate::lsys::tools::SoilNeed::of_program(&program, &params)
+    }
+
     /// The package key: a hash of the spec, its program, the quality, the
     /// day and [`GENERATOR_REVISION`](crate::GENERATOR_REVISION).
     #[must_use]
@@ -226,10 +245,78 @@ impl Generator {
     ///
     /// # Errors
     ///
-    /// When the age is not above 0 and within the years the spec grows,
-    /// or the plant does not grow.
+    /// When the age is not above 0 and within the years the spec grows
+    /// or its old ages ([`PlantSpec::old_ages`]: doubling past its last
+    /// keyframe up to its lifespan), or the plant does not grow.
     pub fn grow_in(&self, environment: Environment, seed: u64, age: f64) -> Result<Plant, Error> {
         Ok(export::grow_seed(&self.inputs, environment, seed, age)?)
+    }
+
+    /// Plant `seed` grown in `environment`, kept at each of `ages`
+    /// (rising) from one growth: cheaper than [`Self::grow_in`] at each.
+    ///
+    /// # Errors
+    ///
+    /// When an age is not above 0 and within the years the spec grows or
+    /// its old ages, the ages do not rise, or the plant does not grow.
+    pub fn grow_ages_in(
+        &self,
+        environment: Environment,
+        seed: u64,
+        ages: &[f64],
+    ) -> Result<Vec<Plant>, Error> {
+        Ok(export::grow_seed_ages(
+            &self.inputs,
+            environment,
+            seed,
+            ages,
+        )?)
+    }
+
+    /// A climber's `seed` grown at the foot of a wall `wall_m` high and
+    /// kept at each of `ages` (rising), from one growth
+    /// ([`export::grow_on_wall`]): the wall's face is the plane z = -0.3
+    /// of the plant's frame, facing +z.
+    ///
+    /// # Errors
+    ///
+    /// As [`Self::grow_ages_in`], and when `wall_m` is not above 0.
+    pub fn grow_ages_on_wall(
+        &self,
+        seed: u64,
+        ages: &[f64],
+        wall_m: f64,
+    ) -> Result<Vec<Plant>, Error> {
+        Ok(export::grow_on_wall(&self.inputs, seed, ages, wall_m)?)
+    }
+
+    /// `plant` drawn at level `level` of its quality's levels of detail
+    /// (0 the finest; past the last, the last), on the generator's day,
+    /// as a package draws it; and the looks its cards' templates index.
+    /// For a renderer that draws many plants at once
+    /// ([`crate::preview::render_on_site`]): it gathers each species'
+    /// looks once and shifts its cards' templates past the looks before.
+    #[must_use]
+    pub fn draw(
+        &self,
+        plant: &Plant,
+        level: usize,
+    ) -> (crate::mesh::PlantMesh, &[crate::looks::Look]) {
+        let inputs = &self.inputs;
+        let lods = &inputs.quality.lods;
+        let level = level.min(lods.len().saturating_sub(1));
+        let staged = crate::looks::staged(&plant.graph, &inputs.sizes, &inputs.looks);
+        let drawn = staged.as_ref().unwrap_or(&plant.graph);
+        let (mesh, _) = package::level_mesh(
+            drawn,
+            inputs,
+            plant.seed,
+            &lods[level].for_height(plant.graph.height),
+            (level, 0.0),
+            None,
+            false,
+        );
+        (mesh, &inputs.looks)
     }
 
     /// A grown plant as glTF binary files, one per level of detail, and
@@ -410,12 +497,24 @@ impl Generator {
         parts: bool,
     ) -> Result<(VariantRecord, Vec<PartRecord>), Error> {
         let plant = self.grow_in(environment, seed, age)?;
+        self.write_plant(&plant, settings, out, parts)
+    }
+
+    /// Export `plant` into `out` as [`Self::write_one_in`] does.
+    pub(crate) fn write_plant(
+        &self,
+        plant: &Plant,
+        settings: &Settings,
+        out: &Path,
+        parts: bool,
+    ) -> Result<(VariantRecord, Vec<PartRecord>), Error> {
+        let seed = plant.seed;
         let regions = if parts {
             crown_regions(&plant.size)
         } else {
             Vec::new()
         };
-        let exported = self.export_parts(&plant, settings, &regions)?;
+        let exported = self.export_parts(plant, settings, &regions)?;
         let written = export::write(&exported, out)?;
         let part_records = regions
             .iter()

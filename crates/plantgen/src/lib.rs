@@ -95,6 +95,7 @@ pub mod substrate;
 pub mod succession;
 pub mod templates;
 pub mod texture;
+mod tile_scene;
 pub mod traits;
 pub mod venation;
 
@@ -1534,11 +1535,48 @@ pub mod venation;
 /// crown 18 m across with 35% there (355 m² of foliage on 74 cm, where the
 /// dome held 414 m² on 86).
 ///
-/// 194: six herbs draw their leaves as their floras state them, where
+/// 194: a daisy's floret gone to seed is a cypsela as long as its flora
+/// measures (`cypsela`, from `fruit_size_m`); a lone head whose flora
+/// gives no involucre width draws its involucre, pappus and cypselae to
+/// the flora's lengths over the disc it is drawn with; the daisy program
+/// leaves a herb's basal leaves to the herb rule, so a rosette herb has
+/// its rosette, and scapes that share one rosette (`rosette_scapes`, a
+/// dandelion's) share its leaves and rise from its middle; a disciform
+/// head is checked as the discoid one it is drawn as (horseweed and
+/// dandelion, from FNA and Flora of China).
+///
+/// 195: the card tiers' midrib lines for cut leaves are lit as their
+/// blades face, not as round stems facing out from the plant's middle (a
+/// yarrow's leaves drew as dark lines), and a solid flower head's cone
+/// reaches as deep as the head's cover from the side says, down at most
+/// to where its stalks meet, lit half way between straight out and its
+/// face as the stands of clusters drawn as cards are. A yarrow's low cards
+/// from the side went from 0.75 to 0.93 as bright as the plant.
+///
+/// 196: on the card tiers, a cut leaf (a yarrow's, a hemlock's) is a pair
+/// of crossed cards of its own, wearing a picture of its look's longest
+/// leaf laid flat, in place of a midrib line and the dots its segments
+/// baked to in the plant's cards (`crate::billboards`): its leaves read
+/// as feathery blades, not lines and dots.
+///
+/// 197: old conifer trunks (`pinidae` revision 15): a conifer's stem lays a
+/// ring every year on the trunk it has, 3e-5 m² of ring for each m² of
+/// foliage above times the share of the sky's light it catches
+/// (`pipe_cambium`, the pipe tool's `cambium`), so a trunk keeps
+/// thickening once its crown stops growing. The trunk was the pipe model's
+/// alone: a Douglas-fir grown 480 years in a stand was 74 cm through, and
+/// is now 118 (Ishii and McDowell 2002: 87 to 154 cm, mean 117, at 450
+/// years at Wind River). Young trees keep the pipe model's girth, as their
+/// pipes outgrow one year's ring (open-grown Douglas-fir 96 cm at 60
+/// years, as before; UTD 95), and limbs keep theirs, so crowns grow as
+/// before. Fed by light, a crown packed with shaded foliage (a Rocky
+/// Mountain juniper's) feeds little.
+///
+/// 198: six herbs draw their leaves as their floras state them, where
 /// their files drew them otherwise (checked against whole-plant photos
 /// from the side): sheep sorrel's and rusty saxifrage's basal leaves
 /// reach the 8 cm Abrams gives, Arizona lupine's leaf cards its longest
 /// leaflets on their longest petioles, jimsonweed's and the tomato's
 /// longest leaves the floras' longest, and a thread-leaved sundew's leaves
 /// stand erect, as Flora of North America says.
-pub const GENERATOR_REVISION: u32 = 194;
+pub const GENERATOR_REVISION: u32 = 198;

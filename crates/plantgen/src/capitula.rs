@@ -141,6 +141,9 @@ pub struct Capitulum {
     pub stand: f64,
     /// The pappus's length; 0 for none.
     pub pappus: f64,
+    /// A cypsela's length where the head states it; 0 for 0.8 of the
+    /// florets' spacing.
+    pub fruit: f64,
     pub phyllaries: Vec<Phyllary>,
     /// The rays that show: none in bud, nor once the head is half seed.
     pub rays: Vec<Strap>,
@@ -166,10 +169,15 @@ impl Capitulum {
         self.spacing * 0.54
     }
 
-    /// A cypsela's length.
+    /// A cypsela's length: as its head states it ([`Head::cypsela`]),
+    /// else 0.8 of its florets' spacing.
     #[must_use]
     pub fn cypsela(&self) -> f64 {
-        self.spacing * 0.8
+        if self.fruit > 0.0 {
+            self.fruit
+        } else {
+            self.spacing * 0.8
+        }
     }
 
     /// The highest point of the head above its foot.
@@ -350,6 +358,7 @@ pub fn layout(head: &Head, cup: f64, turn: f64) -> Capitulum {
             spacing * 0.9
         },
         pappus: disc * head.pappus.max(0.0),
+        fruit: disc * head.cypsela.max(0.0),
         phyllaries,
         rays,
         florets,

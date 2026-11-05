@@ -322,8 +322,7 @@ fn render_on(
 
     #[allow(clippy::cast_precision_loss)]
     let aspect = options.width as f64 / options.height as f64;
-    let fov = 30.0_f64;
-    let half_fov = crate::math::tan(crate::math::radians(fov * 0.5));
+    let half_fov = crate::math::tan(crate::math::radians(LENS_DEG * 0.5));
     // Frame the plant and the figure: x from -reach to the figure's far side.
     let right = if options.figure {
         figure_x + (0.5 * gap).max(0.05)
@@ -348,23 +347,14 @@ fn render_on(
             View::Side | View::Eye | View::ThreeQuarter | View::Oblique | View::Under,
             Some((target, span)),
         ) => {
-            let direction = match options.view {
-                View::Side | View::Eye => Vec3::new(0.0, 0.04, 1.0),
-                View::Under => Vec3::new(0.0, -0.36, 1.0),
-                View::Oblique => Vec3::new(0.7, 0.99, 0.7),
-                _ => Vec3::new(0.7, 0.3, 0.7),
-            }
-            .normalize_or(Vec3::Z);
-            // A close-up of a few millimetres stands back with a narrower
-            // lens, as a macro lens does, so nothing it frames comes
-            // nearer than the rasterizer's near plane.
-            let distance = (span * 0.5 / half_fov).max(MACRO_DISTANCE);
-            let fov_y = crate::math::degrees(2.0 * crate::math::atan(span * 0.5 / distance));
+            let (eye, half_height) = close_up_eye(options.view, target, span);
             Camera {
-                eye: above_ground(target + direction * distance),
+                eye,
                 target,
                 up: Vec3::Y,
-                projection: Projection::Perspective { fov_y },
+                projection: Projection::Perspective {
+                    fov_y: crate::math::degrees(2.0 * crate::math::atan(half_height)),
+                },
             }
         }
         (View::Side | View::Eye | View::ThreeQuarter | View::Oblique | View::Under, None) => {
@@ -385,7 +375,7 @@ fn render_on(
                 eye,
                 target,
                 up: Vec3::Y,
-                projection: Projection::Perspective { fov_y: fov },
+                projection: Projection::Perspective { fov_y: LENS_DEG },
             }
         }
         (View::Top, _) => Camera {
@@ -493,6 +483,32 @@ fn render_on(
     }
     image
 }
+
+/// Where a close-up from `view` framing `span` metres round `target` puts
+/// its eye, and the tangent of half its lens's vertical angle. A close-up
+/// of a few millimetres stands back with a narrower lens, as a macro lens
+/// does, so nothing it frames comes nearer than the rasterizer's near
+/// plane. Callers that draw only what such a close-up can resolve (`plantc
+/// scene`) place its camera with this.
+#[must_use]
+pub fn close_up_eye(view: View, target: Vec3, span: f64) -> (Vec3, f64) {
+    let direction = match view {
+        View::Side | View::Eye => Vec3::new(0.0, 0.04, 1.0),
+        View::Under => Vec3::new(0.0, -0.36, 1.0),
+        View::Oblique => Vec3::new(0.7, 0.99, 0.7),
+        _ => Vec3::new(0.7, 0.3, 0.7),
+    }
+    .normalize_or(Vec3::Z);
+    let half_fov = crate::math::tan(crate::math::radians(LENS_DEG * 0.5));
+    let distance = (span * 0.5 / half_fov).max(MACRO_DISTANCE);
+    (
+        above_ground(target + direction * distance),
+        span * 0.5 / distance,
+    )
+}
+
+/// The previews' lens: its vertical angle of view, degrees.
+const LENS_DEG: f64 = 30.0;
 
 /// The nearest a close-up's camera stands to the point it frames, metres:
 /// well beyond the rasterizer's near plane (5 cm), so a frame a few
