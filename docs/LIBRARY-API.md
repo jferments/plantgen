@@ -157,16 +157,31 @@ Ok(())
 
 - **Stands that develop.** A stand cell is drawn at the stand age
   (`FillSettings::stand_ages`, 10 to 640 years unless chosen) nearest its
-  years since disturbance. A young stand's trees are one cohort grown as
-  in the open; once its crowns close (35 years for Douglas-fir's 500-year
-  lifespan) they grow as in a closed stand and the canopy covers 85% of
-  the ground, falling to 70% in old growth's gaps; from a fifth of the
-  pioneers' lifespan shade-tolerant trees establish under them, fewer of
-  the older. Shrubs and herbs fill their layers' cover where enough light
-  reaches them, and herbs take the ground an open canopy leaves: 90% of
-  a meadow or a stand just after its disturbance. How many stems a cell
-  holds follows from the crowns, so a stand of narrow crowns holds more
-  than one of wide ones.
+  years since disturbance, its first cohort's trees grown to that age. A
+  young stand's trees grow as in the open until half its years to closure
+  (17 years for Douglas-fir's 500-year lifespan), then as in a stand.
+  Once the crowns close (35 years) the cohort's dominants overtop part
+  of it: those trees grow as overtopped trees do and stand in the middle
+  layer, two fifths of them suppressed, grown as at half the stand's
+  years, in the lower layer; the shade-intolerant among them die out
+  through maturation. From a fifth of the pioneers' lifespan
+  shade-tolerant trees establish under them, fewer of the older, and
+  stand in whichever layer their height puts them. Each layer covers
+  what western Oregon's wet conifer inventory plots find (McIntosh, Gray
+  and Garman 2009, PNW-GTR-794): in a closed young stand the upper trees
+  70%, the middle and lower trees 27% together, shrubs 45% and herbs
+  28%; in old growth 45%, 63%, 50% and 15%. Shrubs and herbs fill their
+  layers where enough light reaches them, herbs beneath shrubs in their
+  shade, and herbs take 90% of a meadow where no tree suits. How many
+  stems a cell holds follows from the crowns, so a stand of narrow crowns
+  holds more than one of wide ones.
+- **Measuring the layers.** `fill.layer_cover(&plan)` (`LayerCover`)
+  measures a filled tile as inventory crews measure a stand: trees 1.4 m
+  or taller in upper, middle and lower layers (thirds of the tallest
+  tree's height, as the fill lays the layers out), each layer's
+  crowns seen from above and counted once, their stems and mean heights,
+  and the shrubs and placed herbs beneath. `plantc fill` prints it, so a
+  fill can be set beside plot data.
 - **Edges.** A stand's first row of trees beside open ground (a bare
   cell, or a stand whose canopy stands under half as tall: a clearcut or
   a young stand beside an old one) grows as an `edge`, its crown free
