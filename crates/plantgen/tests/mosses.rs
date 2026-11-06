@@ -337,3 +337,39 @@ fn moss_leaves_take_their_outline_from_leaf_shape() {
     assert!((kind("Grimmia").blade_width(kind("Grimmia").blade_widest()) - 1.0).abs() < 1e-9);
     assert!(kind("Grimmia").blade_width(1.0) < 0.05);
 }
+
+#[test]
+fn a_drawn_cover_writes_as_a_glb_any_reader_opens() {
+    let site = wall_site();
+    let cover = mosses::grow(&site, &library_kinds(), &settings());
+    let moss = cover.draw(
+        &site,
+        &DrawOptions {
+            detail: Detail::Shell,
+            capsules: false,
+            ..DrawOptions::default()
+        },
+    );
+    let (low, high) = site.bounds();
+    let ground = site.drawn(low, high, Vec3::ZERO);
+    let file = plantgen::gltf::coloured_glb(
+        &[("site", &ground, false), ("moss", &moss, true)],
+        "PlantGen moss",
+        serde_json::json!({}),
+    );
+    let summary = plantgen::gltf::check(&file).expect("a valid glTF file");
+    assert_eq!(summary.nodes, 2);
+    assert_eq!(
+        summary.triangles,
+        (moss.indices.len() + ground.indices.len()) / 3
+    );
+    // Plain float positions, normals and colours: no extension a reader
+    // must know, so Blender's importer opens it as it is.
+    let glb = plantgen::gltf::Glb::read(&file).unwrap();
+    assert!(glb.json.get("extensionsRequired").is_none());
+    assert!(
+        glb.json
+            .pointer("/meshes/1/primitives/0/attributes/COLOR_0")
+            .is_some()
+    );
+}

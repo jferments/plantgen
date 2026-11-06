@@ -280,9 +280,9 @@ Usage:
       tile_m, seed, repeat, cover, scale, overlap and herb_radius_m.
   plantc moss <site.json> [--years N] [--seed N] [--latitude DEG]
               [--box X0,Y0,Z0,X1,Y1,Z1] [--out COVER.json] [--cover COVER.json]
-              [--render FILE.png [--view VIEW] [--size PIXELS] [--from south|north]
-               [--focus X,Y,Z | --genus GENUS] [--span METRES] [--wet 0..1]
-               [--detail tint|patch|shell|shoots|near] [--capsules yes|no]]
+              [--render FILE.png [--view VIEW] [--size PIXELS] [--from south|north]]
+              [--glb FILE.glb] [--focus X,Y,Z | --genus GENUS] [--span METRES]
+              [--wet 0..1] [--detail tint|patch|shell|shoots|near] [--capsules yes|no]
       Grow mosses over a site's faces (plantgen::mosses): every moss genus
       the library gives a colony_form settles where its light, wetness
       and substrate fit (rain on faces turned up, damp at a wall's foot,
@@ -295,7 +295,9 @@ Usage:
       just rained on, 0 dry (0.4 when left out); --from north looks from
       the north side. --genus looks at that genus's widest well-grown
       colony instead of --focus; a close render prints the genus of the
-      colony it is centred on, for its caption.
+      colony it is centred on, for its caption. --glb writes the same
+      site and moss as one glTF file (nodes `site` and `moss`, vertex
+      colours, the site's frame: +Y up, -Z north) that Blender opens.
   plantc site <site.json> [--out FILE.png] [--view VIEW] [--size PIXELS]
               [--day N] [--quality draft|standard]
               [--focus X,Y,Z [--span METRES]]
@@ -3227,7 +3229,7 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
         args,
         &[
             "years", "seed", "latitude", "box", "out", "cover", "render", "view", "size", "from",
-            "focus", "span", "wet", "detail", "capsules", "genus",
+            "focus", "span", "wet", "detail", "capsules", "genus", "glb",
         ],
     )?;
     let given = options.one_positional("a site document")?;
@@ -3294,9 +3296,11 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
             .map_err(|error| format!("cannot write {path}: {error}"))?;
         out!("wrote {path}");
     }
-    let Some(render) = options.flags.get("render") else {
+    let render = options.flags.get("render");
+    let glb = options.flags.get("glb");
+    if render.is_none() && glb.is_none() {
         return Ok(());
-    };
+    }
     let mut focus = numbers("focus", 3)?.map(|v| Vec3::new(v[0], v[1], v[2]));
     // `--genus G`: look at that genus's showpiece colony, so a view named
     // for a genus shows it and no other.
@@ -3374,6 +3378,30 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
         let step = (across / pixels * 3.0).max(0.005);
         ground = cover.tint(draw.hydration).paint(&ground, step, low, high);
     }
+    // `--glb FILE`: the site and its moss as drawn, in the site's own
+    // frame (+Y up, -Z north), for Blender and other glTF readers.
+    if let Some(path) = glb {
+        let detail_name = options.flags.get("detail").map_or("near", String::as_str);
+        let file = plantgen::gltf::coloured_glb(
+            &[("site", &ground, false), ("moss", &moss, true)],
+            "PlantGen moss",
+            serde_json::json!({
+                "years": cover.settings.years,
+                "hydration": draw.hydration,
+                "detail": detail_name,
+            }),
+        );
+        fs::write(path, &file).map_err(|error| format!("cannot write {path}: {error}"))?;
+        out!(
+            "wrote {path}: {} triangles of moss, {} of site ({:.1} MiB)",
+            moss.triangle_count(),
+            ground.triangle_count(),
+            f64::from(u32::try_from(file.len()).unwrap_or(u32::MAX)) / 1_048_576.0
+        );
+    }
+    let Some(render) = render else {
+        return Ok(());
+    };
     // Seen from the north: the scene turned half round about the focus.
     let north = match options.flags.get("from").map(String::as_str) {
         None | Some("south") => false,

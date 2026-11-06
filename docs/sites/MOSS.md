@@ -200,6 +200,27 @@ the view half round, `--wet 0.1` draws it dry,
 takes about 30 s; a close view with shoots, a few million triangles and
 seconds to tens of seconds.
 
+### In Blender
+
+`--glb FILE.glb` writes what a render would draw (the same `--detail`,
+`--focus` or `--genus`, `--span` and `--wet`, with or without
+`--render`) as one glTF file: a node `site` and a node `moss`, each one
+mesh in its vertex colours (`COLOR_0`, linear) under a white, rough
+material, in the site's frame (+Y up, -Z north; Blender turns it to +Z
+up, +Y north). `--detail tint` writes the site alone, its surfaces
+coloured by the moss over them. Arrays are plain floats, so Blender 4.5
+and later open it with File > Import > glTF 2.0 and no add-on; the
+vertex colours come in wired into the material. The files are large
+(about 120 bytes a triangle: the test wall's shells are 690,000
+triangles and 81 MB; a 4.5 cm close view with shoots 325,000 and 38 MB).
+
+```bash
+./target/release/plantc moss docs/sites/moss-wall.json --cover /tmp/cover.json \
+  --glb /tmp/grimmia.glb --genus Grimmia --span 0.045 --wet 0.95
+./target/release/plantc moss docs/sites/moss-wall.json --cover /tmp/cover.json \
+  --glb /tmp/wall.glb --detail shell
+```
+
 ## Tests
 
 `crates/plantgen/tests/mosses.rs`: the genera and their forms, colonies
@@ -208,7 +229,8 @@ of a wall carrying more moss than the sunny one, the same cover every
 time and through JSON, patches far with shells between and shoots near,
 the roof genera of western Oregon and their spore output, moss darker and greener wet than dry, a cover tinting the surface
 under it with no triangles of its own, and a view named for a genus
-finding a colony of that genus.
+finding a colony of that genus, and a drawn cover writing as a glTF file
+with no required extensions.
 
 ## Changing it
 
