@@ -1711,4 +1711,23 @@ pub mod venation;
 /// Vegetation Simulator's crown-width equation; it holds 757 m² of
 /// foliage at 480 years (Sillett et al. 2018: 630 to 1,480). Every
 /// conifer stays within its reference sizes.
-pub const GENERATOR_REVISION: u32 = 210;
+///
+/// 214: a compound corymb's branches turn upright at their tips, so the
+/// corymb each bears stands level with the others in one flat top (a
+/// rowan's, a Catalina ironwood's); before, each leaned with its branch.
+/// A corymb that floras call dense (`inflorescence_density`, the
+/// inflorescence's `fill`) leans its pedicels and branches just far
+/// enough that its heads or flowers fill its top, its branches as short
+/// as their heads allow, each tuft's heads side by side (a head leans
+/// with its pedicel, so it stands its own lean nearer the axis): a
+/// yarrow's 5 to 12 tufts of heads in one plate,
+/// each head sized from its involucre and rays (FNA), where hand values
+/// drew a cone of bare pedicels. Every other cluster draws as it did.
+/// A lacy leaf's rachises and ribbons are drawn in pieces along its
+/// droop's arc (`crate::lace`), where each was its chord: a drooping
+/// yarrow leaf's rachis ran 5 to 8 mm beside its pinnae, so they hung in
+/// a row off to one side of it. A divided leaf may hold its primary
+/// divisions in two ranks and only their segments all round
+/// (`division_planes` `segments_round`): a yarrow's leaf is a feathery
+/// strap, three-dimensional in its fine parts (FEIS), not a bottlebrush.
+pub const GENERATOR_REVISION: u32 = 214;
