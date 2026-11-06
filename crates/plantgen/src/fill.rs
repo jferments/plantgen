@@ -29,7 +29,7 @@ use std::sync::{Arc, Mutex, OnceLock, PoisonError};
 use serde::{Deserialize, Serialize};
 
 use crate::api::{Error, Generator, Options, PartRecord, Plant, Settings, VariantRecord};
-use crate::development::{self, Candidate, Stage};
+use crate::development::{self, Candidate};
 use crate::lsys::tools::SoilNeed;
 use crate::niche::{self, Niche, SiteFactors};
 use crate::package::Measurements;
@@ -1197,6 +1197,45 @@ pub struct TileStats {
     pub edge_trees_per_ha: f64,
 }
 
+/// Each layer of a filled tile seen from above ([`Fill::layer_cover`]),
+/// as inventory crews measure a stand's layers: trees 1.4 m or taller in
+/// up to three layers, each layer's crowns projected to the ground and
+/// counted once where they overlap, then the shrubs and herbs beneath
+/// (McIntosh, Gray and Garman 2009, PNW-GTR-794, on 917 western Oregon
+/// inventory plots; their crews set the layers apart by eye, at least
+/// 5 m between their mean heights, and here they are thirds of the
+/// tallest tree's height, as the fill lays the layers out). Every share is
+/// of the whole tile, bare cells too.
+#[derive(Debug, Clone, Copy, PartialEq, Default, Serialize)]
+pub struct LayerCover {
+    /// The tallest tree's height, metres, whose thirds part the layers.
+    /// (Foresters' top height, the mean of the tallest 100 trees a
+    /// hectare, falls into the layer below in old growth, where fewer
+    /// than 100 trees a hectare stand in the upper layer.)
+    pub top_m: f64,
+    /// Share of the ground under the crowns of the upper, middle and lower
+    /// layers' trees: from two thirds of the tallest tree, from a third, and
+    /// from [`Self::TREE_MIN_M`] to a third.
+    pub trees: [f64; 3],
+    /// Mean height of each of those layers' trees, metres; 0 where none.
+    pub heights_m: [f64; 3],
+    /// Each of those layers' trees a hectare.
+    pub stems_per_ha: [f64; 3],
+    /// Under any tree crown, each spot counted once.
+    pub all_trees: f64,
+    /// Under any shrub's crown, tree seedlings under 1.4 m with them.
+    pub shrubs: f64,
+    /// Under any placed herb (none where the fill leaves herbs to the
+    /// ground cover).
+    pub herbs: f64,
+}
+
+impl LayerCover {
+    /// The least height of a tree the layers count, metres, as inventory
+    /// crews count them.
+    pub const TREE_MIN_M: f64 = 1.4;
+}
+
 /// The mean area one triangle of a plant may cover on screen, pixels,
 /// before a coarser level of it is enough ([`TilePlan::glb_cells`]):
 /// four, about two pixels across.
@@ -1652,14 +1691,15 @@ impl StandMember {
         })
     }
 
-    /// The setting a cohort of it is grown in: a tree in a closed stand
-    /// grows as in one ([`Environment::Interior`]), before its stand's
-    /// crowns close as in the open; a shrub or herb as in the open. A
-    /// member kept to other settings takes the first of them. A
-    /// shade-tolerant tree that came up beneath the canopy grows beneath
-    /// it instead ([`Fill::cohort_keys`]).
-    fn environment(&self, stage: Stage) -> Environment {
-        let preferred = if self.candidate.tree() && stage != Stage::Establishment {
+    /// The setting a cohort of it is grown in: a tree in a stand grows as
+    /// in one ([`Environment::Interior`]), while its stand is still young
+    /// and open ([`development::Development::open_grown`]) as in the
+    /// open; a shrub or herb as in the open. A member kept to other
+    /// settings takes the first of them. A shade-tolerant tree that came
+    /// up beneath the canopy grows beneath it instead, and an overtopped
+    /// one as overtopped ([`Fill::cohort_keys`]).
+    fn environment(&self, open_grown: bool) -> Environment {
+        let preferred = if self.candidate.tree() && !open_grown {
             Environment::Interior
         } else {
             Environment::Open
@@ -1832,7 +1872,7 @@ impl Fill {
                             && member.candidate.tree()
                             && member.environments.contains(&Environment::Edge),
                     );
-                    for key in fill.cohort_keys(member, cohort, stand.stage, canopy) {
+                    for key in fill.cohort_keys(member, cohort, stand.open_grown, canopy) {
                         let interior = key.environment == Environment::Interior;
                         let edge_key = PrototypeKey {
                             environment: Environment::Edge,
@@ -1969,21 +2009,27 @@ impl Fill {
         &self,
         member: &StandMember,
         cohort: &development::Cohort,
-        stage: Stage,
+        open_grown: bool,
         canopy: Option<u16>,
     ) -> Vec<PrototypeKey> {
         let species = &self.species[member.species];
+        let suppressed = member.environments.contains(&Environment::Suppressed);
+        if cohort.overtopped && !suppressed {
+            // A member kept from growing overtopped has no overtopped
+            // share.
+            return Vec::new();
+        }
         let beneath_m = canopy.filter(|_| {
             species.grows_beneath
                 && member.candidate.tree()
                 && !cohort.pioneer
                 && !cohort.released
-                && member.environments.contains(&Environment::Suppressed)
+                && suppressed
         });
-        let environment = if beneath_m.is_some() {
+        let environment = if beneath_m.is_some() || cohort.overtopped {
             Environment::Suppressed
         } else {
-            member.environment(stage)
+            member.environment(open_grown)
         };
         #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
         let age_tenths = (cohort.age * 10.0).round() as u32;
@@ -2023,6 +2069,129 @@ impl Fill {
     #[must_use]
     pub fn size(&self, index: usize) -> Option<&Measurements> {
         self.sizes.get(index).and_then(OnceLock::get)
+    }
+
+    /// Each layer of a filled tile seen from above, measured as forest
+    /// inventory crews measure a stand's layers ([`LayerCover`]), so a
+    /// fill can be set beside plot data. Plants whose prototypes are not
+    /// measured, and plants of no stand (a site's colonists), are left
+    /// out.
+    #[must_use]
+    pub fn layer_cover(&self, plan: &TilePlan) -> LayerCover {
+        // Each placed plant's kind (0 tree, 1 shrub, 2 herb), height,
+        // crown and where its crown stands.
+        let kinds: HashMap<&str, usize> = self
+            .stands
+            .iter()
+            .flatten()
+            .map(|member| {
+                let candidate = &member.candidate;
+                let kind = if candidate.tree() {
+                    0
+                } else if candidate.layers[2] >= candidate.layers[3] {
+                    1
+                } else {
+                    2
+                };
+                (self.species[member.species].id.as_str(), kind)
+            })
+            .collect();
+        let mut plants = Vec::new();
+        for instance in &plan.instances {
+            let index = instance.prototype as usize;
+            let (Some(prototype), Some(size)) = (self.prototypes.get(index), self.size(index))
+            else {
+                continue;
+            };
+            let Some(&kind) = kinds.get(prototype.key.species.as_str()) else {
+                continue;
+            };
+            let scale = f64::from(instance.scale);
+            let height = size.height * scale;
+            if kind == 0 && height < LayerCover::TREE_MIN_M {
+                // A seedling under 1.4 m is counted with the shrubs.
+                plants.push((1, height, instance, size, scale));
+            } else {
+                plants.push((kind, height, instance, size, scale));
+            }
+        }
+        let area_ha = plan.tile_m * plan.tile_m / 10_000.0;
+        let top_m = plants
+            .iter()
+            .filter(|plant| plant.0 == 0)
+            .map(|plant| plant.1)
+            .fold(0.0_f64, f64::max);
+        // The raster: upper, middle and lower trees, shrubs, herbs.
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let side = (plan.tile_m / stand_tile::CELL_M).ceil().max(1.0) as usize;
+        let mut covered = vec![[false; 5]; side * side];
+        let mut sums = [0.0_f64; 3];
+        let mut counts = [0.0_f64; 3];
+        for (kind, height, instance, size, scale) in &plants {
+            let slot = match kind {
+                0 if *height >= top_m * 2.0 / 3.0 => 0,
+                0 if *height >= top_m / 3.0 => 1,
+                0 => 2,
+                1 => 3,
+                _ => 4,
+            };
+            if slot < 3 {
+                sums[slot] += height;
+                counts[slot] += 1.0;
+            }
+            // The crown's middle, where the plant's lean carries it.
+            let [x, y, z, w] = instance.rotation.map(f64::from);
+            let up = [2.0 * (x * z + w * y), 2.0 * (y * z - w * x)];
+            let middle = f64::midpoint(size.crown_base.unwrap_or(0.0), size.height) * scale;
+            let centre = [
+                f64::from(instance.position[0]) + up[0] * middle,
+                f64::from(instance.position[1]) + up[1] * middle,
+            ];
+            let radius = size.crown_radius * scale;
+            #[allow(clippy::cast_possible_truncation)]
+            let cells = |at: f64| {
+                let low = ((at - radius) / stand_tile::CELL_M).floor().max(0.0);
+                let high = ((at + radius) / stand_tile::CELL_M).ceil();
+                (low as i64, high as i64)
+            };
+            let (x_low, x_high) = cells(centre[0]);
+            let (y_low, y_high) = cells(centre[1]);
+            #[allow(clippy::cast_possible_wrap, clippy::cast_possible_truncation)]
+            let last = side as i64;
+            for row in y_low..y_high.min(last) {
+                for col in x_low..x_high.min(last) {
+                    #[allow(clippy::cast_precision_loss)]
+                    let (east, north) = (
+                        (col as f64 + 0.5) * stand_tile::CELL_M - centre[0],
+                        (row as f64 + 0.5) * stand_tile::CELL_M - centre[1],
+                    );
+                    if east * east + north * north <= radius * radius {
+                        #[allow(clippy::cast_sign_loss, clippy::cast_possible_truncation)]
+                        let cell = row as usize * side + col as usize;
+                        covered[cell][slot] = true;
+                    }
+                }
+            }
+        }
+        #[allow(clippy::cast_precision_loss)]
+        let share = |test: &dyn Fn(&[bool; 5]) -> bool| {
+            covered.iter().filter(|cell| test(cell)).count() as f64 / covered.len() as f64
+        };
+        LayerCover {
+            top_m,
+            trees: [0, 1, 2].map(|slot| share(&|cell| cell[slot])),
+            heights_m: [0, 1, 2].map(|slot| {
+                if counts[slot] > 0.0 {
+                    sums[slot] / counts[slot]
+                } else {
+                    0.0
+                }
+            }),
+            stems_per_ha: counts.map(|count| count / area_ha),
+            all_trees: share(&|cell| cell[0] || cell[1] || cell[2]),
+            shrubs: share(&|cell| cell[3]),
+            herbs: share(&|cell| cell[4]),
+        }
     }
 
     fn species_of(&self, prototype: &Prototype) -> &Species {
@@ -3057,7 +3226,12 @@ impl Fill {
         let mut chosen = Vec::new();
         for cohort in &stand.cohorts {
             let member = &self.stands[key.community][cohort.candidate];
-            let keys = self.cohort_keys(member, cohort, stand.stage, self.canopy_m(key.community));
+            let keys = self.cohort_keys(
+                member,
+                cohort,
+                stand.open_grown,
+                self.canopy_m(key.community),
+            );
             #[allow(clippy::cast_precision_loss)]
             let share = cohort.weight * member.abundance / keys.len().max(1) as f64;
             for prototype_key in keys {
@@ -3073,21 +3247,39 @@ impl Fill {
                         prototype_key.stem()
                     ))
                 })?;
-                chosen.push((index, cohort.candidate, share, size, member.species));
+                chosen.push((
+                    index,
+                    cohort.candidate,
+                    share,
+                    size,
+                    member.species,
+                    cohort.overtopped,
+                ));
             }
         }
         let top = chosen
             .iter()
             .filter(|(_, candidate, ..)| candidates[*candidate].tree())
-            .map(|(.., size, _)| size.height)
+            .map(|(_, _, _, size, ..)| size.height)
             .fold(0.0_f64, f64::max);
         let mut has_herbs = false;
         let (members, foliage): (Vec<stand_tile::Member>, Vec<[f32; 3]>) = chosen
             .iter()
-            .map(|(index, candidate, share, size, species)| {
+            .map(|(index, candidate, share, size, species, overtopped)| {
+                let mut layer = development::layer_of(&candidates[*candidate], size.height, top);
+                // An overtopped tree stands under the canopy, however tall,
+                // and a tree in the lower layer, a sapling or a suppressed
+                // tree, fills the trees' cover beneath it with the middle
+                // layer's (the subcanopy's cover is the two together:
+                // development::CLOSED_LAYERS), not the shrubs'.
+                if (*overtopped && layer == niche::Layer::Canopy)
+                    || (candidates[*candidate].tree() && layer == niche::Layer::Shrub)
+                {
+                    layer = niche::Layer::Subcanopy;
+                }
                 let member = stand_tile::Member {
                     id: *index,
-                    layer: development::layer_of(&candidates[*candidate], size.height, top),
+                    layer,
                     share: *share,
                     height_m: size.height,
                     crown_base_m: size.crown_base.unwrap_or(0.0),

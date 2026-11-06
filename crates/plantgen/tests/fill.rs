@@ -30,12 +30,13 @@ fn meadow() -> Community {
     .expect("community")
 }
 
-/// Two young stand ages, so the fill grows nothing older than 30 years:
-/// one before the firs' crowns close (Douglas-fir's 500-year lifespan
-/// closes them at 35) and one after.
+/// Two young stand ages, so the fill grows nothing older than 40 years:
+/// one while the firs still grow as in the open (Douglas-fir's 500-year
+/// lifespan closes their crowns at 35, and they grow as in the open to
+/// half that) and one after closure.
 fn settings() -> FillSettings {
     let mut settings = FillSettings::default();
-    settings.stand_ages = vec![20.0, 40.0];
+    settings.stand_ages = vec![10.0, 40.0];
     settings
 }
 
@@ -248,10 +249,10 @@ fn one_tile_holds_many_communities_and_bare_cells() {
 
 #[test]
 fn a_young_stand_is_open_grown_and_closes_as_it_ages() {
-    // Before its crowns close a stand's firs grow as in the open; after,
-    // as in a closed stand, its canopy covering most of the ground
-    // (western Oregon's stands past closure: 60-96%, McIntosh et al.
-    // 2009).
+    // A young stand's firs grow as in the open; once its crowns close, as
+    // in a closed stand, some overtopped by the rest, its canopy covering
+    // most of the ground (western Oregon's stands past closure: 60-96%,
+    // McIntosh et al. 2009).
     let fill = fill();
     let site = Site::flat(TileId { x: 5, y: 5 }, 80.0).expect("site");
     let fir_settings = |years: f32| {
@@ -265,13 +266,14 @@ fn a_young_stand_is_open_grown_and_closes_as_it_ages() {
             .filter(|key| key.species == "pseudotsuga-menziesii")
             .map(|key| key.environment)
             .collect();
+        settings.sort_by_key(|environment| environment.name());
         settings.dedup();
         (settings, plan.stats)
     };
-    let (young, _) = fir_settings(20.0);
+    let (young, _) = fir_settings(10.0);
     assert_eq!(young, [Environment::Open]);
     let (closed, stats) = fir_settings(40.0);
-    assert_eq!(closed, [Environment::Interior]);
+    assert_eq!(closed, [Environment::Interior, Environment::Suppressed]);
     assert!(
         (0.6..0.96).contains(&stats.canopy_cover),
         "canopy cover {}",
@@ -388,9 +390,9 @@ fn every_prototype_is_a_cohort_of_a_stand_in_each_seed() {
         cohorts.len() * usize::from(settings.seeds),
         "{keys:?}"
     );
-    // The firs at the ages nearest the stands' (their keyframes 15 and
-    // 30 years), the closed stand's also as an edge; the yarrow at its
-    // oldest.
+    // The firs at the stands' own ages, the closed stand's also as an
+    // edge and as overtopped, its suppressed trees grown as at half its
+    // years; the yarrow at its oldest.
     for (index, prototype) in fill.prototypes().iter().enumerate() {
         assert!((f64::from(prototype.key.age_tenths) / 10.0 - prototype.age_years).abs() < 0.05);
         assert!(
@@ -408,9 +410,11 @@ fn every_prototype_is_a_cohort_of_a_stand_in_each_seed() {
     assert_eq!(
         firs,
         [
-            (Environment::Open, 150),
-            (Environment::Edge, 300),
-            (Environment::Interior, 300)
+            (Environment::Open, 100),
+            (Environment::Suppressed, 200),
+            (Environment::Edge, 400),
+            (Environment::Interior, 400),
+            (Environment::Suppressed, 400)
         ],
         "{cohorts:?}"
     );
@@ -440,14 +444,23 @@ fn shade_tolerant_conifers_that_came_up_under_the_canopy_grow_beneath_it() {
             .filter(|key| key.species == species)
             .collect()
     };
-    // The pioneers grow in their stand; the hemlocks that came up under
-    // it beneath a canopy as tall as Douglas-fir commonly grows (60 m),
-    // at every age to the 60 years since; the maples, whose program does
-    // not grow them beneath a canopy yet, in the stand.
+    // The pioneers grow in their stand, those their dominants overtop as
+    // overtopped trees; the hemlocks that came up under it beneath a
+    // canopy as tall as Douglas-fir commonly grows (60 m), at every age
+    // to the 60 years since; the maples, whose program does not grow them
+    // beneath a canopy yet, in the stand.
+    let in_stand = |key: &&PrototypeKey| {
+        key.beneath_m.is_none()
+            && matches!(
+                key.environment,
+                Environment::Interior | Environment::Suppressed
+            )
+    };
+    let firs = of("pseudotsuga-menziesii");
+    assert!(firs.iter().all(in_stand), "{firs:?}");
     assert!(
-        of("pseudotsuga-menziesii")
-            .iter()
-            .all(|key| key.environment == Environment::Interior && key.beneath_m.is_none())
+        firs.iter()
+            .any(|key| key.environment == Environment::Suppressed)
     );
     let beneath: Vec<u32> = of("tsuga-heterophylla")
         .iter()
@@ -458,12 +471,7 @@ fn shade_tolerant_conifers_that_came_up_under_the_canopy_grow_beneath_it() {
         })
         .collect();
     assert_eq!(beneath, [50, 150, 300, 600], "{keys:?}");
-    assert!(
-        of("acer-macrophyllum")
-            .iter()
-            .all(|key| key.beneath_m.is_none() && key.environment == Environment::Interior),
-        "{keys:?}"
-    );
+    assert!(of("acer-macrophyllum").iter().all(in_stand), "{keys:?}");
     let young = fill
         .prototypes()
         .iter()
