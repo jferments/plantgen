@@ -204,6 +204,9 @@ A site's `materials` gives each `usemtl` name a material (`soil`, `rock`,
 - `clear`: whether it is kept clear.
 - `colour`.
 - `soil_m`: soil gathered on it, as on a decayed roof.
+- `reaction`: `acid`, `neutral` or `basic`, for the mosses on it, where
+  it differs from its material's (built basic, bark and wood acid, rock
+  and soil either): asphalt shingles are `built` and `neutral`.
 
 `docs/sites/block.json` (made by `docs/sites/make_block.py`) is a mixed
 test block with each kind of host, and `docs/sites/field_view.py` draws a

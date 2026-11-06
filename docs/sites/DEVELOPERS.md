@@ -20,7 +20,7 @@ carry soil green; wetness and heat load from above.
 
 | Piece | Where | What it does |
 | --- | --- | --- |
-| Site mesh | `crates/plantgen/src/site.rs` | `SiteMesh`: triangles, a `Surface` per triangle (material, `thin_m`, `climb`, `clear`, `soil_m`), and column indexes for vertical lines and rays. Cuts what one plant grows in. |
+| Site mesh | `crates/plantgen/src/site.rs` | `SiteMesh`: triangles, a `Surface` per triangle (material, `thin_m`, `climb`, `clear`, `soil_m`, `reaction`), and column indexes for vertical lines and rays. Cuts what one plant grows in. |
 | Pavement | `crates/plantgen/src/pavement.rs` | `CrackTile` (what a host hands over: slab, cracks, holes, soil in them) and `Pavement` (the tile rasterised; footing, classify, wear, openings). |
 | Pavement colonisation | `crates/plantgen/src/succession.rs` | Which plants come up by themselves in the cracks, year by year, without growing each one. |
 | Site field | `crates/plantgen/src/site_field.rs` | `SiteField`: one tile measured once (ground grid, hosts and patches, crack sites) for stands and other hosts. |

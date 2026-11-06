@@ -38,6 +38,7 @@
 use serde::{Deserialize, Serialize};
 use serde_json::{Map, Value};
 
+use crate::conditions::Envelope;
 use crate::library::Library;
 use crate::lsys::tools::closest_on_triangle;
 use crate::math::{self, Vec3};
@@ -431,9 +432,6 @@ impl MossKind {
         })
     }
 
-    /// Across a shoot's leaves from tip to tip, moist: twice a leaf's
-    /// reach out from the stem at the angle it stands at.
-    #[must_use]
     /// The blade's width at `s` along it (0 base, 1 tip), 0 to 1 of its
     /// widest, from [`MossKind::outline`] (lanceolate when empty).
     #[must_use]
@@ -469,6 +467,9 @@ impl MossKind {
             .clamp(0.15, 0.85)
     }
 
+    /// Across a shoot's leaves from tip to tip, moist: twice a leaf's
+    /// reach out from the stem at the angle it stands at.
+    #[must_use]
     pub fn shoot_width_m(&self) -> f64 {
         (2.0 * self.leaf_length_m * math::sin(math::radians(self.moist_angle_deg()))
             + self.leaf_width_m * 0.5)
@@ -521,13 +522,9 @@ impl MossKind {
             substrate = 1.0;
         }
         // Built surfaces (mortar, concrete, cement tiles) are basic, bark
-        // and wood acid, rock and soil either.
-        let surface_reaction: i8 = match habitat.material {
-            BUILT => 1,
-            BARK | WOOD => -1,
-            _ => 0,
-        };
-        let reaction = if self.reaction != 0 && surface_reaction == -self.reaction {
+        // and wood acid, rock and soil either, unless the surface says
+        // otherwise (an asphalt shingle roof neutral).
+        let reaction = if self.reaction != 0 && habitat.reaction == -self.reaction {
             0.35
         } else {
             1.0
@@ -583,15 +580,23 @@ impl MossKind {
 }
 
 /// How far `value` lies in the classes `allowed` marks, the classes split
-/// at `bounds` (rising), with soft edges a tenth wide.
+/// at `bounds` (rising), with soft edges a tenth wide. Neighbouring
+/// classes a moss takes are one range, soft only at its ends: a moss of
+/// wet and mesic places fits fully where they meet.
 fn class_fit(value: f64, bounds: &[f64], allowed: &[bool]) -> f64 {
     let mut best: f64 = 0.0;
-    for (index, &ok) in allowed.iter().enumerate() {
-        if !ok {
+    let mut index = 0;
+    while index < allowed.len() {
+        if !allowed[index] {
+            index += 1;
             continue;
         }
-        let (low, high) = (bounds[index], bounds[index + 1]);
-        let below = if index == 0 {
+        let first = index;
+        while index + 1 < allowed.len() && allowed[index + 1] {
+            index += 1;
+        }
+        let (low, high) = (bounds[first], bounds[index + 1]);
+        let below = if first == 0 {
             1.0
         } else {
             math::smoothstep(low - 0.08, low + 0.08, value)
@@ -602,6 +607,7 @@ fn class_fit(value: f64, bounds: &[f64], allowed: &[bool]) -> f64 {
             math::smoothstep(high + 0.08, high - 0.08, value)
         };
         best = best.max(below * above);
+        index += 1;
     }
     best
 }
@@ -662,6 +668,8 @@ pub struct Habitat {
     /// dries.
     pub wetness: f64,
     pub material: u8,
+    /// How acid (−1) or basic (+1) the face is ([`crate::site::Surface::reaction`]).
+    pub reaction: i8,
     /// Soil lies on it (a roof's gathered grit, a gutter).
     pub soil: bool,
     /// How well spores and water stay on it: 1 on a face turned up, less
@@ -747,6 +755,11 @@ pub struct MossCover {
     pub settings: MossSettings,
     pub kinds: Vec<MossKind>,
     pub colonies: Vec<Colony>,
+    /// The tree crowns that shaded it ([`grow_under`]), in the site's
+    /// frame: each envelope's `centre_m` is (east, north) = (x, −z) of the
+    /// site's origin and its heights are the site's y.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub canopy: Vec<Envelope>,
 }
 
 /// A face's habitat samples.
@@ -768,20 +781,42 @@ fn habitat_at(
     sky_rays: &[Vec3],
     rain_rays: &[Vec3],
     suns: &[Vec3],
+    canopy: &[Envelope],
     p: Vec3,
     n: Vec3,
     material: u8,
+    reaction: i8,
     soil: bool,
 ) -> Habitat {
     let from = p + n * 0.004;
-    let sky = tracer.sky_seen(from, n, sky_rays, 30.0);
+    // The share of light along `ray` that comes through the canopy's
+    // crowns (Beer-Lambert, as plant light).
+    let through = |ray: Vec3| {
+        canopy
+            .iter()
+            .fold(1.0, |light, crown| light * crown.transmission(from, ray))
+    };
+    let sky = if canopy.is_empty() {
+        tracer.sky_seen(from, n, sky_rays, 30.0)
+    } else {
+        let (tangent, bitangent) = frame(n);
+        let open: f64 = sky_rays
+            .iter()
+            .map(|d| (tangent * d.x + n * d.y + bitangent * d.z).normalize_or(n))
+            .filter(|ray| ray.y > -0.02 && !tracer.blocked(from, *ray, 30.0))
+            .map(through)
+            .sum();
+        #[allow(clippy::cast_precision_loss)]
+        let share = open / sky_rays.len().max(1) as f64;
+        share
+    };
     // An upright face's rays turned to it reach at most half the sky.
     let sky_share = (sky / (0.5 + 0.5 * n.y.max(0.0))).min(1.0);
     let mut sun = 0.0;
     for s in suns {
         let facing = n.dot(*s);
         if facing > 0.0 && !tracer.blocked(from, *s, 40.0) {
-            sun += facing;
+            sun += facing * through(*s);
         }
     }
     #[allow(clippy::cast_precision_loss)]
@@ -805,6 +840,7 @@ fn habitat_at(
         light,
         wetness,
         material,
+        reaction,
         soil,
         // A face that sees no sky is pressed against another (a brick's
         // back against its mortar) or shut in: nothing settles there.
@@ -886,8 +922,26 @@ fn suns(latitude_deg: f64) -> Vec<Vec3> {
 
 /// Grow mosses of `kinds` over the faces of `site` in the settings' box.
 #[must_use]
-#[allow(clippy::too_many_lines)]
 pub fn grow(site: &SiteMesh, kinds: &[MossKind], settings: &MossSettings) -> MossCover {
+    grow_under(site, kinds, settings, &[])
+}
+
+/// [`grow`] under the crowns of trees that stand over the site: each sky
+/// and sun ray a face's habitat casts is dimmed by the foliage it passes
+/// through, so a roof or wall a tree overhangs is shadier and, drying
+/// less, wetter (OSU Extension: roof mosses do best on north slopes,
+/// "especially where trees shade them"). The crowns are in the site's
+/// frame ([`MossCover::canopy`]); a stand's crowns give them with
+/// [`crate::conditions::Crown::envelope`]. Rain is not changed: a crown
+/// catches some and drips the rest.
+#[must_use]
+#[allow(clippy::too_many_lines)]
+pub fn grow_under(
+    site: &SiteMesh,
+    kinds: &[MossKind],
+    settings: &MossSettings,
+    canopy: &[Envelope],
+) -> MossCover {
     let low = Vec3::new(settings.low[0], settings.low[1], settings.low[2]);
     let high = Vec3::new(settings.high[0], settings.high[1], settings.high[2]);
     let (bottom, top) = site.bounds();
@@ -951,9 +1005,11 @@ pub fn grow(site: &SiteMesh, kinds: &[MossKind], settings: &MossSettings) -> Mos
                         &sky_rays,
                         &rain_rays,
                         &sun_rays,
+                        canopy,
                         p,
                         normal,
                         surface.material,
+                        surface.reaction(),
                         surface.soil_m > 0.0,
                     ),
                 )
@@ -985,9 +1041,11 @@ pub fn grow(site: &SiteMesh, kinds: &[MossKind], settings: &MossSettings) -> Mos
                         &sky_rays,
                         &rain_rays,
                         &sun_rays,
+                        canopy,
                         p,
                         face.normal,
                         surface.material,
+                        surface.reaction(),
                         surface.soil_m > 0.0,
                     )
                 },
@@ -1228,6 +1286,7 @@ pub fn grow(site: &SiteMesh, kinds: &[MossKind], settings: &MossSettings) -> Mos
         settings: *settings,
         kinds: kinds.to_vec(),
         colonies,
+        canopy: canopy.to_vec(),
     }
 }
 
@@ -2959,5 +3018,26 @@ impl MossCover {
             ));
         }
         Ok(cover)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::class_fit;
+
+    #[test]
+    fn neighbouring_classes_fit_fully_where_they_meet() {
+        let bounds = [0.0, 0.3, 0.55, 0.75, 1.0];
+        // Wet and mesic: whole across their border, soft only past mesic.
+        let wet_mesic = [true, true, false, false];
+        for value in [0.0, 0.22, 0.3, 0.38, 0.46] {
+            assert!((class_fit(value, &bounds, &wet_mesic) - 1.0).abs() < 1e-12);
+        }
+        assert!((class_fit(0.55, &bounds, &wet_mesic) - 0.5).abs() < 1e-12);
+        assert!(class_fit(0.7, &bounds, &wet_mesic) < 1e-12);
+        // Wet and dry with mesic between: half at each inner border.
+        let wet_dry = [true, false, true, false];
+        assert!((class_fit(0.3, &bounds, &wet_dry) - 0.5).abs() < 1e-12);
+        assert!(class_fit(0.42, &bounds, &wet_dry) < 1e-12);
     }
 }
