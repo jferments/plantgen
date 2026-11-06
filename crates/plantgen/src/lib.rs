@@ -1667,7 +1667,7 @@ pub mod venation;
 /// a hardhack's, which drew obovate leaves where Abrams gives elliptical
 /// to oval ones.
 ///
-/// 207: two herbs drawn as their floras state them, and compound leaves'
+/// 209: two herbs drawn as their floras state them, and compound leaves'
 /// leaflets drawn as floras describe them. A common mullein in flower
 /// stands 1-2 m (Gleason and Cronquist), Jepson's 30 cm kept as the rare
 /// low; a vanilla leaf's stalk bears one leaf (Abrams). Leaf shapes gain
@@ -1682,4 +1682,4 @@ pub mod venation;
 /// outlines drew neither, and 17 more compound-leaved species (roses,
 /// brambles, rowans, sumacs, hemp) change with their stated leaflet
 /// tips. Every other leaf draws as it did.
-pub const GENERATOR_REVISION: u32 = 207;
+pub const GENERATOR_REVISION: u32 = 209;
