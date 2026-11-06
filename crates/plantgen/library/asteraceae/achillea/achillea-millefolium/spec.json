@@ -85,7 +85,7 @@
     "leaf_incision": "dissected",
     "division_pattern": "pinnate",
     "division_order": {"min": 1, "max": 2},
-    "division_planes": "all_round",
+    "division_planes": "segments_round",
     "leaf_shape": {"oblong": "often", "lanceolate": "often"},
     "inflorescence": "corymb",
     "units_per_inflorescence": {"min": 10, "max": 100},
@@ -122,7 +122,7 @@
     "traits.division_planes": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",
-      "note": "FEIS's common yarrow review (Aleksoff 1999, read 2026-10-17), after Gleason and Cronquist: the native forms' narrow leaf segments stand in several planes, so the leaf is three-dimensional, where the European form's lie flat. iNaturalist photos of Pacific Northwest plants agree."
+      "note": "FEIS's common yarrow review (Aleksoff 1999, read 2026-10-17), after Gleason and Cronquist: the native forms' narrow leaf segments stand in several planes, so the leaf is three-dimensional, where the European form's lie flat. iNaturalist photos of Pacific Northwest plants agree. It is the segments that stand so: the primary divisions keep two ranks, so the leaf is a feathery strap, oblong or lanceolate in outline as leaf_shape says, as the 28 imagekit photos show it, not a bottlebrush round its rachis."
     },
     "traits.height_typical_m": {
       "evidence": "SourceInferred",

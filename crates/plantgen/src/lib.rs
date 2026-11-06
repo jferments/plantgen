@@ -1721,4 +1721,11 @@ pub mod venation;
 /// as their heads allow: a yarrow's 5 to 12 tufts of heads in one plate,
 /// each head sized from its involucre and rays (FNA), where hand values
 /// drew a cone of bare pedicels. Every other cluster draws as it did.
+/// A lacy leaf's rachises and ribbons are drawn in pieces along its
+/// droop's arc (`crate::lace`), where each was its chord: a drooping
+/// yarrow leaf's rachis ran 5 to 8 mm beside its pinnae, so they hung in
+/// a row off to one side of it. A divided leaf may hold its primary
+/// divisions in two ranks and only their segments all round
+/// (`division_planes` `segments_round`): a yarrow's leaf is a feathery
+/// strap, three-dimensional in its fine parts (FEIS), not a bottlebrush.
 pub const GENERATOR_REVISION: u32 = 214;

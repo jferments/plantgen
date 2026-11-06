@@ -350,28 +350,28 @@
     },
     "appearance.organs.*.shape.lace": {
       "template": "compound",
-      "map": {"division_planes": {"flat": 2, "spray": 2, "all_round": 2}},
+      "map": {"division_planes": {"flat": 2, "spray": 2, "segments_round": 2, "all_round": 2}},
       "why": "A divided leaf whose taxa say how its divisions are held is drawn up close as geometry, its rachises and each leaflet or segment where it stands, on the two nearest levels; farther off, on its card."
     },
     "appearance.organs.*.shape.lift": {
       "template": "compound",
-      "map": {"division_planes": {"flat": 0, "spray": 25, "all_round": 0}},
-      "why": "A spray's primary divisions rise a quarter of a right angle out of the leaf's plane; a flat leaf's and a bottlebrush's do not."
+      "map": {"division_planes": {"flat": 0, "spray": 25, "segments_round": 0, "all_round": 0}},
+      "why": "A spray's primary divisions rise a quarter of a right angle out of the leaf's plane; a flat leaf's, a strap's and a bottlebrush's do not."
     },
     "appearance.organs.*.shape.scatter": {
       "template": "compound",
-      "map": {"division_planes": {"flat": 4, "spray": 30, "all_round": 20}},
-      "why": "Each division turns a little at random about its rachis: hardly in a flat leaf, up to 30 degrees either way in a spray, 20 round a bottlebrush."
+      "map": {"division_planes": {"flat": 4, "spray": 30, "segments_round": 4, "all_round": 20}},
+      "why": "Each division turns a little at random about its rachis: hardly in a flat leaf or a strap whose primary divisions lie in its plane, up to 30 degrees either way in a spray, 20 round a bottlebrush."
     },
     "appearance.organs.*.shape.roll": {
       "template": "compound",
-      "map": {"division_planes": {"flat": 0, "spray": 0, "all_round": 137.5}},
-      "why": "A bottlebrush's primary divisions turn round the rachis by the golden angle from one to the next, so they stand all round it; a flat leaf's and a spray's keep two ranks."
+      "map": {"division_planes": {"flat": 0, "spray": 0, "segments_round": 0, "all_round": 137.5}},
+      "why": "A bottlebrush's primary divisions turn round the rachis by the golden angle from one to the next, so they stand all round it; a flat leaf's, a spray's and a strap's keep two ranks."
     },
     "appearance.organs.*.shape.inner_roll": {
       "template": "compound",
-      "map": {"division_planes": {"flat": 0, "spray": 0, "all_round": 137.5}},
-      "why": "A bottlebrush's leaflets or segments turn round their division's rachis by the golden angle too; a flat leaf's and a spray's lie in their division's plane."
+      "map": {"division_planes": {"flat": 0, "spray": 0, "segments_round": 137.5, "all_round": 137.5}},
+      "why": "A bottlebrush's leaflets or segments turn round their division's rachis by the golden angle too, as do those of a strap whose segments stand in several planes; a flat leaf's and a spray's lie in their division's plane."
     },
     "appearance.organs.*.shape.confluent": {
       "template": "compound",
