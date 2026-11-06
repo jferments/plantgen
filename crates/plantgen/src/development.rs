@@ -247,6 +247,166 @@ pub fn floor_mosses(
     mix
 }
 
+/// The day of the year a stand's covers stand for: inventory crews measure
+/// in the growing season, so the plots' layers ([`CLOSED_LAYERS`],
+/// [`OLD_LAYERS`]) are the summer's, as a package's day
+/// ([`crate::package::DEFAULT_DAY`], mid-July) is.
+pub const PLOT_DAY: f64 = crate::package::DEFAULT_DAY;
+
+/// The light a crown in full leaf lets through, as a share of the light
+/// above it: [`crate::stand_tile::Rules`]'s default.
+pub const LEAFY_CROWN_LIGHT: f64 = 0.1;
+
+/// The light a bare deciduous crown lets through, as a share of the light
+/// above it. Under a Maryland beech and tulip-poplar canopy (23 m, leaf
+/// area index 5.1) the light at 1.75 m was a median 1.3% of the open
+/// sky's in full summer leaf and 31% in the leafless winter, 39% in the
+/// leafless spring (Hudson et al. 2017, PLOS ONE 12: e0185894, table 1),
+/// the trees' and shrubs' woody frames stopping up to half of it. The
+/// crowns that let 1.3% through at [`LEAFY_CROWN_LIGHT`] each are 1.9
+/// crowns deep (0.1^1.9 = 0.013), and 1.9 bare crowns let 35% through at
+/// 0.57 each.
+pub const BARE_CROWN_LIGHT: f64 = 0.57;
+
+/// The light a crown lets through when its leaves are `leafy` of their
+/// full size ([`crate::looks::Leafing::size`]: 0 bare, 1 in full leaf),
+/// between [`BARE_CROWN_LIGHT`] and `in_leaf`, in step with its leaves'
+/// size. The steps between are this model's choice.
+#[must_use]
+pub fn crown_light(leafy: f64, in_leaf: f64) -> f64 {
+    BARE_CROWN_LIGHT + (in_leaf - BARE_CROWN_LIGHT) * leafy.clamp(0.0, 1.0)
+}
+
+/// A herb's year above ground: its shoots come up on day `up` (1 to 365)
+/// and are down by day `down`, a `down` past 365 in the next year, as a
+/// leaf's year is counted ([`crate::looks::Leafing`]). A herb without one
+/// stands all year.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct Shoots {
+    pub up: f64,
+    pub down: f64,
+}
+
+impl Shoots {
+    /// Day `day` within its year: a day before `up` is in the next year
+    /// where its `down` comes then.
+    fn on(&self, day: f64) -> f64 {
+        if day < self.up && day + 365.0 < self.down {
+            day + 365.0
+        } else {
+            day
+        }
+    }
+
+    /// Whether its shoots stand on day `day` of the year.
+    #[must_use]
+    pub fn stand_on(&self, day: f64) -> bool {
+        (self.up..self.down).contains(&self.on(day))
+    }
+
+    /// The middle of its year above ground, 1 to 365: the day the light it
+    /// grows in is judged on, so a spring herb is judged under a canopy
+    /// still bare.
+    #[must_use]
+    pub fn middle(&self) -> f64 {
+        let middle = f64::midpoint(self.up, self.down);
+        if middle > 365.0 {
+            middle - 365.0
+        } else {
+            middle
+        }
+    }
+
+    /// A herb's shoots' year from its traits, by the rules a deciduous
+    /// woody plant's leaves keep theirs (the angiosperms' rank file,
+    /// `appearance.organs.leaf.leafing`): a deciduous herb, or an annual,
+    /// comes up a third of the way into the first month floras say its
+    /// leaves unfold in (`leaf_out_months`), or into April, and no later
+    /// than the start of the first month it flowers in, since a herb
+    /// flowers on its shoots; it is down ten days before the last month
+    /// its leaves are said to fall in ends (`leaf_fall_months`), or
+    /// November, those months in the next year where they come before its
+    /// leaves'. A drought-deciduous herb stands only in the months floras
+    /// give for its leaves. `None` for a woody plant (its leaves keep a
+    /// [`crate::looks::Leafing`]), an evergreen herb (by its most usual
+    /// habit, where floras say how often each occurs), a biennial's
+    /// overwintering rosette, and a herb whose habit floras do not give.
+    #[must_use]
+    pub fn of_herb(traits: &serde_json::Map<String, serde_json::Value>) -> Option<Self> {
+        use crate::formula::month_start;
+        // Its most usual states, as the rank files' rules read a trait
+        // stated with how often each occurs: a bracken `{"deciduous":
+        // "usually", "evergreen": "rarely"}` dies back.
+        let states = |name: &str| -> Vec<String> {
+            match traits.get(name) {
+                Some(serde_json::Value::Object(stated)) => {
+                    let rank = |frequency: &serde_json::Value| {
+                        crate::inherit::FREQUENCIES
+                            .iter()
+                            .position(|known| frequency.as_str() == Some(known))
+                    };
+                    let best = stated.values().filter_map(rank).min();
+                    stated
+                        .iter()
+                        .filter(|(_, frequency)| best.is_some() && rank(frequency) == best)
+                        .map(|(state, _)| state.clone())
+                        .collect()
+                }
+                Some(value) => crate::traits::states_of(value),
+                None => Vec::new(),
+            }
+        };
+        let months = |name: &str| -> Vec<f64> {
+            traits
+                .get(name)
+                .and_then(serde_json::Value::as_array)
+                .map(|months| {
+                    months
+                        .iter()
+                        .filter_map(serde_json::Value::as_f64)
+                        .collect()
+                })
+                .unwrap_or_default()
+        };
+        if states("woodiness").iter().any(|state| state == "woody") {
+            return None;
+        }
+        let habit = states("leaf_habit");
+        let has = |state: &str| habit.iter().any(|own| own == state);
+        if has("evergreen") || has("semi") {
+            return None;
+        }
+        let annual = states("life_span").iter().any(|state| state == "annual");
+        let (out, fall, flowers) = (
+            months("leaf_out_months"),
+            months("leaf_fall_months"),
+            months("flowering_months"),
+        );
+        let first = |months: &[f64]| months.iter().copied().reduce(f64::min);
+        let last = |months: &[f64]| months.iter().copied().reduce(f64::max);
+        let late = |out: f64, fall: f64| if fall < out { 365.0 } else { 0.0 };
+        if has("drought_deciduous") {
+            let up = month_start(first(&out)?) + 10.0;
+            let down = last(&fall).map_or(365.0, |fall| {
+                month_start(fall + 1.0) - 10.0 + late(first(&out).unwrap_or(1.0), fall)
+            });
+            return Some(Self { up, down });
+        }
+        if !has("deciduous") && !annual {
+            return None;
+        }
+        let out_month = first(&out).unwrap_or(4.0);
+        let mut up = month_start(out_month) + 10.0;
+        if let Some(flowering) = first(&flowers) {
+            up = up.min(month_start(flowering));
+        }
+        let fall_first = first(&fall).unwrap_or(10.0);
+        let down =
+            month_start(last(&fall).unwrap_or(11.0) + 1.0) - 10.0 + late(out_month, fall_first);
+        Some(Self { up, down })
+    }
+}
+
 /// A stage of the sere.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Stage {
@@ -1023,5 +1183,79 @@ mod tests {
         assert!(ground_moss(0.1, 0.34, 0.5, 0.0) < 0.1);
         assert!(ground_moss(0.9, 0.34, 0.12, 0.0) < 0.1);
         assert!(ground_moss(0.9, 0.34, 0.5, 1.0) < 0.5 * dense);
+    }
+
+    fn traits(json: &str) -> serde_json::Map<String, serde_json::Value> {
+        serde_json::from_str(json).unwrap()
+    }
+
+    #[test]
+    fn a_herbs_shoots_keep_the_year_its_traits_give() {
+        // A deciduous herb with no months comes up in April and is down in
+        // November, as a deciduous tree's leaves are by default.
+        let summer = Shoots::of_herb(&traits(
+            r#"{"woodiness": "herbaceous", "leaf_habit": {"deciduous": "usually"}}"#,
+        ))
+        .unwrap();
+        assert_eq!(
+            summer,
+            Shoots {
+                up: 101.0,
+                down: 325.0
+            }
+        );
+        assert!(summer.stand_on(PLOT_DAY) && !summer.stand_on(15.0) && !summer.stand_on(340.0));
+        // A spring ephemeral is up from March to May, judged in April.
+        let spring = Shoots::of_herb(&traits(
+            r#"{"woodiness": "herbaceous", "leaf_habit": "deciduous",
+                "leaf_out_months": [3], "leaf_fall_months": [5], "flowering_months": [3, 4]}"#,
+        ))
+        .unwrap();
+        assert_eq!(
+            spring,
+            Shoots {
+                up: 60.0,
+                down: 142.0
+            }
+        );
+        assert!(spring.stand_on(100.0) && !spring.stand_on(PLOT_DAY));
+        assert!((spring.middle() - 101.0).abs() < 1e-9);
+        // A winter-green herb of a dry summer's climate: up in November,
+        // down in May of the next year.
+        let winter = Shoots::of_herb(&traits(
+            r#"{"woodiness": "herbaceous", "leaf_habit": "deciduous",
+                "leaf_out_months": [11], "leaf_fall_months": [5]}"#,
+        ))
+        .unwrap();
+        assert!(winter.stand_on(15.0) && winter.stand_on(320.0) && !winter.stand_on(PLOT_DAY));
+        assert!(winter.middle() < 60.0, "{}", winter.middle());
+        // Its most usual habit counts: a bracken dies back.
+        let bracken = Shoots::of_herb(&traits(
+            r#"{"woodiness": "herbaceous", "leaf_habit": {"deciduous": "usually", "evergreen": "rarely"}}"#,
+        ));
+        assert_eq!(bracken, Some(summer));
+        // Evergreen herbs, woody plants and herbs whose habit is not given
+        // stand all year.
+        for json in [
+            r#"{"woodiness": "herbaceous", "leaf_habit": {"deciduous": "usually", "evergreen": "usually"}}"#,
+            r#"{"woodiness": "herbaceous", "leaf_habit": "evergreen"}"#,
+            r#"{"woodiness": "woody", "leaf_habit": "deciduous"}"#,
+            r#"{"woodiness": "herbaceous", "life_span": "perennial"}"#,
+        ] {
+            assert_eq!(Shoots::of_herb(&traits(json)), None, "{json}");
+        }
+        // An annual comes up in spring and is gone after it seeds.
+        assert!(Shoots::of_herb(&traits(r#"{"life_span": "annual"}"#)).is_some());
+    }
+
+    #[test]
+    fn a_bare_crown_lets_through_what_a_leafless_forest_does() {
+        assert!((crown_light(1.0, LEAFY_CROWN_LIGHT) - LEAFY_CROWN_LIGHT).abs() < 1e-12);
+        assert!((crown_light(0.0, LEAFY_CROWN_LIGHT) - BARE_CROWN_LIGHT).abs() < 1e-12);
+        // Hudson et al. 2017: 1.3% beneath the canopy in full leaf, 31-39%
+        // leafless; as deep a canopy of bare crowns lets that through.
+        let depth = 0.013_f64.ln() / LEAFY_CROWN_LIGHT.ln();
+        let bare = BARE_CROWN_LIGHT.powf(depth);
+        assert!((0.31..0.40).contains(&bare), "{bare}");
     }
 }

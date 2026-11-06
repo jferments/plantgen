@@ -62,6 +62,16 @@ pub struct Member {
     /// Share of full light, 0 to 1, it needs to stand: under a crown
     /// that lets less through, it does not.
     pub light_needed: f64,
+    /// Its leaves' year, for a crown that sheds them: bare, it lets
+    /// [`crate::development::BARE_CROWN_LIGHT`] through below it, and in
+    /// leaf [`Rules::crown_transmission`] ([`crate::development::crown_light`]).
+    /// `None` for a crown in leaf all year.
+    pub leafing: Option<crate::looks::Leafing>,
+    /// The day of the year the light it needs is judged on: a herb's
+    /// shoots' middle ([`crate::development::Shoots::middle`]), so a
+    /// spring herb stands where the canopy is bare in spring. `None` for
+    /// the plots' summer day ([`crate::development::PLOT_DAY`]).
+    pub light_day: Option<f64>,
 }
 
 /// How full a stand tile is.
@@ -132,8 +142,8 @@ impl Placed {
 struct Raster {
     side: usize,
     /// For each cell, the crowns over it: (crown base, top) in metres,
-    /// and the layer's index in [`Layer::ALL`].
-    crowns: Vec<Vec<(f32, f32, u8)>>,
+    /// the layer's index in [`Layer::ALL`] and the member's.
+    crowns: Vec<Vec<(f32, f32, u8, u32)>>,
     /// For each cell, a bit for each layer with a crown over it.
     layers: Vec<u8>,
     /// Cells under each layer's crowns, and under any crown.
@@ -201,7 +211,8 @@ impl Raster {
 
     /// Share of `cells` already holding a crown whose height band meets
     /// [`base`, `top`], and the mean light reaching `top` through the
-    /// crowns above it, for a plant of layer `layer`. Shrubs and herbs
+    /// crowns above it, each letting through what `through` gives for its
+    /// member, for a plant of layer `layer`. Shrubs and herbs
     /// grow through each other's layers: an herb beneath a taller shrub
     /// stands in its shade, not in its room, as a forest's herb layer
     /// spreads under its shrubs (each layer's cover is its own:
@@ -211,7 +222,7 @@ impl Raster {
         cells: &[usize],
         base: f64,
         top: f64,
-        transmission: f64,
+        through_crown: &dyn Fn(u32) -> f64,
         layer: usize,
     ) -> (f64, f64) {
         if cells.is_empty() {
@@ -221,20 +232,20 @@ impl Raster {
         for &cell in cells {
             let mut meets = false;
             let mut through = 1.0;
-            for &(low, high, other) in &self.crowns[cell] {
+            for &(low, high, other, member) in &self.crowns[cell] {
                 let (low, high) = (f64::from(low), f64::from(high));
                 let beneath = layer >= 2 && usize::from(other) >= 2 && usize::from(other) != layer;
                 if low < top && base < high {
                     if beneath {
                         if high > top {
-                            through *= transmission;
+                            through *= through_crown(member);
                         }
                     } else {
                         meets = true;
                     }
                 }
                 if low >= top {
-                    through *= transmission;
+                    through *= through_crown(member);
                 }
             }
             if meets {
@@ -247,9 +258,9 @@ impl Raster {
         (crowded / count, light / count)
     }
 
-    fn stamp(&mut self, cells: &[usize], base: f64, top: f64, layer: usize) {
+    fn stamp(&mut self, cells: &[usize], base: f64, top: f64, layer: usize, member: usize) {
         #[allow(clippy::cast_possible_truncation)]
-        let band = (base as f32, top as f32, layer as u8);
+        let band = (base as f32, top as f32, layer as u8, member as u32);
         let bit = 1_u8 << layer;
         for &cell in cells {
             self.crowns[cell].push(band);
@@ -335,6 +346,20 @@ pub fn lay_out(members: &[Member], rules: &Rules, seed: u64) -> Vec<Placed> {
                     break;
                 }
                 let member = &members[index];
+                // The light each crown above lets through on the day this
+                // plant's light is judged on.
+                let day = member.light_day.unwrap_or(crate::development::PLOT_DAY);
+                let through_crown = |other: u32| {
+                    members[other as usize].leafing.as_ref().map_or(
+                        rules.crown_transmission,
+                        |leafing| {
+                            crate::development::crown_light(
+                                leafing.size(day),
+                                rules.crown_transmission,
+                            )
+                        },
+                    )
+                };
                 let (radius, base, top) = (
                     member.crown_radius_m * scale,
                     member.crown_base_m * scale,
@@ -356,13 +381,8 @@ pub fn lay_out(members: &[Member], rules: &Rules, seed: u64) -> Vec<Placed> {
                             (at[1] + offset[1]).rem_euclid(rules.tile_m),
                         ];
                         let cells = raster.cells(crown, radius.max(CELL_M * 0.5));
-                        let (crowded, light) = raster.crowding(
-                            &cells,
-                            base,
-                            top,
-                            rules.crown_transmission,
-                            layer_index,
-                        );
+                        let (crowded, light) =
+                            raster.crowding(&cells, base, top, &through_crown, layer_index);
                         if light < member.light_needed {
                             continue;
                         }
@@ -375,7 +395,7 @@ pub fn lay_out(members: &[Member], rules: &Rules, seed: u64) -> Vec<Placed> {
                 }
                 match best {
                     Some((at, crown, cells, score)) if score <= rules.overlap + 0.01 => {
-                        raster.stamp(&cells, base, top, layer_index);
+                        raster.stamp(&cells, base, top, layer_index, index);
                         placed.push(Placed {
                             member: index,
                             at_m: at,
@@ -423,7 +443,7 @@ pub fn cover(members: &[Member], placed: &[Placed], tile_m: f64) -> f64 {
     for plant in placed {
         let member = &members[plant.member];
         let cells = raster.cells(plant.crown_m, member.crown_radius_m * plant.scale);
-        raster.stamp(&cells, 0.0, 1.0, 0);
+        raster.stamp(&cells, 0.0, 1.0, 0, plant.member);
     }
     raster.cover(None)
 }
@@ -441,6 +461,8 @@ mod tests {
             crown_base_m: height * 0.5,
             crown_radius_m: radius,
             light_needed: 0.0,
+            leafing: None,
+            light_day: None,
         }
     }
 
@@ -570,6 +592,45 @@ mod tests {
         assert!(
             lean_cover > rigid_cover,
             "{lean_cover} against {rigid_cover}"
+        );
+    }
+
+    #[test]
+    fn a_spring_herb_stands_under_a_canopy_bare_in_spring() {
+        let maple = crate::looks::Leafing {
+            out: 110.0,
+            full: 150.0,
+            turn: 270.0,
+            fall: 320.0,
+            autumn: None,
+        };
+        let rules = Rules {
+            cover: [0.95, 0.0, 0.0, 0.6],
+            ..Rules::default()
+        };
+        let herbs = |leafing: Option<crate::looks::Leafing>, light_day: Option<f64>| {
+            let mut canopy = tree(0, Layer::Canopy, 30.0, 4.0);
+            canopy.leafing = leafing;
+            let mut herb = tree(1, Layer::Herb, 0.3, 0.2);
+            herb.light_needed = 0.3;
+            herb.light_day = light_day;
+            lay_out(&[canopy, herb], &rules, 4)
+                .iter()
+                .filter(|plant| plant.member == 1)
+                .count()
+        };
+        // Judged in April, before the maples leaf out, it stands under
+        // them; under evergreens, or judged in summer, only in the gaps.
+        let spring_under_maples = herbs(Some(maple.clone()), Some(100.0));
+        let spring_under_firs = herbs(None, Some(100.0));
+        let summer_under_maples = herbs(Some(maple), None);
+        assert!(
+            spring_under_maples > 2 * spring_under_firs.max(1),
+            "{spring_under_maples} under maples, {spring_under_firs} under firs"
+        );
+        assert!(
+            spring_under_maples > 2 * summer_under_maples.max(1),
+            "{spring_under_maples} in spring, {summer_under_maples} in summer"
         );
     }
 }

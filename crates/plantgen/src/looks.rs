@@ -1423,6 +1423,23 @@ impl Leafing {
         (look, self.size(day))
     }
 
+    /// `colour`, a leaf's, as [`Self::on_day`] tints it on day `day`:
+    /// toward the spring flush as the leaves unfold, toward their autumn
+    /// colour as they turn. A far crown's colour, a stand's canopy seen
+    /// from above, follows its leaves so.
+    #[must_use]
+    pub fn colour_on(&self, colour: [f32; 3], day: f64) -> [f32; 3] {
+        let (flush, turned) = self.tints(day);
+        let (target, share) = if turned > 0.0 {
+            (self.autumn.unwrap_or(Self::AUTUMN), turned)
+        } else {
+            (Self::FLUSH, flush)
+        };
+        #[allow(clippy::cast_possible_truncation)]
+        let share = share as f32;
+        std::array::from_fn(|i| colour[i] + (target[i] - colour[i]) * share)
+    }
+
     /// Check the days, in order within one year, and the colour.
     ///
     /// # Errors
