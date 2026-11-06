@@ -373,3 +373,44 @@ fn a_drawn_cover_writes_as_a_glb_any_reader_opens() {
             .is_some()
     );
 }
+
+#[test]
+fn a_tree_over_the_sunny_face_lets_moss_grow_there() {
+    use plantgen::conditions::Envelope;
+    let site = wall_site();
+    let kinds = library_kinds();
+    // Moss on the wall's south face (z > 0, facing +Z, the sun's side).
+    let south_moss = |cover: &MossCover| -> f64 {
+        cover
+            .colonies
+            .iter()
+            .filter(|colony| colony.normal[2] > 0.9)
+            .map(|colony| std::f64::consts::PI * colony.radius_m * colony.radius_m)
+            .sum()
+    };
+    let open = mosses::grow(&site, &kinds, &settings());
+    assert_eq!(
+        mosses::grow_under(&site, &kinds, &settings(), &[]),
+        open,
+        "no canopy, the same cover"
+    );
+    // A broadleaf crown south of the wall, over its south face: 3 m
+    // across the radius from 1.5 to 8 m up, shade 0.27 a metre.
+    let crown = Envelope {
+        centre_m: [0.0, -2.0],
+        base_m: 1.5,
+        top_m: 8.0,
+        radius_m: 3.0,
+        density: 0.27,
+    };
+    let shaded = mosses::grow_under(&site, &kinds, &settings(), std::slice::from_ref(&crown));
+    assert_eq!(shaded.canopy, vec![crown]);
+    let (before, after) = (south_moss(&open), south_moss(&shaded));
+    assert!(
+        after > before * 1.5,
+        "south face {before:.4} m2 open, {after:.4} m2 under the tree"
+    );
+    // And it reads back with its canopy.
+    let back = MossCover::from_json(&shaded.to_json().unwrap()).unwrap();
+    assert_eq!(back.canopy, shaded.canopy);
+}

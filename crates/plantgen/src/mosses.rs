@@ -38,6 +38,7 @@
 use serde::{Deserialize, Serialize};
 use serde_json::{Map, Value};
 
+use crate::conditions::Envelope;
 use crate::library::Library;
 use crate::lsys::tools::closest_on_triangle;
 use crate::math::{self, Vec3};
@@ -747,6 +748,11 @@ pub struct MossCover {
     pub settings: MossSettings,
     pub kinds: Vec<MossKind>,
     pub colonies: Vec<Colony>,
+    /// The tree crowns that shaded it ([`grow_under`]), in the site's
+    /// frame: each envelope's `centre_m` is (east, north) = (x, −z) of the
+    /// site's origin and its heights are the site's y.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub canopy: Vec<Envelope>,
 }
 
 /// A face's habitat samples.
@@ -768,20 +774,41 @@ fn habitat_at(
     sky_rays: &[Vec3],
     rain_rays: &[Vec3],
     suns: &[Vec3],
+    canopy: &[Envelope],
     p: Vec3,
     n: Vec3,
     material: u8,
     soil: bool,
 ) -> Habitat {
     let from = p + n * 0.004;
-    let sky = tracer.sky_seen(from, n, sky_rays, 30.0);
+    // The share of light along `ray` that comes through the canopy's
+    // crowns (Beer-Lambert, as plant light).
+    let through = |ray: Vec3| {
+        canopy
+            .iter()
+            .fold(1.0, |light, crown| light * crown.transmission(from, ray))
+    };
+    let sky = if canopy.is_empty() {
+        tracer.sky_seen(from, n, sky_rays, 30.0)
+    } else {
+        let (tangent, bitangent) = frame(n);
+        let open: f64 = sky_rays
+            .iter()
+            .map(|d| (tangent * d.x + n * d.y + bitangent * d.z).normalize_or(n))
+            .filter(|ray| ray.y > -0.02 && !tracer.blocked(from, *ray, 30.0))
+            .map(through)
+            .sum();
+        #[allow(clippy::cast_precision_loss)]
+        let share = open / sky_rays.len().max(1) as f64;
+        share
+    };
     // An upright face's rays turned to it reach at most half the sky.
     let sky_share = (sky / (0.5 + 0.5 * n.y.max(0.0))).min(1.0);
     let mut sun = 0.0;
     for s in suns {
         let facing = n.dot(*s);
         if facing > 0.0 && !tracer.blocked(from, *s, 40.0) {
-            sun += facing;
+            sun += facing * through(*s);
         }
     }
     #[allow(clippy::cast_precision_loss)]
@@ -886,8 +913,26 @@ fn suns(latitude_deg: f64) -> Vec<Vec3> {
 
 /// Grow mosses of `kinds` over the faces of `site` in the settings' box.
 #[must_use]
-#[allow(clippy::too_many_lines)]
 pub fn grow(site: &SiteMesh, kinds: &[MossKind], settings: &MossSettings) -> MossCover {
+    grow_under(site, kinds, settings, &[])
+}
+
+/// [`grow`] under the crowns of trees that stand over the site: each sky
+/// and sun ray a face's habitat casts is dimmed by the foliage it passes
+/// through, so a roof or wall a tree overhangs is shadier and, drying
+/// less, wetter (OSU Extension: roof mosses do best on north slopes,
+/// "especially where trees shade them"). The crowns are in the site's
+/// frame ([`MossCover::canopy`]); a stand's crowns give them with
+/// [`crate::conditions::Crown::envelope`]. Rain is not changed: a crown
+/// catches some and drips the rest.
+#[must_use]
+#[allow(clippy::too_many_lines)]
+pub fn grow_under(
+    site: &SiteMesh,
+    kinds: &[MossKind],
+    settings: &MossSettings,
+    canopy: &[Envelope],
+) -> MossCover {
     let low = Vec3::new(settings.low[0], settings.low[1], settings.low[2]);
     let high = Vec3::new(settings.high[0], settings.high[1], settings.high[2]);
     let (bottom, top) = site.bounds();
@@ -951,6 +996,7 @@ pub fn grow(site: &SiteMesh, kinds: &[MossKind], settings: &MossSettings) -> Mos
                         &sky_rays,
                         &rain_rays,
                         &sun_rays,
+                        canopy,
                         p,
                         normal,
                         surface.material,
@@ -985,6 +1031,7 @@ pub fn grow(site: &SiteMesh, kinds: &[MossKind], settings: &MossSettings) -> Mos
                         &sky_rays,
                         &rain_rays,
                         &sun_rays,
+                        canopy,
                         p,
                         face.normal,
                         surface.material,
@@ -1228,6 +1275,7 @@ pub fn grow(site: &SiteMesh, kinds: &[MossKind], settings: &MossSettings) -> Mos
         settings: *settings,
         kinds: kinds.to_vec(),
         colonies,
+        canopy: canopy.to_vec(),
     }
 }
 

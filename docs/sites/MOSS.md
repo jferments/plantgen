@@ -19,7 +19,7 @@ it gets, not by soil:
 
 | Habitat | Read from the mesh |
 | --- | --- |
-| Light | The sky the face sees (rays over its hemisphere) and three equinox suns, morning, noon and afternoon, from the south (+Z). |
+| Light | The sky the face sees (rays over its hemisphere) and three equinox suns, morning, noon and afternoon, from the south (+Z), each ray dimmed by the tree crowns it passes through when the site stands under a canopy (below). |
 | Wetness | Rain from near-vertical rays the face is open to, a little driven onto upright faces, damp near the ground (falling off over 0.3 m), less what the sun dries, more in shade. |
 | Hold | How well spores and water stay: 1 on a face turned up, 0.15 on an upright one, nothing where no sky or rain reaches. |
 | Nook | Short rays along the face: the joints between bricks, the step under a tile's edge and inner corners catch spores, grit and water, so a landing there holds and stays wet the better. |
@@ -29,6 +29,24 @@ Each genus fits a habitat by its library traits: the `light` and
 `moisture` classes it grows in, its `substrates`, its `substrate_reaction`
 and its `desiccation_tolerance`. Vigour is that fit times the share of the
 year the face stays wet enough to grow.
+
+### Under trees
+
+A site document may carry a `canopy`: the crowns of trees standing over
+it, each the upright cylinder of foliage the stands use
+(`conditions::Envelope`: `centre_m` [east, north] = (x, −z) of the
+site's origin, `base_m` and `top_m` in the site's y, `radius_m`, and
+`density`, shade per metre, 0.5 times the crown's leaf area per cubic
+metre; `Crown::envelope` gives it from a grown plant). `grow_under`
+dims every sky and sun ray of a face's habitat by exp(−density × its
+path inside each crown), as plant light does; less sun dries the face
+less, so it is wetter too. Rain is left as it is: a crown catches some
+and drips the rest. OSU Extension: roof mosses do best on north slopes,
+"especially where trees shade them". `moss-shakes-tree.json` is the
+shake roof with a broadleaf crown (leaf area index 4) over its south
+slope: after 30 years that slope carries 46% moss against 10% in the
+open, Dicranoweisia and Rosulabryum in place of the sun-tolerant
+Niphotrichum and Ceratodon; the north slope stays at about 58%.
 
 ## Growth
 
@@ -229,8 +247,9 @@ of a wall carrying more moss than the sunny one, the same cover every
 time and through JSON, patches far with shells between and shoots near,
 the roof genera of western Oregon and their spore output, moss darker and greener wet than dry, a cover tinting the surface
 under it with no triangles of its own, and a view named for a genus
-finding a colony of that genus, and a drawn cover writing as a glTF file
-with no required extensions.
+finding a colony of that genus, a drawn cover writing as a glTF file
+with no required extensions, and a tree's crown over a wall's sunny face
+letting moss grow there.
 
 ## Changing it
 
@@ -257,8 +276,10 @@ with no required extensions.
 - Dry *Ceratodon* turf opens gaps between its coiled shoots; FNA calls
   its leaves only "somewhat crisped", so it may want a weaker coil than
   *Dicranoweisia*'s, which needs a trait for how strongly a leaf crisps.
-- Roof cushions mostly stay separate where the rooftop study found dense
-  mats; its mats were on tree-shaded roofs, and the test roof has none.
+- Roof cushions on the test roof mostly stay separate, up to about 3 cm
+  across, though the north slope's cover (59%) already matches the
+  rooftop study's "over 40%"; whether they should join into mats is for
+  photos to say.
 - Growth rates, spread distances, spore output by fruiting and
   colonisation order are estimates still to check against Glime's
   *Bryophyte Ecology*.

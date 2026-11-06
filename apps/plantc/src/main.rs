@@ -288,7 +288,9 @@ Usage:
       and substrate fit (rain on faces turned up, damp at a wall's foot,
       shade from the sun, mortar and tiles basic, bark and wood acid) and
       spreads year by year, years 30 when left out, within --box (the
-      whole site when left out). --out writes the colonies; --cover reads
+      whole site when left out), under the site's `canopy` of tree crowns
+      (each centre_m [east, north], base_m, top_m, radius_m and density,
+      shade per metre) when it has one. --out writes the colonies; --cover reads
       them instead of growing. --render draws the site and its mosses:
       shells of the colonies' forms, or with --detail shoots every shoot's
       leaves and capsules (near: only within --span of --focus); --wet 1
@@ -3280,7 +3282,14 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
             settings.low = [values[0], values[1], values[2]];
             settings.high = [values[3], values[4], values[5]];
         }
-        mosses::grow(&site, &kinds, &settings)
+        // A site may stand under trees: crowns as upright cylinders of
+        // foliage, `centre_m` (east, north) = (x, -z) of the site's origin.
+        let canopy: Vec<plantgen::conditions::Envelope> = match document.get("canopy") {
+            Some(value) => serde_json::from_value(value.clone())
+                .map_err(|error| format!("invalid canopy: {error}"))?,
+            None => Vec::new(),
+        };
+        mosses::grow_under(&site, &kinds, &settings, &canopy)
     };
     out!(
         "{} colonies after {} years ({:.1} s)",
