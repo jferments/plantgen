@@ -524,33 +524,108 @@ impl Document {
         } else if !binary.is_empty() {
             root.insert("buffers".into(), json!([{ "byteLength": binary.len() }]));
         }
-        let mut text = serde_json::to_vec(&Value::Object(root)).unwrap_or_default();
-        while !text.len().is_multiple_of(4) {
-            text.push(b' ');
-        }
-        let chunk = |kind: u32, data: &[u8], out: &mut Vec<u8>| {
-            out.extend_from_slice(&u32::try_from(data.len()).unwrap_or(0).to_le_bytes());
-            out.extend_from_slice(&kind.to_le_bytes());
-            out.extend_from_slice(data);
-        };
-        let total = 12
-            + 8
-            + text.len()
-            + if binary.is_empty() {
-                0
-            } else {
-                8 + binary.len()
-            };
-        let mut out = Vec::with_capacity(total);
-        out.extend_from_slice(&MAGIC.to_le_bytes());
-        out.extend_from_slice(&2u32.to_le_bytes());
-        out.extend_from_slice(&u32::try_from(total).unwrap_or(u32::MAX).to_le_bytes());
-        chunk(JSON_CHUNK, &text, &mut out);
-        if !binary.is_empty() {
-            chunk(BIN_CHUNK, &binary, &mut out);
-        }
-        out
+        write(&Value::Object(root), &binary)
     }
+}
+
+/// A GLB file of `root` and the binary chunk `binary` (four-byte aligned).
+fn write(root: &Value, binary: &[u8]) -> Vec<u8> {
+    let mut text = serde_json::to_vec(root).unwrap_or_default();
+    while !text.len().is_multiple_of(4) {
+        text.push(b' ');
+    }
+    let chunk = |kind: u32, data: &[u8], out: &mut Vec<u8>| {
+        out.extend_from_slice(&u32::try_from(data.len()).unwrap_or(0).to_le_bytes());
+        out.extend_from_slice(&kind.to_le_bytes());
+        out.extend_from_slice(data);
+    };
+    let total = 12
+        + 8
+        + text.len()
+        + if binary.is_empty() {
+            0
+        } else {
+            8 + binary.len()
+        };
+    let mut out = Vec::with_capacity(total);
+    out.extend_from_slice(&MAGIC.to_le_bytes());
+    out.extend_from_slice(&2u32.to_le_bytes());
+    out.extend_from_slice(&u32::try_from(total).unwrap_or(u32::MAX).to_le_bytes());
+    chunk(JSON_CHUNK, &text, &mut out);
+    if !binary.is_empty() {
+        chunk(BIN_CHUNK, binary, &mut out);
+    }
+    out
+}
+
+/// The same GLB file with `EXT_meshopt_compression` undone: every buffer
+/// view's bytes as decompressed, in the one binary chunk, and the
+/// extension gone. Blender's importer, Godot and others refuse a file
+/// that requires the extension; this one they read. A file without the
+/// extension comes back unchanged. Quantized arrays stay quantized
+/// (`KHR_mesh_quantization`, which Blender reads).
+///
+/// # Errors
+///
+/// When the file is not a GLB file this reader can decompress.
+pub fn unpack(glb: &[u8]) -> Result<Vec<u8>, String> {
+    let read = Glb::read(glb)?;
+    let uses = |list: &str| {
+        read.json
+            .get(list)
+            .and_then(Value::as_array)
+            .is_some_and(|names| names.iter().any(|n| n == "EXT_meshopt_compression"))
+    };
+    if !uses("extensionsUsed") && !uses("extensionsRequired") {
+        return Ok(glb.to_vec());
+    }
+    let mut root = read.json.clone();
+    let mut binary = Vec::new();
+    if let Some(views) = root.get_mut("bufferViews").and_then(Value::as_array_mut) {
+        for (index, view) in views.iter_mut().enumerate() {
+            let start = field(view, "byteOffset").unwrap_or(0);
+            let length = field(view, "byteLength").unwrap_or(0);
+            let bytes = read
+                .buffer(field(view, "buffer").unwrap_or(0))
+                .and_then(|buffer| buffer.get(start..start + length))
+                .ok_or(format!("buffer view {index} is outside its buffer"))?;
+            let mut plain = Map::new();
+            plain.insert("buffer".into(), json!(0));
+            plain.insert("byteOffset".into(), json!(binary.len()));
+            plain.insert("byteLength".into(), json!(length));
+            for key in ["byteStride", "target", "name"] {
+                if let Some(value) = view.get(key) {
+                    plain.insert(key.into(), value.clone());
+                }
+            }
+            binary.extend_from_slice(bytes);
+            while !binary.len().is_multiple_of(4) {
+                binary.push(0);
+            }
+            *view = Value::Object(plain);
+        }
+    }
+    for list in ["extensionsUsed", "extensionsRequired"] {
+        if let Some(names) = root.get_mut(list).and_then(Value::as_array_mut) {
+            names.retain(|name| name != "EXT_meshopt_compression");
+        }
+        if root
+            .get(list)
+            .and_then(Value::as_array)
+            .is_some_and(Vec::is_empty)
+            && let Some(object) = root.as_object_mut()
+        {
+            object.remove(list);
+        }
+    }
+    if let Some(object) = root.as_object_mut() {
+        if binary.is_empty() {
+            object.remove("buffers");
+        } else {
+            object.insert("buffers".into(), json!([{ "byteLength": binary.len() }]));
+        }
+    }
+    Ok(write(&root, &binary))
 }
 
 /// Buffer views of `buffer` compressed as `codecs` say: the views, the
@@ -1346,6 +1421,25 @@ mod tests {
                 .all(|(at, &value)| value == f64::from(u16::try_from(at).unwrap() % 17) * 0.25)
         );
         assert_eq!(read.accessor(indices).unwrap().0.len(), 96);
+
+        // Unpacked, the file reads the same, without the extension.
+        let plain = unpack(&glb).unwrap();
+        assert_eq!(check(&plain), check(&glb));
+        let unpacked = Glb::read(&plain).unwrap();
+        assert!(!plain.windows(23).any(|w| w == b"EXT_meshopt_compression"));
+        assert_eq!(unpacked.json["buffers"].as_array().unwrap().len(), 1);
+        for accessor in [positions, indices] {
+            assert_eq!(
+                unpacked.accessor(accessor).unwrap(),
+                read.accessor(accessor).unwrap()
+            );
+        }
+        let image_view = unpacked.json["images"][0]["bufferView"].as_u64().unwrap();
+        let view = &unpacked.json["bufferViews"][usize::try_from(image_view).unwrap()];
+        let at = usize::try_from(view["byteOffset"].as_u64().unwrap()).unwrap();
+        assert_eq!(&unpacked.binary[at..at + 5], &[1, 2, 3, 4, 5]);
+        // A file without it comes back as it is.
+        assert_eq!(unpack(&plain).unwrap(), plain);
     }
 
     #[test]

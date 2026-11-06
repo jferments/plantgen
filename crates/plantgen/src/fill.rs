@@ -1197,6 +1197,11 @@ pub struct TileStats {
     pub edge_trees_per_ha: f64,
 }
 
+/// The mean area one triangle of a plant may cover on screen, pixels,
+/// before a coarser level of it is enough ([`TilePlan::glb_cells`]):
+/// four, about two pixels across.
+pub const TRIANGLE_PIXELS: f64 = 4.0;
+
 /// A filled tile: every placed plant, the ground cover and the far
 /// canopy, per stand cell of the [`StandMap`] it was filled from.
 #[derive(Debug, Clone, PartialEq)]
@@ -1297,6 +1302,35 @@ impl TilePlan {
         meshopt: bool,
     ) -> Result<Vec<u8>, Error> {
         crate::tile_scene::tile_glb(self, prototypes, dir, level, meshopt)
+    }
+
+    /// The tile cut into square cells `cell_m` across, each written as
+    /// one glTF file (as [`Self::glb`]) at every one of `levels`, and an
+    /// index, `X_Y/cells.json`, so a host that reads only glTF draws each
+    /// cell at the level its distance asks for. Each entry is a file's
+    /// name, relative to the tiles' folder (`X_Y/c<col>_<row>-lod<N>.glb`),
+    /// and its bytes; a cell with no plants has none.
+    ///
+    /// The index lists, for each cell and level, `pixel_m`: the widest a
+    /// pixel may be, metres, where it falls, before the level is enough,
+    /// its triangles then covering [`TRIANGLE_PIXELS`]
+    /// pixels each over the most demanding plant's height times breadth;
+    /// and `from_m`, the distance that is for a camera 1080 pixels high
+    /// and 60 degrees across.
+    ///
+    /// # Errors
+    ///
+    /// As [`Self::glb`], or when `cell_m` is not positive or `levels` is
+    /// empty.
+    pub fn glb_cells(
+        &self,
+        prototypes: &[PrototypeFiles],
+        dir: &Path,
+        cell_m: f64,
+        levels: &[usize],
+        meshopt: bool,
+    ) -> Result<Vec<(String, Vec<u8>)>, Error> {
+        crate::tile_scene::tile_cells(self, prototypes, dir, cell_m, levels, meshopt)
     }
 }
 
