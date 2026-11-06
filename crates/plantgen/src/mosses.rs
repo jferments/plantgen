@@ -143,6 +143,10 @@ pub struct MossKind {
     /// empty for lanceolate.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub outline: Vec<[f64; 2]>,
+    /// How crowded the leaves are at the top of a shoot (trait
+    /// `stem_foliation`): 0 evenly foliate, 0.5 comose, 1 rosulate.
+    #[serde(default)]
+    pub rosette: f64,
     /// Side branches curl up and inward when dry (trait
     /// `dry_branch_posture` curled).
     #[serde(default)]
@@ -384,6 +388,11 @@ impl MossKind {
             dry_posture,
             crisping: num("leaf_dry_crisping").unwrap_or(1.0).clamp(0.0, 1.0),
             outline: Vec::new(),
+            rosette: match pick("stem_foliation").as_deref() {
+                Some("rosulate") => 1.0,
+                Some("comose") => 0.5,
+                _ => 0.0,
+            },
             branches_curl_dry: pick("dry_branch_posture").as_deref() == Some("curled"),
             seta_m: num("seta_length_m").unwrap_or(leaf_length_m * 8.0),
             seta_arcuate: pick("seta_form").as_deref() == Some("arcuate"),
@@ -483,7 +492,9 @@ impl MossKind {
     fn dry_angle_deg(&self) -> f64 {
         match self.dry_posture {
             DryPosture::Imbricate => 14.0,
-            DryPosture::Appressed | DryPosture::Twisted => 7.0,
+            DryPosture::Appressed => 7.0,
+            // Close to the stem, their outer halves swept round it.
+            DryPosture::Twisted => 20.0,
             DryPosture::Flexuose => 16.0,
             DryPosture::Crisped => 28.0,
             DryPosture::Falcate => 25.0,
@@ -1996,12 +2007,32 @@ impl Drawer<'_> {
         let nodes = (length / step).ceil() as usize;
         let side = any_side(axis);
         let start = unit(mix(seed, 31)) * std::f64::consts::TAU;
-        for node in 0..nodes {
-            #[allow(clippy::cast_precision_loss)]
-            let down = node as f64 * step;
+        // A rosulate stem's top leaves stand crowded and full size, those
+        // below the rosette smaller and further apart (FNA vol. 28,
+        // Rosulabryum: stems usually strongly rosulate); comose, half so.
+        const ROSETTE: usize = 6;
+        let crowd = kind.rosette;
+        let mut down = 0.0;
+        for node in 0..nodes * 2 {
+            if node > 0 {
+                down += step
+                    * if node <= ROSETTE {
+                        1.0 - 0.5 * crowd
+                    } else {
+                        1.0 + 0.6 * crowd
+                    };
+            }
+            if down >= length - 1.0e-12 {
+                break;
+            }
             // Young leaves near the apex are smaller.
             #[allow(clippy::cast_precision_loss)]
-            let size = (0.45 + 0.55 * (node as f64 / 3.0)).min(1.0);
+            let size = (0.45 + 0.55 * (node as f64 / 3.0)).min(1.0)
+                * if node <= ROSETTE {
+                    1.0 + 0.1 * crowd
+                } else {
+                    1.0 - 0.45 * crowd
+                };
             let base = tip - axis * down;
             #[allow(clippy::cast_precision_loss)]
             let turn = start + node as f64 * GOLDEN;
@@ -2054,7 +2085,10 @@ impl Drawer<'_> {
                 0.15 + dry * (unit(mix(seed, 2)) - 0.3) * 1.6,
                 dry * (unit(mix(seed, 3)) - 0.5) * 2.2,
             ),
-            DryPosture::Twisted => (0.1, dry * 0.9),
+            // Spirally twisted round the stem (FNA vol. 28, Rosulabryum
+            // capillare): the outer blade sweeps sideways round the stem,
+            // every leaf the same way, its face turned with it.
+            DryPosture::Twisted => (0.1 + dry * 0.9, dry * std::f64::consts::FRAC_PI_2),
             DryPosture::Flexuose => (0.1 + dry * (unit(mix(seed, 2)) - 0.5) * 0.9, 0.0),
             DryPosture::Falcate => (0.7 + 0.25 * dry, 0.0),
             DryPosture::Appressed | DryPosture::Imbricate => (0.12 * wet, 0.0),
