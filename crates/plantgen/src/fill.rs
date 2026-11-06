@@ -1241,13 +1241,19 @@ pub struct Log {
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
 pub struct CanopyCell {
     pub height_m: f32,
-    /// Share of the cell under crowns, 0 to 1.
+    /// Share of the cell its crowns hide seen from above, 0 to 1: the
+    /// share under crowns, each deciduous crown bare on the tile's day
+    /// ([`TilePlan::day`]) counted as the share of light its twigs stop
+    /// ([`crate::development::BARE_CROWN_LIGHT`]).
     pub cover: f32,
     /// Linear RGB of the canopy seen from above: its canopy and
     /// subcanopy trees' foliage in full light (each species'
-    /// `appearance.foliage`), weighed by their crowns' area, so a maple
-    /// stand reads lighter than a fir one from afar; a dark conifer green
-    /// where the cell has no tree crowns, black where it has no stand.
+    /// `appearance.foliage`, tinted as its leaves unfold and turn on the
+    /// tile's day), weighed by their crowns' area, and a bare crown's
+    /// twigs (`appearance.twig`, or its bark), so a maple stand reads
+    /// lighter than a fir one from afar and grey-brown in winter; a dark
+    /// conifer green where the cell has no tree crowns, black where it
+    /// has no stand.
     pub colour: [f32; 3],
 }
 
@@ -1279,6 +1285,15 @@ pub struct TileStats {
     /// ([`Floor`]).
     #[serde(default)]
     pub floor: [f64; 4],
+    /// The share of its tree crowns, by area, in leaf on the tile's day
+    /// ([`TilePlan::day`]), each as far as its leaves are out: 1 where
+    /// every crown is evergreen or in full leaf.
+    #[serde(default = "in_full_leaf")]
+    pub crowns_in_leaf: f64,
+}
+
+fn in_full_leaf() -> f64 {
+    1.0
 }
 
 /// Each layer of a filled tile seen from above ([`Fill::layer_cover`]),
@@ -1289,7 +1304,9 @@ pub struct TileStats {
 /// inventory plots; their crews set the layers apart by eye, at least
 /// 5 m between their mean heights, and here they are thirds of the
 /// tallest tree's height, as the fill lays the layers out). Every share is
-/// of the whole tile, bare cells too.
+/// of the whole tile, bare cells too, and of the plants that stand on its
+/// day ([`TilePlan::day`]): a herb whose shoots are down is not counted, a
+/// bare crown is, as crews project crowns.
 #[derive(Debug, Clone, Copy, PartialEq, Default, Serialize)]
 pub struct LayerCover {
     /// The tallest tree's height, metres, whose thirds part the layers.
@@ -1330,6 +1347,9 @@ pub const TRIANGLE_PIXELS: f64 = 4.0;
 #[derive(Debug, Clone, PartialEq)]
 pub struct TilePlan {
     pub tile: TileId,
+    /// The day of the year (1 to 365) it shows ([`FillSettings::options`]):
+    /// which deciduous crowns stand bare and which herbs are up.
+    pub day: f64,
     pub tile_m: f64,
     pub cell_m: f64,
     pub cols: usize,
@@ -1348,6 +1368,7 @@ struct TileHeader<'a> {
     schema: u32,
     generator_revision: u32,
     tile: TileId,
+    day: f64,
     tile_m: f64,
     cell_m: f64,
     cols: usize,
@@ -1433,6 +1454,7 @@ impl TilePlan {
             schema: INSTANCE_SCHEMA,
             generator_revision: crate::GENERATOR_REVISION,
             tile: self.tile,
+            day: self.day,
             tile_m: self.tile_m,
             cell_m: self.cell_m,
             cols: self.cols,
@@ -1662,6 +1684,16 @@ struct Species {
     /// ([`development::ground_moss`]); needles and sprays of scale leaves
     /// do not.
     leaf_litter: bool,
+    /// Its leaves' year, for a woody plant that sheds them
+    /// (`appearance.organs.leaf.leafing`): bare, its crown lets more light
+    /// through ([`development::crown_light`]) and shows its twigs from
+    /// above.
+    leafing: Option<crate::looks::Leafing>,
+    /// A herb's year above ground ([`development::Shoots::of_herb`]):
+    /// `None` for one that stands all year.
+    shoots: Option<development::Shoots>,
+    /// The colour of its twigs, linear RGB: a bare crown's from above.
+    twig: [f32; 3],
 }
 
 /// The programs whose trees grow beneath a closed canopy as
@@ -1693,11 +1725,18 @@ impl Species {
             let params = spec.seeded_params(&program, &params, seed);
             SoilNeed::of_program(&program, &params)
         });
-        let canopy_m = library
-            .traits_of(id)
-            .ok()
+        let traits = library.traits_of(id).ok();
+        let canopy_m = traits
+            .as_ref()
             .and_then(|traits| traits.get("height_max_m").and_then(crate::traits::least))
             .filter(|height| *height > 0.0);
+        let shoots = traits.as_ref().and_then(development::Shoots::of_herb);
+        let leafing = spec
+            .appearance
+            .organs
+            .get("leaf")
+            .and_then(|look| look.leafing.clone());
+        let twig = spec.appearance.twig.unwrap_or(spec.appearance.bark);
         let grows_beneath = BENEATH_PROGRAMS.contains(&spec.generator.program.as_str());
         let leaf_litter = library
             .entry(id)
@@ -1715,6 +1754,9 @@ impl Species {
             canopy_m,
             grows_beneath,
             leaf_litter,
+            leafing,
+            shoots,
+            twig,
         })
     }
 
@@ -1851,10 +1893,25 @@ struct Layout {
     canopy_height: f64,
     /// Its tree crowns' colour seen from above, linear RGB: each canopy
     /// and subcanopy tree's species' foliage in full light, weighed by
-    /// its crown's area ([`CANOPY_COLOUR`] where it has none).
+    /// its crown's area ([`CANOPY_COLOUR`] where it has none), on the
+    /// fill's day: a deciduous crown's leaves tinted as they unfold and
+    /// turn, and its twigs where they are not out ([`CanopyCell::colour`]).
     canopy_colour: [f32; 3],
-    /// Share of the ground under herbs.
+    /// How much of the light its tree crowns stop on the fill's day, a
+    /// share of what they stop in full leaf, by crown area: 1 where every
+    /// crown is in leaf, less where deciduous crowns stand bare
+    /// ([`development::BARE_CROWN_LIGHT`]). The far canopy's cover is its
+    /// crowns' cover times it.
+    canopy_opacity: f64,
+    /// The share of its tree crowns, by area, in leaf on the fill's day,
+    /// each as far as its leaves are out.
+    crowns_in_leaf: f64,
+    /// Share of the ground under herbs up on the fill's day.
     herb_cover: f64,
+    /// Share of the ground under herbs up on the plots' summer day
+    /// ([`development::PLOT_DAY`]): what shades the floor's mosses, which
+    /// grow through the year.
+    summer_herb_cover: f64,
     /// Share of the ground under shrubs' crowns.
     shrub_cover: f64,
     /// The share of its tree crowns, by area, of species that shed broad
@@ -1875,6 +1932,10 @@ struct Laid {
     layer: niche::Layer,
     /// Its crown's area seen from above, m².
     crown_m2: f64,
+    /// Whether it stands on the fill's day: a herb whose shoots are down
+    /// is laid out, so the herbs of each season keep their places, but
+    /// not drawn.
+    up: bool,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -2625,6 +2686,7 @@ impl Fill {
                 };
                 let kept = KeptPrototype {
                     generator_revision: crate::GENERATOR_REVISION,
+                    day: self.settings.options.day,
                     files: written.clone(),
                 };
                 let record = out.join(record_name(&prototype.key, parts));
@@ -2655,15 +2717,18 @@ impl Fill {
     }
 
     /// Prototype `index` as a write left it in `out` at this revision,
-    /// every file still there.
+    /// every file still there, drawn on the fill's day where its species'
+    /// looks change through the year.
     fn kept_prototype(&self, index: u32, parts: bool, out: &Path) -> Option<PrototypeFiles> {
         let prototype = &self.prototypes[index as usize];
         let record = out.join(record_name(&prototype.key, parts));
+        let seasons = self.species_of(prototype).spec.appearance.has_seasons();
         std::fs::read_to_string(&record)
             .ok()
             .and_then(|text| serde_json::from_str::<KeptPrototype>(&text).ok())
             .filter(|kept| {
                 kept.generator_revision == crate::GENERATOR_REVISION
+                    && (!seasons || (kept.day - self.settings.options.day).abs() < 1e-9)
                     && kept.files.key == prototype.key
                     && (kept.files.age_years - prototype.age_years).abs() < 1e-9
                     && kept
@@ -2818,6 +2883,7 @@ impl Fill {
         let mut floor_mosses: Vec<String> = Vec::new();
         let mut floor_m2 = [0.0_f64; 4];
         let (mut trees, mut basal, mut leaf_m2, mut crowns) = (0_usize, 0.0, 0.0, 0.0);
+        let mut crowns_in_leaf = 0.0;
         let roofs = site.roofs();
         for (index, cell) in stands.cells.iter().enumerate() {
             let (col, row) = (index % stands.cols, index / stands.cols);
@@ -2888,6 +2954,9 @@ impl Fill {
             let (mut tree_crowns, mut kept_tree_crowns) = (0.0, 0.0);
             let (mut herbs, mut kept_herbs) = (0_usize, 0_usize);
             for (n, plant) in layout.plants.iter().enumerate() {
+                if !plant.up {
+                    continue;
+                }
                 let at = turned(
                     [
                         wrap(plant.at[0] + shift[0], layout_m),
@@ -3049,8 +3118,10 @@ impl Fill {
             let kept_share = |kept: f64, all: f64| if all > 0.0 { kept / all } else { 1.0 };
             let canopy_cover = layout.canopy_cover * kept_share(kept_tree_crowns, tree_crowns);
             #[allow(clippy::cast_precision_loss)]
-            let herb_cover = layout.herb_cover * kept_share(kept_herbs as f64, herbs as f64);
+            let kept_herbs = kept_share(kept_herbs as f64, herbs as f64);
+            let herb_cover = layout.herb_cover * kept_herbs;
             crowns += canopy_cover * cell_m * cell_m;
+            crowns_in_leaf += canopy_cover * layout.crowns_in_leaf * cell_m * cell_m;
             // The forest floor: logs, moss where shade, wet and little
             // else lets it grow, litter under the crowns over the rest.
             let wood = (wood_m2 / (cell_m * cell_m)).min(0.6);
@@ -3061,7 +3132,9 @@ impl Fill {
                 },
                 f64::from,
             );
-            let understorey = 1.0 - (1.0 - layout.shrub_cover) * (1.0 - herb_cover);
+            // The mosses grow through the year beneath the summer's herbs.
+            let understorey =
+                1.0 - (1.0 - layout.shrub_cover) * (1.0 - layout.summer_herb_cover * kept_herbs);
             let moss =
                 (development::ground_moss(canopy_cover, understorey, moisture, layout.leaf_litter)
                     * (1.0 - wood))
@@ -3120,7 +3193,7 @@ impl Fill {
             #[allow(clippy::cast_possible_truncation)]
             canopy.push(CanopyCell {
                 height_m: layout.canopy_height as f32,
-                cover: canopy_cover as f32,
+                cover: (canopy_cover * layout.canopy_opacity) as f32,
                 colour: layout.canopy_colour,
             });
         }
@@ -3129,6 +3202,14 @@ impl Fill {
         // age, scaled to its height.
         for (n, plant) in site.colonists.iter().enumerate() {
             let index = self.colonist_prototype(plant)?;
+            // A herb whose shoots are down that day keeps its crack.
+            if self
+                .species_of(&self.prototypes[index])
+                .shoots
+                .is_some_and(|shoots| !shoots.stand_on(self.settings.options.day))
+            {
+                continue;
+            }
             let size = self.size(index).ok_or_else(|| {
                 Error(format!(
                     "fill: prototype {index} ({}) has not been measured",
@@ -3184,9 +3265,15 @@ impl Fill {
             edge_trees_per_ha: edge_trees as f64 / area_ha,
             logs_per_ha: logs.len() as f64 / area_ha,
             floor: floor_m2.map(|sum| sum / area_m2),
+            crowns_in_leaf: if crowns > 0.0 {
+                crowns_in_leaf / crowns
+            } else {
+                1.0
+            },
         };
         Ok(TilePlan {
             tile: site.tile,
+            day: self.settings.options.day,
             tile_m: site.tile_m,
             cell_m,
             cols: stands.cols,
@@ -3481,6 +3568,10 @@ impl Fill {
             .map(|(_, _, _, size, ..)| size.height)
             .fold(0.0_f64, f64::max);
         let mut has_herbs = false;
+        // The herbs' shares: all of them, those up on the plots' summer
+        // day, and those up on the fill's day.
+        let day = self.settings.options.day;
+        let mut herb_weights = [0.0_f64; 3];
         let (members, traits): (Vec<stand_tile::Member>, Vec<([f32; 3], usize, f64)>) = chosen
             .iter()
             .map(|(index, candidate, share, size, species, overtopped)| {
@@ -3495,6 +3586,19 @@ impl Fill {
                 {
                     layer = niche::Layer::Subcanopy;
                 }
+                let own = &self.species[*species];
+                if layer == niche::Layer::Herb {
+                    let up = |day: f64| own.shoots.is_none_or(|shoots| shoots.stand_on(day));
+                    for (sum, counts) in
+                        herb_weights
+                            .iter_mut()
+                            .zip([true, up(development::PLOT_DAY), up(day)])
+                    {
+                        if counts {
+                            *sum += *share;
+                        }
+                    }
+                }
                 let member = stand_tile::Member {
                     id: *index,
                     layer,
@@ -3502,7 +3606,9 @@ impl Fill {
                     height_m: size.height,
                     crown_base_m: size.crown_base.unwrap_or(0.0),
                     crown_radius_m: size.crown_radius,
-                    light_needed: self.species[*species].light_needed,
+                    light_needed: own.light_needed,
+                    leafing: own.leafing.clone(),
+                    light_day: own.shoots.map(|shoots| shoots.middle()),
                 };
                 let traits = (
                     self.species[*species].spec.appearance.foliage,
@@ -3518,9 +3624,17 @@ impl Fill {
             })
             .unzip();
         let tile_m = f64::from_bits(key.cell_bits);
+        // The plots measure the herbs up in summer: herbs of every season
+        // are laid out together, so those up then cover what the plots
+        // give, and the spring herbs stand among them.
+        let [all_herbs, summer_herbs, day_herbs] = herb_weights;
+        let mut cover = stand.cover;
+        if summer_herbs > 0.0 {
+            cover[3] = (cover[3] * all_herbs / summer_herbs).min(1.0);
+        }
         let rules = stand_tile::Rules {
             tile_m,
-            cover: stand.cover,
+            cover,
             scale: STAND_SCALE,
             ..stand_tile::Rules::default()
         };
@@ -3624,15 +3738,41 @@ impl Fill {
             tile_m,
         );
         let shrub_cover = stand_tile::cover(&members, &in_layers(&[niche::Layer::Shrub]), tile_m);
-        let herb_cover = if !has_herbs {
-            0.0
+        // Whether a placed plant stands on day `day`: a herb only while
+        // its shoots are up, whichever layer its height puts it in (a
+        // bracken's fronds stand among the shrubs).
+        let up_on = |plant: &stand_tile::Placed, day: f64| {
+            self.species[traits[plant.member].1]
+                .shoots
+                .is_none_or(|shoots| shoots.stand_on(day))
+        };
+        let herbs_up = |day: f64| -> f64 {
+            let herbs: Vec<stand_tile::Placed> = in_layers(&[niche::Layer::Herb])
+                .into_iter()
+                .filter(|plant| up_on(plant, day))
+                .collect();
+            stand_tile::cover(&members, &herbs, tile_m)
+        };
+        let share_of = |weight: f64| {
+            if all_herbs > 0.0 {
+                weight / all_herbs
+            } else {
+                0.0
+            }
+        };
+        let (herb_cover, summer_herb_cover) = if !has_herbs {
+            (0.0, 0.0)
         } else if self.settings.herbs {
-            stand_tile::cover(&members, &in_layers(&[niche::Layer::Herb]), tile_m)
+            (herbs_up(day), herbs_up(development::PLOT_DAY))
         } else {
-            stand.cover[3]
+            (
+                cover[3] * share_of(day_herbs),
+                cover[3] * share_of(summer_herbs),
+            )
         };
         let (mut heights, mut count) = (0.0, 0.0);
         let (mut colour, mut crowns, mut leafy) = ([0.0_f64; 3], 0.0, 0.0);
+        let (mut seen, mut in_leaf) = (0.0, 0.0);
         let plants = placed
             .iter()
             .map(|plant| {
@@ -3654,11 +3794,23 @@ impl Fill {
                 if matches!(member.layer, niche::Layer::Canopy | niche::Layer::Subcanopy) {
                     let area = radius * radius;
                     let (foliage, species, _) = traits[plant.member];
-                    for (sum, part) in colour.iter_mut().zip(foliage) {
-                        *sum += area * f64::from(part);
+                    let own = &self.species[species];
+                    // Seen from above on the fill's day: its leaves as far
+                    // as they are out, in their colour that day, and where
+                    // they are not, its twigs, as much of them as a bare
+                    // crown stops light.
+                    let (leaves, foliage) =
+                        own.leafing.as_ref().map_or((1.0, foliage), |leafing| {
+                            (leafing.size(day), leafing.colour_on(foliage, day))
+                        });
+                    let twigs = (1.0 - leaves) * (1.0 - development::BARE_CROWN_LIGHT);
+                    for ((sum, leaf), twig) in colour.iter_mut().zip(foliage).zip(own.twig) {
+                        *sum += area * (leaves * f64::from(leaf) + twigs * f64::from(twig));
                     }
+                    seen += area * (leaves + twigs);
+                    in_leaf += area * leaves;
                     crowns += area;
-                    if self.species[species].leaf_litter {
+                    if own.leaf_litter {
                         leafy += area;
                     }
                 }
@@ -3670,6 +3822,7 @@ impl Fill {
                     lean,
                     layer: member.layer,
                     crown_m2: std::f64::consts::PI * radius * radius,
+                    up: up_on(plant, day),
                 }
             })
             .collect();
@@ -3678,12 +3831,15 @@ impl Fill {
             canopy_cover,
             canopy_height: if count > 0.0 { heights / count } else { 0.0 },
             #[allow(clippy::cast_possible_truncation)]
-            canopy_colour: if crowns > 0.0 {
-                colour.map(|sum| (sum / crowns) as f32)
+            canopy_colour: if seen > 0.0 {
+                colour.map(|sum| (sum / seen) as f32)
             } else {
                 CANOPY_COLOUR
             },
+            canopy_opacity: if crowns > 0.0 { seen / crowns } else { 1.0 },
+            crowns_in_leaf: if crowns > 0.0 { in_leaf / crowns } else { 1.0 },
             herb_cover,
+            summer_herb_cover,
             shrub_cover,
             leaf_litter: if crowns > 0.0 { leafy / crowns } else { 0.0 },
             logs,
@@ -3762,7 +3918,15 @@ fn run_jobs<T: Send>(
 #[derive(Serialize, Deserialize)]
 struct KeptPrototype {
     generator_revision: u32,
+    /// The day of the year it was drawn on ([`FillSettings::options`]);
+    /// a record from before the day was kept was drawn on a package's.
+    #[serde(default = "package_day")]
+    day: f64,
     files: PrototypeFiles,
+}
+
+fn package_day() -> f64 {
+    crate::package::DEFAULT_DAY
 }
 
 /// The index of the stand age in `ages` nearest `years`, by ratio; the
