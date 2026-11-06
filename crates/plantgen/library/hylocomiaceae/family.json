@@ -2,5 +2,27 @@
   "schema": 1,
   "rank": "family",
   "name": "Hylocomiaceae",
-  "parent": "order/hypnales"
+  "parent": "order/hypnales",
+  "traits": {
+    "colony_form": {
+      "weft": "usually"
+    },
+    "seta_colour": [
+      122,
+      52,
+      36
+    ],
+    "capsule_colour": [
+      112,
+      62,
+      40
+    ]
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Hylocomiaceae (Rohrer; efloras, read 2026-11-06): plants in medium-sized to large wefts, often extensive sheets; stems creeping to ascending or erect, innovations often ascending-arching; dioicous; seta elongate, smooth; capsule usually inclined to horizontal. Hylocomium splendens, Pleurozium schreberi and Rhytidiadelphus triquetrus carpet vast areas of forest floor across the northern half of the continent. Seta and capsule colours as the red-brown of the Brachytheciaceae; estimate."
+    }
+  }
 }
