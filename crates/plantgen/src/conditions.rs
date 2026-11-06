@@ -132,9 +132,7 @@ impl Surroundings for Around<'_> {
     }
 
     fn occupied(&self, point: Vec3) -> bool {
-        self.envelopes
-            .iter()
-            .any(|envelope| envelope.claims(point))
+        self.envelopes.iter().any(|envelope| envelope.claims(point))
     }
 
     fn crowded(&self) -> bool {
