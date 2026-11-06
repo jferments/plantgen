@@ -27,8 +27,11 @@ it gets, not by soil:
 
 Each genus fits a habitat by its library traits: the `light` and
 `moisture` classes it grows in, its `substrates`, its `substrate_reaction`
-and its `desiccation_tolerance`. Vigour is that fit times the share of the
-year the face stays wet enough to grow.
+and its `desiccation_tolerance`. Each class has soft edges a tenth wide,
+and neighbouring classes a genus takes are one range, soft only at its
+ends: a genus of wet and mesic places fits fully where the two meet.
+Vigour is that fit times the share of the year the face stays wet enough
+to grow.
 
 ### Under trees
 
@@ -44,9 +47,9 @@ less, so it is wetter too. Rain is left as it is: a crown catches some
 and drips the rest. OSU Extension: roof mosses do best on north slopes,
 "especially where trees shade them". `moss-shakes-tree.json` is the
 shake roof with a broadleaf crown (leaf area index 4) over its south
-slope: after 30 years that slope carries 46% moss against 10% in the
+slope: after 30 years that slope carries 58% moss against 11% in the
 open, Dicranoweisia and Rosulabryum in place of the sun-tolerant
-Niphotrichum and Ceratodon; the north slope stays at about 58%.
+Niphotrichum and Ceratodon; the north slope stays at about 64%.
 
 ## Growth
 
@@ -243,13 +246,15 @@ triangles and 81 MB; a 4.5 cm close view with shoots 325,000 and 38 MB).
 
 `crates/plantgen/tests/mosses.rs`: the genera and their forms, colonies
 kept off a board kept clear and the slab pressed on it, the shaded side
-of a wall carrying more moss than the sunny one, the same cover every
+of a wall carrying more moss than the sunny one (over four seeds, as an
+upright face carries few colonies), the same cover every
 time and through JSON, patches far with shells between and shoots near,
 the roof genera of western Oregon and their spore output, moss darker and greener wet than dry, a cover tinting the surface
 under it with no triangles of its own, and a view named for a genus
 finding a colony of that genus, a drawn cover writing as a glTF file
-with no required extensions, a tree's crown over a wall's sunny face
-letting moss grow there, and a surface stating its own reaction.
+with no required extensions, a tree's crown over a wooden deck letting
+moss grow there, and a surface stating its own reaction. A unit test in
+`mosses.rs` checks that neighbouring classes fit fully where they meet.
 
 ## Changing it
 
@@ -277,12 +282,22 @@ letting moss grow there, and a surface stating its own reaction.
   its leaves only "somewhat crisped", so it may want a weaker coil than
   *Dicranoweisia*'s, which needs a trait for how strongly a leaf crisps.
 - Roof cushions on the test roof mostly stay separate, up to about 3 cm
-  across, though the north slope's cover (59%) already matches the
+  across, though the north slope's cover (64%) already matches the
   rooftop study's "over 40%"; whether they should join into mats is for
   photos to say.
 - Growth rates, spread distances, spore output by fruiting and
   colonisation order are estimates still to check against Glime's
-  *Bryophyte Ecology*.
+  *Bryophyte Ecology*. A colony at no vigour still spreads at three
+  tenths of its genus's rate, so the cover of an upright face, where
+  vigour is low, hangs on a few colonies.
+- The library has no shade moss of basic stone and mortar
+  (*Rhynchostegium*, *Brachythecium*, *Amblystegium* on shaded walls),
+  so a shaded concrete face loses its sun mosses and nothing takes
+  their place.
+- A crown's drip and the still, humid air under it are not modelled:
+  shade only dries a face less. Tamm (1953, in *Bryophyte Biology*):
+  *Hylocomium splendens* grows fastest under the edges of spruce crowns,
+  where shade is not too deep and crown drip brings water and nutrients.
 
 ## Into the site fill
 
@@ -301,15 +316,16 @@ reads to tint its own textures (`MossCover::tint`, above). `plantc fill
 twentieth of the view's span of its focus, shells out to the span,
 patches beyond (`--wet` sets `DrawOptions::hydration`). On the test block
 (DEVELOPERS.md), with the eight Pacific Northwest genera its site names,
-thirty years grow about 39,000 colonies in 12 s on four cores: the shaded
-north slope of the house's roof, toward the street, mossed in clumps; the
-south slope spotted; moss along the curb and the fence's feet. Under
-its 28 tree crowns, the moss on the woodland's boulders and
-ground more than doubles (1.7 to 3.7 m², nearly all Dicranoweisia and
-Rosulabryum). The house is roofed in asphalt shingles (`built`,
-`reaction: neutral`), which the acid roof mosses take: 13.9 m² of moss in
-the open (the north slope a third covered, Niphotrichum, Dicranoweisia,
-Homalothecium and Rosulabryum), 8.7 m² under the trees, whose firs block
-the slope's north sky, now mostly Dicranoweisia and Rosulabryum. As
-concrete it carried 9.9 m², 4.0 under the trees: the shade mosses are
-all acid, so nothing took the sun mosses' place.
+thirty years grow about 73,000 colonies in 24 s on four cores under the
+tile's 28 tree crowns (61,000 with no crowns): the shaded north slope of
+the house's roof, toward the street, mossed in clumps; the south slope
+spotted; moss along the curb and the fence's feet. Off the roof, the
+trees take moss on the boulders, ground, curb and fence from 4.9 to
+6.6 m², the gain nearly all Dicranoweisia and Rosulabryum. The house is
+roofed in asphalt shingles (`built`, `reaction: neutral`), which the
+acid roof mosses take: its north slope is 45% mossed in the open
+(Dicranoweisia, Rosulabryum, Niphotrichum, Homalothecium) and 47% under
+the trees, whose firs block the slope's north sky, there nearly all
+Dicranoweisia and Rosulabryum. As concrete the roof carried 10.0 m² in
+the open and 4.3 under the trees: the shade mosses are all acid, so
+nothing took the sun mosses' place.

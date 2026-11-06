@@ -580,15 +580,23 @@ impl MossKind {
 }
 
 /// How far `value` lies in the classes `allowed` marks, the classes split
-/// at `bounds` (rising), with soft edges a tenth wide.
+/// at `bounds` (rising), with soft edges a tenth wide. Neighbouring
+/// classes a moss takes are one range, soft only at its ends: a moss of
+/// wet and mesic places fits fully where they meet.
 fn class_fit(value: f64, bounds: &[f64], allowed: &[bool]) -> f64 {
     let mut best: f64 = 0.0;
-    for (index, &ok) in allowed.iter().enumerate() {
-        if !ok {
+    let mut index = 0;
+    while index < allowed.len() {
+        if !allowed[index] {
+            index += 1;
             continue;
         }
-        let (low, high) = (bounds[index], bounds[index + 1]);
-        let below = if index == 0 {
+        let first = index;
+        while index + 1 < allowed.len() && allowed[index + 1] {
+            index += 1;
+        }
+        let (low, high) = (bounds[first], bounds[index + 1]);
+        let below = if first == 0 {
             1.0
         } else {
             math::smoothstep(low - 0.08, low + 0.08, value)
@@ -599,6 +607,7 @@ fn class_fit(value: f64, bounds: &[f64], allowed: &[bool]) -> f64 {
             math::smoothstep(high + 0.08, high - 0.08, value)
         };
         best = best.max(below * above);
+        index += 1;
     }
     best
 }
@@ -3009,5 +3018,26 @@ impl MossCover {
             ));
         }
         Ok(cover)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::class_fit;
+
+    #[test]
+    fn neighbouring_classes_fit_fully_where_they_meet() {
+        let bounds = [0.0, 0.3, 0.55, 0.75, 1.0];
+        // Wet and mesic: whole across their border, soft only past mesic.
+        let wet_mesic = [true, true, false, false];
+        for value in [0.0, 0.22, 0.3, 0.38, 0.46] {
+            assert!((class_fit(value, &bounds, &wet_mesic) - 1.0).abs() < 1e-12);
+        }
+        assert!((class_fit(0.55, &bounds, &wet_mesic) - 0.5).abs() < 1e-12);
+        assert!(class_fit(0.7, &bounds, &wet_mesic) < 1e-12);
+        // Wet and dry with mesic between: half at each inner border.
+        let wet_dry = [true, false, true, false];
+        assert!((class_fit(0.3, &bounds, &wet_dry) - 0.5).abs() < 1e-12);
+        assert!(class_fit(0.42, &bounds, &wet_dry) < 1e-12);
     }
 }
