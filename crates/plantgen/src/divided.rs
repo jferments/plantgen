@@ -144,13 +144,15 @@ impl Form {
         };
         let pinnule_angle = c.pinnule_angle.unwrap_or(angle);
         let once_pinnate = pattern == Pattern::Pinnate && pinnules == 0 && confluent <= 0.0;
-        let profile_at = |t: f64| {
-            crate::templates::outline_profile(c.outline.as_deref(), t, widest, blade_base, tip)
-        };
+        let profile_at = |t: f64| crate::templates::leaflet_profile(c, t, widest, blade_base, tip);
         let spread = c.spread.unwrap_or_else(|| {
             open_enough(pattern, c.leaflets, pinnules, c.leaflet_width, profile_at)
         });
         let petiolule = c.petiolule.unwrap_or_else(|| {
+            // Fans meet at their feet.
+            if c.fanned() {
+                return 0.0;
+            }
             apart(
                 pattern,
                 c.leaflets,
@@ -160,10 +162,13 @@ impl Form {
                 profile_at,
             )
         });
-        let profile = (c.outline.is_some() || !once_pinnate).then(|| {
-            ALONG.map(|t| {
-                crate::templates::outline_profile(c.outline.as_deref(), t, widest, blade_base, tip)
-            })
+        let shaped = c.outline.is_some()
+            || c.fanned()
+            || [c.apex_taper, c.apex_point, c.base_taper]
+                .iter()
+                .any(Option::is_some);
+        let profile = (shaped || !once_pinnate).then(|| {
+            ALONG.map(|t| crate::templates::leaflet_profile(c, t, widest, blade_base, tip))
         });
         Self {
             pattern,
@@ -316,9 +321,8 @@ pub fn crowding(c: &Compound) -> Option<f64> {
     if form.pattern != Pattern::Palmate || form.pinnules > 0 || form.leaflets < 2 {
         return None;
     }
-    let profile = |t: f64| {
-        crate::templates::outline_profile(c.outline.as_deref(), t, form.widest, form.base, form.tip)
-    };
+    let profile =
+        |t: f64| crate::templates::leaflet_profile(c, t, form.widest, form.base, form.tip);
     let widest = ALONG
         .iter()
         .copied()

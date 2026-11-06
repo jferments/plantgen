@@ -463,10 +463,11 @@ Usage:
       on every day of the year, passing when they are the months stated
       and warning a month off at an end. --group shows one of the four.
       Exits non-zero on any error.
-  plantc atlas <species|spec.json> --out FILE.png
+  plantc atlas <species|spec.json> --out FILE.png [--organ ORGAN]
       Draw the species' organ card textures (leaves, needles, flowers) in
       their colours, one per organ, side by side, each lower face that
-      differs (an underside colour, sori) beside its upper.
+      differs (an underside colour, sori) beside its upper; with --organ,
+      that organ's card alone (a leaf to set beside photographs).
   plantc ground --out FILE.png [--seed N] [--looks words|litter]
       Draw the nine plant-made ground looks (needles, leaves, thatch,
       twigs, moss, sphagnum, grass, tussock and cushion), seven to a row,
@@ -5537,7 +5538,7 @@ fn lineup_command(args: &[String]) -> Result<(), Failure> {
 }
 
 fn atlas_command(args: &[String]) -> Result<(), Failure> {
-    let options = Options::parse(args, &["out", "program"])?;
+    let options = Options::parse(args, &["out", "program", "organ"])?;
     let program = options.program()?;
     let spec = load_spec(options.one_positional("a species")?)?;
     let out = options.flags.get("out").ok_or("missing `--out FILE.png`")?;
@@ -5546,7 +5547,20 @@ fn atlas_command(args: &[String]) -> Result<(), Failure> {
         None => spec.program(),
     }
     .map_err(|error| error.to_string())?;
-    let looks = spec.appearance.looks(program.organs());
+    let mut looks = spec.appearance.looks(program.organs());
+    let mut shading = spec::organ_areas(&program, &params).map_err(|error| error.to_string())?;
+    // One organ's card alone (`--organ leaf`): for comparing a drawn leaf
+    // with photographs of the species' leaves.
+    if let Some(organ) = options.flags.get("organ") {
+        let keep: Vec<bool> = looks.iter().map(|look| look.organ == *organ).collect();
+        let mut kept = keep.iter();
+        looks.retain(|_| *kept.next().unwrap_or(&false));
+        let mut kept = keep.iter();
+        shading.retain(|_| *kept.next().unwrap_or(&false));
+        if looks.is_empty() {
+            return Err(format!("the program draws no organ `{organ}`").into());
+        }
+    }
     let bodies = spec.appearance.body_looks(program.bodies());
     let named: Vec<(&str, &BodyLook)> = program.bodies().zip(&bodies).collect();
     let templates = Templates::for_plant(&looks, &named);
@@ -5554,7 +5568,6 @@ fn atlas_command(args: &[String]) -> Result<(), Failure> {
     let png = raster::encode_png(width, height, &pixels)
         .map_err(|error| format!("cannot encode PNG: {error}"))?;
     fs::write(out, png).map_err(|error| format!("cannot write {out}: {error}"))?;
-    let shading = spec::organ_areas(&program, &params).map_err(|error| error.to_string())?;
     out!(
         "wrote {out}: {width}x{height}, one card texture per organ, left to right,\n\
          its lower face beside it where the two are unlike.\n\
