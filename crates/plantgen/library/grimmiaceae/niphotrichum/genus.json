@@ -35,6 +35,7 @@
       34
     ],
     "leaf_dry_posture": "appressed",
+    "leaf_shape": "ovate",
     "seta_length_m": {
       "min": 0.012,
       "max": 0.015
@@ -80,6 +81,11 @@
       "evidence": "SourceInferred",
       "source": "fna-27",
       "note": "FNA vol. 27, Niphotrichum (Ochyra and Bednarek-Ochyra; efloras, read 2026-11-05): plants loosely to densely caespitose or in extensive mats or patches, green, yellow- to greyish green, often hoary when dry (Greek nipha, snow, and trichos, hair); stems creeping to erect, often with short tuft-like branches; leaves erect-appressed when dry, usually awned; seta yellowish to blackish red. Typical values are N. ericoides, the roof taxon (Racomitrium canescens var. ericoides; same volume): extensive mats, yellow- or olive green, brown to blackish brown proximally; stems 3-8 cm, prostrate to ascending, pinnate; leaves appressed and slightly twisted dry, 2-3 x 0.9-1.2 mm, awns capillaceous or absent; seta dark to reddish brown 12-15 mm; capsule brown, long-cylindric, 1.5-2 mm; dry or intermittently moist sandy, gravelly soil and soil over rock, mostly non-calcareous. Bryophytes at Oregon State, rooftop study (nine Willamette Valley roofs; read 2026-11-05 as summarised in a search, the site itself blocked here): Dicranoweisia cirrata very abundant (45% occurrence), Bryum capillare abundant (33%), Racomitrium canescens var. ericoides abundant but infrequent (11%), able to form large mats; Dicranoweisia and Bryum capillare the only two species found on cedar shakes; most roofs had fewer than four species."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-27",
+      "note": "FNA vol. 27, Niphotrichum canescens (efloras, read 2026-11-05): leaves ovate to broadly ovate-lanceolate; N. ericoides ovate-lanceolate to subtriangular."
     },
     "traits.height_typical_m": {
       "evidence": "Authored",

@@ -137,6 +137,12 @@ pub struct MossKind {
     /// crisped" or "contorted" 0.5.
     #[serde(default = "full_crisping")]
     pub crisping: f64,
+    /// The blade's outline: its width (0 to 1 of the widest) at points
+    /// from base (0) to tip (1), the library's profile for the genus's
+    /// `leaf_shape` (kingdom rule `appearance.organs.leaf.shape.outline`);
+    /// empty for lanceolate.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub outline: Vec<[f64; 2]>,
     /// Side branches curl up and inward when dry (trait
     /// `dry_branch_posture` curled).
     #[serde(default)]
@@ -180,6 +186,26 @@ fn default_lid() -> f64 {
 }
 
 /// Older leaves a moss genus gives no colour for: yellow-brown.
+/// The library's lanceolate profile (kingdom rule
+/// `appearance.organs.leaf.shape.outline`), for kinds read without one.
+const LANCEOLATE: [[f64; 2]; 15] = [
+    [0.0, 0.2],
+    [0.02, 0.31],
+    [0.05, 0.48],
+    [0.1, 0.7],
+    [0.2, 0.91],
+    [0.3, 1.0],
+    [0.4, 0.96],
+    [0.5, 0.85],
+    [0.6, 0.74],
+    [0.7, 0.58],
+    [0.8, 0.4],
+    [0.9, 0.21],
+    [0.95, 0.1],
+    [0.98, 0.04],
+    [1.0, 0.0],
+];
+
 fn full_crisping() -> f64 {
     1.0
 }
@@ -357,6 +383,7 @@ impl MossKind {
                 .unwrap_or(linear([90, 120, 50])),
             dry_posture,
             crisping: num("leaf_dry_crisping").unwrap_or(1.0).clamp(0.0, 1.0),
+            outline: Vec::new(),
             branches_curl_dry: pick("dry_branch_posture").as_deref() == Some("curled"),
             seta_m: num("seta_length_m").unwrap_or(leaf_length_m * 8.0),
             seta_arcuate: pick("seta_form").as_deref() == Some("arcuate"),
@@ -398,6 +425,41 @@ impl MossKind {
     /// Across a shoot's leaves from tip to tip, moist: twice a leaf's
     /// reach out from the stem at the angle it stands at.
     #[must_use]
+    /// The blade's width at `s` along it (0 base, 1 tip), 0 to 1 of its
+    /// widest, from [`MossKind::outline`] (lanceolate when empty).
+    #[must_use]
+    pub fn blade_width(&self, s: f64) -> f64 {
+        let points: &[[f64; 2]] = if self.outline.len() >= 2 {
+            &self.outline
+        } else {
+            &LANCEOLATE
+        };
+        let s = s.clamp(0.0, 1.0);
+        for pair in points.windows(2) {
+            let ([s0, w0], [s1, w1]) = (pair[0], pair[1]);
+            if s <= s1 {
+                let t = if s1 > s0 { (s - s0) / (s1 - s0) } else { 0.0 };
+                return w0 + (w1 - w0) * t;
+            }
+        }
+        points.last().map_or(0.0, |p| p[1])
+    }
+
+    /// Where along the blade it is widest, 0 (base) to 1 (tip).
+    #[must_use]
+    pub fn blade_widest(&self) -> f64 {
+        let points: &[[f64; 2]] = if self.outline.len() >= 2 {
+            &self.outline
+        } else {
+            &LANCEOLATE
+        };
+        points
+            .iter()
+            .max_by(|a, b| a[1].total_cmp(&b[1]))
+            .map_or(0.3, |p| p[0])
+            .clamp(0.15, 0.85)
+    }
+
     pub fn shoot_width_m(&self) -> f64 {
         (2.0 * self.leaf_length_m * math::sin(math::radians(self.moist_angle_deg()))
             + self.leaf_width_m * 0.5)
@@ -555,7 +617,25 @@ pub fn kinds(library: &Library) -> Result<Vec<MossKind>, String> {
             .get(..1)
             .map(|first| first.to_uppercase() + &family[1..])
             .unwrap_or_default();
-        found.push(MossKind::from_traits(&rank.name, &family, &traits)?);
+        let mut kind = MossKind::from_traits(&rank.name, &family, &traits)?;
+        if let Some(shape) = traits.get("leaf_shape").and_then(Value::as_str) {
+            let rule = library.rank_rule(&rank.file, "appearance.organs.leaf.shape.outline")?;
+            let points = rule
+                .as_ref()
+                .and_then(|rule| rule.pointer(&format!("/map/leaf_shape/{shape}")))
+                .and_then(Value::as_array)
+                .ok_or_else(|| {
+                    format!("{}: leaf_shape `{shape}` has no outline profile", rank.name)
+                })?;
+            kind.outline = points
+                .iter()
+                .filter_map(|point| {
+                    let pair = point.as_array()?;
+                    Some([pair.first()?.as_f64()?, pair.get(1)?.as_f64()?])
+                })
+                .collect();
+        }
+        found.push(kind);
     }
     Ok(found)
 }
@@ -1981,7 +2061,9 @@ impl Drawer<'_> {
         };
         let length = kind.leaf_length_m * size;
         let width = kind.leaf_width_m * size;
-        let lower = length * 0.38;
+        // The blade bends where it is widest (its outline, leaf_shape).
+        let widest = kind.blade_widest();
+        let lower = length * widest;
         let mid = base + dir * lower;
         // Falcate leaves curve back toward the stem's side away from the
         // light; the others outward and down from the stem.
@@ -2011,24 +2093,64 @@ impl Drawer<'_> {
                 width,
                 dry,
                 kind.crisping,
+                &|s| kind.blade_width(s),
                 [dark, mid_colour, tip_colour],
                 seed,
             );
             return;
         }
+        // Widest at `mid`; at the base and halfway on to the tip as wide
+        // as the outline says there.
         let left = mid + flat * (width * 0.5);
         let right = mid - flat * (width * 0.5);
         let centre = mid + keel;
-        self.tri([base, left, centre], [dark, mid_colour, mid_colour], true);
-        self.tri([base, centre, right], [dark, mid_colour, mid_colour], true);
+        let foot = width * 0.5 * kind.blade_width(0.0);
+        if foot > width * 0.1 {
+            let (foot_left, foot_right) = (base + flat * foot, base - flat * foot);
+            self.tri(
+                [foot_left, left, centre],
+                [dark, mid_colour, mid_colour],
+                true,
+            );
+            self.tri([base, foot_left, centre], [dark, dark, mid_colour], true);
+            self.tri([base, centre, foot_right], [dark, mid_colour, dark], true);
+            self.tri(
+                [foot_right, centre, right],
+                [dark, mid_colour, mid_colour],
+                true,
+            );
+        } else {
+            self.tri([base, left, centre], [dark, mid_colour, mid_colour], true);
+            self.tri([base, centre, right], [dark, mid_colour, mid_colour], true);
+        }
+        let half = (widest + 1.0) * 0.5;
+        let up = mid + upper_dir * (length * (half - widest));
+        let up_half = width * 0.5 * kind.blade_width(half);
+        let up_colour = blend(mid_colour, tip_colour, 0.5);
+        let (up_left, up_right) = (up + flat * up_half, up - flat * up_half);
         self.tri(
-            [left, apex, centre],
-            [mid_colour, tip_colour, mid_colour],
+            [left, up_left, centre],
+            [mid_colour, up_colour, mid_colour],
             true,
         );
         self.tri(
-            [centre, apex, right],
-            [mid_colour, tip_colour, mid_colour],
+            [centre, up_left, up],
+            [mid_colour, up_colour, up_colour],
+            true,
+        );
+        self.tri(
+            [centre, up, up_right],
+            [mid_colour, up_colour, up_colour],
+            true,
+        );
+        self.tri(
+            [centre, up_right, right],
+            [mid_colour, up_colour, mid_colour],
+            true,
+        );
+        self.tri(
+            [up_left, apex, up_right],
+            [up_colour, tip_colour, up_colour],
             true,
         );
         if kind.hair_point_m > 0.0 {
@@ -2064,6 +2186,7 @@ impl Drawer<'_> {
         width: f64,
         dry: f64,
         crisping: f64,
+        outline: &dyn Fn(f64) -> f64,
         [dark, mid_colour, tip_colour]: [[f32; 3]; 3],
         seed: u64,
     ) {
@@ -2074,13 +2197,7 @@ impl Drawer<'_> {
         let curl = 0.12 * (1.0 - dry) - dry * (1.8 + 1.4 * unit(mix(seed, 7)));
         let spin = dry * (unit(mix(seed, 3)) - 0.5) * 3.2;
         let lower = 0.3;
-        let half_width = |s: f64| {
-            if s < lower {
-                width * 0.5 * (0.65 + 0.35 * s / lower)
-            } else {
-                width * 0.5 * ((1.0 - s) / (1.0 - lower)).powf(0.8)
-            }
-        };
+        let half_width = |s: f64| width * 0.5 * outline(s);
         let colour = |s: f64| {
             if s < lower {
                 blend(dark, mid_colour, s / lower)
