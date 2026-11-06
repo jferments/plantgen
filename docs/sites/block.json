@@ -45,9 +45,9 @@
    "as": "built",
    "soil_m": 0.04,
    "colour": [
-    0.2,
-    0.24,
-    0.12
+    0.22,
+    0.22,
+    0.24
    ]
   },
   "glass": {
@@ -151,5 +151,15 @@
    "seed": 1,
    "years": 12
   }
+ ],
+ "mosses": [
+  "Dicranoweisia",
+  "Rosulabryum",
+  "Niphotrichum",
+  "Homalothecium",
+  "Ceratodon",
+  "Bryum",
+  "Tortula",
+  "Grimmia"
  ]
 }

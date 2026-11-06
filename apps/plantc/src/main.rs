@@ -145,6 +145,7 @@ fn run() -> Result<(), Failure> {
         "variants" => variants_command(&args),
         "fill" => fill_command(&args),
         "inspect" => inspect_command(&args),
+        "unpack" => unpack_command(&args),
         "sources" => sources_command(&args),
         "help" | "--help" | "-h" => print_usage(),
         other => Err(format!("unknown command `{other}`; run `plantc help`").into()),
@@ -280,8 +281,8 @@ Usage:
   plantc moss <site.json> [--years N] [--seed N] [--latitude DEG]
               [--box X0,Y0,Z0,X1,Y1,Z1] [--out COVER.json] [--cover COVER.json]
               [--render FILE.png [--view VIEW] [--size PIXELS] [--from south|north]
-               [--focus X,Y,Z [--span METRES]] [--wet 0..1]
-               [--detail patch|shell|shoots|near] [--capsules yes|no]]
+               [--focus X,Y,Z | --genus GENUS] [--span METRES] [--wet 0..1]
+               [--detail tint|patch|shell|shoots|near] [--capsules yes|no]]
       Grow mosses over a site's faces (plantgen::mosses): every moss genus
       the library gives a colony_form settles where its light, wetness
       and substrate fit (rain on faces turned up, damp at a wall's foot,
@@ -292,7 +293,9 @@ Usage:
       shells of the colonies' forms, or with --detail shoots every shoot's
       leaves and capsules (near: only within --span of --focus); --wet 1
       just rained on, 0 dry (0.4 when left out); --from north looks from
-      the north side.
+      the north side. --genus looks at that genus's widest well-grown
+      colony instead of --focus; a close render prints the genus of the
+      colony it is centred on, for its caption.
   plantc site <site.json> [--out FILE.png] [--view VIEW] [--size PIXELS]
               [--day N] [--quality draft|standard]
               [--focus X,Y,Z [--span METRES]]
@@ -518,20 +521,30 @@ Usage:
               [--compress none|quantize|meshopt]
               [--attributes all|wind|none] [--triangles N[,N,N,N]]
               [--max-mib N] [--levels tiers|package] [--glb LEVEL]
+              [--glb-cells LEVEL,... [--cell-m N]]
               [--packages DIR [--profile static|motion] [--cards yes|no]]
               [--field SITE.json [--corner X,Z] [--cracks YEARS]
+               [--moss YEARS]
                [--render PNG [--view V] [--size N] [--level N]
-                [--focus X,Y,Z --span M]]]
+                [--focus X,Y,Z --span M] [--wet W]]]
       Fill one map tile with plant communities (each a JSON file: an id
       and members, each a species, optionally the layer it keeps to and
-      its abundance) as the library API's Fill does, and write
+      its abundance; origin planted for a yard's or street's kept
+      trees) as the library API's Fill does, and write
       DIR/tiles/X_Y.json (header, ground cover and far canopy per stand
       cell, stand numbers) and DIR/tiles/X_Y.bin (32-byte instances;
       docs/LIBRARY-API.md). Each community's stand is developed at each of
       --ages years since disturbance (default 10,20,40,80,160,320,640);
       a stand cell takes the nearest. Without --stands (a StandMap:
-      cell_m, cols and cells), the first community covers the tile at
-      --years since disturbance (default 100). Every prototype is measured
+      cell_m, cols and cells, each with its community, its
+      years_since_disturbance and optionally its ground's moisture, 0 to
+      1, for a creek's bank or a lake's shore), the first community
+      covers the tile at --years since disturbance (default 100). A
+      member without a niche is named on stderr: it suits every site.
+      A map's cells may be as
+      fine as a city's yards and verges (4 m): each reads its window of one
+      stand tile laid out for its block of cells about 40 m across, so fine
+      cells cost little more than coarse ones. Every prototype is measured
       first, its size kept in DIR/prototypes so a later fill grows none
       again. --prototypes used (the default) also exports, into
       DIR/prototypes with prototypes.json, each prototype the tile places
@@ -549,13 +562,24 @@ Usage:
       on shallow soil, herbs on roofs that hold soil, climbers at the feet
       of walls and fences. --cracks YEARS adds what comes up in its
       pavements in those years among the fill's species of the pavement
-      pool. --render draws the filled tile on its mesh, each prototype at
-      --level (1 unless given). --glb LEVEL (0 nearest to 3 farthest)
+      pool. --moss YEARS grows mosses over the tile for those years
+      (the genera the mosses list of the site names, or the library's;
+      docs/sites/MOSS.md) and writes DIR/tiles/X_Y.moss.json.
+      --render draws the filled tile on its mesh, each prototype at
+      --level (1 unless given), and its moss, as wet as --wet (0 dry to 1
+      just rained on, 0.4 unless given). --glb LEVEL (0 nearest to 3 farthest)
       also writes DIR/tiles/X_Y.glb: the whole tile as one glTF file,
       each prototype's level LEVEL once and every plant an instance of it
       (EXT_mesh_gpu_instancing), which Blender, Godot, Unity and three.js
-      open as they are (Blender and Godot need --compress quantize or
-      none: they do not read meshopt). --packages DIR also builds the
+      open as they are (Blender before 5 and Godot need --compress
+      quantize or none, or `plantc unpack` afterwards: they do not read
+      meshopt). --glb-cells LEVEL,... (say
+      0,1,2,3) cuts the tile into cells --cell-m across (20 unless given)
+      and writes each as such a file at every level listed,
+      DIR/tiles/X_Y/c<col>_<row>-lod<N>.glb, with DIR/tiles/X_Y/cells.json
+      saying from how far each level of each cell is enough, so a host
+      that reads only glTF draws near cells fine and far ones coarse.
+      --packages DIR also builds the
       packages that hold the prototypes the tile places (every one with
       --prototypes all), one per species, setting and seed with a
       keyframe at each of their ages, as plantc build builds one
@@ -564,6 +588,12 @@ Usage:
       have none yet).
   plantc inspect <package.afterplant>
       Check every object of a package and summarise it.
+  plantc unpack <FILE.glb|DIR> --out <FILE.glb|DIR>
+      Copy a glTF file, or a folder such as a fill's output, with
+      EXT_meshopt_compression undone in every .glb, so Blender 4.5 and
+      other importers without a meshopt decoder read it (positions stay
+      quantized, which they read). Other files are copied as they are,
+      so a tile's cells.json still names its files.
   plantc export <species|spec.json|package.afterplant> [--out DIR]
                 [--format glb] [--env ENV] [--seed N] [--age N]
                 [--shade attribute|baked] [--quality draft|standard]
@@ -587,7 +617,8 @@ Usage:
       EXT_mesh_gpu_instancing, which three.js, Unity's glTFast and current
       Blender read and Godot does not. --compress meshopt also compresses
       every array (EXT_meshopt_compression, which three.js reads with its
-      meshopt decoder), 3 to 4 times smaller again: the 30-year bigleaf
+      meshopt decoder and Blender from 5.2; `plantc unpack` undoes it for
+      Blender 4.5), 3 to 4 times smaller again: the 30-year bigleaf
       maple's nearest level is 7 MiB. --attributes wind leaves out the
       growth attributes (_PLANTGEN_BIRTH, _PLANTGEN_SHED), none also the
       wind ones (_PLANTGEN_WIND, _PLANTGEN_RADIUS).
@@ -3197,7 +3228,7 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
         args,
         &[
             "years", "seed", "latitude", "box", "out", "cover", "render", "view", "size", "from",
-            "focus", "span", "wet", "detail", "capsules",
+            "focus", "span", "wet", "detail", "capsules", "genus",
         ],
     )?;
     let given = options.one_positional("a site document")?;
@@ -3233,10 +3264,7 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
             fs::read_to_string(path).map_err(|error| format!("cannot read {path}: {error}"))?;
         MossCover::from_json(&text).map_err(|error| format!("{path}: {error}"))?
     } else {
-        let kinds = mosses::kinds(library())?;
-        if kinds.is_empty() {
-            return Err("the library describes no moss genus with a colony_form".into());
-        }
+        let kinds = site_moss_kinds(&document)?;
         let mut settings = MossSettings::default();
         if let Some(years) = options.number::<u32>("years")? {
             settings.years = years;
@@ -3270,17 +3298,51 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
     let Some(render) = options.flags.get("render") else {
         return Ok(());
     };
-    let focus = numbers("focus", 3)?.map(|v| Vec3::new(v[0], v[1], v[2]));
+    let mut focus = numbers("focus", 3)?.map(|v| Vec3::new(v[0], v[1], v[2]));
+    // `--genus G`: look at that genus's showpiece colony, so a view named
+    // for a genus shows it and no other.
+    if let Some(genus) = options.flags.get("genus") {
+        if focus.is_some() {
+            return Err("give --genus or --focus, not both".into());
+        }
+        let colony = cover
+            .showpiece(genus)
+            .ok_or_else(|| format!("the cover holds no colony of `{genus}`"))?;
+        let at = cover.view_point(colony);
+        focus = Some(Vec3::new(at[0], at[1], at[2]));
+    }
+    // Name the colony a close view is centred on, for its caption.
+    if let Some(at) = focus
+        && let Some((colony, distance)) = cover.nearest([at.x, at.y, at.z])
+    {
+        let genus = cover
+            .kinds
+            .get(usize::from(colony.kind))
+            .map_or("?", |kind| kind.genus.as_str());
+        out!(
+            "centred on {genus} (colony {:.1} cm across, {:.0} years old, {:.1} cm from the focus {:.4},{:.4},{:.4})",
+            colony.radius_m * 200.0,
+            colony.age,
+            distance * 100.0,
+            at.x,
+            at.y,
+            at.z
+        );
+    }
     let span: f64 = options.number("span")?.unwrap_or(2.0);
+    // `tint`: no moss triangles; the site's own surfaces coloured by the
+    // moss over them, as a host tints a roof's or wall's texture.
+    let tinted = options.flags.get("detail").map(String::as_str) == Some("tint");
     let detail = match options.flags.get("detail").map(String::as_str) {
-        None | Some("near") => Detail::Near,
+        None | Some("near" | "tint") => Detail::Near,
         Some("patch") => Detail::Patch,
         Some("shell") => Detail::Shell,
         Some("shoots") => Detail::Shoots,
         Some(other) => {
-            return Err(
-                format!("unknown detail `{other}`; use patch, shell, shoots or near").into(),
-            );
+            return Err(format!(
+                "unknown detail `{other}`; use tint, patch, shell, shoots or near"
+            )
+            .into());
         }
     };
     let draw = DrawOptions {
@@ -3289,7 +3351,11 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
         near: focus.map(|at| (at, span)),
         capsules: options.flags.get("capsules").is_none_or(|v| v != "no"),
     };
-    let mut moss = cover.draw(&site, &draw);
+    let mut moss = if tinted {
+        plantgen::mesh::Mesh::default()
+    } else {
+        cover.draw(&site, &draw)
+    };
     let (low, high) = match focus {
         Some(at) => {
             let half = Vec3::new(span, span, span) * 1.5;
@@ -3302,6 +3368,13 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
         high + Vec3::new(1.0, 1.0, 1.0),
         Vec3::ZERO,
     );
+    if tinted {
+        // A texel about three pixels across, and 5 mm at the finest.
+        let across = focus.map_or_else(|| (high - low).length(), |_| span * 2.0);
+        let pixels: f64 = options.number("size")?.unwrap_or(1200.0);
+        let step = (across / pixels * 3.0).max(0.005);
+        ground = cover.tint(draw.hydration).paint(&ground, step, low, high);
+    }
     // Seen from the north: the scene turned half round about the focus.
     let north = match options.flags.get("from").map(String::as_str) {
         None | Some("south") => false,
@@ -3530,6 +3603,31 @@ const PAVEMENT_POOL: [&str; 17] = [
 
 /// A species of the pool for the yearly step: its facts from the library,
 /// and its size by age grown once in open ground.
+/// Says which members of the communities have no niche: each suits every
+/// site and stands as half tolerant of shade, so it comes up wherever its
+/// community grows, under a closed canopy too.
+fn warn_without_niche(communities: &[api::Community]) {
+    let library = library();
+    let mut missing: Vec<&str> = communities
+        .iter()
+        .flat_map(|community| &community.members)
+        .map(|member| member.species.as_str())
+        .filter(|id| {
+            library
+                .entry(id)
+                .is_some_and(|entry| matches!(entry.niche(), Ok(None)))
+        })
+        .collect();
+    missing.sort_unstable();
+    missing.dedup();
+    if !missing.is_empty() {
+        eprintln!(
+            "note: no niche for {}: each suits every site and stands half tolerant of shade",
+            missing.join(", ")
+        );
+    }
+}
+
 fn colonist(id: &str, ages: &[f64]) -> Result<plantgen::succession::Colonist, String> {
     use plantgen::succession::{Colonist, Size};
     let spec = load_spec(id)?;
@@ -3569,7 +3667,14 @@ fn colonist(id: &str, ages: &[f64]) -> Result<plantgen::succession::Colonist, St
                 .segments
                 .iter()
                 .map(|segment| sideways(segment.end))
-                .chain(graph.organs.iter().map(|organ| sideways(organ.position)))
+                // A leaf's tip, not where it stands: a rosette's crown is
+                // its leaves' reach.
+                .chain(
+                    graph
+                        .organs
+                        .iter()
+                        .map(|organ| sideways(organ.position + organ.heading * organ.size)),
+                )
                 .fold(0.0, f64::max),
         })
         .collect();
@@ -6325,6 +6430,8 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
             "field",
             "corner",
             "cracks",
+            "moss",
+            "wet",
             "render",
             "view",
             "size",
@@ -6332,6 +6439,8 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
             "focus",
             "span",
             "glb",
+            "glb-cells",
+            "cell-m",
             "packages",
             "profile",
             "cards",
@@ -6349,6 +6458,7 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
             api::Community::from_json(&text).map_err(|error| format!("{path}: {error}"))
         })
         .collect::<Result<Vec<_>, String>>()?;
+    warn_without_niche(&communities);
     let tile = options
         .flags
         .get("tile")
@@ -6494,11 +6604,27 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
             "  {species}: {per_ha:.0} trees/ha (mean height {mean:.1} m, tallest {tallest:.1} m), {every:.0} plants/ha in all"
         );
     }
+    let moss = match options.number::<u32>("moss")? {
+        Some(years) => {
+            let field = field_site
+                .as_ref()
+                .ok_or("`--moss` grows moss over a site: give `--field SITE.json`")?;
+            let cover = tile_moss(field, tile_m, years, options.number("seed")?.unwrap_or(1))?;
+            let path = out
+                .join("tiles")
+                .join(format!("{}_{}.moss.json", tile.x, tile.y));
+            fs::write(&path, cover.to_json()?)
+                .map_err(|error| format!("cannot write {}: {error}", path.display()))?;
+            out!("  wrote {}", path.display());
+            Some(cover)
+        }
+        None => None,
+    };
     if let Some(png) = options.flags.get("render") {
         let field = field_site
             .as_ref()
             .ok_or("`--render` draws a tile over a site: give `--field SITE.json`")?;
-        render_fill(&options, png, &fill, &plan, field)?;
+        render_fill(&options, png, &fill, &plan, field, moss.as_ref())?;
     }
     if let Some(dir) = options.flags.get("packages") {
         // The prototypes the tile places, or with --prototypes all every one.
@@ -6560,6 +6686,48 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
         out!(
             "wrote the tile as one glTF file at level {level}, {mib:.1} MiB: {}",
             path.display()
+        );
+    }
+    if let Some(list) = options.flags.get("glb-cells") {
+        let levels = list
+            .split(',')
+            .map(|v| match v.trim().parse::<usize>() {
+                Ok(level) if level < export::LEVELS => Ok(level),
+                _ => Err(format!(
+                    "--glb-cells takes levels from 0 to {}, not `{v}`",
+                    export::LEVELS - 1
+                )),
+            })
+            .collect::<Result<Vec<_>, _>>()?;
+        let cell_m = options.number::<f64>("cell-m")?.unwrap_or(20.0);
+        let files = plan
+            .glb_cells(
+                &prototypes,
+                &out.join("prototypes"),
+                cell_m,
+                &levels,
+                compression == export::Compression::Meshopt,
+            )
+            .map_err(|error| error.to_string())?;
+        let tiles = out.join("tiles");
+        let mut bytes = 0;
+        for (name, data) in &files {
+            let path = tiles.join(name);
+            if let Some(parent) = path.parent() {
+                fs::create_dir_all(parent)
+                    .map_err(|error| format!("{}: {error}", parent.display()))?;
+            }
+            fs::write(&path, data).map_err(|error| format!("{}: {error}", path.display()))?;
+            bytes += data.len();
+        }
+        #[allow(clippy::cast_precision_loss)]
+        let mib = bytes as f64 / 1_048_576.0;
+        out!(
+            "wrote the tile as {} files of {cell_m} m cells at levels {list}, {mib:.1} MiB: {}",
+            files.len() - 1,
+            tiles
+                .join(format!("{}_{}/cells.json", tile.x, tile.y))
+                .display()
         );
     }
     Ok(())
@@ -6637,6 +6805,8 @@ fn write_fill_packages(
 
 /// A fill's tile over a site document's mesh (`plantc fill --field`).
 struct FieldSite {
+    /// The site document.
+    document: serde_json::Value,
     mesh: plantgen::site::SiteMesh,
     site: api::Site,
     /// The tile's south-west corner, (x, z) in the mesh's frame.
@@ -6742,7 +6912,12 @@ fn field_site(
             started.elapsed().as_secs_f64()
         );
     }
-    Ok(FieldSite { mesh, site, corner })
+    Ok(FieldSite {
+        document,
+        mesh,
+        site,
+        corner,
+    })
 }
 
 /// `plant` (in growth's frame: +Y up, -Z north) placed as `instance` says
@@ -6830,9 +7005,61 @@ fn placed_instance(
     out
 }
 
+/// The moss genera that grow on the site `document`: the library's, or
+/// only those its `mosses` list names (its region's mosses; spores of the
+/// others do not reach it).
+fn site_moss_kinds(
+    document: &serde_json::Value,
+) -> Result<Vec<plantgen::mosses::MossKind>, Failure> {
+    let mut kinds = plantgen::mosses::kinds(library())?;
+    if kinds.is_empty() {
+        return Err("the library describes no moss genus with a colony_form".into());
+    }
+    if let Some(names) = document.get("mosses").and_then(serde_json::Value::as_array) {
+        let names: Vec<&str> = names.iter().filter_map(serde_json::Value::as_str).collect();
+        if let Some(unknown) = names
+            .iter()
+            .find(|name| !kinds.iter().any(|kind| kind.genus == **name))
+        {
+            return Err(
+                format!("site names moss genus `{unknown}`, which the library lacks").into(),
+            );
+        }
+        kinds.retain(|kind| names.contains(&kind.genus.as_str()));
+    }
+    Ok(kinds)
+}
+
+/// The mosses `years` grow over the tile of `field` (`plantc fill
+/// --moss YEARS`): the genera its site names, or every genus of the
+/// library, from `seed`.
+fn tile_moss(
+    field: &FieldSite,
+    tile_m: f64,
+    years: u32,
+    seed: u64,
+) -> Result<plantgen::mosses::MossCover, Failure> {
+    use plantgen::mosses::{self, MossSettings};
+    let started = Instant::now();
+    let kinds = site_moss_kinds(&field.document)?;
+    let settings = MossSettings::over_tile(field.corner, tile_m, years, seed);
+    let cover = mosses::grow(&field.mesh, &kinds, &settings);
+    out!(
+        "  moss: {} colonies after {years} years in {:.1} s",
+        cover.colonies.len(),
+        started.elapsed().as_secs_f64()
+    );
+    for (genus, count, area) in cover.census() {
+        out!("    {genus:<14} {count:>6} colonies, {area:.2} m²");
+    }
+    Ok(cover)
+}
+
 /// Draw a filled tile on its site (`plantc fill --render PNG`): the
 /// site's mesh and every instance as its prototype at `--level` (1 unless
-/// given), seen from `--view` (oblique unless given).
+/// given), seen from `--view` (oblique unless given), with its moss if
+/// grown: shoots within a twentieth of the view's span of its focus (the
+/// tile's middle unless given), shells out to its span, patches beyond.
 #[allow(clippy::too_many_lines)]
 fn render_fill(
     options: &Options,
@@ -6840,6 +7067,7 @@ fn render_fill(
     fill: &api::Fill,
     plan: &api::TilePlan,
     field: &FieldSite,
+    moss: Option<&plantgen::mosses::MossCover>,
 ) -> Result<(), Failure> {
     let started = Instant::now();
     let level: usize = options.number("level")?.unwrap_or(1);
@@ -6922,9 +7150,36 @@ fn render_fill(
         }
         None => None,
     };
+    let moss = match moss {
+        Some(cover) => {
+            use plantgen::mosses::{Detail, DrawOptions};
+            let (at, span) = focus.unwrap_or((Vec3::ZERO, half));
+            let mut mesh = cover.draw(
+                &field.mesh,
+                &DrawOptions {
+                    hydration: options.number::<f64>("wet")?.unwrap_or(0.4).clamp(0.0, 1.0),
+                    detail: Detail::Near,
+                    near: Some((at - offset, span * 0.05)),
+                    capsules: true,
+                },
+            );
+            #[allow(clippy::cast_possible_truncation)]
+            let shift = [offset.x as f32, offset.y as f32, offset.z as f32];
+            for p in &mut mesh.positions {
+                for (value, by) in p.iter_mut().zip(shift) {
+                    *value += by;
+                }
+            }
+            mesh
+        }
+        None => plantgen::mesh::Mesh::default(),
+    };
     let image = preview::render_on_site(
         &scene,
-        &[(&ground, raster::Material::Opaque)],
+        &[
+            (&ground, raster::Material::Opaque),
+            (&moss, raster::Material::Opaque),
+        ],
         &templates,
         &PreviewOptions {
             width: pixels,
@@ -6946,8 +7201,9 @@ fn render_fill(
     .map_err(|error| format!("cannot encode PNG: {error}"))?;
     fs::write(png, bytes).map_err(|error| format!("cannot write {png}: {error}"))?;
     out!(
-        "wrote {png}: {} triangles of plants, {} of site, in {:.1} s",
+        "wrote {png}: {} triangles of plants, {} of moss, {} of site, in {:.1} s",
         scene.triangle_count(),
+        moss.triangle_count(),
         ground.triangle_count(),
         started.elapsed().as_secs_f64()
     );
@@ -6992,6 +7248,75 @@ fn triangle_budget(given: &str) -> Result<[usize; export::LEVELS], String> {
             )
         }),
     }
+}
+
+/// `plantc unpack`: copy glTF files, or a folder of them, with
+/// `EXT_meshopt_compression` undone, so Blender 4.5 reads them.
+fn unpack_command(args: &[String]) -> Result<(), Failure> {
+    let options = Options::parse(args, &["out"])?;
+    let from = PathBuf::from(options.one_positional("a .glb file or a folder")?);
+    let to = PathBuf::from(
+        options
+            .flags
+            .get("out")
+            .ok_or("`plantc unpack` needs --out (a file, or a folder for a folder)")?,
+    );
+    if from == to {
+        return Err("--out must differ from the input".to_string().into());
+    }
+    let mut files = Vec::new();
+    if from.is_dir() {
+        let mut folders = vec![from.clone()];
+        while let Some(folder) = folders.pop() {
+            for entry in fs::read_dir(&folder)
+                .map_err(|error| format!("cannot read {}: {error}", folder.display()))?
+            {
+                let path = entry.map_err(|error| error.to_string())?.path();
+                if path.is_dir() {
+                    folders.push(path);
+                } else {
+                    let relative = path.strip_prefix(&from).map_err(|e| e.to_string())?;
+                    files.push((path.clone(), to.join(relative)));
+                }
+            }
+        }
+    } else {
+        files.push((from.clone(), to.clone()));
+    }
+    files.sort();
+    let (mut unpacked, mut before, mut after) = (0usize, 0usize, 0usize);
+    for (source, target) in &files {
+        if let Some(parent) = target.parent() {
+            fs::create_dir_all(parent)
+                .map_err(|error| format!("cannot create {}: {error}", parent.display()))?;
+        }
+        let bytes = fs::read(source)
+            .map_err(|error| format!("cannot read {}: {error}", source.display()))?;
+        let written = if source.extension().is_some_and(|ext| ext == "glb") {
+            let plain = plantgen::gltf::unpack(&bytes)
+                .map_err(|error| format!("{}: {error}", source.display()))?;
+            if plain.len() != bytes.len() || plain != bytes {
+                unpacked += 1;
+                before += bytes.len();
+                after += plain.len();
+            }
+            plain
+        } else {
+            bytes
+        };
+        fs::write(target, written)
+            .map_err(|error| format!("cannot write {}: {error}", target.display()))?;
+    }
+    #[allow(clippy::cast_precision_loss)]
+    let mib = |bytes: usize| bytes as f64 / 1_048_576.0;
+    out!(
+        "copied {} files to {}, {unpacked} of them unpacked from meshopt ({:.1} to {:.1} MiB)",
+        files.len(),
+        to.display(),
+        mib(before),
+        mib(after)
+    );
+    Ok(())
 }
 
 fn inspect_command(args: &[String]) -> Result<(), Failure> {

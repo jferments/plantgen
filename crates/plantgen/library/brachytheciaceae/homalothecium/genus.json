@@ -26,6 +26,7 @@
     ],
     "dry_branch_posture": "curled",
     "leaf_dry_posture": "appressed",
+    "leaf_shape": "lanceolate",
     "seta_length_m": {
       "min": 0.01,
       "max": 0.02
@@ -51,13 +52,20 @@
       "dry"
     ],
     "desiccation_tolerance": "high",
-    "colony_spread_m_per_year": 0.008
+    "colony_spread_m_per_year": 0.008,
+    "capsule_shape": "cylindric",
+    "operculum_form": "long_conic"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "fna-28",
       "note": "FNA vol. 28, Homalothecium (Ignatov; efloras, read 2026-11-05): plants in loose to dense tufts or mats, green to rich golden; stems creeping, pinnate; stem leaves erect-appressed when dry, lanceolate, strongly plicate; seta red-brown; capsule inclined to erect, red-brown, cylindric. Typical values are H. sericeum, the silky wall moss (same volume): light green to golden or brownish yellow; stems to 5 cm, branches 5-7 mm, curved and secund from the surface; stem leaves 1.8-2.4 x 0.6-0.8 mm, branch leaves 1-2 x 0.2-0.5 mm, appressed dry, spreading moist; seta 1-2 cm; capsule erect, cylindric, 2-3 mm; on rock and rock faces."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Homalothecium sericeum (efloras, read 2026-11-05): stem leaves triangular-lanceolate; branch leaves narrowly lanceolate."
     },
     "traits.substrates": {
       "evidence": "Authored",
@@ -78,6 +86,16 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Estimate as for other pleurocarp mats; to check against Glime, Bryophyte Ecology."
+    },
+    "traits.capsule_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Homalothecium sericeum: capsule cylindric, straight or slightly curved. (efloras, read 2026-11-05)"
+    },
+    "traits.operculum_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Homalothecium: operculum long-conic and gradually rostrate, sometimes conic; H. sericeum long-conic, short-rostrate. (efloras, read 2026-11-05)"
     },
     "traits.dry_branch_posture": {
       "evidence": "SourceInferred",

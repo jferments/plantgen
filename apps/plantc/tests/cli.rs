@@ -79,7 +79,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let campanulids = "(clade campanulids: _ranks/clade/campanulids.json)";
     assert!(
         built_in.starts_with(&format!(
-            "Rules, by their home (1049):\n  appearance.organs.*.inflorescence.branch.kind  {flowering}\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
+            "Rules, by their home (1051):\n  appearance.organs.*.inflorescence.branch.kind  {flowering}\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
         )),
         "{built_in}"
     );
@@ -201,7 +201,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let library = dir.to_str().unwrap();
     let rules = stdout(&plantc(&["--library", library, "rules"]));
     assert!(
-        rules.starts_with("Rules, by their home (1050):\n"),
+        rules.starts_with("Rules, by their home (1052):\n"),
         "{rules}"
     );
     assert!(
@@ -742,13 +742,34 @@ fn fill_writes_a_tile_and_the_prototypes_it_places() {
     }
     assert!(made.contains("measured 1 prototypes (1 grown"), "{made}");
     // Filling again keeps the prototypes, measures none and writes the
-    // same tile, and --glb writes it as one glTF file too.
+    // same tile, and --glb writes it as one glTF file too, and
+    // --glb-cells as cells at two levels with their index.
     let mut with_glb = args.to_vec();
-    with_glb.extend(["--glb", "3"]);
+    with_glb.extend(["--glb", "3", "--glb-cells", "2,3", "--cell-m", "10"]);
     let again = stdout(&plantc(&with_glb));
     assert!(again.contains("(0 grown"), "{again}");
     assert!(again.contains("wrote the tile as one glTF file"), "{again}");
     assert_eq!(fs::read(out.join("tiles/2_-3.bin")).unwrap(), bin);
     let glb = fs::read(out.join("tiles/2_-3.glb")).unwrap();
     assert_eq!(&glb[..4], b"glTF");
+    assert!(again.contains("m cells at levels 2,3"), "{again}");
+    let cells: serde_json::Value =
+        serde_json::from_slice(&fs::read(out.join("tiles/2_-3/cells.json")).unwrap()).unwrap();
+    let first = &cells["cells"][0]["levels"][1]["file"];
+    assert!(
+        out.join("tiles").join(first.as_str().unwrap()).is_file(),
+        "{first}"
+    );
+    // `plantc unpack` copies the folder for Blender; these files hold no
+    // meshopt, so each comes over as it is.
+    let unpacked = dir.join("fill-unpacked");
+    let copied = stdout(&plantc(&[
+        "unpack",
+        out.to_str().unwrap(),
+        "--out",
+        unpacked.to_str().unwrap(),
+    ]));
+    assert!(copied.contains("0 of them unpacked"), "{copied}");
+    assert_eq!(fs::read(unpacked.join("tiles/2_-3.glb")).unwrap(), glb);
+    assert!(unpacked.join("tiles/2_-3/cells.json").is_file());
 }

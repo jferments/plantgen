@@ -1,0 +1,142 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Dicranoweisia",
+  "traits": {
+    "colony_form": "cushion",
+    "height_typical_m": {
+      "min": 0.005,
+      "max": 0.03,
+      "typical": 0.01
+    },
+    "leaf_length_m": {
+      "min": 0.001,
+      "max": 0.0035,
+      "typical": 0.002
+    },
+    "leaf_width_m": 0.0004,
+    "hair_point_length_m": 0,
+    "leaf_colour": [
+      95,
+      101,
+      42
+    ],
+    "leaf_dry_posture": "crisped",
+    "leaf_shape": "lanceolate",
+    "seta_length_m": {
+      "min": 0.003,
+      "max": 0.015,
+      "typical": 0.008
+    },
+    "seta_colour": [
+      170,
+      140,
+      70
+    ],
+    "capsule_length_m": {
+      "min": 0.0005,
+      "max": 0.002,
+      "typical": 0.0013
+    },
+    "capsule_colour": [
+      110,
+      76,
+      42
+    ],
+    "capsule_posture": "erect",
+    "capsule_share": 0.15,
+    "substrates": [
+      "bark",
+      "wood",
+      "rock",
+      "built"
+    ],
+    "substrate_reaction": "acid",
+    "light": [
+      "shade",
+      "part",
+      "sun"
+    ],
+    "moisture": [
+      "wet",
+      "mesic",
+      "dry"
+    ],
+    "desiccation_tolerance": "high",
+    "colony_spread_m_per_year": 0.002,
+    "capsule_shape": "ovoid",
+    "operculum_form": "rostrate"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-27",
+      "note": "FNA vol. 27, Dicranoweisia (Schofield; efloras, read 2026-11-05): plants densely tufted, light to dark green, dull; stems 0.5-3 cm, erect, forked; leaves lanceolate, flexuose, crisped or curled when dry, 1-3.5 mm; autoicous; seta solitary, yellowish, 3-15 mm; capsule light to dark brown, elliptic to short-cylindric, 0.5-2 mm. D. cirrata (same volume): leaves crisped and incurved when dry; gemmae frequent on the leaves; capsules mature late fall to winter; short turf or tufts on tree trunks and decorticated logs, rarely in rock crevices; B.C. to California. Bryophytes at Oregon State, rooftop study (nine Willamette Valley roofs; read 2026-11-05 as summarised in a search, the site itself blocked here): Dicranoweisia cirrata very abundant (45% occurrence), Bryum capillare abundant (33%), Racomitrium canescens var. ericoides abundant but infrequent (11%), able to form large mats; Dicranoweisia and Bryum capillare the only two species found on cedar shakes; most roofs had fewer than four species."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-27",
+      "note": "FNA vol. 27, Dicranoweisia (efloras, read 2026-11-05): leaves lanceolate."
+    },
+    "traits.colony_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "FNA's dense tufts; on roofs the tufts are the neat rounded cushions that line the courses of shakes and shingles (OSU)."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Lanceolate leaves about a fifth as wide as long."
+    },
+    "traits.capsule_posture": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "FNA gives no posture; the straight solitary seta and symmetric elliptic capsule stand erect, as in the Dicranaceae alliance."
+    },
+    "traits.capsule_share": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Autoicous and fruiting freely in winter (FNA, capsules mature late fall-winter); estimate."
+    },
+    "traits.substrates": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "FNA's bark, logs and rock crevices, and roofs from OSU's survey (the commonest roof moss of western Oregon)."
+    },
+    "traits.substrate_reaction": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Acid bark, wood and shingles; FNA names no calcareous habitat."
+    },
+    "traits.light": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Roofs and trunks from tree shade to open sun: the commonest moss of western Oregon roofs, thickest on north-facing parts and where trees shade them (OSU), and on trunks in forest (FNA)."
+    },
+    "traits.moisture": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Roofs wet all winter and dry all summer west of the Cascades, and trunks and logs in forest (FNA): wet to dry."
+    },
+    "traits.colony_spread_m_per_year": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Estimate for a small acrocarp cushion, as Grimmia; to check against Glime, Bryophyte Ecology."
+    },
+    "traits.capsule_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-27",
+      "note": "FNA vol. 27, Dicranoweisia: capsule elliptic to short-cylindric. (efloras, read 2026-11-05)"
+    },
+    "traits.operculum_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-27",
+      "note": "FNA vol. 27, Dicranoweisia: operculum rostrate, beak straight or oblique. (efloras, read 2026-11-05)"
+    },
+    "traits.leaf_colour": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Hue measured: imagekit run moss-colour-2026-11-05 on batch moss-pnw-2026-11-05 (iNaturalist research-grade photos from Washington, about 20 a taxon, script moss_colour.py): the median linear r/g and b/g of the moss pixels (D. cirrata r/g 0.88, b/g 0.18, masked median only). Photos are exposed brighter than moss is, so only the hue is taken from them; the brightness is a green reflectance of 0.13, a lit leaf's, just above the 0.05-0.11 moss canopies reflect in the visible (Lovelock and Robinson 2002, Plant Cell Environ. 25: 1239, Antarctic Grimmia; moss biocrust albedo about 0.11 against 0.20 for bare soil, Sci. Total Environ. 2020), the canopy's own shade darkening the shell further."
+    }
+  }
+}

@@ -31,6 +31,7 @@
       34
     ],
     "leaf_dry_posture": "appressed",
+    "leaf_shape": "obovate",
     "seta_length_m": {
       "min": 0.006,
       "max": 0.015
@@ -55,13 +56,19 @@
       "mesic",
       "dry"
     ],
-    "colony_spread_m_per_year": 0.002
+    "colony_spread_m_per_year": 0.002,
+    "operculum_form": "long_conic"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "fna-27",
       "note": "FNA vol. 27, Tortula (Zander and Eckel; efloras, read 2026-11-05): plants forming cushions, green, yellow-brown to dark brown below; stems usually to 2 cm; leaves appressed-incurved to lax when dry, spreading when moist, obovate to elliptic, 1-4(-6) mm; costa short- to long-excurrent as an awn; Tortula species delicate, characteristically light green, with smooth awns. Typical values are T. muralis, the wall moss (same volume): leaves short- to long-awned; seta 0.6-1.5 cm; capsule cylindric, erect, urn 1.5-2.7 mm; calcareous rock, often bricks or walls. Wikipedia, Tortula muralis (read 2026-11-05): greyish-green cushions no more than 1 cm tall; on concrete, brick walls, rock."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-27",
+      "note": "FNA vol. 27, Tortula (efloras, read 2026-11-05): leaves obovate to spathulate, ovate to elliptical, occasionally ligulate; the first word taken."
     },
     "traits.leaf_width_m": {
       "evidence": "Authored",
@@ -77,6 +84,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Estimate for small wall cushions; to check against Glime, Bryophyte Ecology, vol. 1, chapter 5."
+    },
+    "traits.operculum_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-27",
+      "note": "FNA vol. 27, Tortula: operculum long-conic, occasionally shortly rostrate. (efloras, read 2026-11-05)"
     },
     "traits.older_leaf_colour": {
       "evidence": "SourceInferred",

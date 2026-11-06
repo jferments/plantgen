@@ -26,6 +26,7 @@
       58
     ],
     "leaf_dry_posture": "imbricate",
+    "leaf_shape": "ovate",
     "seta_length_m": {
       "min": 0.01,
       "max": 0.02
@@ -61,13 +62,20 @@
       "dry"
     ],
     "desiccation_tolerance": "high",
-    "colony_spread_m_per_year": 0.003
+    "colony_spread_m_per_year": 0.003,
+    "capsule_shape": "ovoid",
+    "operculum_form": "conic"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "fna-28",
       "note": "FNA vol. 28, Bryum (Spence; efloras, read 2026-11-05): plants small, gregarious or in dense mats, white, silver-green, olive or green; stems 0.2-1(-2) cm, julaceous; leaves imbricate when dry, erect to erect-spreading moist, ovate, concave, 0.2-1(-1.5) mm; capsule inclined to pendent, (1-)2-3 mm; dioicous. Typical values are B. argenteum, the silver moss of pavements and roofs (same volume): white-green to silver-green, stems 0.2-1 cm, leaves 0.3-1 mm, hyaline in their distal quarter to half, apiculus short and hyaline; seta brown to red-brown 1-2 cm; capsule red to red-brown, ovate, 2-3 mm. Wikipedia, Bryum argenteum (read 2026-11-05): on pavement gaps, tarmac, concrete, walls and rooftops of cities, on disturbed nutrient-rich ground that dries out; leaves about 0.4 mm wide; capsules pendent."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Bryum argenteum (efloras, read 2026-11-05): leaves ovate to ovate-lanceolate."
     },
     "traits.capsule_share": {
       "evidence": "Authored",
@@ -83,6 +91,16 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Estimate for a pavement and roof turf that spreads also by bulbils; to check against Glime, Bryophyte Ecology."
+    },
+    "traits.capsule_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Bryum argenteum: capsule ovate (genus: ovate or clavate to pyriform). (efloras, read 2026-11-05)"
+    },
+    "traits.operculum_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Bryum: operculum weakly convex, short-conic, not rostrate. (efloras, read 2026-11-05)"
     }
   }
 }

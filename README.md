@@ -104,6 +104,21 @@ with every flower, fruit and spine drawn as its own mesh (`--parts on`).*
   sun.
   How broadleaf trees are grown and checked against photographs is in
   [docs/TREES.md](docs/TREES.md).
+- **Stands and whole city tiles.** A community (its species, the layer
+  each keeps to and how abundant it is) develops as a real stand does,
+  from a young cohort through a closed canopy to old growth with
+  shade-tolerant trees beneath it and gaps that release them. A fill
+  lays such stands over a map tile from a stand map (a community and the
+  years since disturbance for each cell, as fine as 4 m) and a site
+  field measured from the tile's own mesh, so plants stand on uneven
+  ground, beside and on buildings, and in cracked pavement, but not in
+  roads or walls. Each prototype is grown once and each stand laid out
+  once for a whole city: a 512 m tile of Olympia, Washington, with its
+  buildings and roads and seven communities, fills in about 14 s the
+  first time and in a tenth of a second after that. `plantc fill` does
+  it from the command line and `plantgen::api::Fill` from code
+  ([docs/LIBRARY-API.md](docs/LIBRARY-API.md),
+  [docs/sites/DEVELOPERS.md](docs/sites/DEVELOPERS.md)).
 - **Output.** Meshes at four levels of detail and impostors for the
   distance. They come with organ card textures drawn from each species'
   looks, solid spines and part meshes for flowers, fruit and cones, with
@@ -126,6 +141,12 @@ with every flower, fruit and spine drawn as its own mesh (`--parts on`).*
 - **Ground.** Tiling textures of what plants lay on the ground: needles,
   leaves, thatch, twigs, mosses and grasses, and each canopy species' own
   litter.
+- **Moss on buildings.** Moss genera settle on a site's walls, copings
+  and roofs where light, wetness and the surface suit them, spread year
+  by year, and are drawn as cushions, turfs and mats: shoots close up,
+  shells and patches farther, and a tint with no triangles for a host to
+  bake into its own textures. `plantc moss` runs it on a site; see
+  [docs/sites/MOSS.md](docs/sites/MOSS.md).
 - **Deterministic and offline.** The generator depends only on `libm`,
   `png`, `serde`, `serde_json` and `sha2`. Nothing it runs uses the
   network, another process or AI.
@@ -142,6 +163,9 @@ cargo build --release
 ./target/release/plantc build carnegiea-gigantea --out plants
 ./target/release/plantc export pseudotsuga-menziesii --age 20 --out exports
 ./target/release/plantc variants achillea-millefolium --count 50
+./target/release/plantc fill docs/sites/block-fill/woodland.json docs/sites/block-fill/yard.json \
+  --tile 0,0 --tile-m 40 --corner -20,18 --field docs/sites/block.json \
+  --stands docs/sites/block-fill/stands.json --ages 8,60 --out block-fill --render block-fill.png
 ```
 
 To use PlantGen from your own Rust code, or to make many distinct plants

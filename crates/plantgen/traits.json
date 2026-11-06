@@ -2382,6 +2382,25 @@
       "when": {"body_plan": ["leafy"]},
       "why": "how a moss's leaves lie when it dries out (they spread again when wet): pressed to the stem (appressed), overlapping as when moist (imbricate), wavy (flexuose), curled and contorted (crisped), twisted round the stem (twisted), or curved to one side like a sickle (falcate)"
     },
+    "stem_foliation": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["evenly_foliate", "rosulate", "comose"],
+      "optional": true,
+      "when": {"body_plan": ["leafy"]},
+      "why": "how a moss's leaves sit along its stem: evenly spaced (evenly foliate), crowded and larger in a rosette at the top (rosulate, as in Rosulabryum), or in a looser tuft at the top (comose); evenly foliate when left out"
+    },
+    "leaf_dry_crisping": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "number",
+      "unit": "share",
+      "range": [0, 1],
+      "optional": true,
+      "when": {"leaf_dry_posture": ["crisped"]},
+      "why": "how far a moss's crisped leaves coil when dry, read from the flora's wording: 1 for crisped, strongly crisped or crisped and incurved; 0.5 for somewhat crisped or contorted; 0.3 for slightly crisped (1 when left out)"
+    },
     "leaf_underside_colour": {
       "group": "leaves",
       "organ": "leaf",
@@ -3796,6 +3815,22 @@
       "values": ["erect", "inclined", "horizontal", "pendent"],
       "optional": true,
       "why": "how a ripe moss capsule is held on its seta: upright (erect), leaning (inclined), level (horizontal) or hanging (pendent, nutant)"
+    },
+    "capsule_shape": {
+      "group": "fruit_and_cones",
+      "organ": "capsule",
+      "type": "enum",
+      "values": ["ovoid", "cylindric", "pyriform"],
+      "optional": true,
+      "why": "a moss capsule's outline: widest at its middle (ovoid, ellipsoid), straight-sided (cylindric), or widening toward the mouth from a narrow neck (pyriform, clavate)"
+    },
+    "operculum_form": {
+      "group": "fruit_and_cones",
+      "organ": "capsule",
+      "type": "enum",
+      "values": ["conic", "long_conic", "rostrate"],
+      "optional": true,
+      "why": "the moss capsule's lid: a short cone or dome (conic), a tall cone (long_conic), or drawn out into a beak (rostrate)"
     },
     "capsule_share": {
       "group": "fruit_and_cones",

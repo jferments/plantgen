@@ -25,6 +25,7 @@
       42
     ],
     "leaf_dry_posture": "falcate",
+    "leaf_shape": "ovate",
     "seta_length_m": {
       "min": 0.01,
       "max": 0.025
@@ -61,13 +62,20 @@
       "mesic"
     ],
     "desiccation_tolerance": "intermediate",
-    "colony_spread_m_per_year": 0.012
+    "colony_spread_m_per_year": 0.012,
+    "capsule_shape": "cylindric",
+    "operculum_form": "conic"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "fna-28",
       "note": "FNA vol. 28, Hypnum (Schofield; efloras, read 2026-11-05): plants yellowish, green or brown, glossy or dull; stems creeping, pinnate or irregularly branched; leaves secund or falcate-secund; seta yellowish to reddish; capsule usually curved. Typical values are H. cupressiforme of roofs, walls and trunks (same volume): rusty, golden or yellow-green; stems 1-8 cm, creeping, irregularly pinnate; leaves 1.5-2 x 0.5-0.8 mm, falcate-secund; seta reddish 1-2.5 cm; capsule slightly inclined, reddish, cylindric, 1.8-2.5 mm; dioicous. Wikipedia, Hypnum cupressiforme (read 2026-11-05): smooth dense mats on trunks, logs, walls and rocks, preferring acid surfaces."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Hypnum cupressiforme (efloras, read 2026-11-05): leaves ovate to oblong-lanceolate, gradually or abruptly narrowed to apex."
     },
     "traits.height_typical_m": {
       "evidence": "Authored",
@@ -88,6 +96,16 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Estimate: pleurocarps add one to two centimetres of shoot a year at the mat's edge. To check against Glime, Bryophyte Ecology, vol. 1, chapter 5."
+    },
+    "traits.capsule_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Hypnum cupressiforme: capsule cylindric. (efloras, read 2026-11-05)"
+    },
+    "traits.operculum_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Hypnum: operculum conic to rounded-mammillate (H. cupressiforme conic to rostrate). (efloras, read 2026-11-05)"
     },
     "traits.leaf_colour": {
       "evidence": "Authored",
