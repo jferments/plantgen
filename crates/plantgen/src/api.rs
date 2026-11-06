@@ -57,10 +57,10 @@ pub use crate::export::{
 };
 pub use crate::fill::{
     CLIMBER_SPACING_M, CanopyCell, Community, Cover, CoverKind, CrackPlant, FieldTile, Fill,
-    FillSettings, INSTANCE_BYTES, INSTANCE_SCHEMA, Instance, Layer, LayerCover, Member,
-    PROTOTYPES_FILE, Prototype, PrototypeFiles, PrototypeKey, PrototypePackage, RoofSoil, Roofs,
-    STAND_AGES, STAND_CELL_M, STAND_SCALE, Site, StandCell, StandMap, TileId, TilePlan, TileStats,
-    WallClip, moisture_from_wetness,
+    FillSettings, Floor, FloorMoss, INSTANCE_BYTES, INSTANCE_SCHEMA, Instance, Layer, LayerCover,
+    Log, Member, PROTOTYPES_FILE, Prototype, PrototypeFiles, PrototypeKey, PrototypePackage,
+    RoofSoil, Roofs, STAND_AGES, STAND_CELL_M, STAND_SCALE, Site, StandCell, StandMap, TileId,
+    TilePlan, TileStats, WallClip, moisture_from_wetness,
 };
 pub use crate::package::Measurements;
 pub use crate::quality::Quality;
@@ -78,8 +78,11 @@ pub use crate::spec::{Environment, PlantSpec};
 /// [`PrototypeKey`] by its age (`age_tenths`) and is measured
 /// ([`Fill::measure`]) before [`Fill::tile`]; [`FillSettings`] is no
 /// longer `Copy` and [`TileStats`] is non-exhaustive; a plant grows past
-/// its spec's years to its old ages.
-pub const API_VERSION: u32 = 5;
+/// its spec's years to its old ages. 6: [`Cover`] gained `floor` (each
+/// share of a cell's forest floor, [`Floor`]) and is non-exhaustive, made
+/// with [`Cover::of`]; [`TilePlan`] gained `logs` ([`Log`]) and
+/// `floor_mosses`, the genera [`FloorMoss`] names.
+pub const API_VERSION: u32 = 6;
 
 /// The name of the file listing a set of variants ([`VariantSet`]).
 pub const VARIANTS_FILE: &str = "variants.json";

@@ -114,6 +114,139 @@ pub const CLOSED_LAYERS: [f64; 4] = [0.70, 0.27, 0.45, 0.28];
 /// herbs 15% for the plots' 11-14% of forbs and ferns.
 pub const OLD_LAYERS: [f64; 4] = [0.45, 0.63, 0.50, 0.15];
 
+/// The share of a closed conifer stand's forest floor mosses cover where
+/// nothing grows over them, on moist ground: fitted, with
+/// [`MOSS_UNDER_PLANTS`], to the Puget Trough's second-growth Douglas-fir
+/// beside Olympia (Thysell and Carey 2001, PNW-GTR-488, table 5: mosses
+/// 59% of the floor of dense unthinned 55-year stands whose vascular
+/// understorey covered 34%, 30% in thinned stands whose understorey
+/// covered 88%). Capitol Forest's 65-year stands held 14.5%, from 1 to 53%
+/// by plot (Evans, Halpern and McKenzie 2012); the moss mat that harvest
+/// strips takes decades to come back (under 5% after harvest on Vancouver
+/// Island, Trofymow et al. 2003).
+pub const FLOOR_MOSS: f64 = 0.72;
+
+/// How much of the moss a full understorey of shrubs and herbs shades
+/// out (see [`FLOOR_MOSS`]).
+pub const MOSS_UNDER_PLANTS: f64 = 0.55;
+
+/// The share of the moss a floor keeps under broadleaf trees' litter:
+/// each autumn's fallen leaves bury and leach forest-floor feather mosses
+/// (Startsev, Lieffers and Landhäusser 2008, Journal of Vegetation
+/// Science 19: 253-260: aspen leaf litter and its extracts killed feather
+/// mosses, pine needles did not), so under maples and alders moss keeps
+/// to logs, stones and stem bases. The share is this model's choice.
+pub const MOSS_UNDER_LEAVES: f64 = 0.3;
+
+/// The tree cover from which a stand's floor is shaded and damp enough for
+/// a full moss mat; an open stand's is drier and sunnier. This model's
+/// choice.
+pub const CLOSED_TREE_COVER: f64 = 0.8;
+
+/// The tree cover from which litter covers all of a floor that moss and
+/// logs leave; under thinner crowns some of the ground lies bare. This
+/// model's choice.
+pub const LITTER_CLOSURE: f64 = 0.5;
+
+/// The share of a forest floor under moss ([`FLOOR_MOSS`]): less under
+/// thin crowns ([`CLOSED_TREE_COVER`]), under shrubs and herbs
+/// (`understorey`, the share of the ground under either,
+/// [`MOSS_UNDER_PLANTS`]), on dry ground (none at moisture 0.1, all from
+/// 0.35, a niche's moisture scale) and under broadleaf litter
+/// (`leaf_litter`, the share of the crowns that shed broad leaves,
+/// [`MOSS_UNDER_LEAVES`]).
+#[must_use]
+pub fn ground_moss(tree_cover: f64, understorey: f64, moisture: f64, leaf_litter: f64) -> f64 {
+    let closure = (tree_cover / CLOSED_TREE_COVER).clamp(0.0, 1.0);
+    let wet = ((moisture - 0.1) / 0.25).clamp(0.0, 1.0);
+    let leaves = 1.0 - leaf_litter.clamp(0.0, 1.0) * (1.0 - MOSS_UNDER_LEAVES);
+    let shaded = 1.0 - MOSS_UNDER_PLANTS * understorey.clamp(0.0, 1.0);
+    (FLOOR_MOSS * closure * wet * leaves * shaded).clamp(0.0, 1.0)
+}
+
+/// The light on a forest floor, on [`crate::mosses::Habitat`]'s scale (0
+/// deep shade, 1 open): open ground's 1, falling to 0.15 under closed
+/// crowns ([`CLOSED_TREE_COVER`]), in the shade class where a closed
+/// conifer stand's floor gets a few per cent of full sun. This model's
+/// choice.
+#[must_use]
+pub fn floor_light(tree_cover: f64) -> f64 {
+    1.0 - 0.85 * (tree_cover / CLOSED_TREE_COVER).clamp(0.0, 1.0)
+}
+
+/// How many years after a disturbance a forest floor's moss takes to pass
+/// from the mosses that spread fastest to those that build the deepest
+/// wefts. Hylocomium splendens, whose stair-step wefts add one frond a
+/// year (Goffinet and Shaw, Bryophyte Biology, 2009, p. 424), is a moss
+/// of stable late stages and very shade tolerant; 10 to 30 years after a
+/// fire it replaces the first mosses, and in Finland it was not back to
+/// its cover 50 years on (USDA Fire Effects Information System,
+/// Hylocomium splendens, after Johnson 1981 and Ahlgren 1974). The years
+/// are this model's choice.
+pub const FLOOR_MOSS_BUILD_YEARS: f64 = 80.0;
+
+/// Mosses whose fit to a floor is under this share of the best one's are
+/// left out. This model's choice.
+const FLOOR_MOSS_LEAST_FIT: f64 = 0.25;
+
+/// The moss genera of a forest floor and each one's share of its moss,
+/// from `kinds` (the library's mosses, [`crate::mosses::kinds`]): each
+/// genus's fit to the floor ([`crate::mosses::MossKind::fit`] on soil and
+/// humus, in [`floor_light`] under `tree_cover`, as wet as the ground's
+/// `moisture`), weighted early by how fast it spreads
+/// (`colony_spread_m_per_year`) and late by how deep its colonies grow
+/// (`height_typical_m`), the two blended over
+/// [`FLOOR_MOSS_BUILD_YEARS`] since the disturbance (`years`). At most
+/// `most` genera, each at least a tenth, largest first; none where no
+/// moss fits.
+#[must_use]
+pub fn floor_mosses(
+    kinds: &[crate::mosses::MossKind],
+    tree_cover: f64,
+    moisture: f64,
+    years: f64,
+    most: usize,
+) -> Vec<(usize, f64)> {
+    let habitat = crate::mosses::Habitat {
+        light: floor_light(tree_cover),
+        wetness: moisture.clamp(0.0, 1.0),
+        material: crate::substrate::SOIL,
+        soil: true,
+        hold: 1.0,
+    };
+    let fits: Vec<f64> = kinds.iter().map(|kind| kind.fit(&habitat)).collect();
+    let best = fits.iter().copied().fold(0.0, f64::max);
+    if best <= 1.0e-6 {
+        return Vec::new();
+    }
+    let fitting: Vec<usize> = (0..kinds.len())
+        .filter(|&k| fits[k] >= FLOOR_MOSS_LEAST_FIT * best)
+        .collect();
+    let shares = |weight: &dyn Fn(usize) -> f64| -> Vec<f64> {
+        let total: f64 = fitting.iter().map(|&k| weight(k)).sum();
+        fitting
+            .iter()
+            .map(|&k| if total > 0.0 { weight(k) / total } else { 0.0 })
+            .collect()
+    };
+    let early = shares(&|k| fits[k] * kinds[k].spread_m);
+    let late = shares(&|k| fits[k] * kinds[k].height_m);
+    let built = 1.0 - (-years.max(0.0) / FLOOR_MOSS_BUILD_YEARS).exp();
+    let mut mix: Vec<(usize, f64)> = fitting
+        .iter()
+        .enumerate()
+        .map(|(n, &k)| (k, (1.0 - built) * early[n] + built * late[n]))
+        .collect();
+    mix.sort_by(|a, b| b.1.total_cmp(&a.1).then(a.0.cmp(&b.0)));
+    mix.retain(|(_, share)| *share >= 0.1);
+    mix.truncate(most);
+    let total: f64 = mix.iter().map(|(_, share)| share).sum();
+    for (_, share) in &mut mix {
+        *share /= total;
+    }
+    mix
+}
+
 /// A stage of the sere.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Stage {
@@ -847,5 +980,48 @@ mod tests {
         assert_eq!(layer_of(&tree, 28.0, 65.0), Layer::Subcanopy);
         assert_eq!(layer_of(&tree, 8.0, 65.0), Layer::Shrub);
         assert_eq!(layer_of(&fern(), 1.0, 65.0), Layer::Herb);
+    }
+
+    #[test]
+    fn floor_mosses_spread_fast_early_and_build_deep_wefts_late() {
+        let kinds = crate::mosses::kinds(crate::library::Library::builtin()).expect("mosses");
+        let named = |mix: &[(usize, f64)]| -> Vec<(String, f64)> {
+            mix.iter()
+                .map(|(k, share)| (kinds[*k].genus.clone(), *share))
+                .collect()
+        };
+        let young = named(&floor_mosses(&kinds, 0.9, 0.5, 20.0, 3));
+        let old = named(&floor_mosses(&kinds, 0.9, 0.5, 400.0, 3));
+        assert_eq!(young[0].0, "Kindbergia", "{young:?}");
+        assert_eq!(old[0].0, "Hylocomium", "{old:?}");
+        for mix in [&young, &old] {
+            let total: f64 = mix.iter().map(|(_, share)| share).sum();
+            assert!((total - 1.0).abs() < 1e-9);
+            // Wall and roof mosses keep off the forest floor.
+            assert!(
+                mix.iter()
+                    .all(|(genus, _)| genus != "Grimmia" && genus != "Tortula")
+            );
+        }
+        // A sunlit, dry floor fits none of the forest's mosses.
+        let open = named(&floor_mosses(&kinds, 0.0, 0.15, 400.0, 3));
+        assert!(
+            open.iter().all(|(genus, _)| genus != "Rhytidiadelphus"),
+            "{open:?}"
+        );
+    }
+
+    #[test]
+    fn floor_moss_grows_in_shade_on_moist_ground_under_needles() {
+        // The Puget Trough's dense and thinned second growth (Thysell and
+        // Carey 2001): 59% and 30%.
+        let dense = ground_moss(0.9, 0.34, 0.5, 0.0);
+        assert!((dense - 0.59).abs() < 0.03, "{dense}");
+        let thinned = ground_moss(0.65, 0.88, 0.5, 0.0);
+        assert!((thinned - 0.30).abs() < 0.04, "{thinned}");
+        // Less in the open, on dry ground and under broad leaves.
+        assert!(ground_moss(0.1, 0.34, 0.5, 0.0) < 0.1);
+        assert!(ground_moss(0.9, 0.34, 0.12, 0.0) < 0.1);
+        assert!(ground_moss(0.9, 0.34, 0.5, 1.0) < 0.5 * dense);
     }
 }

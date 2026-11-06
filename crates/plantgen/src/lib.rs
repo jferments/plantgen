@@ -39,6 +39,7 @@ pub mod clusters;
 pub mod conditions;
 pub mod cores;
 pub mod damage;
+pub mod deadwood;
 pub mod development;
 pub mod divided;
 pub mod drawing;

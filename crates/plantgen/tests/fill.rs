@@ -328,6 +328,80 @@ fn a_tile_writes_its_header_and_packed_instances() {
 }
 
 #[test]
+fn a_forest_floor_holds_logs_moss_and_litter_and_the_tile_says_so() {
+    let fill = fill();
+    let site = Site::flat(TileId { x: 2, y: 3 }, 40.0).expect("site");
+    let plan = fill
+        .tile(&site, &StandMap::uniform(40.0, 0, 40.0), 9)
+        .expect("tile");
+    // A young natural stand's logs: about 600 a hectare covering about a
+    // tenth of the floor (Spies, Franklin and Thomas 1988), fewer where
+    // its stems leave no room.
+    let per_ha = plan.stats.logs_per_ha;
+    assert!((300.0..=700.0).contains(&per_ha), "{per_ha} logs/ha");
+    let [litter, moss, wood, herb] = plan.stats.floor;
+    assert!((0.04..=0.14).contains(&wood), "logs cover {wood}");
+    assert!(moss > 0.05 && litter > 0.2, "moss {moss}, litter {litter}");
+    assert!(litter + moss + wood <= 1.0 + 1e-6);
+    assert!(herb >= 0.0);
+    for log in &plan.logs {
+        assert_eq!(log.species, "pseudotsuga-menziesii");
+        assert!((1..=5).contains(&log.shape.decay));
+        assert!(log.shape.butt_m >= log.shape.top_m && log.shape.length_m >= 1.0);
+        for coordinate in &log.position[..2] {
+            assert!((0.0..40.0).contains(coordinate));
+        }
+    }
+    for cover in &plan.cover {
+        let floor = cover.floor;
+        assert!(
+            floor.litter + floor.moss + floor.wood <= 1.0 + 1e-6,
+            "{floor:?}"
+        );
+        // Its moss is named by genus, the shares adding up to the whole.
+        let named: Vec<_> = floor.mosses.iter().flatten().collect();
+        if floor.moss > 0.0 {
+            let total: f32 = named.iter().map(|found| found.share).sum();
+            assert!((total - 1.0).abs() < 0.02, "{floor:?}");
+            assert!(
+                named
+                    .iter()
+                    .all(|found| usize::from(found.genus) < plan.floor_mosses.len())
+            );
+        } else {
+            assert!(named.is_empty());
+        }
+    }
+    // The forest floor's own mosses, not the wall mosses.
+    for genus in &plan.floor_mosses {
+        assert!(
+            ["Kindbergia", "Hylocomium", "Rhytidiadelphus"].contains(&genus.as_str()),
+            "{genus} on a forest floor"
+        );
+    }
+    assert!(!plan.floor_mosses.is_empty());
+    // The tile's JSON carries both.
+    let dir = std::env::temp_dir().join(format!("plantgen-floor-test-{}", std::process::id()));
+    let json = plan.write(&dir).expect("write");
+    let header: serde_json::Value =
+        serde_json::from_str(&std::fs::read_to_string(&json).expect("json")).expect("parse");
+    assert_eq!(
+        header["logs"].as_array().map(Vec::len),
+        Some(plan.logs.len())
+    );
+    assert!(header["cover"][0]["floor"]["moss"].is_number());
+    assert!(header["floor_mosses"].is_array());
+    std::fs::remove_dir_all(dir).ok();
+    // A meadow has no trees to fall: no logs, and no crowns to shade moss.
+    let meadow = fill
+        .tile(&site, &StandMap::uniform(40.0, 1, 40.0), 9)
+        .expect("tile");
+    assert!(meadow.logs.is_empty());
+    assert!(meadow.stats.floor[1] < 1e-9 && meadow.stats.floor[2] < 1e-9);
+    assert!(meadow.floor_mosses.is_empty());
+}
+
+#[test]
 fn every_prototype_is_a_cohort_of_a_stand_in_each_seed() {
     let fill = fill();
     let settings = settings();

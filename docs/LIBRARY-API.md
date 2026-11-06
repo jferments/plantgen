@@ -296,14 +296,46 @@ Ok(())
   i16 x4 snorm rotation quaternion (z up), f16 scale, u16 age in tenths
   of a year, i8 x2 tint (lightness, hue shift), u16 extra (a climber's
   cut back to its wall, `WallClip::from_extra`; 0 for any other plant).
-  `Instance::from_bytes` reads them back. Schema 3 (`INSTANCE_SCHEMA`):
-  in schema 2 a climber's extra was its wall's top alone, in decimetres.
+  `Instance::from_bytes` reads them back. Schema 4 (`INSTANCE_SCHEMA`):
+  the instances are as in schema 3, and the tile JSON gained the forest
+  floor and the logs (below); in schema 2 a climber's extra was its
+  wall's top alone, in decimetres.
 - **Ground cover and far canopy** come per stand cell in the plan
   (`cover`: kind and fraction; `canopy`: height, cover, colour), for
   hosts that draw ground cover and far forest with their own systems.
   The canopy's colour is its trees' foliage in full light, linear RGB,
   each species' weighed by its crowns' area, so a maple stand reads
   lighter than a fir one from afar.
+- **The forest floor** comes per stand cell too (`cover[k].floor`,
+  `Floor`): the shares of the ground under litter, moss and logs (side
+  by side, together at most 1, the rest bare soil) and under herbs (over
+  them). Moss grows where crowns close, the ground is moist and few
+  shrubs, herbs or broad leaves cover it (`development::ground_moss`,
+  fitted to the Puget Trough's plots); litter lies under the crowns over
+  the rest. `floor.mosses` names up to three moss genera with their
+  shares of the cell's moss, by their index in the plan's
+  `floor_mosses` (the JSON's `floor_mosses`): the library's mosses that
+  fit a shaded, moist floor (`development::floor_mosses`), the fastest
+  spreading leading after a disturbance and the deepest wefts later, as
+  Hylocomium does in old growth. A host can tint its ground with each
+  genus's `mosses::MossKind::far_colour`.
+- **Logs** lie on a natural stand's floor (`TilePlan::logs`, the JSON's
+  `logs`; none in a planted or kept stand): each with the species it
+  fell from, the floor under its middle (as an instance's position),
+  the way its axis runs from its large end (`yaw`, radians from east), how
+  far its small end rises (`pitch`) and its shape
+  (`deadwood::Shape`: length, both ends' widths, decay class 1-5,
+  seed). How many, how large and how rotted follow the age of the stand,
+  as 196 Douglas-fir plots measured them (Spies, Franklin and Thomas
+  1988: about 600 a hectare covering a tenth of the floor in young
+  stands, fewest in mature ones). Draw each with your own meshes, or
+  with `deadwood::draw(&log.shape, appearance, level)`, a mesh in the
+  log's own frame (axis along +x, up +y, the floor at y = 0): its
+  species' bark while it keeps bark (alpha minus the radius, as a plant's
+  bark), bare and mossy wood as it rots, oval and sunk in class V.
+  `plantc logs --render logs.png` draws the five classes side by side.
+  `plantc fill ... --render` draws the logs and the floor; `--cut 2.5`
+  leaves out everything above 2.5 m to show it.
 
 From the command line, `plantc fill` does the same (`--ages` chooses the
 stand ages, `--herbs no` leaves herbs to the ground cover, `--edges no`
