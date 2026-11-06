@@ -23,7 +23,7 @@ it gets, not by soil:
 | Wetness | Rain from near-vertical rays the face is open to, a little driven onto upright faces, damp near the ground (falling off over 0.3 m), less what the sun dries, more in shade. |
 | Hold | How well spores and water stay: 1 on a face turned up, 0.15 on an upright one, nothing where no sky or rain reaches. |
 | Nook | Short rays along the face: the joints between bricks, the step under a tile's edge and inner corners catch spores, grit and water, so a landing there holds and stays wet the better. |
-| Substrate | The face's material; built faces (mortar, concrete, tile) are basic, bark and wood acid. |
+| Substrate | The face's material; built faces (mortar, concrete, tile) are basic, bark and wood acid, unless the site's material says otherwise (`reaction`: an asphalt shingle roof is built but neutral). |
 
 Each genus fits a habitat by its library traits: the `light` and
 `moisture` classes it grows in, its `substrates`, its `substrate_reaction`
@@ -248,8 +248,8 @@ time and through JSON, patches far with shells between and shoots near,
 the roof genera of western Oregon and their spore output, moss darker and greener wet than dry, a cover tinting the surface
 under it with no triangles of its own, and a view named for a genus
 finding a colony of that genus, a drawn cover writing as a glTF file
-with no required extensions, and a tree's crown over a wall's sunny face
-letting moss grow there.
+with no required extensions, a tree's crown over a wall's sunny face
+letting moss grow there, and a surface stating its own reaction.
 
 ## Changing it
 
@@ -306,8 +306,10 @@ north slope of the house's roof, toward the street, mossed in clumps; the
 south slope spotted; moss along the curb and the fence's feet. Under
 its 28 tree crowns, the moss on the woodland's boulders and
 ground more than doubles (1.7 to 3.7 m², nearly all Dicranoweisia and
-Rosulabryum) and the house's roof, whose north sky the firs block, falls
-from 9.9 to 4.0 m²: its mosses are the sun and part-shade mats and
-cushions of basic stone (Homalothecium, Tortula, Grimmia), and the shade
-mosses of the library are all acid, so nothing takes their place on a
-roof modelled as concrete (`built`).
+Rosulabryum). The house is roofed in asphalt shingles (`built`,
+`reaction: neutral`), which the acid roof mosses take: 13.9 m² of moss in
+the open (the north slope a third covered, Niphotrichum, Dicranoweisia,
+Homalothecium and Rosulabryum), 8.7 m² under the trees, whose firs block
+the slope's north sky, now mostly Dicranoweisia and Rosulabryum. As
+concrete it carried 9.9 m², 4.0 under the trees: the shade mosses are
+all acid, so nothing took the sun mosses' place.

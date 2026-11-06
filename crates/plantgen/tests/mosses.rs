@@ -414,3 +414,16 @@ fn a_tree_over_the_sunny_face_lets_moss_grow_there() {
     let back = MossCover::from_json(&shaded.to_json().unwrap()).unwrap();
     assert_eq!(back.canopy, shaded.canopy);
 }
+
+#[test]
+fn a_surface_may_say_its_face_is_neutral_where_its_material_is_basic() {
+    // Asphalt shingles are built but neutral; mortar stays basic, shakes acid.
+    assert_eq!(Surface::solid(BUILT).reaction(), 1);
+    assert_eq!(Surface::solid(WOOD).reaction(), -1);
+    assert_eq!(Surface::solid(SOIL).reaction(), 0);
+    let asphalt = Surface {
+        reaction: Some(0),
+        ..Surface::solid(BUILT)
+    };
+    assert_eq!(asphalt.reaction(), 0);
+}

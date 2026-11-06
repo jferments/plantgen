@@ -522,13 +522,9 @@ impl MossKind {
             substrate = 1.0;
         }
         // Built surfaces (mortar, concrete, cement tiles) are basic, bark
-        // and wood acid, rock and soil either.
-        let surface_reaction: i8 = match habitat.material {
-            BUILT => 1,
-            BARK | WOOD => -1,
-            _ => 0,
-        };
-        let reaction = if self.reaction != 0 && surface_reaction == -self.reaction {
+        // and wood acid, rock and soil either, unless the surface says
+        // otherwise (an asphalt shingle roof neutral).
+        let reaction = if self.reaction != 0 && habitat.reaction == -self.reaction {
             0.35
         } else {
             1.0
@@ -663,6 +659,8 @@ pub struct Habitat {
     /// dries.
     pub wetness: f64,
     pub material: u8,
+    /// How acid (−1) or basic (+1) the face is ([`crate::site::Surface::reaction`]).
+    pub reaction: i8,
     /// Soil lies on it (a roof's gathered grit, a gutter).
     pub soil: bool,
     /// How well spores and water stay on it: 1 on a face turned up, less
@@ -778,6 +776,7 @@ fn habitat_at(
     p: Vec3,
     n: Vec3,
     material: u8,
+    reaction: i8,
     soil: bool,
 ) -> Habitat {
     let from = p + n * 0.004;
@@ -832,6 +831,7 @@ fn habitat_at(
         light,
         wetness,
         material,
+        reaction,
         soil,
         // A face that sees no sky is pressed against another (a brick's
         // back against its mortar) or shut in: nothing settles there.
@@ -1000,6 +1000,7 @@ pub fn grow_under(
                         p,
                         normal,
                         surface.material,
+                        surface.reaction(),
                         surface.soil_m > 0.0,
                     ),
                 )
@@ -1035,6 +1036,7 @@ pub fn grow_under(
                         p,
                         face.normal,
                         surface.material,
+                        surface.reaction(),
                         surface.soil_m > 0.0,
                     )
                 },

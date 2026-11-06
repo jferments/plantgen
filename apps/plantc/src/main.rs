@@ -4039,8 +4039,11 @@ fn cracks_command(args: &[String]) -> Result<(), Failure> {
 /// A site material table's entry `name`: a material's name, or an object
 /// with the material (`as`), a thin part's thickness (`thin_m`), whether a
 /// climber may hold to it (`climb`), whether it is kept clear of plants
-/// (`clear`: what grows onto it is cut back) and the colour to draw it in
-/// (`colour`, sRGB 0 to 1).
+/// (`clear`: what grows onto it is cut back), the colour to draw it in
+/// (`colour`, sRGB 0 to 1), soil gathered on it (`soil_m`) and, where it
+/// differs from its material's, how acid its face is for mosses
+/// (`reaction`: acid, neutral or basic; asphalt shingles are `built`
+/// and neutral).
 fn site_surface(name: &str, given: &serde_json::Value) -> Result<plantgen::site::Surface, String> {
     use plantgen::site::{Surface, material_named};
     if let Some(material) = given.as_str() {
@@ -4050,9 +4053,13 @@ fn site_surface(name: &str, given: &serde_json::Value) -> Result<plantgen::site:
         .as_object()
         .ok_or_else(|| format!("site material `{name}` must be a name or an object"))?;
     for key in table.keys() {
-        if !["as", "thin_m", "climb", "clear", "colour", "soil_m"].contains(&key.as_str()) {
+        if ![
+            "as", "thin_m", "climb", "clear", "colour", "soil_m", "reaction",
+        ]
+        .contains(&key.as_str())
+        {
             return Err(format!(
-                "site material `{name}`: unknown field `{key}`; use as, thin_m, climb, clear, colour, soil_m"
+                "site material `{name}`: unknown field `{key}`; use as, thin_m, climb, clear, colour, soil_m, reaction"
             ));
         }
     }
@@ -4077,6 +4084,18 @@ fn site_surface(name: &str, given: &serde_json::Value) -> Result<plantgen::site:
             .as_f64()
             .filter(|t| t.is_finite() && *t >= 0.0)
             .ok_or_else(|| format!("site material `{name}`: soil_m must be metres, 0 or more"))?;
+    }
+    if let Some(reaction) = table.get("reaction") {
+        surface.reaction = Some(match reaction.as_str() {
+            Some("acid") => -1,
+            Some("neutral") => 0,
+            Some("basic") => 1,
+            _ => {
+                return Err(format!(
+                    "site material `{name}`: reaction must be acid, neutral or basic"
+                ));
+            }
+        });
     }
     if let Some(clear) = table.get("clear") {
         surface.clear = clear

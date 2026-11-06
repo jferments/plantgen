@@ -6,7 +6,7 @@ the site field (`plantc field`, plantgen::site_field) and stands on it.
 North of a cracked two-lane street, a strip of woodland on uneven ground
 that falls away northward, with boulders and a fallen log. South of it, a
 cracked sidewalk behind a curb, a picket fence, two utility poles with
-their wires, an old house whose roofs gather soil for moss,
+their wires, an old house roofed in asphalt shingles that gather soil for moss,
 windows and a door kept clear, a hollow where water gathers, and a rocky
 knoll to the south-east with boulders half sunk in it.
 
@@ -306,8 +306,14 @@ def main():
             "woodland": {"as": "soil", "colour": [0.14, 0.11, 0.07]},
             "curb": {"as": "built", "colour": [0.45, 0.44, 0.41]},
             "render": {"as": "built", "colour": [0.62, 0.57, 0.48]},
-            "roof": {"as": "built", "colour": [0.22, 0.22, 0.24]},
-            "roof-moss": {"as": "built", "soil_m": 0.04, "colour": [0.22, 0.22, 0.24]},
+            # Asphalt shingles, the commonest house roof in the Pacific
+            # Northwest (Jay, 2026-11-06): built, but their granules are
+            # coloured crushed rock with no lime, so neutral, and the acid
+            # roof mosses (Dicranoweisia, Rosulabryum) hold to them as on
+            # the Oregon State rooftop study's roofs.
+            "roof": {"as": "built", "reaction": "neutral", "colour": [0.22, 0.22, 0.24]},
+            "roof-moss": {"as": "built", "reaction": "neutral", "soil_m": 0.04,
+                          "colour": [0.22, 0.22, 0.24]},
             "glass": {"as": "built", "thin_m": 0.02, "clear": True, "colour": [0.30, 0.38, 0.42]},
             "door": {"as": "wood", "thin_m": 0.04, "clear": True, "colour": [0.28, 0.17, 0.11]},
             "fence": {"as": "wood", "colour": [0.70, 0.68, 0.62]},
