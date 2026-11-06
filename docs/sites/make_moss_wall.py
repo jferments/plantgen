@@ -237,8 +237,18 @@ def main():
     shakes["mosses"] = ["Dicranoweisia", "Rosulabryum", "Niphotrichum", "Homalothecium",
                         "Ceratodon", "Bryum", "Tortula", "Grimmia"]
     (HERE / "moss-shakes.json").write_text(json.dumps(shakes, indent=2) + "\n")
+    # The shake roof under a broadleaf tree standing south of the shed,
+    # its crown over the south slope (OSU Extension: roof mosses do best
+    # "especially where trees shade them"). A crown 3.5 m across the
+    # radius from 2.5 to 10 m up, leaf area index 4 over its spread:
+    # 154 m2 of leaves in 289 m3, so shade 0.5 x 0.53 = 0.27 a metre and
+    # about a sixth of the light through its middle.
+    under_tree = json.loads(json.dumps(shakes))
+    under_tree["canopy"] = [{"centre_m": [4.25, -3.0], "base_m": 2.5, "top_m": 10.0,
+                             "radius_m": 3.5, "density": 0.27}]
+    (HERE / "moss-shakes-tree.json").write_text(json.dumps(under_tree, indent=2) + "\n")
     tri_count = sum(len(f) for f in mesh.groups.values())
-    print(f"wrote moss-wall.obj ({len(mesh.v)} vertices, {tri_count} triangles), moss-wall.json and moss-shakes.json")
+    print(f"wrote moss-wall.obj ({len(mesh.v)} vertices, {tri_count} triangles), moss-wall.json, moss-shakes.json and moss-shakes-tree.json")
 
 
 if __name__ == "__main__":
