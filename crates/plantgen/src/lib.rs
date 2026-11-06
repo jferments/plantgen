@@ -1711,4 +1711,12 @@ pub mod venation;
 /// Vegetation Simulator's crown-width equation; it holds 757 m² of
 /// foliage at 480 years (Sillett et al. 2018: 630 to 1,480). Every
 /// conifer stays within its reference sizes.
-pub const GENERATOR_REVISION: u32 = 210;
+///
+/// 215: an old conifer's side shoots lay down a segment every 20 cm
+/// (`pinidae` revision 23, Pinaceae `seg_side` 0.2, coming in from 100
+/// years and in full by 200), drawing their foliage at one place for each
+/// three years they hold. A 500-year Douglas-fir at a stand's edge, which
+/// passed the 2 million segment limit near 400 years, has 1.02 million; a
+/// 480-year Douglas-fir in a stand has 258,000 (724,000 before) and 844 m²
+/// of foliage (757). Young trees grow as before.
+pub const GENERATOR_REVISION: u32 = 215;
