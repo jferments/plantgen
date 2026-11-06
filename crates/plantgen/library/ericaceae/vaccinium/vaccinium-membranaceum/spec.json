@@ -40,7 +40,6 @@
       "leaf_angle": 50,
       "blooms": 2,
       "adult_age": 4,
-      "bloom_size": 0.011,
       "bloom_angle": 120,
       "path_half": 0.8,
       "crown_height": 0.85
@@ -79,11 +78,6 @@
           "aspect": 1.0,
           "unripe": 0.3
         },
-        "colour": [
-          0.22,
-          0.08,
-          0.16
-        ],
         "accent": [
           0.35,
           0.25,
@@ -414,11 +408,6 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vol. 8 p. 516 (eFloras, read 2026-10-19), Vaccinium membranaceum: \"twigs of current season yellow-green or reddish green, terete to slightly angled\"; sRGB a model estimate (confidence medium) of a yellow-green."
-    },
-    "generator.params.bloom_size": {
-      "evidence": "SourceInferred",
-      "source": "fna-online",
-      "note": "Flora of North America vol. 8 p. 516 (eFloras, read 2026-10-19), Vaccinium membranaceum: \"Berries ... 9-13 mm diam.\": the bloom card is drawn as the ripe berry, 11 mm across, its flower look 0.4 of that (corolla \"3-5 x 5-7 mm\"; Abrams 1951 p. 328: \"4-5 mm. in diameter\")."
     }
   },
   "provenance": {

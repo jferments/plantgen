@@ -42,7 +42,6 @@
       "leaf_angle": 45,
       "blooms": 1,
       "adult_age": 2,
-      "bloom_size": 0.035,
       "bloom_angle": 5,
       "path_half": 0.4,
       "crown_height": 0.32
@@ -82,11 +81,6 @@
           "notch": 0.0,
           "centre": 0.3
         },
-        "colour": [
-          0.7106,
-          0.1473,
-          0.3672
-        ],
         "accent": [
           0.8481,
           0.3424,

@@ -78,9 +78,7 @@
         }
       },
       "flower": {
-        "shape": { "template": "head" },
-        "colour": [0.95, 0.95, 0.92],
-        "accent": [0.87, 0.48, 0.01]
+        "shape": { "template": "head" }
       }
     }
   },
@@ -129,11 +127,6 @@
       "evidence": "SourceInferred",
       "source": "abrams-ferris-1960",
       "note": "Abrams and Ferris vol. 4, Chrysanthemum leucanthemum (p. 394): stem leaves sessile, clasping, incised, reduced upward. Photographs (iNaturalist observations 170263172, 290839324) show them oblong to oblanceolate, about a quarter as wide as long, with a broad clasping foot and many small rounded teeth on both edges; drawn so, the foot narrowing a little above the clasp."
-    },
-    "appearance.organs.flower.accent": {
-      "evidence": "Measured",
-      "source": "inaturalist-photos-2026-10",
-      "note": "The disc deep golden yellow, toward orange, not pale: about sRGB (240, 185, 20) on the face-on heads (observations 119225591, 198086066, 77287435, 12714687), the centre greener while its inner florets are in bud."
     },
     "traits.ray_apex": {
       "evidence": "Measured",

@@ -81,8 +81,6 @@
           "unripe": 0.3
         },
         "inflorescence": { "kind": "raceme", "spread": 40 },
-        "colour": [0.026, 0.007, 0.021],
-        "accent": [0.45, 0.5, 0.25],
         "season": {
           "ripening": 30,
           "flower_look": {

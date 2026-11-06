@@ -45,7 +45,6 @@
       "leaf_angle": 30,
       "blooms": 3,
       "adult_age": 2,
-      "bloom_size": 0.05,
       "bloom_angle": 45,
       "leaf_area": 0.205,
       "bloom_area": 0.327,
@@ -82,7 +81,6 @@
           "aspect": 0.22,
           "unripe": 0.4
         },
-        "colour": [0.12, 0.1, 0.08],
         "accent": [0.33, 0.45, 0.15],
         "season": {
           "ripening": 30,
