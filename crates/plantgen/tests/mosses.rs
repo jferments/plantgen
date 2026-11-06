@@ -95,6 +95,9 @@ fn the_library_describes_wall_mosses_by_genus() {
         "Ceratodon",
         "Hypnum",
         "Homalothecium",
+        "Dicranoweisia",
+        "Niphotrichum",
+        "Rosulabryum",
     ] {
         assert!(names.contains(&genus), "{genus} missing from {names:?}");
     }
@@ -110,6 +113,15 @@ fn the_library_describes_wall_mosses_by_genus() {
     assert_eq!(hypnum.form, ColonyForm::Mat);
     assert!(hypnum.pleurocarpous);
     assert!(hypnum.spread_m > grimmia.spread_m);
+    // The roof mosses of western Oregon (FNA vol. 27, 28): Dicranoweisia
+    // in cushions and fruiting freely, so its spores outnumber those of
+    // Niphotrichum's mats, which seldom fruit; Rosulabryum in turfs.
+    let dicranoweisia = kind("Dicranoweisia");
+    let niphotrichum = kind("Niphotrichum");
+    assert_eq!(dicranoweisia.form, ColonyForm::Cushion);
+    assert_eq!(niphotrichum.form, ColonyForm::Mat);
+    assert_eq!(kind("Rosulabryum").form, ColonyForm::Turf);
+    assert!(dicranoweisia.spore_output() > 2.0 * niphotrichum.spore_output());
 }
 
 #[test]
@@ -242,4 +254,62 @@ fn moss_is_darker_and_greener_wet_than_dry() {
     // Drying, moss reflects more and turns duller and yellower.
     assert!(luminance(wet) < luminance(dry), "wet {wet:?} dry {dry:?}");
     assert!(wet[1] / wet[0] > dry[1] / dry[0], "wet {wet:?} dry {dry:?}");
+}
+
+#[test]
+fn a_cover_tints_the_surface_under_it_with_no_triangles_of_its_own() {
+    let site = wall_site();
+    let cover = mosses::grow(&site, &library_kinds(), &settings());
+    let tint = cover.tint(0.5);
+    // At a colony's centre the moss hides the surface; far from any colony
+    // there is none.
+    let colony = cover
+        .colonies
+        .iter()
+        .max_by(|a, b| a.radius_m.total_cmp(&b.radius_m))
+        .unwrap();
+    let at = Vec3::new(colony.centre[0], colony.centre[1], colony.centre[2]);
+    let normal = Vec3::new(colony.normal[0], colony.normal[1], colony.normal[2]);
+    let (colour, share) = tint.at(at, normal).unwrap();
+    assert!(share > 0.6, "share {share}");
+    assert!(colour[1] > colour[2], "moss is green, not blue: {colour:?}");
+    assert!(tint.at(Vec3::new(50.0, 50.0, 50.0), Vec3::Y).is_none());
+    // The site painted: the triangles near moss split, the far ones kept,
+    // and some vertices greener than the bare surface.
+    let (low, high) = site.bounds();
+    let bare = site.drawn(low, high, Vec3::ZERO);
+    let painted = tint.paint(&bare, 0.02, low, high);
+    assert!(painted.indices.len() > bare.indices.len());
+    let changed = painted
+        .colors
+        .iter()
+        .filter(|c| !bare.colors.iter().any(|b| b[..3] == c[..3]))
+        .count();
+    assert!(changed > 0);
+}
+
+#[test]
+fn a_view_named_for_a_genus_finds_that_genus() {
+    let site = wall_site();
+    let cover = mosses::grow(&site, &library_kinds(), &settings());
+    let mut found = 0;
+    for (index, kind) in cover.kinds.iter().enumerate() {
+        let Some(colony) = cover.showpiece(&kind.genus) else {
+            continue;
+        };
+        found += 1;
+        assert_eq!(usize::from(colony.kind), index, "{}", kind.genus);
+        // Its view point names it back: the nearest colony is itself.
+        let (nearest, _) = cover
+            .nearest(colony.centre)
+            .expect("a cover with colonies has a nearest one");
+        assert_eq!(nearest.kind, colony.kind, "{}", kind.genus);
+        // No colony of the genus is wider and as vigorous.
+        assert!(cover.colonies.iter().all(|other| other.kind != colony.kind
+            || other.age < 3.0
+            || other.radius_m * other.vigour.min(1.0)
+                <= colony.radius_m * colony.vigour.min(1.0) + 1e-12));
+    }
+    assert!(found > 0, "the wall grows some genus");
+    assert!(cover.showpiece("Sphagnum").is_none());
 }

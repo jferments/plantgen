@@ -1,0 +1,154 @@
+{
+  "schema": 2,
+  "species": "salix-scouleriana",
+  "layers": {
+    "subcanopy": 0.6,
+    "shrub": 0.6
+  },
+  "moisture": [
+    0.2,
+    0.35,
+    0.85,
+    0.95
+  ],
+  "heat_load": [
+    0.2,
+    0.5,
+    2.0,
+    2.5
+  ],
+  "elevation_m": [
+    -50,
+    0,
+    3000,
+    3300
+  ],
+  "max_slope_deg": 35,
+  "shade_tolerance": 0.25,
+  "coldest_c": [
+    -16,
+    -10,
+    10,
+    14
+  ],
+  "hard_freeze_c": [
+    -42,
+    -34,
+    10,
+    14
+  ],
+  "warmest_c": [
+    9,
+    11.5,
+    26,
+    30
+  ],
+  "degree_days_0": [
+    1100,
+    1800,
+    6500,
+    8000
+  ],
+  "degree_days_5": [
+    400,
+    800,
+    4000,
+    5000
+  ],
+  "moisture_index": [
+    0.1,
+    0.2,
+    1,
+    1.01
+  ],
+  "summer_rain": [
+    0,
+    0,
+    0.45,
+    0.65
+  ],
+  "evidence": {
+    "layers": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "Fire Effects Information System species review of Scouler's willow (Anderson 2001): a tall shrub or small tree; it forms a tall shrub layer in young stands and becomes a small tree at low to mid elevations."
+    },
+    "moisture": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "Fire Effects Information System species review of Scouler's willow (Anderson 2001): found in drier habitats than most willows, on moderately to well-drained soils, most often on moist ground and intermittent watercourses, rarely on wet; its cover is greatest at intermediate soil moisture."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Grows on any aspect, as Pacific willow's range is read."
+    },
+    "elevation_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "Fire Effects Information System species review of Scouler's willow (Anderson 2001): from sea level to over 3,000 m."
+    },
+    "max_slope_deg": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "Fire Effects Information System species review of Scouler's willow (Anderson 2001): level to moderately sloping ground, and steep dry slopes in the south-west; 35 degrees is this niche's reading."
+    },
+    "shade_tolerance": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "Fire Effects Information System species review of Scouler's willow (Anderson 2001): a shade-intolerant, persistent seral species; it persists only under thin canopies, peaks in stands 30 to 40 years old and is gone from stands past 150 years."
+    },
+    "coldest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Taken from Pacific willow's niche: both range from Alaska to California and the Rockies (FEIS); an approximate envelope."
+    },
+    "hard_freeze_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "As coldest_c."
+    },
+    "warmest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "As coldest_c."
+    },
+    "degree_days_0": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "As coldest_c."
+    },
+    "degree_days_5": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "As coldest_c."
+    },
+    "moisture_index": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Drier than Pacific willow, which the water's edge keeps wet: upland ground, gone in the driest climates (below about 0.1)."
+    },
+    "summer_rain": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "As coldest_c."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Fire Effects Information System (FEIS), USDA Forest Service, Rocky Mountain Research Station: species reviews",
+        "url": "https://www.fs.usda.gov/database/feis/plants/tree/salsco/all.html",
+        "licence": "public domain (work of the US federal government)"
+      },
+      {
+        "title": "PlantGen authors: niche choices",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "PlantGen"
+    ],
+    "notes": "Site ranges and shade tolerance read from FEIS (Anderson 2001); climate ranges taken from Pacific willow's niche (2026-11-05, stands W8)."
+  }
+}

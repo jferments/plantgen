@@ -22,6 +22,7 @@
 //! fill never grows a plant per stand.
 
 use crate::niche::Layer;
+use serde::{Deserialize, Serialize};
 
 /// Shade tolerance (a niche's 0 to 1) from which a tree establishes under
 /// a closed canopy: western hemlock 0.95, Pacific silver fir 0.8, grand
@@ -232,6 +233,28 @@ pub struct Development {
 /// stand is laid out ([`crate::stand_tile`]).
 #[must_use]
 pub fn develop(candidates: &[Candidate], age: f64) -> Development {
+    develop_as(candidates, age, Origin::Natural)
+}
+
+/// How a stand came to be, which sets who stands in it.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Origin {
+    /// It came up by itself after a disturbance ([`develop`]).
+    #[default]
+    Natural,
+    /// It was planted or kept: a yard's, a street's or a park's trees.
+    /// Each tree stands in proportion to its abundance in the canopy and
+    /// subcanopy, whatever its tolerance of shade, from the first cohort;
+    /// nothing comes up beneath it, since a kept yard is mown and weeded.
+    /// Its trees still fade as they pass their lifespan.
+    Planted,
+}
+
+/// [`develop`] for a stand of `origin`.
+#[must_use]
+pub fn develop_as(candidates: &[Candidate], age: f64, origin: Origin) -> Development {
+    let planted = origin == Origin::Planted;
     // The pioneers' lifespan: the longest-lived intolerant tree's, else
     // any tree's.
     let longest = |pick: &dyn Fn(&Candidate) -> bool| {
@@ -257,7 +280,11 @@ pub fn develop(candidates: &[Candidate], age: f64) -> Development {
             // The first cohort.
             let own = candidate.lifespan.max(1.0);
             let survival = 1.0 - ((age / own - GAPS) / (PIONEERS_GONE - GAPS)).clamp(0.0, 1.0);
-            let weight = suits * candidate.layers[0] * (1.0 - candidate.shade_tolerance) * survival;
+            let weight = if planted {
+                suits * (candidate.layers[0] + candidate.layers[1]) * survival
+            } else {
+                suits * candidate.layers[0] * (1.0 - candidate.shade_tolerance) * survival
+            };
             if weight > 0.0 {
                 cohorts.push(Cohort {
                     candidate: index,
@@ -268,7 +295,7 @@ pub fn develop(candidates: &[Candidate], age: f64) -> Development {
                 });
             }
             // Ingrowth under the canopy.
-            if candidate.shade_tolerance >= TOLERANT {
+            if !planted && candidate.shade_tolerance >= TOLERANT {
                 ingrowth(&mut cohorts, index, candidate, age, lifespan);
             }
         } else {
@@ -589,6 +616,33 @@ mod tests {
         poor[0].suitability = 0.1;
         poor[1].suitability = 0.1;
         assert!(develop(&poor, 500.0).cover[0] < 0.5 * full.cover[0]);
+    }
+
+    #[test]
+    fn planted_trees_stand_by_their_abundance_whatever_their_shade_tolerance() {
+        let pool = [fir(), hemlock(), fern()];
+        let weight = |d: &Development, candidate: usize| -> f64 {
+            d.cohorts
+                .iter()
+                .filter(|c| c.candidate == candidate)
+                .map(|c| c.weight)
+                .sum()
+        };
+        // After a fire the tolerant hemlock barely joins the first cohort;
+        // planted, each tree stands as its layers' abundance gives.
+        let natural = develop(&pool, 80.0);
+        let planted = develop_as(&pool, 80.0, Origin::Planted);
+        assert!(weight(&natural, 1) < 0.2 * weight(&natural, 0));
+        let ratio = weight(&planted, 1) / weight(&planted, 0);
+        let layers = |c: &Candidate| c.layers[0] + c.layers[1];
+        assert!((ratio - layers(&hemlock()) / layers(&fir())).abs() < 1e-9);
+        // Nothing comes up beneath a kept yard's trees.
+        assert!(
+            planted
+                .cohorts
+                .iter()
+                .all(|c| pool[c.candidate].tree() == c.pioneer)
+        );
     }
 
     #[test]
