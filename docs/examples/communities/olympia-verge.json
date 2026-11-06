@@ -1,4 +1,4 @@
-{"id": "olympia-verge", "members": [
+{"id": "olympia-verge", "origin": "cleared", "members": [
   {"species": "dactylis-glomerata", "layer": "herb"},
   {"species": "holcus-lanatus", "layer": "herb"},
   {"species": "festuca-rubra", "layer": "herb", "abundance": 0.6},

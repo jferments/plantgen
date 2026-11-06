@@ -459,6 +459,12 @@ pub enum Origin {
     /// nothing comes up beneath it, since a kept yard is mown and weeded.
     /// Its trees still fade as they pass their lifespan.
     Planted,
+    /// It came up by itself on ground people cleared or built on: a vacant
+    /// lot, a building site, a railway's edge. Its stand develops as a
+    /// natural one does, but no forest stood there before it, so nothing
+    /// lies on its floor that one left: its only logs are those its own
+    /// trees drop ([`crate::deadwood::DownWood::at`]).
+    Cleared,
 }
 
 /// [`develop`] for a stand of `origin`.

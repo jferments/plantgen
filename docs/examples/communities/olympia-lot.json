@@ -1,4 +1,4 @@
-{"id": "olympia-lot", "members": [
+{"id": "olympia-lot", "origin": "cleared", "members": [
   {"species": "alnus-rubra", "layer": "canopy", "abundance": 0.4},
   {"species": "salix-scouleriana", "layer": "subcanopy", "abundance": 0.3},
   {"species": "crataegus-monogyna", "layer": "subcanopy", "abundance": 0.2},

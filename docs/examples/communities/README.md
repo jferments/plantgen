@@ -3,7 +3,8 @@
 Each file is a `Community` (`plantgen::api::Community::from_json`): the
 species that grow together in one kind of place, the layer each keeps to,
 how common each is against the others (`abundance`, 1 when left out),
-and, for kept ground, `"origin": "planted"`. A fill takes a list of them,
+and, for kept ground, `"origin": "planted"`, or for ground people
+cleared or built on, `"origin": "cleared"`. A fill takes a list of them,
 and each cell of a `StandMap` names one by its place in that list
 (`docs/LIBRARY-API.md`, "Stands over a whole map").
 
@@ -28,8 +29,8 @@ what the ground is, in this order:
 | `olympia-yard-trees.json` | tree cover of half or more with a house within 30 m, or on residential land or gardens | planted | 80 years |
 | `olympia-lowland-forest.json` | tree cover of half or more elsewhere: parks, ravines, greenbelts | natural | 80 years (the years since the last clearing) |
 | `olympia-garden-bed.json` | within 4 m of a house's wall | planted | 10 years |
-| `olympia-lot.json` | bare ground, building sites, brownfields, within 6 m of a railway | natural | 10 years |
-| `olympia-verge.json` | a third or more paved: road and path edges, medians | natural | 1 year (mown) |
+| `olympia-lot.json` | bare ground, building sites, brownfields, within 6 m of a railway | cleared | 10 years |
+| `olympia-verge.json` | a third or more paved: road and path edges, medians | cleared | 1 year (mown) |
 | `olympia-lawn.json` | the rest of the open ground | planted | 1 year (mown) |
 
 Cells under a roof, or under 15% soil (paving, water), get none. Wall climbers
