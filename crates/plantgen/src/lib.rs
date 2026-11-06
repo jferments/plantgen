@@ -1711,4 +1711,13 @@ pub mod venation;
 /// Vegetation Simulator's crown-width equation; it holds 757 m² of
 /// foliage at 480 years (Sillett et al. 2018: 630 to 1,480). Every
 /// conifer stays within its reference sizes.
-pub const GENERATOR_REVISION: u32 = 210;
+///
+/// 211: a palmately lobed blade takes its stated base, where every one was
+/// drawn with a heart round its petiole: its body reaches round from its
+/// tip half the angle its basal margins meet at (Simpson's classes:
+/// cuneate a wedge into the petiole, truncate cut square, rounded a little
+/// past), and a blade whose base is unstated keeps its heart. A Pacific
+/// ninebark's base is rounded to truncate (FNA). A baobab's leaf is
+/// palmately compound with five to seven leaflets (Baum 1995), drawn from
+/// those facts, where a hand-set palmately lobed blade stood in for it.
+pub const GENERATOR_REVISION: u32 = 211;
