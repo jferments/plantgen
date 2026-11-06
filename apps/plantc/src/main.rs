@@ -521,8 +521,9 @@ Usage:
               [--max-mib N] [--levels tiers|package] [--glb LEVEL]
               [--packages DIR [--profile static|motion] [--cards yes|no]]
               [--field SITE.json [--corner X,Z] [--cracks YEARS]
+               [--moss YEARS]
                [--render PNG [--view V] [--size N] [--level N]
-                [--focus X,Y,Z --span M]]]
+                [--focus X,Y,Z --span M] [--wet W]]]
       Fill one map tile with plant communities (each a JSON file: an id
       and members, each a species, optionally the layer it keeps to and
       its abundance; origin planted for a yard's or street's kept
@@ -558,8 +559,12 @@ Usage:
       on shallow soil, herbs on roofs that hold soil, climbers at the feet
       of walls and fences. --cracks YEARS adds what comes up in its
       pavements in those years among the fill's species of the pavement
-      pool. --render draws the filled tile on its mesh, each prototype at
-      --level (1 unless given). --glb LEVEL (0 nearest to 3 farthest)
+      pool. --moss YEARS grows mosses over the tile for those years
+      (the genera the mosses list of the site names, or the library's;
+      docs/sites/MOSS.md) and writes DIR/tiles/X_Y.moss.json.
+      --render draws the filled tile on its mesh, each prototype at
+      --level (1 unless given), and its moss, as wet as --wet (0 dry to 1
+      just rained on, 0.4 unless given). --glb LEVEL (0 nearest to 3 farthest)
       also writes DIR/tiles/X_Y.glb: the whole tile as one glTF file,
       each prototype's level LEVEL once and every plant an instance of it
       (EXT_mesh_gpu_instancing), which Blender, Godot, Unity and three.js
@@ -3242,24 +3247,7 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
             fs::read_to_string(path).map_err(|error| format!("cannot read {path}: {error}"))?;
         MossCover::from_json(&text).map_err(|error| format!("{path}: {error}"))?
     } else {
-        let mut kinds = mosses::kinds(library())?;
-        if kinds.is_empty() {
-            return Err("the library describes no moss genus with a colony_form".into());
-        }
-        // A site may name its region's mosses; spores of the others do
-        // not reach it.
-        if let Some(names) = document.get("mosses").and_then(serde_json::Value::as_array) {
-            let names: Vec<&str> = names.iter().filter_map(serde_json::Value::as_str).collect();
-            if let Some(unknown) = names
-                .iter()
-                .find(|name| !kinds.iter().any(|kind| kind.genus == **name))
-            {
-                return Err(
-                    format!("site names moss genus `{unknown}`, which the library lacks").into(),
-                );
-            }
-            kinds.retain(|kind| names.contains(&kind.genus.as_str()));
-        }
+        let kinds = site_moss_kinds(&document)?;
         let mut settings = MossSettings::default();
         if let Some(years) = options.number::<u32>("years")? {
             settings.years = years;
@@ -3662,7 +3650,14 @@ fn colonist(id: &str, ages: &[f64]) -> Result<plantgen::succession::Colonist, St
                 .segments
                 .iter()
                 .map(|segment| sideways(segment.end))
-                .chain(graph.organs.iter().map(|organ| sideways(organ.position)))
+                // A leaf's tip, not where it stands: a rosette's crown is
+                // its leaves' reach.
+                .chain(
+                    graph
+                        .organs
+                        .iter()
+                        .map(|organ| sideways(organ.position + organ.heading * organ.size)),
+                )
                 .fold(0.0, f64::max),
         })
         .collect();
@@ -6406,6 +6401,8 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
             "field",
             "corner",
             "cracks",
+            "moss",
+            "wet",
             "render",
             "view",
             "size",
@@ -6576,11 +6573,27 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
             "  {species}: {per_ha:.0} trees/ha (mean height {mean:.1} m, tallest {tallest:.1} m), {every:.0} plants/ha in all"
         );
     }
+    let moss = match options.number::<u32>("moss")? {
+        Some(years) => {
+            let field = field_site
+                .as_ref()
+                .ok_or("`--moss` grows moss over a site: give `--field SITE.json`")?;
+            let cover = tile_moss(field, tile_m, years, options.number("seed")?.unwrap_or(1))?;
+            let path = out
+                .join("tiles")
+                .join(format!("{}_{}.moss.json", tile.x, tile.y));
+            fs::write(&path, cover.to_json()?)
+                .map_err(|error| format!("cannot write {}: {error}", path.display()))?;
+            out!("  wrote {}", path.display());
+            Some(cover)
+        }
+        None => None,
+    };
     if let Some(png) = options.flags.get("render") {
         let field = field_site
             .as_ref()
             .ok_or("`--render` draws a tile over a site: give `--field SITE.json`")?;
-        render_fill(&options, png, &fill, &plan, field)?;
+        render_fill(&options, png, &fill, &plan, field, moss.as_ref())?;
     }
     if let Some(dir) = options.flags.get("packages") {
         // The prototypes the tile places, or with --prototypes all every one.
@@ -6719,6 +6732,8 @@ fn write_fill_packages(
 
 /// A fill's tile over a site document's mesh (`plantc fill --field`).
 struct FieldSite {
+    /// The site document.
+    document: serde_json::Value,
     mesh: plantgen::site::SiteMesh,
     site: api::Site,
     /// The tile's south-west corner, (x, z) in the mesh's frame.
@@ -6824,7 +6839,12 @@ fn field_site(
             started.elapsed().as_secs_f64()
         );
     }
-    Ok(FieldSite { mesh, site, corner })
+    Ok(FieldSite {
+        document,
+        mesh,
+        site,
+        corner,
+    })
 }
 
 /// `plant` (in growth's frame: +Y up, -Z north) placed as `instance` says
@@ -6912,9 +6932,61 @@ fn placed_instance(
     out
 }
 
+/// The moss genera that grow on the site `document`: the library's, or
+/// only those its `mosses` list names (its region's mosses; spores of the
+/// others do not reach it).
+fn site_moss_kinds(
+    document: &serde_json::Value,
+) -> Result<Vec<plantgen::mosses::MossKind>, Failure> {
+    let mut kinds = plantgen::mosses::kinds(library())?;
+    if kinds.is_empty() {
+        return Err("the library describes no moss genus with a colony_form".into());
+    }
+    if let Some(names) = document.get("mosses").and_then(serde_json::Value::as_array) {
+        let names: Vec<&str> = names.iter().filter_map(serde_json::Value::as_str).collect();
+        if let Some(unknown) = names
+            .iter()
+            .find(|name| !kinds.iter().any(|kind| kind.genus == **name))
+        {
+            return Err(
+                format!("site names moss genus `{unknown}`, which the library lacks").into(),
+            );
+        }
+        kinds.retain(|kind| names.contains(&kind.genus.as_str()));
+    }
+    Ok(kinds)
+}
+
+/// The mosses `years` grow over the tile of `field` (`plantc fill
+/// --moss YEARS`): the genera its site names, or every genus of the
+/// library, from `seed`.
+fn tile_moss(
+    field: &FieldSite,
+    tile_m: f64,
+    years: u32,
+    seed: u64,
+) -> Result<plantgen::mosses::MossCover, Failure> {
+    use plantgen::mosses::{self, MossSettings};
+    let started = Instant::now();
+    let kinds = site_moss_kinds(&field.document)?;
+    let settings = MossSettings::over_tile(field.corner, tile_m, years, seed);
+    let cover = mosses::grow(&field.mesh, &kinds, &settings);
+    out!(
+        "  moss: {} colonies after {years} years in {:.1} s",
+        cover.colonies.len(),
+        started.elapsed().as_secs_f64()
+    );
+    for (genus, count, area) in cover.census() {
+        out!("    {genus:<14} {count:>6} colonies, {area:.2} m²");
+    }
+    Ok(cover)
+}
+
 /// Draw a filled tile on its site (`plantc fill --render PNG`): the
 /// site's mesh and every instance as its prototype at `--level` (1 unless
-/// given), seen from `--view` (oblique unless given).
+/// given), seen from `--view` (oblique unless given), with its moss if
+/// grown: shoots within a twentieth of the view's span of its focus (the
+/// tile's middle unless given), shells out to its span, patches beyond.
 #[allow(clippy::too_many_lines)]
 fn render_fill(
     options: &Options,
@@ -6922,6 +6994,7 @@ fn render_fill(
     fill: &api::Fill,
     plan: &api::TilePlan,
     field: &FieldSite,
+    moss: Option<&plantgen::mosses::MossCover>,
 ) -> Result<(), Failure> {
     let started = Instant::now();
     let level: usize = options.number("level")?.unwrap_or(1);
@@ -7004,9 +7077,36 @@ fn render_fill(
         }
         None => None,
     };
+    let moss = match moss {
+        Some(cover) => {
+            use plantgen::mosses::{Detail, DrawOptions};
+            let (at, span) = focus.unwrap_or((Vec3::ZERO, half));
+            let mut mesh = cover.draw(
+                &field.mesh,
+                &DrawOptions {
+                    hydration: options.number::<f64>("wet")?.unwrap_or(0.4).clamp(0.0, 1.0),
+                    detail: Detail::Near,
+                    near: Some((at - offset, span * 0.05)),
+                    capsules: true,
+                },
+            );
+            #[allow(clippy::cast_possible_truncation)]
+            let shift = [offset.x as f32, offset.y as f32, offset.z as f32];
+            for p in &mut mesh.positions {
+                for (value, by) in p.iter_mut().zip(shift) {
+                    *value += by;
+                }
+            }
+            mesh
+        }
+        None => plantgen::mesh::Mesh::default(),
+    };
     let image = preview::render_on_site(
         &scene,
-        &[(&ground, raster::Material::Opaque)],
+        &[
+            (&ground, raster::Material::Opaque),
+            (&moss, raster::Material::Opaque),
+        ],
         &templates,
         &PreviewOptions {
             width: pixels,
@@ -7028,8 +7128,9 @@ fn render_fill(
     .map_err(|error| format!("cannot encode PNG: {error}"))?;
     fs::write(png, bytes).map_err(|error| format!("cannot write {png}: {error}"))?;
     out!(
-        "wrote {png}: {} triangles of plants, {} of site, in {:.1} s",
+        "wrote {png}: {} triangles of plants, {} of moss, {} of site, in {:.1} s",
         scene.triangle_count(),
+        moss.triangle_count(),
         ground.triangle_count(),
         started.elapsed().as_secs_f64()
     );
