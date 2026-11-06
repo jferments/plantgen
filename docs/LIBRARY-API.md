@@ -188,13 +188,16 @@ Ok(())
   a site field (`docs/sites/SITE-FIELD.md`).
 - **Fast over a city.** Each community, stand age, site class and cell
   size is laid out once as a wrapping stand tile and stamped over every
-  cell that shares it, turned and shifted by the cell's place in the
-  world, from four layouts each. `TilePlan::stats` gives the stand
-  numbers to check against plots: stems and trees (5 cm or more at
-  breast height) per hectare, basal area, canopy cover and leaf area
-  index, and edge trees per hectare. `FillSettings::herbs = false`
-  leaves herbs to the ground cover raster for hosts that draw ground
-  cover their own way.
+  cell that shares it, turned and shifted by the cell's (or its block's)
+  place in the world, from four layouts each. `Fill::new` reads its
+  species on every core and makes a species' `Generator` only when a
+  prototype of it is grown, drawn or written, so a fill whose sizes are
+  all kept starts in seconds (3 s for Olympia's 45 species, from 34).
+  `TilePlan::stats` gives the stand numbers to check against plots:
+  stems and trees (5 cm or more at breast height) per hectare, basal
+  area, canopy cover and leaf area index, and edge trees per hectare.
+  `FillSettings::herbs = false` leaves herbs to the ground cover raster
+  for hosts that draw ground cover their own way.
 - **Pure and local.** A tile's plan depends only on the fill's
   communities, the site, the stand map, the seed and
   `GENERATOR_REVISION`. Its draws are keyed by each stand cell's place in
@@ -202,7 +205,28 @@ Ok(())
   be filled alone, on any thread (`Fill` is `Send + Sync`).
 - **Many communities per tile.** The `StandMap` gives each cell a
   community (or none: pavement, building, water) and the years since it
-  was disturbed or abandoned.
+  was disturbed or abandoned, and may give the ground's `moisture` (0 dry
+  to 1 saturated) where the caller knows it better than the ground's
+  shape: a coarse height model reads a creek's bank or a lake's shore as
+  level ground (0.5), too dry for red alder or Pacific willow, so a city
+  that maps its water gives its bank cells their own (Olympia's: 0.95 at
+  the water's edge to 0.7 at 15 m). A city's map changes every few metres (a
+  yard, a verge, a bed by a house), finer than a crown: a cell under
+  `STAND_CELL_M` (40 m) reads its window of one stand tile laid out for
+  its block of cells about 40 m across (`fill::cells_per_layout`), the
+  site's factors read at the block's middle. Crowns are laid out whole,
+  and the cells of one stand in a block continue one pattern: a 40 m
+  tile mapped in 4 m cells of one stand places the very plants one 40 m
+  cell does, and a bare 4 m strip through it takes out only the plants
+  whose stems stand in it. `fill.tile` lays out every stand tile a tile
+  needs on every core before it places a plant, and keeps them for the
+  next tile. Over a square kilometre of Olympia, Washington (four 512 m
+  tiles, 4 m cells mapped from ESA WorldCover, Overture Maps and SRTM),
+  laying out the stand tiles takes about 22 s once, and each tile then
+  places its trees and shrubs in 0.04 to 0.1 s on 4 cores (about 30,000
+  a square kilometre there, where a sixth of the cells are forest or
+  yard trees). How that city's mesh, materials and stand map were made
+  is in [sites/DEVELOPERS.md](sites/DEVELOPERS.md), "A real city tile".
 - **Prototypes** (`fill.prototypes()`) are keyed by species, seed,
   setting and age (`PrototypeKey::age_tenths`, its files named
   `<species>-<setting>-<seed>-<age>y`). `fill.measure(which, threads,
@@ -352,7 +376,13 @@ subcanopy, shrub, herb, ground, climber) that keeps it to that layer
 in place of its niche's, the `environments` it grows in (interior, edge,
 open, suppressed; all four when left out) and an `abundance` (a share
 against the others, 1 when left out). A species without a niche needs
-its layer. It gives no density: how many stems a cell holds comes from
+its layer, suits every site and stands half tolerant of shade (`plantc
+fill` names such members). A community is `"origin": "natural"` unless
+it says `"planted"`: a natural stand develops as after a fire (its
+first trees by their intolerance of shade, the tolerant ones coming up
+beneath them later), while a planted one (a yard's, a street's or a
+park's kept trees) holds each tree in proportion to its abundance from
+the start, with nothing coming up beneath. It gives no density: how many stems a cell holds comes from
 the fill, from the site and the stand's age, not from the caller.
 
 Any plant can be grown past its spec's years to its old ages (doubling
@@ -364,6 +394,39 @@ Each instance's `rotation` carries its yaw and its lean together.
 `Instance::lean(yaw, [east, north])` builds it, with the lean in metres
 per metre up, so a plant on a slope or reaching for a gap stands as the
 fill grew it with no extra field to read.
+
+## Moss on a host's walls and roofs: `plantgen::mosses`
+
+Moss is a surface layer over a site mesh, not plant instances. Grow a
+cover once for a building or a tile, keep it as JSON, and draw it at the
+level the view needs. The full guide is
+[docs/sites/MOSS.md](sites/MOSS.md).
+
+```rust
+use plantgen::library::Library;
+use plantgen::math::Vec3;
+use plantgen::mosses::{self, Detail, DrawOptions, MossSettings};
+
+// `site` is a SiteMesh, for example from plantgen::api::site_mesh.
+let mut kinds = mosses::kinds(Library::builtin())?;
+// Keep only the region's genera (as a site document's `mosses` list does).
+kinds.retain(|k| ["Dicranoweisia", "Rosulabryum", "Niphotrichum"].contains(&k.genus.as_str()));
+let cover = mosses::grow(&site, &kinds, &MossSettings { years: 30, ..Default::default() });
+let json = cover.to_json()?; // and MossCover::from_json to read it back
+
+// Triangles: patches far off, shells, or shoots close up.
+let mesh = cover.draw(&site, &DrawOptions { detail: Detail::Shell, ..Default::default() });
+
+// No triangles: colour and coverage (0-1) to bake into the host's texture.
+let tint = cover.tint(0.4); // hydration, 0 dry to 1 wet
+if let Some((rgb, coverage)) = tint.at(Vec3::new(4.3, 2.5, -0.8), Vec3::Y) {
+    // blend rgb over the roof's texel by coverage
+}
+```
+
+`MossCover::census` gives each genus's colonies and area. Growing the
+test wall and shed for 30 years takes about 30 s; drawing a whole
+building at shell level is under a million triangles.
 
 ## From the command line
 

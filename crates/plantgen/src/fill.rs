@@ -102,11 +102,21 @@ impl Member {
 
 /// A plant community: its members and how they share a stand. Built from
 /// JSON (`{"id": ..., "members": [{"species": ..., "layer": ...,
-/// "abundance": ...}]}`, layer and abundance optional).
+/// "abundance": ...}]}`, layer and abundance optional, and `"origin":
+/// "planted"` for a yard's or a street's kept trees).
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Community {
     pub id: String,
     pub members: Vec<Member>,
+    /// How its stands came to be ([`development::Origin`]): natural
+    /// unless given.
+    #[serde(default, skip_serializing_if = "is_natural")]
+    pub origin: development::Origin,
+}
+
+#[allow(clippy::trivially_copy_pass_by_ref)]
+fn is_natural(origin: &development::Origin) -> bool {
+    *origin == development::Origin::Natural
 }
 
 impl Community {
@@ -833,6 +843,12 @@ pub struct StandCell {
     /// building, water).
     pub community: Option<u16>,
     pub years_since_disturbance: f32,
+    /// The ground's moisture, 0 dry to 1 saturated, where the caller knows
+    /// it better than the ground's shape does: a creek's bank or a lake's
+    /// shore that a coarse height model reads as level ground. It takes the
+    /// place of the moisture the site gives ([`Site::site_factors_at`]).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub moisture: Option<f32>,
 }
 
 /// Which community grows where over a tile, cell by cell, row by row from
@@ -863,6 +879,7 @@ impl StandMap {
                 StandCell {
                     community: Some(community),
                     years_since_disturbance: years,
+                    moisture: None,
                 };
                 cols * cols
             ],
@@ -890,6 +907,16 @@ impl StandMap {
             return Err(Error(format!(
                 "stands: community {:?} is not one of the fill's {communities}",
                 cell.community
+            )));
+        }
+        if let Some(moisture) = self
+            .cells
+            .iter()
+            .filter_map(|cell| cell.moisture)
+            .find(|moisture| !(0.0..=1.0).contains(moisture))
+        {
+            return Err(Error(format!(
+                "stands: a cell's moisture must be 0 to 1, found {moisture}"
             )));
         }
         Ok(())
@@ -1432,7 +1459,13 @@ fn wall_runs(field: &SiteField) -> Vec<Option<[f64; 2]>> {
 #[derive(Debug, Clone)]
 struct Species {
     id: String,
-    generator: Generator,
+    /// Its spec, as its taxa and its own file give it.
+    spec: crate::spec::PlantSpec,
+    options: Options,
+    /// Made the first time one of its prototypes is grown, drawn or
+    /// written ([`Self::generator`]): making one draws every organ's look
+    /// and part, which a fill whose sizes are all kept never reads.
+    generator: OnceLock<Generator>,
     niche: Option<Niche>,
     /// The seeds of its prototypes: its package's own first.
     seeds: Vec<u64>,
@@ -1461,10 +1494,11 @@ pub const BENEATH_PROGRAMS: [&str; 1] = ["pinidae"];
 
 impl Species {
     fn new(id: &str, settings: &FillSettings) -> Result<Self, Error> {
-        let generator = Generator::new(id, &settings.options)?;
+        let library = crate::library::Library::builtin();
+        let spec = library.spec(id)?;
         let niche = Niche::builtin(id).ok();
         let mut seeds = Vec::new();
-        for seed in generator.spec().variants.seeds.iter().copied().chain(1..) {
+        for seed in spec.variants.seeds.iter().copied().chain(1..) {
             if seeds.len() >= usize::from(settings.seeds) {
                 break;
             }
@@ -1473,16 +1507,23 @@ impl Species {
             }
         }
         let light_needed = niche.as_ref().map_or(0.0, development::light_needed);
-        let soil = generator.soil_need();
-        let canopy_m = crate::library::Library::builtin()
+        // As `Generator::soil_need` reads it, without making the generator.
+        let soil = spec.program_in(library).ok().and_then(|(program, params)| {
+            let seed = spec.variants.seeds.first().copied().unwrap_or(1);
+            let params = spec.seeded_params(&program, &params, seed);
+            SoilNeed::of_program(&program, &params)
+        });
+        let canopy_m = library
             .traits_of(id)
             .ok()
             .and_then(|traits| traits.get("height_max_m").and_then(crate::traits::least))
             .filter(|height| *height > 0.0);
-        let grows_beneath = BENEATH_PROGRAMS.contains(&generator.spec().generator.program.as_str());
+        let grows_beneath = BENEATH_PROGRAMS.contains(&spec.generator.program.as_str());
         Ok(Self {
             id: id.to_string(),
-            generator,
+            spec,
+            options: settings.options,
+            generator: OnceLock::new(),
             niche,
             seeds,
             light_needed,
@@ -1490,6 +1531,16 @@ impl Species {
             canopy_m,
             grows_beneath,
         })
+    }
+
+    /// Its generator, made the first time it is asked for. Two threads
+    /// that ask at once may each make one; the first kept serves both.
+    fn generator(&self) -> Result<&Generator, Error> {
+        if let Some(made) = self.generator.get() {
+            return Ok(made);
+        }
+        let made = Generator::new(&self.id, &self.options)?;
+        Ok(self.generator.get_or_init(|| made))
     }
 }
 
@@ -1506,7 +1557,7 @@ struct StandMember {
 
 impl StandMember {
     fn new(member: &Member, species: &Species, at: usize, community: &str) -> Result<Self, Error> {
-        let spec = species.generator.spec();
+        let spec = &species.spec;
         let niche_layers = species
             .niche
             .as_ref()
@@ -1672,20 +1723,33 @@ impl Fill {
                 settings.stand_ages
             )));
         }
-        let mut species: Vec<Species> = Vec::new();
+        // Every species once, in the order the communities first name
+        // them, read on every core: reading a species' program draws its
+        // organs' looks to measure their areas.
+        let mut ids: Vec<&str> = Vec::new();
+        for community in communities {
+            community.check()?;
+            for member in &community.members {
+                if !ids.contains(&member.species.as_str()) {
+                    ids.push(&member.species);
+                }
+            }
+        }
+        let species = crate::cores::map(ids, crate::cores::available(), &|id| {
+            Species::new(id, settings)
+        })
+        .into_iter()
+        .collect::<Result<Vec<Species>, Error>>()?;
         let mut stands = Vec::new();
         let mut climbers = Vec::new();
         for community in communities {
-            community.check()?;
             let mut members = Vec::new();
             let mut climbing = Vec::new();
             for member in &community.members {
-                let at = if let Some(at) = species.iter().position(|s| s.id == member.species) {
-                    at
-                } else {
-                    species.push(Species::new(&member.species, settings)?);
-                    species.len() - 1
-                };
+                let at = species
+                    .iter()
+                    .position(|s| s.id == member.species)
+                    .unwrap_or_default();
                 if member.layer == Some(Layer::Climber) {
                     climbing.push(Climber {
                         species: at,
@@ -1713,7 +1777,11 @@ impl Fill {
         };
         for community in 0..fill.communities.len() {
             for age in fill.settings.stand_ages.clone() {
-                let stand = development::develop(&fill.candidates(community, None), age);
+                let stand = development::develop_as(
+                    &fill.candidates(community, None),
+                    age,
+                    fill.communities[community].origin,
+                );
                 let canopy = fill.canopy_m(community);
                 for cohort in &stand.cohorts {
                     let member = &fill.stands[community][cohort.candidate];
@@ -1777,10 +1845,9 @@ impl Fill {
         for community in 0..self.climbers.len() {
             for climber in 0..self.climbers[community].len() {
                 let species = &self.species[self.climbers[community][climber].species];
-                let oldest = species.generator.default_age();
+                let oldest = crate::export::oldest_age(&species.spec);
                 let age = species
-                    .generator
-                    .spec()
+                    .spec
                     .allometry
                     .iter()
                     .filter(|point| point.height >= crate::export::WALL_M && point.age > 0.0)
@@ -1935,7 +2002,7 @@ impl Fill {
             .prototypes
             .get(index)
             .ok_or_else(|| Error(format!("fill: no prototype {index}")))?;
-        let generator = self.species_of(prototype).generator.clone();
+        let generator = self.species_of(prototype).generator()?.clone();
         let plant = Self::grow_ages(&generator, &prototype.key, &[prototype.age_years])?
             .pop()
             .ok_or_else(|| Error(format!("fill: {} kept no plant", prototype.key.stem())))?;
@@ -2040,7 +2107,7 @@ impl Fill {
                 .iter()
                 .map(|index| self.prototypes[*index as usize].age_years)
                 .collect();
-            let mut spec = self.species_of(first).generator.spec().clone();
+            let mut spec = self.species_of(first).spec.clone();
             let key = &first.key;
             // Its reference sizes are its setting's: none beneath a
             // canopy, where no yield table measured it.
@@ -2147,7 +2214,11 @@ impl Fill {
             .iter()
             .map(|index| self.prototypes[*index as usize].age_years)
             .collect();
-        Self::grow_ages(&self.species_of(prototype).generator, &prototype.key, &ages)
+        Self::grow_ages(
+            self.species_of(prototype).generator()?,
+            &prototype.key,
+            &ages,
+        )
     }
 
     /// Prototype `index`'s size as a measure or a write left it in `dir`
@@ -2218,7 +2289,7 @@ impl Fill {
             let plants = self.grow_together(&fresh)?;
             for (index, plant) in fresh.into_iter().zip(plants) {
                 let prototype = &self.prototypes[index as usize];
-                let generator = &self.species_of(prototype).generator;
+                let generator = self.species_of(prototype).generator()?;
                 let (record, part_records) = generator.write_plant(&plant, settings, out, parts)?;
                 let written = PrototypeFiles {
                     index,
@@ -2330,6 +2401,11 @@ impl Fill {
     ) -> Result<TilePlan, Error> {
         stands.check(site, self.communities.len())?;
         let cell_m = stands.cell_m;
+        // A cell finer than a stand tile reads its window of one laid out
+        // for its block of cells ([`cells_per_layout`]).
+        let per = cells_per_layout(cell_m);
+        #[allow(clippy::cast_precision_loss)]
+        let layout_m = cell_m * per as f64;
         let rows = stands.cells.len() / stands.cols.max(1);
         let (cols_i, rows_i) = (
             i64::try_from(stands.cols).unwrap_or(i64::MAX),
@@ -2345,6 +2421,71 @@ impl Fill {
                 outside(col, row)
             }
         };
+        // Each cell's stand tile: its community and age, how the site
+        // suits each member at the cell's middle (at its block's middle,
+        // within the tile, for a cell finer than a stand tile, so the
+        // cells of a block share one), and which of the block's layouts.
+        let key_of = |index: usize| -> Option<LayoutKey> {
+            let cell = stands.cells[index];
+            let community = usize::from(cell.community?);
+            let (col, row) = (index % stands.cols, index / stands.cols);
+            let (block, window) = layout_block(world_cell(site, stands, col, row), per, cell_m);
+            #[allow(clippy::cast_precision_loss)]
+            let corner = [col as f64 * cell_m, row as f64 * cell_m];
+            let middle = if per == 1 {
+                [corner[0] + 0.5 * cell_m, corner[1] + 0.5 * cell_m]
+            } else {
+                [
+                    (corner[0] - window[0] + 0.5 * layout_m).clamp(0.0, site.tile_m),
+                    (corner[1] - window[1] + 0.5 * layout_m).clamp(0.0, site.tile_m),
+                ]
+            };
+            let mut factors = site.site_factors_at(middle[0], middle[1]);
+            if let Some(moisture) = cell.moisture {
+                factors.moisture = f64::from(moisture).clamp(0.0, 1.0);
+            }
+            let suits = self.stands[community]
+                .iter()
+                .map(|member| {
+                    let suits = self.species[member.species]
+                        .niche
+                        .as_ref()
+                        .map_or(1.0, |niche| niche.site_response(factors));
+                    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+                    let quarters = (suits.clamp(0.0, 1.0) * 4.0).round() as u8;
+                    quarters
+                })
+                .collect();
+            Some(LayoutKey {
+                community,
+                age: nearest_age(
+                    &self.settings.stand_ages,
+                    f64::from(cell.years_since_disturbance),
+                ),
+                suits,
+                cell_bits: layout_m.to_bits(),
+                seed,
+                layout: rng::hash_words(&[seed, block[0], block[1], 1]) % LAYOUTS,
+            })
+        };
+        let keys: Vec<Option<LayoutKey>> = (0..stands.cells.len()).map(key_of).collect();
+        // Every stand tile the cells need, and each community and age's
+        // tile on a site that suits it fully (its edges' height), laid out
+        // on every core before the cells read them.
+        let mut needed: Vec<LayoutKey> = Vec::new();
+        for key in keys.iter().flatten() {
+            let whole = LayoutKey {
+                suits: vec![4; key.suits.len()],
+                layout: 0,
+                ..key.clone()
+            };
+            for key in [key.clone(), whole] {
+                if !needed.contains(&key) {
+                    needed.push(key);
+                }
+            }
+        }
+        self.lay_out_all(needed)?;
         let mut edge_trees = 0_usize;
         let mut instances = Vec::new();
         let mut cover = Vec::with_capacity(stands.cells.len());
@@ -2354,7 +2495,8 @@ impl Fill {
         for (index, cell) in stands.cells.iter().enumerate() {
             let (col, row) = (index % stands.cols, index / stands.cols);
             let world = world_cell(site, stands, col, row);
-            let Some(community) = cell.community.map(usize::from) else {
+            let (Some(community), Some(key)) = (cell.community.map(usize::from), &keys[index])
+            else {
                 cover.push(Cover {
                     kind: CoverKind::Bare,
                     fraction: 0.0,
@@ -2368,37 +2510,15 @@ impl Fill {
             };
             #[allow(clippy::cast_precision_loss)]
             let corner = [col as f64 * cell_m, row as f64 * cell_m];
-            let factors = site.site_factors_at(corner[0] + 0.5 * cell_m, corner[1] + 0.5 * cell_m);
-            let suits = self.stands[community]
-                .iter()
-                .map(|member| {
-                    let suits = self.species[member.species]
-                        .niche
-                        .as_ref()
-                        .map_or(1.0, |niche| niche.site_response(factors));
-                    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-                    let quarters = (suits.clamp(0.0, 1.0) * 4.0).round() as u8;
-                    quarters
-                })
-                .collect();
-            let draw = |salt: u64| rng::hash_words(&[seed, world[0], world[1], salt]);
-            let age = nearest_age(
-                &self.settings.stand_ages,
-                f64::from(cell.years_since_disturbance),
-            );
-            let layout = self.layout(LayoutKey {
-                community,
-                age,
-                suits,
-                cell_bits: cell_m.to_bits(),
-                seed,
-                layout: draw(1) % LAYOUTS,
-            })?;
+            let (block, window) = layout_block(world, per, cell_m);
+            let draw = |salt: u64| rng::hash_words(&[seed, block[0], block[1], salt]);
+            let age = key.age;
+            let layout = self.layout(key.clone())?;
             // Which of its sides, west, east, south and north, open onto
             // ground its canopy overtops.
             let mut opens = [false; 4];
             if self.settings.edges {
-                let own = self.stand_height(community, age, cell_m, seed)?;
+                let own = self.stand_height(community, age, layout_m, seed)?;
                 if own > 0.0 {
                     #[allow(clippy::cast_possible_wrap)]
                     let (col, row) = (col as i64, row as i64);
@@ -2417,6 +2537,7 @@ impl Fill {
                             Some(StandCell {
                                 community: Some(other),
                                 years_since_disturbance,
+                                ..
                             }) => {
                                 let other = usize::from(other);
                                 if other >= self.communities.len() {
@@ -2429,34 +2550,39 @@ impl Fill {
                                     &self.settings.stand_ages,
                                     f64::from(years_since_disturbance),
                                 );
-                                self.stand_height(other, age, cell_m, seed)?
+                                self.stand_height(other, age, layout_m, seed)?
                                     < EDGE_HEIGHT_SHARE * own
                             }
                         };
                     }
                 }
             }
-            // The cell's own turn and shift of the wrapping stand tile.
+            // The block's own turn and shift of the wrapping stand tile.
             let turn = draw(2) % 4;
-            let shift = [rng::unit(draw(3)) * cell_m, rng::unit(draw(4)) * cell_m];
+            let shift = [rng::unit(draw(3)) * layout_m, rng::unit(draw(4)) * layout_m];
             let keep = draw(5);
             let (mut tree_crowns, mut kept_tree_crowns) = (0.0, 0.0);
             let (mut herbs, mut kept_herbs) = (0_usize, 0_usize);
             for (n, plant) in layout.plants.iter().enumerate() {
+                let at = turned(
+                    [
+                        wrap(plant.at[0] + shift[0], layout_m),
+                        wrap(plant.at[1] + shift[1], layout_m),
+                    ],
+                    turn,
+                    layout_m,
+                );
+                // Only the plants whose stems stand in this cell's window.
+                let at = [at[0] - window[0], at[1] - window[1]];
+                if !(0.0..cell_m).contains(&at[0]) || !(0.0..cell_m).contains(&at[1]) {
+                    continue;
+                }
                 let tree = matches!(plant.layer, niche::Layer::Canopy | niche::Layer::Subcanopy);
                 let herb = plant.layer == niche::Layer::Herb;
                 if tree {
                     tree_crowns += plant.crown_m2;
                 }
                 herbs += usize::from(herb);
-                let at = turned(
-                    [
-                        wrap(plant.at[0] + shift[0], cell_m),
-                        wrap(plant.at[1] + shift[1], cell_m),
-                    ],
-                    turn,
-                    cell_m,
-                );
                 let (east, north) = (corner[0] + at[0], corner[1] + at[1]);
                 let pick = |salt: u64| rng::unit(rng::hash_words(&[keep, n as u64, salt]));
                 let plantable = site.plantable_at(east, north);
@@ -2857,13 +2983,36 @@ impl Fill {
         ))
     }
 
+    /// Lay out every stand tile of `keys` not laid out yet, on every core.
+    fn lay_out_all(&self, keys: Vec<LayoutKey>) -> Result<(), Error> {
+        let missing: Vec<LayoutKey> = {
+            let laid = self.laid.lock().unwrap_or_else(PoisonError::into_inner);
+            keys.into_iter()
+                .filter(|key| !laid.contains_key(key))
+                .collect()
+        };
+        let made = crate::cores::map(missing, crate::cores::available(), &|key| {
+            self.lay_out(&key).map(|layout| (key, Arc::new(layout)))
+        });
+        let mut laid = self.laid.lock().unwrap_or_else(PoisonError::into_inner);
+        for made in made {
+            let (key, layout) = made?;
+            laid.entry(key).or_insert(layout);
+        }
+        Ok(())
+    }
+
     /// Lay out the stand tile `key` names: its community's stand developed
     /// at its age on its site, each cohort a member in each of its seeds,
     /// in the layer its measured height puts it.
     #[allow(clippy::too_many_lines)]
     fn lay_out(&self, key: &LayoutKey) -> Result<Layout, Error> {
         let candidates = self.candidates(key.community, Some(&key.suits));
-        let stand = development::develop(&candidates, self.settings.stand_ages[key.age]);
+        let stand = development::develop_as(
+            &candidates,
+            self.settings.stand_ages[key.age],
+            self.communities[key.community].origin,
+        );
         let mut chosen = Vec::new();
         for cohort in &stand.cohorts {
             let member = &self.stands[key.community][cohort.candidate];
@@ -2904,10 +3053,7 @@ impl Fill {
                     crown_radius_m: size.crown_radius,
                     light_needed: self.species[*species].light_needed,
                 };
-                (
-                    member,
-                    self.species[*species].generator.spec().appearance.foliage,
-                )
+                (member, self.species[*species].spec.appearance.foliage)
             })
             .filter(|(member, _)| {
                 let herb = member.layer == niche::Layer::Herb;
@@ -3114,6 +3260,37 @@ fn turned_vector(v: [f64; 2], turns: u64) -> [f64; 2] {
         2 => [-v[0], -v[1]],
         _ => [v[1], -v[0]],
     }
+}
+
+/// How many stand cells a side one stand tile is laid out for: one for a
+/// cell of [`STAND_CELL_M`] or more, else as many as make about that. A
+/// finer cell (a city's yards, verges and beds, a few metres each) reads
+/// its window of the stand tile its block shares, so a crown wider than the
+/// cell is laid out whole and the cells of one community and age in a
+/// block continue one pattern, with no seam between them.
+#[must_use]
+pub fn cells_per_layout(cell_m: f64) -> u64 {
+    if !(cell_m > 0.0) || cell_m >= STAND_CELL_M {
+        return 1;
+    }
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+    let per = (STAND_CELL_M / cell_m).round().max(1.0) as u64;
+    per
+}
+
+/// The block of `per` cells a side that world cell `world` lies in, as two
+/// words that key the block's draws, and the cell's window in the block's
+/// stand tile, metres east and north of its corner.
+fn layout_block(world: [u64; 2], per: u64, cell_m: f64) -> ([u64; 2], [f64; 2]) {
+    let per = i64::try_from(per.max(1)).unwrap_or(1);
+    let split = |word: u64| {
+        let at = word.cast_signed();
+        #[allow(clippy::cast_precision_loss)]
+        let offset = at.rem_euclid(per) as f64 * cell_m;
+        (at.div_euclid(per).cast_unsigned(), offset)
+    };
+    let ((east, east_m), (north, north_m)) = (split(world[0]), split(world[1]));
+    ([east, north], [east_m, north_m])
 }
 
 /// A stand cell's place in the world grid of cells, as two words that key

@@ -104,6 +104,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "age_max_years": 100,
     "leaf_area_per_basal_area": 0.079,
     "crown_spread": 0.97,
     "crown_base_share": 0.34,
@@ -133,6 +134,7 @@
     "fruiting_months": [8, 9, 10, 11]
   },
   "evidence": {
+    "traits.age_max_years": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS species review of desert-willow (Fryer 2022): it may live as long as 100 years."},
     "traits.leaf_area_per_basal_area": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 21 desert willows: 0.079 m² of leaf a cm². Median leaf area over trunk area at breast height of its open-grown street and park trees 20 cm or more through, the trees the broadleaf median (0.167) was taken over."},
     "traits.crown_spread": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 29 desert willows 15 years or older (none older than 25): 0.97. Median crown width over height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees."},
     "traits.crown_base_share": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 29 desert willows 15 years or older (none older than 25): 0.34 (quartiles 0.23 and 0.41). Median height of the crown's base over the tree's height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees, which are often pruned up for clearance."},
