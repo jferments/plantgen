@@ -1287,6 +1287,72 @@ fn instance_count(
     count.ok_or(format!("node {index}'s instancing names no attribute"))
 }
 
+/// Meshes drawn in their own colours, as one glTF file: a node per
+/// `(name, mesh, double_sided)` part, its triangles one primitive with
+/// the mesh's linear RGB colours as `COLOR_0` (alpha dropped) under a
+/// white, rough, non-metallic material, so a viewer multiplies the colours
+/// by white and draws them as they are. Normals are made unit length (+Y
+/// where a mesh has none). Parts with no triangles are left out. Every
+/// array is plain floats, which every glTF reader opens, Blender's among
+/// them.
+#[must_use]
+pub fn coloured_glb(
+    parts: &[(&str, &crate::mesh::Mesh, bool)],
+    generator: &str,
+    extras: Value,
+) -> Vec<u8> {
+    let mut document = Document::new();
+    let mut roots = vec![];
+    for &(name, mesh, double_sided) in parts {
+        if mesh.indices.is_empty() || mesh.positions.is_empty() {
+            continue;
+        }
+        let positions: Vec<f32> = mesh.positions.iter().flatten().copied().collect();
+        let normals: Vec<f32> = (0..mesh.positions.len())
+            .flat_map(|vertex| {
+                let [x, y, z] = mesh.normals.get(vertex).copied().unwrap_or([0.0; 3]);
+                let length = (x * x + y * y + z * z).sqrt();
+                if length > 1e-6 && length.is_finite() {
+                    [x / length, y / length, z / length]
+                } else {
+                    [0.0, 1.0, 0.0]
+                }
+            })
+            .collect();
+        let colours: Vec<f32> = (0..mesh.positions.len())
+            .flat_map(|vertex| {
+                let [r, g, b, _] = mesh.colors.get(vertex).copied().unwrap_or([1.0; 4]);
+                [r, g, b].map(|channel| channel.clamp(0.0, 1.0))
+            })
+            .collect();
+        let material = document.material(json!({
+            "name": name,
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [1, 1, 1, 1],
+                "metallicFactor": 0,
+                "roughnessFactor": 0.9,
+            },
+            "doubleSided": double_sided,
+        }));
+        let primitive = json!({
+            "attributes": {
+                "POSITION": document.attribute(&positions, 3, true),
+                "NORMAL": document.attribute(&normals, 3, false),
+                "COLOR_0": document.attribute(&colours, 3, false),
+            },
+            "indices": document.indices(&mesh.indices),
+            "material": material,
+        });
+        let index = document.mesh(name, vec![primitive]);
+        roots.push(document.node(json!({ "name": name, "mesh": index })));
+    }
+    document.glb(
+        json!({ "version": "2.0", "generator": generator }),
+        &roots,
+        extras,
+    )
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

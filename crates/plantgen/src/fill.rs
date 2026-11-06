@@ -1363,6 +1363,47 @@ struct TileHeader<'a> {
 }
 
 impl TilePlan {
+    /// The crowns of the tile's plants at least `least_height_m` tall, as
+    /// the envelopes that shade a site (`crate::mosses::grow_under`), in
+    /// the frame of a site whose tile has its south-west corner at (x, z)
+    /// `corner` (north −Z, as [`crate::mosses::MossSettings::over_tile`]):
+    /// each prototype's measured crown (base, height, radius, leaf area)
+    /// scaled with its instance and stood on its foot. Climbers are left
+    /// out: their leaves lie flat on their wall, not in a crown round
+    /// their foot. So are plants whose size has not been measured.
+    #[must_use]
+    pub fn crowns(
+        &self,
+        fill: &Fill,
+        corner: [f64; 2],
+        least_height_m: f64,
+    ) -> Vec<crate::conditions::Envelope> {
+        self.instances
+            .iter()
+            .filter_map(|instance| {
+                let index = instance.prototype as usize;
+                if fill.prototypes().get(index)?.key.on_wall {
+                    return None;
+                }
+                let size = fill.size(index)?;
+                let scale = f64::from(instance.scale);
+                let height = size.height * scale;
+                if height < least_height_m || size.leaf_area <= 0.0 {
+                    return None;
+                }
+                let [east, north, up] = instance.position.map(f64::from);
+                let crown = crate::conditions::Crown {
+                    base_m: up + size.crown_base.unwrap_or(0.0) * scale,
+                    top_m: up + height,
+                    radius_m: (size.crown_radius * scale).max(0.05),
+                    leaf_area_m2: size.leaf_area * scale * scale,
+                };
+                // The site's (east, north) of the foot: x = corner x +
+                // east, z = corner z − north, and north is −z.
+                Some(crown.envelope([corner[0] + east, north - corner[1]]))
+            })
+            .collect()
+    }
     /// The prototypes the plan places, each once, in order: what to pass
     /// [`Fill::write_prototypes`] for this tile.
     #[must_use]

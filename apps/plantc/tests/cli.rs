@@ -79,7 +79,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let campanulids = "(clade campanulids: _ranks/clade/campanulids.json)";
     assert!(
         built_in.starts_with(&format!(
-            "Rules, by their home (1046):\n  appearance.organs.*.inflorescence.branch.kind  {flowering}\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
+            "Rules, by their home (1051):\n  appearance.organs.*.inflorescence.branch.kind  {flowering}\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
         )),
         "{built_in}"
     );
@@ -161,15 +161,16 @@ fn rules_and_traits_say_where_they_come_from() {
         assert!(built_in.contains(&line), "{line} in {built_in}");
     }
     // Leaf outlines from shape words, at the kingdom, on four cards; a
-    // compound leaf's word is its leaflets'.
+    // compound leaf's word is its leaflets', and its side leaflets may be
+    // lopsided.
     assert!(
         built_in.contains(
-            "\n  appearance.organs.leaf.shape.leaflet_width on `compound` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n  appearance.organs.leaf.shape.lobe_depth on `compound` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n  appearance.organs.leaf.shape.lobes on `compound` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n  appearance.organs.leaf.shape.outline on `simple` or `sprig` or `compound` or `lobed` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n"
+            "\n  appearance.organs.leaf.shape.leaflet_width on `compound` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n  appearance.organs.leaf.shape.lobe_depth on `compound` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n  appearance.organs.leaf.shape.lobes on `compound` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n  appearance.organs.leaf.shape.oblique on `compound` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n  appearance.organs.leaf.shape.outline on `simple` or `sprig` or `compound` or `lobed` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n"
         ),
         "{built_in}"
     );
     assert!(
-        built_in.contains("General, with no taxonomic home: 154 rules at all plants;"),
+        built_in.contains("General, with no taxonomic home: 159 rules at all plants;"),
         "{built_in}"
     );
     // The maples' program is named for their family, so it is homed.
@@ -200,7 +201,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let library = dir.to_str().unwrap();
     let rules = stdout(&plantc(&["--library", library, "rules"]));
     assert!(
-        rules.starts_with("Rules, by their home (1047):\n"),
+        rules.starts_with("Rules, by their home (1052):\n"),
         "{rules}"
     );
     assert!(

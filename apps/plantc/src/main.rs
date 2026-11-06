@@ -288,22 +288,26 @@ Usage:
       Douglas-fir, 6 m and 0.6 m wide unless given, at level 0.
   plantc moss <site.json> [--years N] [--seed N] [--latitude DEG]
               [--box X0,Y0,Z0,X1,Y1,Z1] [--out COVER.json] [--cover COVER.json]
-              [--render FILE.png [--view VIEW] [--size PIXELS] [--from south|north]
-               [--focus X,Y,Z | --genus GENUS] [--span METRES] [--wet 0..1]
-               [--detail tint|patch|shell|shoots|near] [--capsules yes|no]]
+              [--render FILE.png [--view VIEW] [--size PIXELS] [--from south|north]]
+              [--glb FILE.glb] [--focus X,Y,Z | --genus GENUS] [--span METRES]
+              [--wet 0..1] [--detail tint|patch|shell|shoots|near] [--capsules yes|no]
       Grow mosses over a site's faces (plantgen::mosses): every moss genus
       the library gives a colony_form settles where its light, wetness
       and substrate fit (rain on faces turned up, damp at a wall's foot,
       shade from the sun, mortar and tiles basic, bark and wood acid) and
       spreads year by year, years 30 when left out, within --box (the
-      whole site when left out). --out writes the colonies; --cover reads
+      whole site when left out), under the site's `canopy` of tree crowns
+      (each centre_m [east, north], base_m, top_m, radius_m and density,
+      shade per metre) when it has one. --out writes the colonies; --cover reads
       them instead of growing. --render draws the site and its mosses:
       shells of the colonies' forms, or with --detail shoots every shoot's
       leaves and capsules (near: only within --span of --focus); --wet 1
       just rained on, 0 dry (0.4 when left out); --from north looks from
       the north side. --genus looks at that genus's widest well-grown
       colony instead of --focus; a close render prints the genus of the
-      colony it is centred on, for its caption.
+      colony it is centred on, for its caption. --glb writes the same
+      site and moss as one glTF file (nodes `site` and `moss`, vertex
+      colours, the site's frame: +Y up, -Z north) that Blender opens.
   plantc site <site.json> [--out FILE.png] [--view VIEW] [--size PIXELS]
               [--day N] [--quality draft|standard]
               [--focus X,Y,Z [--span METRES]]
@@ -471,10 +475,11 @@ Usage:
       on every day of the year, passing when they are the months stated
       and warning a month off at an end. --group shows one of the four.
       Exits non-zero on any error.
-  plantc atlas <species|spec.json> --out FILE.png
+  plantc atlas <species|spec.json> --out FILE.png [--organ ORGAN]
       Draw the species' organ card textures (leaves, needles, flowers) in
       their colours, one per organ, side by side, each lower face that
-      differs (an underside colour, sori) beside its upper.
+      differs (an underside colour, sori) beside its upper; with --organ,
+      that organ's card alone (a leaf to set beside photographs).
   plantc ground --out FILE.png [--seed N] [--looks words|litter]
       Draw the nine plant-made ground looks (needles, leaves, thatch,
       twigs, moss, sphagnum, grass, tussock and cushion), seven to a row,
@@ -3334,7 +3339,7 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
         args,
         &[
             "years", "seed", "latitude", "box", "out", "cover", "render", "view", "size", "from",
-            "focus", "span", "wet", "detail", "capsules", "genus",
+            "focus", "span", "wet", "detail", "capsules", "genus", "glb",
         ],
     )?;
     let given = options.one_positional("a site document")?;
@@ -3385,7 +3390,14 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
             settings.low = [values[0], values[1], values[2]];
             settings.high = [values[3], values[4], values[5]];
         }
-        mosses::grow(&site, &kinds, &settings)
+        // A site may stand under trees: crowns as upright cylinders of
+        // foliage, `centre_m` (east, north) = (x, -z) of the site's origin.
+        let canopy: Vec<plantgen::conditions::Envelope> = match document.get("canopy") {
+            Some(value) => serde_json::from_value(value.clone())
+                .map_err(|error| format!("invalid canopy: {error}"))?,
+            None => Vec::new(),
+        };
+        mosses::grow_under(&site, &kinds, &settings, &canopy)
     };
     out!(
         "{} colonies after {} years ({:.1} s)",
@@ -3401,9 +3413,11 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
             .map_err(|error| format!("cannot write {path}: {error}"))?;
         out!("wrote {path}");
     }
-    let Some(render) = options.flags.get("render") else {
+    let render = options.flags.get("render");
+    let glb = options.flags.get("glb");
+    if render.is_none() && glb.is_none() {
         return Ok(());
-    };
+    }
     let mut focus = numbers("focus", 3)?.map(|v| Vec3::new(v[0], v[1], v[2]));
     // `--genus G`: look at that genus's showpiece colony, so a view named
     // for a genus shows it and no other.
@@ -3481,6 +3495,30 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
         let step = (across / pixels * 3.0).max(0.005);
         ground = cover.tint(draw.hydration).paint(&ground, step, low, high);
     }
+    // `--glb FILE`: the site and its moss as drawn, in the site's own
+    // frame (+Y up, -Z north), for Blender and other glTF readers.
+    if let Some(path) = glb {
+        let detail_name = options.flags.get("detail").map_or("near", String::as_str);
+        let file = plantgen::gltf::coloured_glb(
+            &[("site", &ground, false), ("moss", &moss, true)],
+            "PlantGen moss",
+            serde_json::json!({
+                "years": cover.settings.years,
+                "hydration": draw.hydration,
+                "detail": detail_name,
+            }),
+        );
+        fs::write(path, &file).map_err(|error| format!("cannot write {path}: {error}"))?;
+        out!(
+            "wrote {path}: {} triangles of moss, {} of site ({:.1} MiB)",
+            moss.triangle_count(),
+            ground.triangle_count(),
+            f64::from(u32::try_from(file.len()).unwrap_or(u32::MAX)) / 1_048_576.0
+        );
+    }
+    let Some(render) = render else {
+        return Ok(());
+    };
     // Seen from the north: the scene turned half round about the focus.
     let north = match options.flags.get("from").map(String::as_str) {
         None | Some("south") => false,
@@ -4109,8 +4147,11 @@ fn cracks_command(args: &[String]) -> Result<(), Failure> {
 /// A site material table's entry `name`: a material's name, or an object
 /// with the material (`as`), a thin part's thickness (`thin_m`), whether a
 /// climber may hold to it (`climb`), whether it is kept clear of plants
-/// (`clear`: what grows onto it is cut back) and the colour to draw it in
-/// (`colour`, sRGB 0 to 1).
+/// (`clear`: what grows onto it is cut back), the colour to draw it in
+/// (`colour`, sRGB 0 to 1), soil gathered on it (`soil_m`) and, where it
+/// differs from its material's, how acid its face is for mosses
+/// (`reaction`: acid, neutral or basic; asphalt shingles are `built`
+/// and neutral).
 fn site_surface(name: &str, given: &serde_json::Value) -> Result<plantgen::site::Surface, String> {
     use plantgen::site::{Surface, material_named};
     if let Some(material) = given.as_str() {
@@ -4120,9 +4161,13 @@ fn site_surface(name: &str, given: &serde_json::Value) -> Result<plantgen::site:
         .as_object()
         .ok_or_else(|| format!("site material `{name}` must be a name or an object"))?;
     for key in table.keys() {
-        if !["as", "thin_m", "climb", "clear", "colour", "soil_m"].contains(&key.as_str()) {
+        if ![
+            "as", "thin_m", "climb", "clear", "colour", "soil_m", "reaction",
+        ]
+        .contains(&key.as_str())
+        {
             return Err(format!(
-                "site material `{name}`: unknown field `{key}`; use as, thin_m, climb, clear, colour, soil_m"
+                "site material `{name}`: unknown field `{key}`; use as, thin_m, climb, clear, colour, soil_m, reaction"
             ));
         }
     }
@@ -4147,6 +4192,18 @@ fn site_surface(name: &str, given: &serde_json::Value) -> Result<plantgen::site:
             .as_f64()
             .filter(|t| t.is_finite() && *t >= 0.0)
             .ok_or_else(|| format!("site material `{name}`: soil_m must be metres, 0 or more"))?;
+    }
+    if let Some(reaction) = table.get("reaction") {
+        surface.reaction = Some(match reaction.as_str() {
+            Some("acid") => -1,
+            Some("neutral") => 0,
+            Some("basic") => 1,
+            _ => {
+                return Err(format!(
+                    "site material `{name}`: reaction must be acid, neutral or basic"
+                ));
+            }
+        });
     }
     if let Some(clear) = table.get("clear") {
         surface.clear = clear
@@ -5644,7 +5701,7 @@ fn lineup_command(args: &[String]) -> Result<(), Failure> {
 }
 
 fn atlas_command(args: &[String]) -> Result<(), Failure> {
-    let options = Options::parse(args, &["out", "program"])?;
+    let options = Options::parse(args, &["out", "program", "organ"])?;
     let program = options.program()?;
     let spec = load_spec(options.one_positional("a species")?)?;
     let out = options.flags.get("out").ok_or("missing `--out FILE.png`")?;
@@ -5653,7 +5710,20 @@ fn atlas_command(args: &[String]) -> Result<(), Failure> {
         None => spec.program(),
     }
     .map_err(|error| error.to_string())?;
-    let looks = spec.appearance.looks(program.organs());
+    let mut looks = spec.appearance.looks(program.organs());
+    let mut shading = spec::organ_areas(&program, &params).map_err(|error| error.to_string())?;
+    // One organ's card alone (`--organ leaf`): for comparing a drawn leaf
+    // with photographs of the species' leaves.
+    if let Some(organ) = options.flags.get("organ") {
+        let keep: Vec<bool> = looks.iter().map(|look| look.organ == *organ).collect();
+        let mut kept = keep.iter();
+        looks.retain(|_| *kept.next().unwrap_or(&false));
+        let mut kept = keep.iter();
+        shading.retain(|_| *kept.next().unwrap_or(&false));
+        if looks.is_empty() {
+            return Err(format!("the program draws no organ `{organ}`").into());
+        }
+    }
     let bodies = spec.appearance.body_looks(program.bodies());
     let named: Vec<(&str, &BodyLook)> = program.bodies().zip(&bodies).collect();
     let templates = Templates::for_plant(&looks, &named);
@@ -5661,7 +5731,6 @@ fn atlas_command(args: &[String]) -> Result<(), Failure> {
     let png = raster::encode_png(width, height, &pixels)
         .map_err(|error| format!("cannot encode PNG: {error}"))?;
     fs::write(out, png).map_err(|error| format!("cannot write {out}: {error}"))?;
-    let shading = spec::organ_areas(&program, &params).map_err(|error| error.to_string())?;
     out!(
         "wrote {out}: {width}x{height}, one card texture per organ, left to right,\n\
          its lower face beside it where the two are unlike.\n\
@@ -6762,7 +6831,15 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
             let field = field_site
                 .as_ref()
                 .ok_or("`--moss` grows moss over a site: give `--field SITE.json`")?;
-            let cover = tile_moss(field, tile_m, years, options.number("seed")?.unwrap_or(1))?;
+            // The tile's trees shade the walls and roofs they stand over.
+            let canopy = plan.crowns(&fill, field.corner, MOSS_SHADE_LEAST_M);
+            let cover = tile_moss(
+                field,
+                tile_m,
+                years,
+                options.number("seed")?.unwrap_or(1),
+                &canopy,
+            )?;
             let path = out
                 .join("tiles")
                 .join(format!("{}_{}.moss.json", tile.x, tile.y));
@@ -7346,23 +7423,29 @@ fn site_moss_kinds(
     Ok(kinds)
 }
 
+/// The least height of a fill plant whose crown shades the moss under it,
+/// metres: trees and big shrubs over roofs and walls, not the herbs.
+const MOSS_SHADE_LEAST_M: f64 = 2.0;
+
 /// The mosses `years` grow over the tile of `field` (`plantc fill
-/// --moss YEARS`): the genera its site names, or every genus of the
-/// library, from `seed`.
+/// --moss YEARS`) under the crowns of `canopy`: the genera its site
+/// names, or every genus of the library, from `seed`.
 fn tile_moss(
     field: &FieldSite,
     tile_m: f64,
     years: u32,
     seed: u64,
+    canopy: &[plantgen::conditions::Envelope],
 ) -> Result<plantgen::mosses::MossCover, Failure> {
     use plantgen::mosses::{self, MossSettings};
     let started = Instant::now();
     let kinds = site_moss_kinds(&field.document)?;
     let settings = MossSettings::over_tile(field.corner, tile_m, years, seed);
-    let cover = mosses::grow(&field.mesh, &kinds, &settings);
+    let cover = mosses::grow_under(&field.mesh, &kinds, &settings, canopy);
     out!(
-        "  moss: {} colonies after {years} years in {:.1} s",
+        "  moss: {} colonies after {years} years under {} crowns in {:.1} s",
         cover.colonies.len(),
+        canopy.len(),
         started.elapsed().as_secs_f64()
     );
     for (genus, count, area) in cover.census() {
