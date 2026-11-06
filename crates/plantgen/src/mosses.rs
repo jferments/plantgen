@@ -431,9 +431,6 @@ impl MossKind {
         })
     }
 
-    /// Across a shoot's leaves from tip to tip, moist: twice a leaf's
-    /// reach out from the stem at the angle it stands at.
-    #[must_use]
     /// The blade's width at `s` along it (0 base, 1 tip), 0 to 1 of its
     /// widest, from [`MossKind::outline`] (lanceolate when empty).
     #[must_use]
@@ -469,6 +466,9 @@ impl MossKind {
             .clamp(0.15, 0.85)
     }
 
+    /// Across a shoot's leaves from tip to tip, moist: twice a leaf's
+    /// reach out from the stem at the angle it stands at.
+    #[must_use]
     pub fn shoot_width_m(&self) -> f64 {
         (2.0 * self.leaf_length_m * math::sin(math::radians(self.moist_angle_deg()))
             + self.leaf_width_m * 0.5)
