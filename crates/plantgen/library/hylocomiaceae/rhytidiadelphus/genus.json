@@ -1,0 +1,95 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Rhytidiadelphus",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.03,
+      "max": 0.12,
+      "typical": 0.06
+    },
+    "leaf_length_m": {
+      "min": 0.0017,
+      "max": 0.0036,
+      "typical": 0.0025
+    },
+    "leaf_width_m": {
+      "min": 0.0004,
+      "max": 0.001,
+      "typical": 0.0006
+    },
+    "hair_point_length_m": 0,
+    "leaf_colour": [
+      96,
+      101,
+      47
+    ],
+    "leaf_dry_posture": "falcate",
+    "capsule_length_m": {
+      "min": 0.0013,
+      "max": 0.0025
+    },
+    "capsule_posture": "horizontal",
+    "capsule_shape": "ovoid",
+    "operculum_form": "conic",
+    "capsule_share": 0.01,
+    "substrates": [
+      "wood",
+      "soil",
+      "rock",
+      "bark"
+    ],
+    "light": [
+      "shade",
+      "part"
+    ],
+    "moisture": [
+      "wet",
+      "mesic"
+    ],
+    "desiccation_tolerance": "low",
+    "colony_spread_m_per_year": 0.03
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Rhytidiadelphus (Rohrer; efloras, read 2026-11-06): stems creeping to ascending or erect, 2-8 mm wide across the leafy stem, irregularly and remotely branched to subpinnate; stem leaves erect-spreading to squarrose or falcate-secund, 2.1-4.9 mm; capsule horizontal; operculum conic; five species. Typical values are R. loreus (same volume, p. 332): plants to 15 cm, soft; branches to 4 cm; branch leaves narrowly lanceolate, 1.7-3.6 x 0.4-1 mm; capsule ovoid, 1.3-2.5 mm; especially common on logs, but also covering soil, humus, rock and the base of trees, on the floor of moist coniferous forests, abundant near the coast. (R. squarrosus, of lawns and open grassy ground, is the genus's open-ground species.)"
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The depth of a soft weft of shoots to 15 cm (FNA). Estimate."
+    },
+    "traits.light": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Rhytidiadelphus loreus (efloras, read 2026-11-06): floor of moist coniferous forests."
+    },
+    "traits.desiccation_tolerance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A moss of moist forest floors near the coast, rare elsewhere (FNA): little tolerance of drying out. Estimate."
+    },
+    "traits.capsule_share": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Dioicous like the family; capsules occasional. Estimate."
+    },
+    "traits.colony_spread_m_per_year": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Shoots to 15 cm with branches to 4 cm, between Hylocomium's one frond a year and Kindbergia's long plumose stems. Estimate."
+    },
+    "traits.leaf_colour": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Not measured yet: pale to yellowish green, so r/g 0.90, b/g 0.22; the brightness is a green reflectance of 0.13, as the other moss genera's colours take it (a lit leaf's, just above the 0.05-0.11 moss canopies reflect in the visible; see Hypnum's note). To measure with imagekit like the other genera."
+    },
+    "traits.leaf_dry_posture": {
+      "evidence": "Authored",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Rhytidiadelphus loreus (efloras, read 2026-11-06): stem leaves erect-spreading, often falcate-secund or recurved distally. FNA gives no dry posture; falcate is the nearest value."
+    }
+  }
+}

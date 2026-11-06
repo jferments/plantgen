@@ -125,6 +125,7 @@ fn run() -> Result<(), Failure> {
         "cracks" => cracks_command(&args),
         "field" => field_command(&args),
         "moss" => moss_command(&args),
+        "logs" => logs_command(&args),
         "render" => render_command(&args),
         "sheet" => sheet_command(&args),
         "tiers" => tiers_command(&args),
@@ -278,6 +279,13 @@ Usage:
       seeds), each species' niche and lifespan, and a site's moisture,
       heat_load, elevation_m and slope_deg (plantgen::development), with
       tile_m, seed, repeat, cover, scale, overlap and herb_radius_m.
+  plantc logs [--species ID] --render FILE.png [--length M] [--width M]
+              [--level 0-3] [--view VIEW] [--size PIXELS] [--seed N]
+      Draw five logs of a species side by side, decay classes I (farthest)
+      to V (nearest; plantgen::deadwood): barked, raised on branch stubs;
+      barked, sagging; traces of bark on faded wood; bare, brown and
+      oval, under moss; red-brown, flattened, sunk and half buried.
+      Douglas-fir, 6 m and 0.6 m wide unless given, at level 0.
   plantc moss <site.json> [--years N] [--seed N] [--latitude DEG]
               [--box X0,Y0,Z0,X1,Y1,Z1] [--out COVER.json] [--cover COVER.json]
               [--render FILE.png [--view VIEW] [--size PIXELS] [--from south|north]]
@@ -530,13 +538,14 @@ Usage:
               [--field SITE.json [--corner X,Z] [--cracks YEARS]
                [--moss YEARS]
                [--render PNG [--view V] [--size N] [--level N]
-                [--focus X,Y,Z --span M] [--wet W]]]
+                [--focus X,Y,Z --span M] [--cut M] [--wet W]]]
       Fill one map tile with plant communities (each a JSON file: an id
       and members, each a species, optionally the layer it keeps to and
       its abundance; origin planted for a yard's or street's kept
       trees) as the library API's Fill does, and write
-      DIR/tiles/X_Y.json (header, ground cover and far canopy per stand
-      cell, stand numbers) and DIR/tiles/X_Y.bin (32-byte instances;
+      DIR/tiles/X_Y.json (header, ground cover, forest floor and far
+      canopy per stand cell, the logs on its floor, stand numbers) and
+      DIR/tiles/X_Y.bin (32-byte instances;
       docs/LIBRARY-API.md). Each community's stand is developed at each of
       --ages years since disturbance (default 10,20,40,80,160,320,640);
       a stand cell takes the nearest. Without --stands (a StandMap:
@@ -555,8 +564,9 @@ Usage:
       that is not there yet; all exports every prototype; none only the
       tile. It prints the stand's numbers, each species', and each
       layer seen from above as inventory plots measure it (upper, middle
-      and lower trees by thirds of the tallest tree, shrubs, herbs).
-      --herbs no leaves herbs to the ground cover. --edges no grows
+      and lower trees by thirds of the tallest tree, shrubs, herbs), then
+      its forest floor: litter, moss, logs (a hectare, and by decay
+      class) and herbs. --herbs no leaves herbs to the ground cover. --edges no grows
       a stand's first row beside a road or clearing as inside the stand,
       not as an edge facing the opening. --site gives the
       flat tile's moisture, heat load, elevation (m) and slope (degrees)
@@ -573,8 +583,10 @@ Usage:
       (the genera the mosses list of the site names, or the library's;
       docs/sites/MOSS.md) and writes DIR/tiles/X_Y.moss.json.
       --render draws the filled tile on its mesh, each prototype at
-      --level (1 unless given), and its moss, as wet as --wet (0 dry to 1
-      just rained on, 0.4 unless given). --glb LEVEL (0 nearest to 3 farthest)
+      --level (1 unless given), with its logs and its forest floor's
+      litter and moss, and its --moss moss, as wet as --wet (0 dry to 1
+      just rained on, 0.4 unless given); --cut M leaves out all above M
+      metres, to show the floor. --glb LEVEL (0 nearest to 3 farthest)
       also writes DIR/tiles/X_Y.glb: the whole tile as one glTF file,
       each prototype's level LEVEL once and every plant an instance of it
       (EXT_mesh_gpu_instancing), which Blender, Godot, Unity and three.js
@@ -3230,6 +3242,98 @@ fn site_size(spec: &PlantSpec, age: f64) -> (f64, f64) {
 
 /// `plantc moss`: grow mosses over a site and draw them.
 #[allow(clippy::too_many_lines)]
+fn logs_command(args: &[String]) -> Result<(), Failure> {
+    let options = Options::parse(
+        args,
+        &[
+            "species", "render", "length", "width", "level", "view", "size", "seed",
+        ],
+    )?;
+    if !options.positional.is_empty() {
+        return Err("`logs` takes its species as `--species ID`".into());
+    }
+    let png = options
+        .flags
+        .get("render")
+        .ok_or("missing `--render FILE.png`")?;
+    let species = options
+        .flags
+        .get("species")
+        .map_or("pseudotsuga-menziesii", String::as_str);
+    let spec = library()
+        .spec(species)
+        .map_err(|error| format!("{species}: {error}"))?;
+    let length: f64 = options.number("length")?.unwrap_or(6.0);
+    let width: f64 = options.number("width")?.unwrap_or(0.6);
+    let level: usize = options.number("level")?.unwrap_or(0);
+    let seed: u64 = options.number("seed")?.unwrap_or(1);
+    let pixels: usize = options.number("size")?.unwrap_or(1600);
+    let gap = 2.2 * width;
+    let mut scene = PlantMesh::default();
+    for decay in 1..=5_u8 {
+        let shape = plantgen::deadwood::Shape {
+            length_m: length,
+            butt_m: width,
+            top_m: (width - plantgen::deadwood::TAPER * length).max(0.45 * width),
+            decay,
+            seed: seed.wrapping_mul(31).wrapping_add(u64::from(decay)),
+        };
+        let drawn = plantgen::deadwood::draw(&shape, Some(&spec.appearance), level);
+        let placed = api::Log {
+            species: species.to_string(),
+            position: [0.0, 0.0, 0.0],
+            yaw: 0.0,
+            pitch: 0.0,
+            shape,
+        };
+        let offset = Vec3::new(0.0, 0.0, (f64::from(decay) - 3.0) * gap);
+        scene = on_host(scene, placed_log(drawn, &placed, [0.0, 0.0], offset), 0);
+    }
+    let half = 0.5 * length + 1.0;
+    let deep = 2.5 * gap + 1.0;
+    let mut ground = mesh::Mesh::default();
+    #[allow(clippy::cast_possible_truncation)]
+    let litter =
+        plantgen::deadwood::LITTER_SRGB.map(|byte| plantgen::texture::srgb_to_linear(byte) as f32);
+    for (x, z) in [(-half, -deep), (half, -deep), (half, deep), (-half, deep)] {
+        ground.push(mesh::Vertex::plain(Vec3::new(x, 0.0, z), Vec3::Y, litter));
+    }
+    ground.indices.extend([0, 2, 1, 0, 3, 2]);
+    let templates = Templates::for_plant(&[], &[]).with_bark(spec.appearance.bark_params());
+    let view = match options.flags.get("view") {
+        Some(name) => View::from_name(name).ok_or_else(|| format!("unknown view `{name}`"))?,
+        None => View::ThreeQuarter,
+    };
+    let image = preview::render_on_site(
+        &scene,
+        &[(&ground, raster::Material::Opaque)],
+        &templates,
+        &PreviewOptions {
+            width: pixels,
+            height: pixels * 3 / 4,
+            view,
+            supersample: 2,
+            figure: false,
+            frame_height: None,
+            frame_reach: Some(half.max(deep)),
+            focus: None,
+            fit_plant: false,
+        },
+    );
+    let bytes = raster::encode_png(
+        image.width,
+        image.height,
+        &image.to_srgb8(Some(preview::SKY)),
+    )
+    .map_err(|error| format!("cannot encode PNG: {error}"))?;
+    fs::write(png, bytes).map_err(|error| format!("cannot write {png}: {error}"))?;
+    out!(
+        "wrote {png}: five {species} logs, decay classes I-V, {} triangles at level {level}",
+        scene.triangle_count()
+    );
+    Ok(())
+}
+
 fn moss_command(args: &[String]) -> Result<(), Failure> {
     use plantgen::mosses::{self, Detail, DrawOptions, MossCover, MossSettings};
     let options = Options::parse(
@@ -6498,6 +6602,7 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
             "level",
             "focus",
             "span",
+            "cut",
             "glb",
             "glb-cells",
             "cell-m",
@@ -6635,6 +6740,42 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
         stats.leaf_area_index,
         stats.edge_trees_per_ha
     );
+    let [litter, moss, wood, herbs] = stats.floor;
+    let mut decay = [0_usize; 5];
+    for log in &plan.logs {
+        decay[usize::from(log.shape.decay.clamp(1, 5) - 1)] += 1;
+    }
+    out!(
+        "  forest floor: litter {:.0}%, moss {:.0}%, logs {:.1}% ({:.0}/ha; decay classes I-V {}), herbs {:.0}%",
+        100.0 * litter,
+        100.0 * moss,
+        100.0 * wood,
+        stats.logs_per_ha,
+        decay.map(|n| n.to_string()).join("/"),
+        100.0 * herbs
+    );
+    // The floor's moss genera, each its share of all the tile's moss.
+    let mut genera = vec![0.0_f64; plan.floor_mosses.len()];
+    for cover in &plan.cover {
+        for found in cover.floor.mosses.iter().flatten() {
+            if let Some(sum) = genera.get_mut(usize::from(found.genus)) {
+                *sum += f64::from(cover.floor.moss) * f64::from(found.share);
+            }
+        }
+    }
+    let all: f64 = genera.iter().sum();
+    if all > 0.0 {
+        let mut named: Vec<(&String, f64)> = plan.floor_mosses.iter().zip(genera).collect();
+        named.sort_by(|a, b| b.1.total_cmp(&a.1));
+        out!(
+            "  floor mosses: {}",
+            named
+                .iter()
+                .map(|(genus, sum)| format!("{genus} {:.0}%", 100.0 * sum / all))
+                .collect::<Vec<_>>()
+                .join(", ")
+        );
+    }
     // By species: trees 5 cm or more at breast height, their mean and
     // tallest height, and every plant.
     let area_ha = tile_m * tile_m / 10_000.0;
@@ -7006,6 +7147,169 @@ fn field_site(
 /// moved by `offset`: turned by its rotation (z up, x east, y north),
 /// scaled, and its foot set at its position; a climber's wood and cards
 /// past its wall's top and ends (`extra`, [`api::WallClip`]) left out.
+/// A log drawn in its own frame ([`plantgen::deadwood::Shape`]) placed
+/// as the tile lays it: turned to its yaw and tilted to its pitch about
+/// the floor under its middle, in the render's frame (+x east, +y up, -z
+/// north).
+/// Leave out of `scene` every triangle wholly above `y`, and every card
+/// and spine tuft whose foot is.
+fn cut_above(scene: &mut PlantMesh, y: f32) {
+    let positions = &scene.wood.positions;
+    let kept: Vec<u32> = scene
+        .wood
+        .indices
+        .chunks_exact(3)
+        .filter(|triangle| triangle.iter().any(|&k| positions[k as usize][1] <= y))
+        .flatten()
+        .copied()
+        .collect();
+    scene.wood.indices = kept;
+    scene.cards.retain(|card| card.base[1] <= y);
+    scene.tufts.retain(|tuft| tuft.position[1] <= y);
+    scene.sites.clear();
+}
+
+fn placed_log(log: mesh::Mesh, placed: &api::Log, corner: [f64; 2], offset: Vec3) -> PlantMesh {
+    let (yaw, pitch) = (f64::from(placed.yaw), f64::from(placed.pitch));
+    let along = Vec3::new(yaw.cos(), 0.0, -yaw.sin());
+    let across = Vec3::new(yaw.sin(), 0.0, yaw.cos());
+    let (sp, cp) = (pitch.sin(), pitch.cos());
+    let foot = Vec3::new(
+        corner[0] + f64::from(placed.position[0]),
+        f64::from(placed.position[2]),
+        corner[1] - f64::from(placed.position[1]),
+    ) + offset;
+    let turn = |v: [f32; 3]| {
+        let (x, y, z) = (f64::from(v[0]), f64::from(v[1]), f64::from(v[2]));
+        let (x, y) = (x * cp - y * sp, x * sp + y * cp);
+        along * x + Vec3::Y * y + across * z
+    };
+    let mut wood = log;
+    for position in &mut wood.positions {
+        *position = (turn(*position) + foot).to_f32();
+    }
+    for normal in &mut wood.normals {
+        *normal = turn(*normal).to_f32();
+    }
+    PlantMesh {
+        wood,
+        ..PlantMesh::default()
+    }
+}
+
+/// The tile's forest floor drawn over its ground for a render: a grid of
+/// half-metre squares a centimetre above it, each corner moss, litter or
+/// bare soil by its stand cell's shares ([`api::Floor`]), in patches a few
+/// metres across.
+fn floor_mesh(plan: &api::TilePlan, field: &FieldSite, offset: Vec3) -> mesh::Mesh {
+    const STEP_M: f64 = 0.5;
+    let srgb = |c: [u8; 3]| -> [f32; 3] {
+        #[allow(clippy::cast_possible_truncation)]
+        c.map(|byte| plantgen::texture::srgb_to_linear(byte) as f32)
+    };
+    let (moss, litter, soil) = (
+        plantgen::looks::Moss::default().colour,
+        srgb(plantgen::deadwood::LITTER_SRGB),
+        srgb([122, 104, 82]),
+    );
+    // Each floor moss genus's colour from afar, as its colonies draw.
+    let kinds = plantgen::mosses::kinds(Library::builtin()).unwrap_or_default();
+    let genus_colour: Vec<[f32; 3]> = plan
+        .floor_mosses
+        .iter()
+        .map(|genus| {
+            kinds
+                .iter()
+                .find(|kind| &kind.genus == genus)
+                .map_or(moss, plantgen::mosses::MossKind::far_colour)
+        })
+        .collect();
+    let tile_m = plan.tile_m;
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+    let steps = (tile_m / STEP_M).round() as usize;
+    // Smooth patches: two octaves of value noise, metres.
+    let noise = |x: f64, y: f64, salt: u64| -> f64 {
+        let octave = |scale: f64, salt: u64| {
+            let (fx, fy) = (x / scale, y / scale);
+            let (ix, iy) = (fx.floor(), fy.floor());
+            let (tx, ty) = (fx - ix, fy - iy);
+            #[allow(clippy::cast_possible_truncation)]
+            let at = |dx: f64, dy: f64| {
+                plantgen::rng::unit(plantgen::rng::hash_words(&[
+                    salt,
+                    (ix + dx) as i64 as u64,
+                    (iy + dy) as i64 as u64,
+                ]))
+            };
+            let (sx, sy) = (tx * tx * (3.0 - 2.0 * tx), ty * ty * (3.0 - 2.0 * ty));
+            let top = at(0.0, 0.0) + (at(1.0, 0.0) - at(0.0, 0.0)) * sx;
+            let bottom = at(0.0, 1.0) + (at(1.0, 1.0) - at(0.0, 1.0)) * sx;
+            top + (bottom - top) * sy
+        };
+        0.65 * octave(3.0, salt) + 0.35 * octave(0.9, salt + 1)
+    };
+    let mut out = mesh::Mesh::default();
+    let row = steps + 1;
+    for j in 0..=steps {
+        for i in 0..=steps {
+            #[allow(clippy::cast_precision_loss)]
+            let (east, north) = (
+                (i as f64 * STEP_M).min(tile_m),
+                (j as f64 * STEP_M).min(tile_m),
+            );
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            let cell = {
+                let col = ((east / plan.cell_m) as usize).min(plan.cols - 1);
+                let r = ((north / plan.cell_m) as usize).min(plan.cols - 1);
+                r * plan.cols + col
+            };
+            let floor = plan
+                .cover
+                .get(cell)
+                .map(|cover| cover.floor)
+                .unwrap_or_default();
+            let (m, l) = (f64::from(floor.moss), f64::from(floor.litter));
+            let surface = (1.0 - f64::from(floor.wood)).max(1e-6);
+            // Moss where the patch noise falls under its share of the
+            // floor logs leave, litter over the rest as far as it reaches.
+            let n = noise(east, north, 0x0f10);
+            let colour = if n < m / surface {
+                // Which genus: patches of each by its share.
+                let mut pick = noise(east, north, 0x0f20);
+                let mut colour = moss;
+                for found in floor.mosses.iter().flatten() {
+                    colour = genus_colour
+                        .get(usize::from(found.genus))
+                        .copied()
+                        .unwrap_or(moss);
+                    pick -= f64::from(found.share);
+                    if pick < 0.0 {
+                        break;
+                    }
+                }
+                colour
+            } else if n < (m + l) / surface {
+                litter
+            } else {
+                soil
+            };
+            let up = field.site.height_at(east, north) + 0.01;
+            let position = Vec3::new(field.corner[0] + east, up, field.corner[1] - north) + offset;
+            out.push(mesh::Vertex::plain(position, Vec3::Y, colour));
+        }
+    }
+    for j in 0..steps {
+        for i in 0..steps {
+            #[allow(clippy::cast_possible_truncation)]
+            let a = (j * row + i) as u32;
+            #[allow(clippy::cast_possible_truncation)]
+            let b = a + row as u32;
+            out.indices.extend([a, a + 1, b, a + 1, b + 1, b]);
+        }
+    }
+    out
+}
+
 fn placed_instance(
     plant: &PlantMesh,
     instance: &api::Instance,
@@ -7209,12 +7513,34 @@ fn render_fill(
         let placed = placed_instance(plant, instance, climber, field.corner, offset);
         scene = on_host(scene, placed, 0);
     }
+    // The logs, each drawn at the level, its bark its species'.
+    let mut appearances: BTreeMap<String, Option<spec::Appearance>> = BTreeMap::new();
+    for log in &plan.logs {
+        let appearance = appearances
+            .entry(log.species.clone())
+            .or_insert_with(|| {
+                Library::builtin()
+                    .spec(&log.species)
+                    .ok()
+                    .map(|spec| spec.appearance)
+            })
+            .as_ref();
+        // Logs are cheap: never coarser than level 1.
+        let drawn = plantgen::deadwood::draw(&log.shape, appearance, level.min(1));
+        scene = on_host(scene, placed_log(drawn, log, field.corner, offset), 0);
+    }
+    // `--cut M`: leave out everything more than M metres above the tile's
+    // middle, so the forest floor shows from above.
+    if let Some(cut) = options.number::<f32>("cut")? {
+        cut_above(&mut scene, cut);
+    }
     let half = 0.5 * tile_m;
     let ground = field.mesh.drawn(
         Vec3::new(field.corner[0], -1.0e9, field.corner[1] - tile_m),
         Vec3::new(field.corner[0] + tile_m, 1.0e9, field.corner[1]),
         offset,
     );
+    let floor = floor_mesh(plan, field, offset);
     let templates = Templates::for_plant(&all_looks, &[]).with_bark(bark);
     let view = match options.flags.get("view") {
         Some(name) => View::from_name(name).ok_or_else(|| format!("unknown view `{name}`"))?,
@@ -7265,6 +7591,7 @@ fn render_fill(
         &scene,
         &[
             (&ground, raster::Material::Opaque),
+            (&floor, raster::Material::Opaque),
             (&moss, raster::Material::Opaque),
         ],
         &templates,

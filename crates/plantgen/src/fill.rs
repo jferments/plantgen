@@ -42,8 +42,11 @@ use crate::stand_tile;
 /// tile JSON beside it.
 ///
 /// 3: a climber's `extra` is its [`WallClip`] (its wall's top and both
-/// ends), no longer its wall's top alone in decimetres.
-pub const INSTANCE_SCHEMA: u32 = 3;
+/// ends), no longer its wall's top alone in decimetres. 4: the tile JSON
+/// gives each cell's forest floor (`cover[].floor`, [`Floor`], with its
+/// moss genera, `mosses`, by their index in `floor_mosses`) and the tile's
+/// logs (`logs`, [`Log`]).
+pub const INSTANCE_SCHEMA: u32 = 4;
 
 /// Bytes per packed instance.
 pub const INSTANCE_BYTES: usize = 32;
@@ -1154,10 +1157,84 @@ pub enum CoverKind {
 
 /// One stand cell's ground cover.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct Cover {
+    /// What covers most of it ([`Self::floor`] says each share).
     pub kind: CoverKind,
     /// 0 to 1.
     pub fraction: f32,
+    /// The share of its ground under each cover.
+    #[serde(default)]
+    pub floor: Floor,
+}
+
+impl Cover {
+    /// A cell's cover of one kind, with no shares told apart.
+    #[must_use]
+    pub fn of(kind: CoverKind, fraction: f32) -> Self {
+        Self {
+            kind,
+            fraction,
+            floor: Floor::default(),
+        }
+    }
+}
+
+/// What lies on a stand cell's forest floor, each a share of its ground,
+/// 0 to 1: litter, moss and down wood lie side by side (together at most
+/// 1, the rest bare soil); herbs stand over them, so their share overlaps
+/// the others'. On a forest floor beside Olympia litter covers most of the
+/// ground (75-92% at Capitol Forest, 65 years), forest-floor mosses 14.5%
+/// (1-53% by plot) and logs 6% (Evans, Halpern and McKenzie 2012, The
+/// Bryologist 115: 278-294); in the Puget Trough's dense 55-year stands
+/// mosses covered 59% (Thysell and Carey 2001, PNW-GTR-488).
+#[derive(Debug, Clone, Copy, PartialEq, Default, Serialize, Deserialize)]
+pub struct Floor {
+    pub litter: f32,
+    pub moss: f32,
+    /// Under logs ([`TilePlan::logs`]) seen from above.
+    pub wood: f32,
+    pub herb: f32,
+    /// The moss genera of its [`Self::moss`], largest share first, at most
+    /// three ([`development::floor_mosses`]); left out of the JSON where
+    /// it has no moss.
+    #[serde(default, skip_serializing_if = "no_mosses")]
+    pub mosses: [Option<FloorMoss>; 3],
+}
+
+/// One moss genus of a cell's forest floor.
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+pub struct FloorMoss {
+    /// The genus, as its index in [`TilePlan::floor_mosses`].
+    pub genus: u16,
+    /// Its share of the cell's moss, 0 to 1.
+    pub share: f32,
+}
+
+#[allow(clippy::trivially_copy_pass_by_ref)]
+fn no_mosses(mosses: &[Option<FloorMoss>; 3]) -> bool {
+    mosses.iter().all(Option::is_none)
+}
+
+/// One log on a tile's forest floor ([`crate::deadwood`]), for a host to
+/// draw with its own meshes or [`crate::deadwood::draw`]'s.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Log {
+    /// The species it fell from, whose bark it keeps while it has bark.
+    pub species: String,
+    /// The forest floor under the middle of its axis: east, north and up,
+    /// metres from the tile's south-west corner at height 0, as an
+    /// [`Instance`]'s position.
+    pub position: [f32; 3],
+    /// The direction its axis runs from its large end to its small end,
+    /// radians anticlockwise from east.
+    pub yaw: f32,
+    /// How far its small end rises above its large end along the ground,
+    /// radians.
+    pub pitch: f32,
+    /// Its shape in its own frame: length, both ends' widths, decay class
+    /// and seed ([`crate::deadwood::Shape`]).
+    pub shape: crate::deadwood::Shape,
 }
 
 /// One stand cell of the far canopy.
@@ -1195,6 +1272,13 @@ pub struct TileStats {
     /// ([`FillSettings::edges`]), per hectare.
     #[serde(default)]
     pub edge_trees_per_ha: f64,
+    /// Logs on the forest floor ([`TilePlan::logs`]), per hectare.
+    #[serde(default)]
+    pub logs_per_ha: f64,
+    /// The share of the tile's ground under litter, moss, logs and herbs
+    /// ([`Floor`]).
+    #[serde(default)]
+    pub floor: [f64; 4],
 }
 
 /// Each layer of a filled tile seen from above ([`Fill::layer_cover`]),
@@ -1253,6 +1337,10 @@ pub struct TilePlan {
     pub cover: Vec<Cover>,
     pub canopy: Vec<CanopyCell>,
     pub stats: TileStats,
+    /// The logs on its forest floors.
+    pub logs: Vec<Log>,
+    /// The moss genera its forest floors name ([`FloorMoss::genus`]).
+    pub floor_mosses: Vec<String>,
 }
 
 #[derive(Serialize)]
@@ -1269,6 +1357,9 @@ struct TileHeader<'a> {
     cover: &'a [Cover],
     canopy: &'a [CanopyCell],
     stats: TileStats,
+    logs: &'a [Log],
+    #[serde(skip_serializing_if = "<[String]>::is_empty")]
+    floor_mosses: &'a [String],
 }
 
 impl TilePlan {
@@ -1351,6 +1442,8 @@ impl TilePlan {
             cover: &self.cover,
             canopy: &self.canopy,
             stats: self.stats,
+            logs: &self.logs,
+            floor_mosses: &self.floor_mosses,
         };
         let fail = |error: std::io::Error| Error(format!("{}: {error}", dir.display()));
         std::fs::create_dir_all(dir).map_err(fail)?;
@@ -1439,6 +1532,8 @@ pub struct Fill {
     sizes: Arc<Vec<OnceLock<Measurements>>>,
     /// The stand tiles laid out so far.
     laid: Arc<Mutex<HashMap<LayoutKey, Arc<Layout>>>>,
+    /// The library's moss genera, for the forest floors.
+    mosses: Vec<crate::mosses::MossKind>,
 }
 
 /// A climber of a community ([`Layer::Climber`]): its species, its
@@ -1562,6 +1657,11 @@ struct Species {
     /// Whether its program grows it beneath a canopy as a shade-suppressed
     /// tree grows ([`BENEATH_PROGRAMS`]).
     grows_beneath: bool,
+    /// Whether it sheds broad leaves (its `shed` section's foliage), whose
+    /// litter buries forest-floor mosses
+    /// ([`development::ground_moss`]); needles and sprays of scale leaves
+    /// do not.
+    leaf_litter: bool,
 }
 
 /// The programs whose trees grow beneath a closed canopy as
@@ -1599,6 +1699,10 @@ impl Species {
             .and_then(|traits| traits.get("height_max_m").and_then(crate::traits::least))
             .filter(|height| *height > 0.0);
         let grows_beneath = BENEATH_PROGRAMS.contains(&spec.generator.program.as_str());
+        let leaf_litter = library
+            .entry(id)
+            .and_then(|entry| entry.shed().ok().flatten())
+            .is_some_and(|shed| shed.foliage.kind == crate::shed::FoliageKind::Leaves);
         Ok(Self {
             id: id.to_string(),
             spec,
@@ -1610,6 +1714,7 @@ impl Species {
             soil,
             canopy_m,
             grows_beneath,
+            leaf_litter,
         })
     }
 
@@ -1750,6 +1855,14 @@ struct Layout {
     canopy_colour: [f32; 3],
     /// Share of the ground under herbs.
     herb_cover: f64,
+    /// Share of the ground under shrubs' crowns.
+    shrub_cover: f64,
+    /// The share of its tree crowns, by area, of species that shed broad
+    /// leaves ([`Species::leaf_litter`]).
+    leaf_litter: f64,
+    /// Its logs ([`crate::deadwood::lay`]), each with the species it fell
+    /// from.
+    logs: Vec<(usize, crate::deadwood::Laid)>,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -1855,6 +1968,7 @@ impl Fill {
             edge_twins: Vec::new(),
             sizes: Arc::new(Vec::new()),
             laid: Arc::new(Mutex::new(HashMap::new())),
+            mosses: crate::mosses::kinds(crate::library::Library::builtin()).map_err(Error)?,
         };
         for community in 0..fill.communities.len() {
             for age in fill.settings.stand_ages.clone() {
@@ -2708,6 +2822,9 @@ impl Fill {
         let mut instances = Vec::new();
         let mut cover = Vec::with_capacity(stands.cells.len());
         let mut canopy = Vec::with_capacity(stands.cells.len());
+        let mut logs = Vec::new();
+        let mut floor_mosses: Vec<String> = Vec::new();
+        let mut floor_m2 = [0.0_f64; 4];
         let (mut trees, mut basal, mut leaf_m2, mut crowns) = (0_usize, 0.0, 0.0, 0.0);
         let roofs = site.roofs();
         for (index, cell) in stands.cells.iter().enumerate() {
@@ -2715,10 +2832,7 @@ impl Fill {
             let world = world_cell(site, stands, col, row);
             let (Some(community), Some(key)) = (cell.community.map(usize::from), &keys[index])
             else {
-                cover.push(Cover {
-                    kind: CoverKind::Bare,
-                    fraction: 0.0,
-                });
+                cover.push(Cover::of(CoverKind::Bare, 0.0));
                 canopy.push(CanopyCell {
                     height_m: 0.0,
                     cover: 0.0,
@@ -2889,27 +3003,127 @@ impl Fill {
                     extra: 0,
                 });
             }
+            // The logs whose middles lie in this cell's window, where the
+            // ground is open at their middles and both ends, along its slope.
+            let mut wood_m2 = 0.0;
+            for (n, (species, log)) in layout.logs.iter().enumerate() {
+                let at = turned(
+                    [
+                        wrap(log.at[0] + shift[0], layout_m),
+                        wrap(log.at[1] + shift[1], layout_m),
+                    ],
+                    turn,
+                    layout_m,
+                );
+                let at = [at[0] - window[0], at[1] - window[1]];
+                if !(0.0..cell_m).contains(&at[0]) || !(0.0..cell_m).contains(&at[1]) {
+                    continue;
+                }
+                #[allow(clippy::cast_precision_loss)]
+                let yaw = log.yaw + turn as f64 * std::f64::consts::FRAC_PI_2;
+                let (east, north) = (corner[0] + at[0], corner[1] + at[1]);
+                let half = 0.5 * log.shape.length_m;
+                let inside = |v: f64| v.clamp(0.0, site.tile_m);
+                let ends = [-half, half].map(|along| {
+                    [
+                        inside(east + along * libm::cos(yaw)),
+                        inside(north + along * libm::sin(yaw)),
+                    ]
+                });
+                let pick = rng::unit(rng::hash_words(&[keep, n as u64, 0x106]));
+                if pick >= site.plantable_at(east, north)
+                    || ends
+                        .iter()
+                        .any(|end| site.plantable_at(end[0], end[1]) <= 0.0)
+                {
+                    continue;
+                }
+                let rise =
+                    site.height_at(ends[1][0], ends[1][1]) - site.height_at(ends[0][0], ends[0][1]);
+                wood_m2 += log.shape.area_m2();
+                #[allow(clippy::cast_possible_truncation)]
+                logs.push(Log {
+                    species: self.species[*species].id.clone(),
+                    position: [
+                        east as f32,
+                        north as f32,
+                        site.height_at(east, north) as f32,
+                    ],
+                    yaw: yaw.rem_euclid(std::f64::consts::TAU) as f32,
+                    pitch: libm::atan2(rise, log.shape.length_m) as f32,
+                    shape: log.shape,
+                });
+            }
             let kept_share = |kept: f64, all: f64| if all > 0.0 { kept / all } else { 1.0 };
             let canopy_cover = layout.canopy_cover * kept_share(kept_tree_crowns, tree_crowns);
             #[allow(clippy::cast_precision_loss)]
             let herb_cover = layout.herb_cover * kept_share(kept_herbs as f64, herbs as f64);
             crowns += canopy_cover * cell_m * cell_m;
+            // The forest floor: logs, moss where shade, wet and little
+            // else lets it grow, litter under the crowns over the rest.
+            let wood = (wood_m2 / (cell_m * cell_m)).min(0.6);
+            let moisture = cell.moisture.map_or_else(
+                || {
+                    site.site_factors_at(corner[0] + 0.5 * cell_m, corner[1] + 0.5 * cell_m)
+                        .moisture
+                },
+                f64::from,
+            );
+            let understorey = 1.0 - (1.0 - layout.shrub_cover) * (1.0 - herb_cover);
+            let moss =
+                (development::ground_moss(canopy_cover, understorey, moisture, layout.leaf_litter)
+                    * (1.0 - wood))
+                    .clamp(0.0, 1.0 - wood);
+            let litter = (1.0 - wood - moss).max(0.0)
+                * (canopy_cover / development::LITTER_CLOSURE).min(1.0);
+            let shares = [litter, moss, wood, herb_cover];
+            for (sum, share) in floor_m2.iter_mut().zip(shares) {
+                *sum += share * cell_m * cell_m;
+            }
+            // Which mosses: those that fit the floor, the fast spreaders
+            // first after a disturbance, the deep wefts later.
+            let mut mosses = [None; 3];
+            if moss > 0.0 {
+                let years = self.settings.stand_ages[age];
+                let mix = development::floor_mosses(&self.mosses, canopy_cover, moisture, years, 3);
+                for (slot, (kind, share)) in mosses.iter_mut().zip(mix) {
+                    let genus = &self.mosses[kind].genus;
+                    let at = floor_mosses
+                        .iter()
+                        .position(|name| name == genus)
+                        .unwrap_or_else(|| {
+                            floor_mosses.push(genus.clone());
+                            floor_mosses.len() - 1
+                        });
+                    #[allow(clippy::cast_possible_truncation)]
+                    {
+                        *slot = Some(FloorMoss {
+                            genus: u16::try_from(at).unwrap_or(u16::MAX),
+                            share: (share * 100.0).round() as f32 / 100.0,
+                        });
+                    }
+                }
+            }
             #[allow(clippy::cast_possible_truncation)]
-            cover.push(if herb_cover > 0.0 {
-                Cover {
-                    kind: CoverKind::Herb,
-                    fraction: herb_cover as f32,
-                }
+            let floor = Floor {
+                litter: litter as f32,
+                moss: moss as f32,
+                wood: wood as f32,
+                herb: herb_cover as f32,
+                mosses,
+            };
+            #[allow(clippy::cast_possible_truncation)]
+            let (kind, fraction) = if herb_cover > 0.0 {
+                (CoverKind::Herb, herb_cover as f32)
             } else if canopy_cover > 0.0 {
-                Cover {
-                    kind: CoverKind::Litter,
-                    fraction: canopy_cover as f32,
-                }
+                (CoverKind::Litter, canopy_cover as f32)
             } else {
-                Cover {
-                    kind: CoverKind::Bare,
-                    fraction: 0.0,
-                }
+                (CoverKind::Bare, 0.0)
+            };
+            cover.push(Cover {
+                kind,
+                fraction,
+                floor,
             });
             #[allow(clippy::cast_possible_truncation)]
             canopy.push(CanopyCell {
@@ -2976,6 +3190,8 @@ impl Fill {
             canopy_cover: crowns / area_m2,
             leaf_area_index: leaf_m2 / area_m2,
             edge_trees_per_ha: edge_trees as f64 / area_ha,
+            logs_per_ha: logs.len() as f64 / area_ha,
+            floor: floor_m2.map(|sum| sum / area_m2),
         };
         Ok(TilePlan {
             tile: site.tile,
@@ -2986,6 +3202,8 @@ impl Fill {
             instances,
             cover,
             canopy,
+            logs,
+            floor_mosses,
         })
     }
 
@@ -3271,7 +3489,7 @@ impl Fill {
             .map(|(_, _, _, size, ..)| size.height)
             .fold(0.0_f64, f64::max);
         let mut has_herbs = false;
-        let (members, foliage): (Vec<stand_tile::Member>, Vec<[f32; 3]>) = chosen
+        let (members, traits): (Vec<stand_tile::Member>, Vec<([f32; 3], usize, f64)>) = chosen
             .iter()
             .map(|(index, candidate, share, size, species, overtopped)| {
                 let mut layer = development::layer_of(&candidates[*candidate], size.height, top);
@@ -3294,7 +3512,12 @@ impl Fill {
                     crown_radius_m: size.crown_radius,
                     light_needed: self.species[*species].light_needed,
                 };
-                (member, self.species[*species].spec.appearance.foliage)
+                let traits = (
+                    self.species[*species].spec.appearance.foliage,
+                    *species,
+                    size.dbh.unwrap_or(0.0),
+                );
+                (member, traits)
             })
             .filter(|(member, _)| {
                 let herb = member.layer == niche::Layer::Herb;
@@ -3309,11 +3532,93 @@ impl Fill {
             scale: STAND_SCALE,
             ..stand_tile::Rules::default()
         };
-        let placed = stand_tile::lay_out(
+        let mut placed = stand_tile::lay_out(
             &members,
             &rules,
             rng::hash_words(&[key.seed, key.layout, key.community as u64, key.age as u64]),
         );
+        let is_tree = |member: &stand_tile::Member| {
+            matches!(member.layer, niche::Layer::Canopy | niche::Layer::Subcanopy)
+        };
+        // Logs on the floor, clear of the trees' stems, each of a tree
+        // species of the stand as wide as it, by their basal area; a
+        // shrub or a herb whose foot one lies over stands beside it.
+        let stand_age = self.settings.stand_ages[key.age];
+        let wood = if members.iter().any(is_tree) {
+            crate::deadwood::DownWood::at(
+                stand_age,
+                stand.lifespan,
+                self.canopy_m(key.community).map_or(0.0, f64::from),
+                self.communities[key.community].origin,
+            )
+        } else {
+            crate::deadwood::DownWood::NONE
+        };
+        let trees: Vec<(usize, f64, [f64; 2])> = placed
+            .iter()
+            .filter(|plant| is_tree(&members[plant.member]))
+            .map(|plant| {
+                let (_, species, dbh) = traits[plant.member];
+                (species, dbh * plant.scale, plant.at_m)
+            })
+            .collect();
+        let stems: Vec<crate::deadwood::Stem> = trees
+            .iter()
+            .map(|(_, dbh, at)| crate::deadwood::Stem {
+                at: *at,
+                radius_m: 0.5 * dbh.max(0.02),
+            })
+            .collect();
+        let log_seed = rng::hash_words(&[
+            key.seed,
+            key.layout,
+            key.community as u64,
+            key.age as u64,
+            0x106,
+        ]);
+        let logs: Vec<(usize, crate::deadwood::Laid)> =
+            crate::deadwood::lay(&wood, &stems, tile_m, log_seed)
+                .into_iter()
+                .enumerate()
+                .filter_map(|(n, log)| {
+                    let wide = |least: f64| {
+                        trees
+                            .iter()
+                            .filter(move |(_, dbh, _)| *dbh >= least)
+                            .map(|(species, dbh, _)| (*species, dbh * dbh))
+                    };
+                    let mut pool: Vec<(usize, f64)> = wide(0.5 * log.shape.butt_m).collect();
+                    if pool.is_empty() {
+                        let widest = trees.iter().map(|tree| tree.1).fold(0.0_f64, f64::max);
+                        pool = wide(widest).collect();
+                    }
+                    let total: f64 = pool.iter().map(|(_, weight)| weight).sum();
+                    let mut pick = rng::unit(rng::hash_words(&[log_seed, n as u64, 1])) * total;
+                    let species = pool
+                        .iter()
+                        .find(|(_, weight)| {
+                            pick -= weight;
+                            pick < 0.0
+                        })
+                        .or(pool.last())?
+                        .0;
+                    Some((species, log))
+                })
+                .collect();
+        for plant in &mut placed {
+            if is_tree(&members[plant.member]) {
+                continue;
+            }
+            for _ in 0..2 {
+                let Some(moved) = logs
+                    .iter()
+                    .find_map(|(_, log)| log.moved_off(plant.at_m, tile_m))
+                else {
+                    break;
+                };
+                plant.at_m = moved;
+            }
+        }
         let in_layers = |layers: &[niche::Layer]| -> Vec<stand_tile::Placed> {
             placed
                 .iter()
@@ -3326,6 +3631,7 @@ impl Fill {
             &in_layers(&[niche::Layer::Canopy, niche::Layer::Subcanopy]),
             tile_m,
         );
+        let shrub_cover = stand_tile::cover(&members, &in_layers(&[niche::Layer::Shrub]), tile_m);
         let herb_cover = if !has_herbs {
             0.0
         } else if self.settings.herbs {
@@ -3334,7 +3640,7 @@ impl Fill {
             stand.cover[3]
         };
         let (mut heights, mut count) = (0.0, 0.0);
-        let (mut colour, mut crowns) = ([0.0_f64; 3], 0.0);
+        let (mut colour, mut crowns, mut leafy) = ([0.0_f64; 3], 0.0, 0.0);
         let plants = placed
             .iter()
             .map(|plant| {
@@ -3355,10 +3661,14 @@ impl Fill {
                 let radius = member.crown_radius_m * plant.scale;
                 if matches!(member.layer, niche::Layer::Canopy | niche::Layer::Subcanopy) {
                     let area = radius * radius;
-                    for (sum, part) in colour.iter_mut().zip(foliage[plant.member]) {
+                    let (foliage, species, _) = traits[plant.member];
+                    for (sum, part) in colour.iter_mut().zip(foliage) {
                         *sum += area * f64::from(part);
                     }
                     crowns += area;
+                    if self.species[species].leaf_litter {
+                        leafy += area;
+                    }
                 }
                 Laid {
                     prototype: member.id,
@@ -3382,6 +3692,9 @@ impl Fill {
                 CANOPY_COLOUR
             },
             herb_cover,
+            shrub_cover,
+            leaf_litter: if crowns > 0.0 { leafy / crowns } else { 0.0 },
+            logs,
         })
     }
 }
