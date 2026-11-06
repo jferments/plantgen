@@ -39,6 +39,7 @@ pub mod clusters;
 pub mod conditions;
 pub mod cores;
 pub mod damage;
+pub mod deadwood;
 pub mod development;
 pub mod divided;
 pub mod drawing;
@@ -1683,6 +1684,22 @@ pub mod venation;
 /// program, its revision 21) as broadleaf trees, herbs and grasses are:
 /// one rooted in a crack or a thin soil grows as a shaded one does. Grown
 /// with no rooting limits, as every package is, a conifer grows as before.
+///
+/// 209: two herbs drawn as their floras state them, and compound leaves'
+/// leaflets drawn as floras describe them. A common mullein in flower
+/// stands 1-2 m (Gleason and Cronquist), Jepson's 30 cm kept as the rare
+/// low; a vanilla leaf's stalk bears one leaf (Abrams). Leaf shapes gain
+/// flabellate (a fan: sides bowing out from a narrow foot to a lobed or
+/// toothed far edge, rounded or cut square as the apex says) and
+/// obcordate (notched deep at a broad tip); side leaflets stated
+/// asymmetric are lopsided (`lateral_leaflets`); a lobed leaflet's lobe
+/// tips follow `leaflet_lobe_apex`; leaflets take their stated apex and
+/// base (tapers, points, notches), as simple blades did; and a leaflet
+/// may be twice as broad as long. A vanilla leaf draws three broad lobed
+/// wedges and a redwood sorrel three heart-shaped leaflets, where hand
+/// outlines drew neither, and 17 more compound-leaved species (roses,
+/// brambles, rowans, sumacs, hemp) change with their stated leaflet
+/// tips. Every other leaf draws as it did.
 ///
 /// 212: broadleaf trees grown in a stand of their like take the form of
 /// forest-grown trees. A stem divides at its fork height only where its

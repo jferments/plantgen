@@ -1,0 +1,98 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Hylocomium",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.03,
+      "max": 0.15,
+      "typical": 0.08
+    },
+    "leaf_length_m": {
+      "min": 0.0008,
+      "max": 0.002,
+      "typical": 0.001
+    },
+    "leaf_width_m": {
+      "min": 0.0003,
+      "max": 0.0009,
+      "typical": 0.00045
+    },
+    "hair_point_length_m": 0,
+    "leaf_colour": [
+      99,
+      101,
+      47
+    ],
+    "leaf_dry_posture": "appressed",
+    "seta_length_m": {
+      "min": 0.005,
+      "max": 0.025
+    },
+    "capsule_length_m": {
+      "min": 0.0017,
+      "max": 0.0028
+    },
+    "capsule_posture": "horizontal",
+    "capsule_shape": "ovoid",
+    "operculum_form": "rostrate",
+    "capsule_share": 0.005,
+    "substrates": [
+      "soil",
+      "wood",
+      "rock"
+    ],
+    "light": [
+      "shade",
+      "part",
+      "sun"
+    ],
+    "moisture": [
+      "wet",
+      "mesic"
+    ],
+    "colony_spread_m_per_year": 0.02
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Hylocomium (Rohrer; efloras, read 2026-11-06): stems creeping to more often arching-ascending, regularly 2- or 3-pinnate; capsule inclined to pendent; operculum conic, obliquely long-rostrate; one species. H. splendens (same volume, p. 328): plants to 20 cm; innovations forming ascending series of flat frondose tiers, fronds 20-35(-50) mm wide; primary branch leaves 0.8-1.3(-2) x 0.3-0.6(-0.9) mm; seta 0.5-2.5 cm; capsule mostly bent horizontal at the neck, ovoid to ellipsoid, 1.7-2.8 mm; on soil, humus, rotten logs and rock over extensive areas of forest, especially boreal conifer forests, also common in arctic and alpine tundra. PNW rainforest plants are robust, 3-pinnate, and form deep wefts of stair-step innovations."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The depth of a weft of stair-step fronds on shoots to 20 cm (FNA): deep in PNW forests, a few centimetres in the tundra form. Estimate."
+    },
+    "traits.light": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Hylocomium splendens (efloras, read 2026-11-06): forest floors, and also arctic and alpine tundra, so shade to open."
+    },
+    "traits.moisture": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Moist forest floors and tundra; not on dry exposed ground. Estimate from the FNA habitats."
+    },
+    "traits.capsule_share": {
+      "evidence": "SourceInferred",
+      "source": "bryophyte-biology",
+      "note": "Goffinet and Shaw, Bryophyte Biology (2009), p. 424 (as extracted 2026-10-15): dioicous; capsules rare, found only on the oldest uplift island studied. Share an estimate."
+    },
+    "traits.colony_spread_m_per_year": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "One new frond a year, each arising from the back of the one before (Bryophyte Biology, p. 424, fig. 10.3), so a weft advances a few centimetres a year at most. Estimate."
+    },
+    "traits.leaf_colour": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Not measured yet: yellowish to olive green over red stems (Wikipedia, read 2026-11-06), so r/g 0.95, b/g 0.22, between Homalothecium and Hypnum; the brightness is a green reflectance of 0.13, as the other moss genera's colours take it (a lit leaf's, just above the 0.05-0.11 moss canopies reflect in the visible; see Hypnum's note). To measure with imagekit like the other genera."
+    },
+    "traits.leaf_dry_posture": {
+      "evidence": "Authored",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Hylocomium (efloras, read 2026-11-06): stem leaves tightly appressed on the stipe to erect among the branches; primary branch leaves erect-spreading, concave. FNA gives no dry posture; the leaves change little on drying, so appressed."
+    }
+  }
+}

@@ -19,16 +19,37 @@ it gets, not by soil:
 
 | Habitat | Read from the mesh |
 | --- | --- |
-| Light | The sky the face sees (rays over its hemisphere) and three equinox suns, morning, noon and afternoon, from the south (+Z). |
+| Light | The sky the face sees (rays over its hemisphere) and three equinox suns, morning, noon and afternoon, from the south (+Z), each ray dimmed by the tree crowns it passes through when the site stands under a canopy (below). |
 | Wetness | Rain from near-vertical rays the face is open to, a little driven onto upright faces, damp near the ground (falling off over 0.3 m), less what the sun dries, more in shade. |
 | Hold | How well spores and water stay: 1 on a face turned up, 0.15 on an upright one, nothing where no sky or rain reaches. |
 | Nook | Short rays along the face: the joints between bricks, the step under a tile's edge and inner corners catch spores, grit and water, so a landing there holds and stays wet the better. |
-| Substrate | The face's material; built faces (mortar, concrete, tile) are basic, bark and wood acid. |
+| Substrate | The face's material; built faces (mortar, concrete, tile) are basic, bark and wood acid, unless the site's material says otherwise (`reaction`: an asphalt shingle roof is built but neutral). |
 
 Each genus fits a habitat by its library traits: the `light` and
 `moisture` classes it grows in, its `substrates`, its `substrate_reaction`
-and its `desiccation_tolerance`. Vigour is that fit times the share of the
-year the face stays wet enough to grow.
+and its `desiccation_tolerance`. Each class has soft edges a tenth wide,
+and neighbouring classes a genus takes are one range, soft only at its
+ends: a genus of wet and mesic places fits fully where the two meet.
+Vigour is that fit times the share of the year the face stays wet enough
+to grow.
+
+### Under trees
+
+A site document may carry a `canopy`: the crowns of trees standing over
+it, each the upright cylinder of foliage the stands use
+(`conditions::Envelope`: `centre_m` [east, north] = (x, −z) of the
+site's origin, `base_m` and `top_m` in the site's y, `radius_m`, and
+`density`, shade per metre, 0.5 times the crown's leaf area per cubic
+metre; `Crown::envelope` gives it from a grown plant). `grow_under`
+dims every sky and sun ray of a face's habitat by exp(−density × its
+path inside each crown), as plant light does; less sun dries the face
+less, so it is wetter too. Rain is left as it is: a crown catches some
+and drips the rest. OSU Extension: roof mosses do best on north slopes,
+"especially where trees shade them". `moss-shakes-tree.json` is the
+shake roof with a broadleaf crown (leaf area index 4) over its south
+slope: after 30 years that slope carries 58% moss against 11% in the
+open, Dicranoweisia and Rosulabryum in place of the sun-tolerant
+Niphotrichum and Ceratodon; the north slope stays at about 64%.
 
 ## Growth
 
@@ -200,15 +221,40 @@ the view half round, `--wet 0.1` draws it dry,
 takes about 30 s; a close view with shoots, a few million triangles and
 seconds to tens of seconds.
 
+### In Blender
+
+`--glb FILE.glb` writes what a render would draw (the same `--detail`,
+`--focus` or `--genus`, `--span` and `--wet`, with or without
+`--render`) as one glTF file: a node `site` and a node `moss`, each one
+mesh in its vertex colours (`COLOR_0`, linear) under a white, rough
+material, in the site's frame (+Y up, -Z north; Blender turns it to +Z
+up, +Y north). `--detail tint` writes the site alone, its surfaces
+coloured by the moss over them. Arrays are plain floats, so Blender 4.5
+and later open it with File > Import > glTF 2.0 and no add-on; the
+vertex colours come in wired into the material. The files are large
+(about 120 bytes a triangle: the test wall's shells are 690,000
+triangles and 81 MB; a 4.5 cm close view with shoots 325,000 and 38 MB).
+
+```bash
+./target/release/plantc moss docs/sites/moss-wall.json --cover /tmp/cover.json \
+  --glb /tmp/grimmia.glb --genus Grimmia --span 0.045 --wet 0.95
+./target/release/plantc moss docs/sites/moss-wall.json --cover /tmp/cover.json \
+  --glb /tmp/wall.glb --detail shell
+```
+
 ## Tests
 
 `crates/plantgen/tests/mosses.rs`: the genera and their forms, colonies
 kept off a board kept clear and the slab pressed on it, the shaded side
-of a wall carrying more moss than the sunny one, the same cover every
+of a wall carrying more moss than the sunny one (over four seeds, as an
+upright face carries few colonies), the same cover every
 time and through JSON, patches far with shells between and shoots near,
 the roof genera of western Oregon and their spore output, moss darker and greener wet than dry, a cover tinting the surface
 under it with no triangles of its own, and a view named for a genus
-finding a colony of that genus.
+finding a colony of that genus, a drawn cover writing as a glTF file
+with no required extensions, a tree's crown over a wooden deck letting
+moss grow there, and a surface stating its own reaction. A unit test in
+`mosses.rs` checks that neighbouring classes fit fully where they meet.
 
 ## Changing it
 
@@ -235,11 +281,23 @@ finding a colony of that genus.
 - Dry *Ceratodon* turf opens gaps between its coiled shoots; FNA calls
   its leaves only "somewhat crisped", so it may want a weaker coil than
   *Dicranoweisia*'s, which needs a trait for how strongly a leaf crisps.
-- Roof cushions mostly stay separate where the rooftop study found dense
-  mats; its mats were on tree-shaded roofs, and the test roof has none.
+- Roof cushions on the test roof mostly stay separate, up to about 3 cm
+  across, though the north slope's cover (64%) already matches the
+  rooftop study's "over 40%"; whether they should join into mats is for
+  photos to say.
 - Growth rates, spread distances, spore output by fruiting and
   colonisation order are estimates still to check against Glime's
-  *Bryophyte Ecology*.
+  *Bryophyte Ecology*. A colony at no vigour still spreads at three
+  tenths of its genus's rate, so the cover of an upright face, where
+  vigour is low, hangs on a few colonies.
+- The library has no shade moss of basic stone and mortar
+  (*Rhynchostegium*, *Brachythecium*, *Amblystegium* on shaded walls),
+  so a shaded concrete face loses its sun mosses and nothing takes
+  their place.
+- A crown's drip and the still, humid air under it are not modelled:
+  shade only dries a face less. Tamm (1953, in *Bryophyte Biology*):
+  *Hylocomium splendens* grows fastest under the edges of spruce crowns,
+  where shade is not too deep and crown drip brings water and nutrients.
 
 ## Into the site fill
 
@@ -247,8 +305,10 @@ The cover sits beside the fill as a surface layer, not as plant
 instances. A fill tile over a site field grows its own:
 `MossSettings::over_tile(corner, tile_m, years, seed)` is the box of the
 tile whose south-west corner `Site::from_field` was given, at every
-height, and `grow` on the same mesh the field was measured from gives the
-tile's cover, which a host keeps beside the tile's instances, draws, or
+height, and `grow_under` on the same mesh the field was measured from,
+under the crowns of the tile's own plants two metres tall or more
+(`TilePlan::crowns`; climbers left out, their leaves lie on their wall),
+gives the tile's cover, which a host keeps beside the tile's instances, draws, or
 reads to tint its own textures (`MossCover::tint`, above). `plantc fill
 --field SITE.json --moss YEARS` does this with the genera the site's
 `mosses` list names (all the library's without one), writes the cover to
@@ -256,6 +316,16 @@ reads to tint its own textures (`MossCover::tint`, above). `plantc fill
 twentieth of the view's span of its focus, shells out to the span,
 patches beyond (`--wet` sets `DrawOptions::hydration`). On the test block
 (DEVELOPERS.md), with the eight Pacific Northwest genera its site names,
-thirty years grow about 39,000 colonies in 12 s on four cores: the shaded
-north slope of the house's roof, toward the street, mossed in clumps; the
-south slope spotted; moss along the curb and the fence's feet.
+thirty years grow about 73,000 colonies in 24 s on four cores under the
+tile's 28 tree crowns (61,000 with no crowns): the shaded north slope of
+the house's roof, toward the street, mossed in clumps; the south slope
+spotted; moss along the curb and the fence's feet. Off the roof, the
+trees take moss on the boulders, ground, curb and fence from 4.9 to
+6.6 m², the gain nearly all Dicranoweisia and Rosulabryum. The house is
+roofed in asphalt shingles (`built`, `reaction: neutral`), which the
+acid roof mosses take: its north slope is 45% mossed in the open
+(Dicranoweisia, Rosulabryum, Niphotrichum, Homalothecium) and 47% under
+the trees, whose firs block the slope's north sky, there nearly all
+Dicranoweisia and Rosulabryum. As concrete the roof carried 10.0 m² in
+the open and 4.3 under the trees: the shade mosses are all acid, so
+nothing took the sun mosses' place.
