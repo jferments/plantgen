@@ -102,16 +102,57 @@ controls.target.copy(centre).setY(
 if (view === 'ground' || view === 'roof') controls.target.setZ(-size * 0.9);
 controls.update();
 
-// The ground, coloured by the plan's ground cover per stand cell.
+// The ground, coloured by the plan's ground cover per stand cell: from
+// its forest floor's shares of litter, moss and logs where it has one
+// (schema 4), else from the cover's kind and fraction.
 const cover = document.createElement('canvas');
 cover.width = cover.height = header.cols;
 const ctx = cover.getContext('2d');
 const kinds = { bare: [150, 140, 125], litter: [96, 74, 50], herb: [92, 120, 60], grass: [120, 140, 70], moss: [70, 100, 50] };
+const wood = [110, 80, 56];
 header.cover.forEach((c, i) => {
   const col = i % header.cols, row = Math.floor(i / header.cols);
-  const [r, g, b] = kinds[c.kind] ?? kinds.bare, bare = kinds.bare, f = c.fraction;
-  ctx.fillStyle = `rgb(${bare[0] + (r - bare[0]) * f},${bare[1] + (g - bare[1]) * f},${bare[2] + (b - bare[2]) * f})`;
+  const bare = kinds.bare;
+  let rgb;
+  const floor = c.floor;
+  if (floor && floor.litter + floor.moss + floor.wood > 0) {
+    const rest = Math.max(0, 1 - floor.litter - floor.moss - floor.wood);
+    rgb = [0, 1, 2].map(k => kinds.litter[k] * floor.litter + kinds.moss[k] * floor.moss + wood[k] * floor.wood + bare[k] * rest);
+  } else {
+    const [r, g, b] = kinds[c.kind] ?? kinds.bare, f = c.fraction;
+    rgb = [bare[0] + (r - bare[0]) * f, bare[1] + (g - bare[1]) * f, bare[2] + (b - bare[2]) * f];
+  }
+  ctx.fillStyle = `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
   ctx.fillRect(col, header.cols - 1 - row, 1, 1);
+});
+
+// The logs on the forest floor (schema 4), one instanced cylinder per
+// decay class: barked (I, II), faded (III), brown (IV), dark, flattened
+// and sunk (V). Each lies along its yaw from its large end, its small
+// end narrower, raised or sunk by its class as plantgen::deadwood draws
+// it.
+const logColours = [[86, 62, 44], [86, 62, 44], [126, 110, 92], [124, 84, 56], [92, 58, 40]];
+const roundness = [1, 1, 1, 0.8, 0.44], lift = [0.35, 0.12, 0, -0.1, -0.2];
+const byClass = [[], [], [], [], []];
+for (const log of header.logs ?? []) byClass[Math.min(5, Math.max(1, log.shape.decay)) - 1].push(log);
+byClass.forEach((logs, k) => {
+  if (!logs.length) return;
+  const geometry = new THREE.CylinderGeometry(0.4, 0.5, 1, 10);
+  const [r, g, b] = logColours[k].map(v => v / 255);
+  const material = new THREE.MeshLambertMaterial({ color: new THREE.Color().setRGB(r, g, b, THREE.SRGBColorSpace) });
+  const mesh = new THREE.InstancedMesh(geometry, material, logs.length);
+  const m = new THREE.Matrix4(), scale = new THREE.Matrix4();
+  logs.forEach((log, i) => {
+    const { length_m: length, butt_m: butt } = log.shape;
+    const along = new THREE.Vector3(Math.cos(log.yaw) * Math.cos(log.pitch), Math.sin(log.pitch), -Math.sin(log.yaw) * Math.cos(log.pitch));
+    const up = new THREE.Vector3(0, 1, 0).addScaledVector(along, -along.y).normalize();
+    const side = new THREE.Vector3().crossVectors(along, up);
+    const height = 0.5 * butt * roundness[k] + lift[k] * butt;
+    m.makeBasis(side, along, up).setPosition(log.position[0], log.position[2] + height, -log.position[1]);
+    m.multiply(scale.makeScale(butt, length, butt * roundness[k]));
+    mesh.setMatrixAt(i, m);
+  });
+  scene.add(mesh);
 });
 const groundTexture = new THREE.CanvasTexture(cover);
 groundTexture.magFilter = THREE.NearestFilter;

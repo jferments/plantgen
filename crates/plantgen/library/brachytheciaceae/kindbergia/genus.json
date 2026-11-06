@@ -1,0 +1,80 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Kindbergia",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.02,
+      "max": 0.08,
+      "typical": 0.04
+    },
+    "leaf_length_m": {
+      "min": 0.001,
+      "max": 0.002,
+      "typical": 0.0015
+    },
+    "leaf_width_m": {
+      "min": 0.0006,
+      "max": 0.0012,
+      "typical": 0.0008
+    },
+    "hair_point_length_m": 0,
+    "leaf_colour": [
+      91,
+      101,
+      52
+    ],
+    "seta_length_m": {
+      "min": 0.015,
+      "max": 0.02
+    },
+    "capsule_posture": "inclined",
+    "capsule_shape": "ovoid",
+    "operculum_form": "rostrate",
+    "capsule_share": 0.02,
+    "substrates": [
+      "soil",
+      "wood"
+    ],
+    "light": [
+      "part",
+      "shade"
+    ],
+    "moisture": [
+      "mesic"
+    ],
+    "colony_spread_m_per_year": 0.05
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Kindbergia (Ignatov; efloras, read 2026-11-06): plants medium-sized to large, in loose to dense mats, occasionally tufts, green, yellow-green or brownish; stems creeping, ascending to erect, regularly pinnate; seta red-brown, roughened; capsule inclined to horizontal, red-brown, short-ovate, curved; operculum long-rostrate; dioicous. Typical values are K. oregana, the Oregon beaked moss (same volume, p. 447): plants large, plumose; stems 10-25(-45) cm; branches 6-10 mm, almost always simple; branch leaves plicate, 1-2 x (0.6-)0.7-0.9(-1.2) mm; seta 1.5-2 cm; on litter, soil rich in humus and rotten logs in forests, mesic, diffusely lighted places, 0-1300 m, B.C. to California."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The depth of a mat of ascending stems 10-25 cm long (FNA): a few centimetres. Estimate."
+    },
+    "traits.light": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Kindbergia oregana (efloras, read 2026-11-06): forests, in diffusely lighted places: part shade to shade, not open ground."
+    },
+    "traits.capsule_share": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Dioicous; capsules frequent on the species in PNW forests. Estimate."
+    },
+    "traits.colony_spread_m_per_year": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Large plumose shoots 10-25 cm long that creep and branch: it spreads faster than the wall mats (Hypnum 0.012). Estimate; to check against Glime, Bryophyte Ecology."
+    },
+    "traits.leaf_colour": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Hue measured: imagekit run moss-colour-2026-11-05 on batch moss-pnw-2026-11-05 (iNaturalist research-grade photos from Washington, script moss_colour.py), Kindbergia oregana, 24 photos: the median of each photo's linear r/g 0.80 and b/g 0.26. Photos are exposed brighter than moss is, so only the hue is taken from them; the brightness is a green reflectance of 0.13, as the other moss genera's colours take it (a lit leaf's, just above the 0.05-0.11 moss canopies reflect in the visible; see Hypnum's note)."
+    }
+  }
+}
