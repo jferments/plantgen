@@ -24,6 +24,7 @@
       "lean": 20,
       "wiggle": 12,
       "blooms": 2,
+      "bloom_size": 0.11,
       "bloom_angle": 140,
       "bloom_area": 0.382,
       "path_half": 14.4,

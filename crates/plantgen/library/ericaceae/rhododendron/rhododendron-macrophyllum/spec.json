@@ -44,6 +44,7 @@
       "leaf_angle": 45,
       "blooms": 1,
       "adult_age": 4,
+      "bloom_size": 0.06,
       "bloom_angle": 20,
       "path_half": 1.6
     }
@@ -98,6 +99,11 @@
           "spread": 70,
           "pedicel": 0.2
         },
+        "colour": [
+          0.42,
+          0.3,
+          0.2
+        ],
         "season": {
           "flower_look": {
             "shape": {

@@ -43,6 +43,7 @@
       "leaf_angle": 50,
       "blooms": 1,
       "adult_age": 3,
+      "bloom_size": 0.025,
       "bloom_angle": 60,
       "leaf_area": 0.282,
       "bloom_area": 0.218,

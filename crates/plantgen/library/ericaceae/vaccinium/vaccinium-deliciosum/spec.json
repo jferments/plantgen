@@ -42,7 +42,8 @@
       "adult_age": 3,
       "bloom_angle": 120,
       "path_half": 0.3,
-      "crown_height": 0.2
+      "crown_height": 0.2,
+      "bloom_size": 0.011
     }
   },
   "growth": {
@@ -78,6 +79,11 @@
           "aspect": 1.0,
           "unripe": 0.3
         },
+        "colour": [
+          0.0593,
+          0.1005,
+          0.2633
+        ],
         "accent": [
           0.1005,
           0.0732,
@@ -401,6 +407,11 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vol. 8 p. 516 (eFloras, read 2026-10-19), Vaccinium deliciosum: \"twigs green, sometimes glaucous, +/- terete\"; sRGB a model estimate (confidence medium) of a dull, slightly glaucous green."
+    },
+    "generator.params.bloom_size": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 8 p. 516 (eFloras, read 2026-10-19), Vaccinium deliciosum: \"Berries ... 9-13 mm diam.\": the bloom card is drawn as the ripe berry, 11 mm across, its flower look 0.45 of that (corolla \"4-6 x 5-7 mm\")."
     }
   },
   "provenance": {
