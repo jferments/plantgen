@@ -316,9 +316,21 @@
 # held 663, and 237 m² below 50 m where 136. With shade_own 0, the
 # default, a plant grows as before.
 #
+# Revision 20 (old tops die and regrow): once the leader's yearly rise is
+# under top_rise of its fastest, it dies with chance top_die a year, as
+# storms and dieback take old trees' tops, and one to reit_n new leaders
+# (reiterated trunks) rise from the dead top, leaning reit_angle out,
+# each with a shoot reit_shoot long that shrinks by e every reit_years
+# years, setting reit_whorl branches a year. Sillett et al. (2018, Forest
+# Ecology and Management 429:93-114) find Douglas-fir crowns simple until
+# damaged, few trees under 300 years with reiterated trunks and many
+# older ones with them. The leader's dying rules come last in the program
+# so that every other draw stays as it was; with top_die 0, the default,
+# a plant grows as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem pinidae 19;
+lsystem pinidae 20;
 
 # Height of the leader over time: a Chapman-Richards curve,
 # height = height_max * (1 - exp(-height_rate * age))^height_shape.
@@ -383,6 +395,13 @@ param stem_epi = 0;            # chance a year that a dormant bud on the stem, l
 param stem_epi_rise = 0.25;    # the leader's yearly rise, as a share of its fastest, under which stem buds may sprout
 param stem_epi_light = 0.05;   # light a stem bud needs to sprout
 param stem_epi_vigour = 3;     # a stem sprout's vigour, as a young limb's (1) multiple: it repeats the tree's young form (reiteration)
+param top_die = 0;             # chance a year that the leader dies once its yearly rise is under top_rise of its fastest (storms and dieback take old tops; revision 20); 0: never
+param top_rise = 0.25;         # the leader's yearly rise, as a share of its fastest, under which its top may die
+param reit_n = 3;              # most new leaders that rise from a dead top (reiterated trunks), at least one
+param reit_angle = 20;         # degrees a new leader leans out from the old axis
+param reit_shoot = 0.5;        # a new leader's first yearly shoot, metres
+param reit_years = 12;         # years over which a new leader's shoot shrinks by e: it rises about reit_shoot * reit_years in all
+param reit_whorl = 2;          # branches a new leader sets each year
 param epi_order = 0;           # highest branch order whose shoots keep a dormant bud; 0: side_order
 param spray_base = 0.2;        # foliage spray length on the shortest shoot
 param spray_length = 1.3;      # and how much longer per metre of shoot
@@ -433,6 +452,8 @@ module H queries substrate;             # where a branch shoot starts, its bud s
 module Q(n, s);                         # a branch shoot's short shoots: n more years to leaf out, a spray s long
 module D queries light;                 # a dormant bud on the stem (stem_epi)
 module B(n);                            # n stems still to start
+module U(a) queries light;              # a new leader's apex, rising from a dead top for a years (revision 20)
+module P(n, m);                         # new leaders still to start from a dead top, of m
 
 organ spray foliage area spray_area;
 organ cone cone area cone_area;
@@ -456,7 +477,9 @@ axiom !(0.003) A B(stems - 1);
 
 
 # The leader: this year's height growth with its foliage, then a whorl.
-rule A -> G(0, (richards(t + dt, height_max, height_rate, height_shape)
+rule A : top_die <= 0
+         || (richards(t + 1, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))
+            / (height_max * height_rate * (height_shape > 1 ? pow(1 - 1 / height_shape, height_shape - 1) : 1)) >= top_rise -> G(0, (richards(t + dt, height_max, height_rate, height_shape)
                 - richards(t, height_max, height_rate, height_shape))
                * (leader_shade * min(1, (top * (1 + leader_half) / (top + leader_half) - (1 - leader_shade) * top) / max(0.01, leader_shade)) + (1 - leader_shade) * light), needle_years * 2 / (1 + needle_low), 0, 1)
           W((bud_length > 0 ? round(whorl * min(1, (richards(t + dt, height_max, height_rate, height_shape)
@@ -471,6 +494,7 @@ decompose W(n, m) : n > 0 ->
     W(n - 1, m);
 decompose W(n, m) : stem_epi > 0 && epi_chance > 0 -> D;
 decompose W(n, m) -> ;
+
 decompose I(n) : n > 0 ->
     [ /(uniform(0, 360)) &(branch_angle + uniform(-8, 8))
       T(0, 1, 0, upturn) S C(1, interwhorl_vigour, 0, 0, 0, 0) ]
@@ -640,3 +664,27 @@ decompose B(n) -> ;
 # keep their sites.
 rule S : limb_light > 0 && age > limb_age && qsum < limb_light * max(shade_floor, shade_death * top) * (shade_cost + (1 - shade_cost) * min(1, shade_own > 0 ? min(top, qsum / max(1, ntip)) : top)) / 0.1 * nseg -> K;
 rule S : limb_tip > 0 && age > limb_age && qsum < limb_tip * max(shade_floor, shade_death * top) * (shade_cost + (1 - shade_cost) * min(1, shade_own > 0 ? min(top, qsum / max(1, ntip)) : top)) * ntip -> K;
+
+# Revision 20: a dead top's new leaders, spread round the old axis (one
+# alone stands nearly straight), each rising with a shoot that shrinks by
+# e every reit_years years and setting a whorl a year, as the leader did.
+decompose P(n, m) : n > 0 ->
+    [ /(360 * n / max(1, n + m) + uniform(-30, 30)) &(n + m > 1 ? reit_angle + uniform(-8, 8) : uniform(0, 10)) U(0) ]
+    P(n - 1, m + 1);
+decompose P(n, m) -> ;
+rule U(a) : reit_shoot * exp(-a / reit_years) < min_shoot -> ;
+rule U(a) -> G(0, reit_shoot * exp(-a / reit_years) * max(0.2, min(1, light / max(0.01, top))), needle_years * 2 / (1 + needle_low), 0, 1)
+             W(reit_whorl, reit_whorl) /(137.5) U(a + 1);
+# Revision 20: once its rise is under top_rise of its fastest, the leader
+# dies with chance top_die a year, and new leaders rise from its top;
+# otherwise it grows as above. (These rules come last in the program so
+# that every draw before them stays as it was.)
+rule A : rand() < top_die -> P(max(1, round(uniform(0.5, reit_n + 0.5))), 0);
+rule A -> G(0, (richards(t + dt, height_max, height_rate, height_shape)
+                - richards(t, height_max, height_rate, height_shape))
+               * (leader_shade * min(1, (top * (1 + leader_half) / (top + leader_half) - (1 - leader_shade) * top) / max(0.01, leader_shade)) + (1 - leader_shade) * light), needle_years * 2 / (1 + needle_low), 0, 1)
+          W((bud_length > 0 ? round(whorl * min(1, (richards(t + dt, height_max, height_rate, height_shape)
+                - richards(t, height_max, height_rate, height_shape))
+               * (leader_shade * min(1, (top * (1 + leader_half) / (top + leader_half) - (1 - leader_shade) * top) / max(0.01, leader_shade)) + (1 - leader_shade) * light) / bud_length)) : whorl), (bud_length > 0 ? round(whorl * min(1, (richards(t + dt, height_max, height_rate, height_shape)
+                - richards(t, height_max, height_rate, height_shape))
+               * (leader_shade * min(1, (top * (1 + leader_half) / (top + leader_half) - (1 - leader_shade) * top) / max(0.01, leader_shade)) + (1 - leader_shade) * light) / bud_length)) : whorl)) /(137.5) A;
