@@ -324,8 +324,10 @@ impl Cluster {
     /// $`b\,(\sqrt{N/f} - 1)`$ from the axis, which the lowest node's
     /// pedicel reaches leaning $`\sigma`$ over the axis above it: $`1 - l`$,
     /// less a branch's own length, as a branch stands upright at its tip
-    /// ([`axis`]); $`\sigma`$ between 5 and 70 degrees. Returns the
-    /// half-width of the corymb's top.
+    /// ([`axis`]), while a unit leans with its pedicel, so its centre
+    /// stands $`s \sin\sigma`$ nearer the axis for a unit $`s`$ long;
+    /// $`\sigma`$ between 5 and 70 degrees. Returns the half-width of the
+    /// corymb's top.
     fn packed_corymb(&mut self, given: &Inflorescence, fill: f64) -> f64 {
         let mut s = self.size.clamp(0.005, 1.0);
         let fill = fill.clamp(0.1, 1.0);
@@ -337,11 +339,14 @@ impl Cluster {
                     // The branch as long as lets its units, leaning its
                     // spread, just fill its top: a short corymb of heads on
                     // a long ray, not a tall one.
+                    // Its lowest unit's centre reaches `rise` times the
+                    // branch's length out, less the unit's own lean.
                     let unit = branch.size.clamp(0.005, 1.0) * s;
                     let top = 0.5 * unit * math::sqrt(f64::from(branch.flowers.max(1)) / fill);
-                    let rise = (1.0 - branch.peduncle.clamp(0.0, 0.95))
-                        * math::tan(math::radians(branch.spread.clamp(5.0, 70.0)));
-                    s = ((top - 0.5 * unit).max(0.0) / rise).clamp((unit / 0.9).max(0.05), 0.6);
+                    let sigma = math::radians(branch.spread.clamp(5.0, 70.0));
+                    let rise = (1.0 - branch.peduncle.clamp(0.0, 0.95)) * math::tan(sigma);
+                    s = (((top - 0.5 * unit).max(0.0) + unit * math::sin(sigma)) / rise)
+                        .clamp((unit / 0.9).max(0.05), 0.6);
                     self.size = s;
                     branch.size = (unit / s).clamp(0.005, 1.0);
                     (self.branches, top)
@@ -359,11 +364,33 @@ impl Cluster {
         } else {
             1.0 - low
         };
+        // How far out the lowest node's unit or branch stands, leaning
+        // `sigma`: a branch from its tip, upright; a unit from its centre,
+        // its pedicel shorter by the unit's own length.
+        let bearing = self.branch.is_some();
+        let out = |sigma: f64| {
+            let reach = rise * math::tan(sigma);
+            if bearing {
+                reach
+            } else {
+                reach - s * math::sin(sigma)
+            }
+        };
         if given.spread.is_none() && rise > 1e-6 {
             let reach = half * (across - 1.0).max(0.0);
-            self.spread = math::degrees(math::atan(reach / rise)).clamp(5.0, 70.0);
+            // `out` rises with the lean over 5 to 70 degrees.
+            let (mut low, mut high) = (math::radians(5.0), math::radians(70.0));
+            for _ in 0..40 {
+                let mid = 0.5 * (low + high);
+                if out(mid) < reach {
+                    low = mid;
+                } else {
+                    high = mid;
+                }
+            }
+            self.spread = math::degrees(0.5 * (low + high));
         }
-        rise * math::tan(math::radians(self.spread.clamp(0.0, 89.0))) + half
+        out(math::radians(self.spread.clamp(0.0, 89.0))).max(0.0) + half
     }
 
     /// A unit's length over the organ, `unit`, sizes the innermost axis's
@@ -3361,7 +3388,7 @@ mod tests {
         let dense = Cluster::of(&given(Some(0.82)));
         let open = Cluster::of(&given(None));
         // Its branches are as short as their heads allow, not 0.4.
-        assert!(dense.size < 0.2, "{}", dense.size);
+        assert!(dense.size < 0.25, "{}", dense.size);
         assert!((open.size - 0.4).abs() < 1e-12);
         for cluster in [&dense, &open] {
             let laid = layout(cluster, Unit::Head, 0.0, 0);
@@ -3389,6 +3416,23 @@ mod tests {
             + 0.045;
         let covered = 54.0 * 0.045 * 0.045 / (reach * reach);
         assert!((0.4..1.0).contains(&covered), "{covered}");
+        // Each tuft's heads stand side by side, not stacked on one
+        // another: its two farthest apart about a head's width or more.
+        // Leaning with their pedicels, they once stood half as far out as
+        // the packing meant, so each tuft drew as one head.
+        for group in 1..=9 {
+            let heads: Vec<Vec3> = laid
+                .units
+                .iter()
+                .filter(|p| p.group == group)
+                .map(|p| p.base)
+                .collect();
+            let widest = heads
+                .iter()
+                .flat_map(|a| heads.iter().map(move |b| (*a - *b).length()))
+                .fold(0.0, f64::max);
+            assert!(widest > 0.09, "tuft {group}: {widest}");
+        }
     }
 
     #[test]

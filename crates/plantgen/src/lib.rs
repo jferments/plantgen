@@ -1718,7 +1718,9 @@ pub mod venation;
 /// A corymb that floras call dense (`inflorescence_density`, the
 /// inflorescence's `fill`) leans its pedicels and branches just far
 /// enough that its heads or flowers fill its top, its branches as short
-/// as their heads allow: a yarrow's 5 to 12 tufts of heads in one plate,
+/// as their heads allow, each tuft's heads side by side (a head leans
+/// with its pedicel, so it stands its own lean nearer the axis): a
+/// yarrow's 5 to 12 tufts of heads in one plate,
 /// each head sized from its involucre and rays (FNA), where hand values
 /// drew a cone of bare pedicels. Every other cluster draws as it did.
 /// A lacy leaf's rachises and ribbons are drawn in pieces along its
