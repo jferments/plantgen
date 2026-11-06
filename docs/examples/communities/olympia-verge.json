@@ -1,0 +1,11 @@
+{"id": "olympia-verge", "members": [
+  {"species": "dactylis-glomerata", "layer": "herb"},
+  {"species": "holcus-lanatus", "layer": "herb"},
+  {"species": "festuca-rubra", "layer": "herb", "abundance": 0.6},
+  {"species": "plantago-major", "layer": "herb", "abundance": 0.5},
+  {"species": "taraxacum-sect-taraxacum", "layer": "herb", "abundance": 0.5},
+  {"species": "hypochaeris-radicata", "layer": "herb", "abundance": 0.5},
+  {"species": "daucus-carota", "layer": "herb", "abundance": 0.4},
+  {"species": "leucanthemum-vulgare", "layer": "herb", "abundance": 0.3},
+  {"species": "trifolium-repens", "layer": "herb", "abundance": 0.3}
+]}

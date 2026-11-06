@@ -305,7 +305,10 @@ cached by key, so the next tile only grows and draws the ones it adds):
 `docs/examples/communities/wind-river.json` is the old-growth
 Douglas-fir and western hemlock forest of the Wind River plot (Shaw et al.
 2004): fill it at `--years 500 --site 0.5,1,370,5` to check a stand
-against the plot.
+against the plot. The `olympia-*.json` communities beside it cover a
+lowland Puget Sound city, from its forest and creeks to its yards, beds,
+lots, verges and lawns; the folder's `README.md` says which ground each
+belongs on, which are planted, and how they were checked.
 
 `docs/examples/fill-viewer.html` is an example caller with no PlantGen
 code: copy it into the `--out` folder, serve that folder

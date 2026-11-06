@@ -302,6 +302,49 @@ fn herbs_left_to_the_ground_cover_are_not_placed_and_a_tile_needs_its_sizes() {
 }
 
 #[test]
+fn every_example_community_loads_and_makes_a_fill() {
+    // docs/examples/communities: each file is a community of the
+    // library's species, and together they make one fill, as a city's
+    // stand map uses them.
+    let dir =
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../docs/examples/communities");
+    let mut paths: Vec<_> = std::fs::read_dir(&dir)
+        .expect("examples")
+        .map(|entry| entry.expect("entry").path())
+        .filter(|path| path.extension().is_some_and(|e| e == "json"))
+        .collect();
+    paths.sort();
+    assert!(paths.len() >= 8, "{paths:?}");
+    let communities: Vec<Community> = paths
+        .iter()
+        .map(|path| {
+            let text = std::fs::read_to_string(path).expect("read");
+            let community = Community::from_json(&text)
+                .unwrap_or_else(|error| panic!("{}: {error}", path.display()));
+            let stem = path.file_stem().and_then(|s| s.to_str()).expect("stem");
+            if stem != "wind-river" {
+                assert_eq!(community.id, stem, "{}", path.display());
+            }
+            community
+        })
+        .collect();
+    let planted: Vec<&str> = communities
+        .iter()
+        .filter(|c| c.origin == plantgen::development::Origin::Planted)
+        .map(|c| c.id.as_str())
+        .collect();
+    assert_eq!(
+        planted,
+        ["olympia-garden-bed", "olympia-lawn", "olympia-yard-trees"]
+    );
+    let mut settings = FillSettings::default();
+    settings.stand_ages = vec![10.0, 80.0];
+    settings.seeds = 1;
+    let fill = Fill::new(&communities, &settings).expect("fill");
+    assert!(!fill.prototypes().is_empty());
+}
+
+#[test]
 fn a_tile_writes_its_header_and_packed_instances() {
     let fill = fill();
     let site = Site::flat(TileId { x: -1, y: 4 }, 40.0).expect("site");
