@@ -1683,4 +1683,11 @@ pub mod venation;
 /// program, its revision 21) as broadleaf trees, herbs and grasses are:
 /// one rooted in a crack or a thin soil grows as a shaded one does. Grown
 /// with no rooting limits, as every package is, a conifer grows as before.
-pub const GENERATOR_REVISION: u32 = 208;
+///
+/// 211: thin limbs a far level drops stay whole. Wood at least 0.35 of
+/// the level's thinnest (`mesh::LIMB_SHARE`), borne by wood the level draws, is drawn as
+/// at most three sticks end to end along its own axis, not gathered
+/// with the twigs into sticks at each cell's mean place: a shade-grown
+/// bigleaf maple's braided leaders, as thin as its farthest level's
+/// thinnest wood, were drawn there as pieces floating over gaps.
+pub const GENERATOR_REVISION: u32 = 211;
