@@ -759,4 +759,16 @@ fn fill_writes_a_tile_and_the_prototypes_it_places() {
         out.join("tiles").join(first.as_str().unwrap()).is_file(),
         "{first}"
     );
+    // `plantc unpack` copies the folder for Blender; these files hold no
+    // meshopt, so each comes over as it is.
+    let unpacked = dir.join("fill-unpacked");
+    let copied = stdout(&plantc(&[
+        "unpack",
+        out.to_str().unwrap(),
+        "--out",
+        unpacked.to_str().unwrap(),
+    ]));
+    assert!(copied.contains("0 of them unpacked"), "{copied}");
+    assert_eq!(fs::read(unpacked.join("tiles/2_-3.glb")).unwrap(), glb);
+    assert!(unpacked.join("tiles/2_-3/cells.json").is_file());
 }

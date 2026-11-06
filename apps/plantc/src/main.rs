@@ -145,6 +145,7 @@ fn run() -> Result<(), Failure> {
         "variants" => variants_command(&args),
         "fill" => fill_command(&args),
         "inspect" => inspect_command(&args),
+        "unpack" => unpack_command(&args),
         "sources" => sources_command(&args),
         "help" | "--help" | "-h" => print_usage(),
         other => Err(format!("unknown command `{other}`; run `plantc help`").into()),
@@ -564,8 +565,9 @@ Usage:
       also writes DIR/tiles/X_Y.glb: the whole tile as one glTF file,
       each prototype's level LEVEL once and every plant an instance of it
       (EXT_mesh_gpu_instancing), which Blender, Godot, Unity and three.js
-      open as they are (Blender and Godot need --compress quantize or
-      none: they do not read meshopt). --glb-cells LEVEL,... (say
+      open as they are (Blender before 5 and Godot need --compress
+      quantize or none, or `plantc unpack` afterwards: they do not read
+      meshopt). --glb-cells LEVEL,... (say
       0,1,2,3) cuts the tile into cells --cell-m across (20 unless given)
       and writes each as such a file at every level listed,
       DIR/tiles/X_Y/c<col>_<row>-lod<N>.glb, with DIR/tiles/X_Y/cells.json
@@ -580,6 +582,12 @@ Usage:
       have none yet).
   plantc inspect <package.afterplant>
       Check every object of a package and summarise it.
+  plantc unpack <FILE.glb|DIR> --out <FILE.glb|DIR>
+      Copy a glTF file, or a folder such as a fill's output, with
+      EXT_meshopt_compression undone in every .glb, so Blender 4.5 and
+      other importers without a meshopt decoder read it (positions stay
+      quantized, which they read). Other files are copied as they are,
+      so a tile's cells.json still names its files.
   plantc export <species|spec.json|package.afterplant> [--out DIR]
                 [--format glb] [--env ENV] [--seed N] [--age N]
                 [--shade attribute|baked] [--quality draft|standard]
@@ -603,7 +611,8 @@ Usage:
       EXT_mesh_gpu_instancing, which three.js, Unity's glTFast and current
       Blender read and Godot does not. --compress meshopt also compresses
       every array (EXT_meshopt_compression, which three.js reads with its
-      meshopt decoder), 3 to 4 times smaller again: the 30-year bigleaf
+      meshopt decoder and Blender from 5.2; `plantc unpack` undoes it for
+      Blender 4.5), 3 to 4 times smaller again: the 30-year bigleaf
       maple's nearest level is 7 MiB. --attributes wind leaves out the
       growth attributes (_PLANTGEN_BIRTH, _PLANTGEN_SHED), none also the
       wind ones (_PLANTGEN_WIND, _PLANTGEN_RADIUS).
@@ -7125,6 +7134,75 @@ fn triangle_budget(given: &str) -> Result<[usize; export::LEVELS], String> {
             )
         }),
     }
+}
+
+/// `plantc unpack`: copy glTF files, or a folder of them, with
+/// `EXT_meshopt_compression` undone, so Blender 4.5 reads them.
+fn unpack_command(args: &[String]) -> Result<(), Failure> {
+    let options = Options::parse(args, &["out"])?;
+    let from = PathBuf::from(options.one_positional("a .glb file or a folder")?);
+    let to = PathBuf::from(
+        options
+            .flags
+            .get("out")
+            .ok_or("`plantc unpack` needs --out (a file, or a folder for a folder)")?,
+    );
+    if from == to {
+        return Err("--out must differ from the input".to_string().into());
+    }
+    let mut files = Vec::new();
+    if from.is_dir() {
+        let mut folders = vec![from.clone()];
+        while let Some(folder) = folders.pop() {
+            for entry in fs::read_dir(&folder)
+                .map_err(|error| format!("cannot read {}: {error}", folder.display()))?
+            {
+                let path = entry.map_err(|error| error.to_string())?.path();
+                if path.is_dir() {
+                    folders.push(path);
+                } else {
+                    let relative = path.strip_prefix(&from).map_err(|e| e.to_string())?;
+                    files.push((path.clone(), to.join(relative)));
+                }
+            }
+        }
+    } else {
+        files.push((from.clone(), to.clone()));
+    }
+    files.sort();
+    let (mut unpacked, mut before, mut after) = (0usize, 0usize, 0usize);
+    for (source, target) in &files {
+        if let Some(parent) = target.parent() {
+            fs::create_dir_all(parent)
+                .map_err(|error| format!("cannot create {}: {error}", parent.display()))?;
+        }
+        let bytes = fs::read(source)
+            .map_err(|error| format!("cannot read {}: {error}", source.display()))?;
+        let written = if source.extension().is_some_and(|ext| ext == "glb") {
+            let plain = plantgen::gltf::unpack(&bytes)
+                .map_err(|error| format!("{}: {error}", source.display()))?;
+            if plain.len() != bytes.len() || plain != bytes {
+                unpacked += 1;
+                before += bytes.len();
+                after += plain.len();
+            }
+            plain
+        } else {
+            bytes
+        };
+        fs::write(target, written)
+            .map_err(|error| format!("cannot write {}: {error}", target.display()))?;
+    }
+    #[allow(clippy::cast_precision_loss)]
+    let mib = |bytes: usize| bytes as f64 / 1_048_576.0;
+    out!(
+        "copied {} files to {}, {unpacked} of them unpacked from meshopt ({:.1} to {:.1} MiB)",
+        files.len(),
+        to.display(),
+        mib(before),
+        mib(after)
+    );
+    Ok(())
 }
 
 fn inspect_command(args: &[String]) -> Result<(), Failure> {
