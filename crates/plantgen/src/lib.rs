@@ -1714,15 +1714,21 @@ pub mod venation;
 ///
 /// 214: a tree grown in a stand stands among its crown class
 /// ([`spec::class_spacing`]). Its like stood as far apart as all of a
-/// fully stocked stand's stems, so a young stand's crowns were half the
-/// width a stand-grown tree's are and its overtopped trees grew as poles;
-/// now a canopy tree's peers are the half of the stems that are dominant
-/// or codominant ([`spec::DOMINANT_SHARE`]), sqrt(2) farther apart, and
-/// an overtopped tree stands among the crowns over it. Laid out to the
-/// plots' layer covers, a 35-year Douglas-fir stand holds 1,726 trees a
-/// hectare and 38 m² of basal area where it held 3,934 and 62, against
-/// 1,790 and 36 in McArdle et al. (1961). Past the yield tables' ages the
-/// thinning stand's own spacing takes over once it is wider, so a stand
-/// from about 250 years grows as before; a tree come up beneath an older
-/// canopy, and every plant outside a stand, grows as before.
+/// fully stocked stand's stems, so a young Douglas-fir's crown reached 0.6
+/// of the width the Forest Vegetation Simulator's equation gives a
+/// stand-grown tree its size, and its overtopped trees grew as poles; now
+/// a canopy tree's peers are the half of the stems that are dominant or
+/// codominant ([`spec::DOMINANT_SHARE`]), sqrt(2) farther apart, and an
+/// overtopped tree stands among the crowns over it. Laid out to the plots'
+/// layer covers, a 35-year Douglas-fir stand holds 1,737 trees a hectare
+/// over 5 cm and 39 m² of basal area where it held 3,934 and 62, against
+/// 1,790 and 36 in McArdle et al. (1961); its crowns reach 0.73 of the
+/// equation's width, and 1.06 at 85 years where they reached 0.82. Past
+/// the yield tables' ages the thinning stand's own spacing takes over once
+/// it is wider (from about 250 years for a canopy tree), but a tree that
+/// grew as a dominant keeps the wider crown and thicker stem it grew: at
+/// 480 years a Douglas-fir in a stand reaches 8.5 m from its trunk where
+/// it reached 7.7, on a 148 cm stem where 134, 1.18 of the equation's
+/// width for its size as before. A tree come up beneath an older canopy,
+/// and every plant outside a stand, grows as before.
 pub const GENERATOR_REVISION: u32 = 214;

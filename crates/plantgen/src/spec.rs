@@ -427,10 +427,10 @@ pub const STAND_SPACING: f64 = 0.115;
 /// covers, a 35-year Douglas-fir stand held 3,934 trees a hectare over 5 cm
 /// across and 62 m² of basal area, twice the 1,790 trees and 36 m² of a
 /// fully stocked stand (McArdle et al. 1961, Table 2, site index 140). At
-/// half the stems it holds 1,726 trees, 38 m² and a 16.8 cm average tree
-/// (16.4 in the table), and at 45 and 80 years 78% and 79% of the table's
-/// trees, as unmanaged stands run below full stocking. The value is this
-/// model's choice, fitted at 35 years.
+/// half the stems it holds 1,737 trees, 39 m² and a 16.8 cm average tree
+/// (16.4 in the table); at 45 and 80 years 78% and 80% of the table's
+/// trees, and 84% and 69% of its basal area. The value is this model's
+/// choice, fitted at 35 years.
 pub const DOMINANT_SHARE: f64 = 0.5;
 
 /// How many times farther apart than all of a stand's stems the stems of
@@ -439,7 +439,7 @@ pub const DOMINANT_SHARE: f64 = 0.5;
 /// trees overtopped by crowns `relative_height` times their own height
 /// stand among those crowns, as far apart as they are for that height.
 /// Past the yield tables' ages the thinning stand's own spacing takes over
-/// once it is wider ([`stand_spacing`]), so old stands grow as before.
+/// once it is wider ([`stand_spacing`]).
 #[must_use]
 pub fn class_spacing(relative_height: f64) -> f64 {
     relative_height.max(1.0) / DOMINANT_SHARE.sqrt()
