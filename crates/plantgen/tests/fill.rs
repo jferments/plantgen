@@ -1097,6 +1097,55 @@ mod on_a_site_field {
     }
 
     #[test]
+    fn a_wall_climbers_package_grows_it_at_the_wall_as_the_fill_measured_it() {
+        // The yard's ivy: a host that draws packages builds one per seed,
+        // grown at the foot of the fill's wall, and its keyframe is the
+        // prototype as the fill measured it.
+        let fill = &*YARD_FILL;
+        let ivy: Vec<u32> = (0..fill.prototypes().len())
+            .filter(|&i| fill.prototypes()[i].key.on_wall)
+            .map(|i| u32::try_from(i).unwrap())
+            .collect();
+        assert!(!ivy.is_empty(), "{:?}", fill.prototypes());
+        let packages = fill.packages(&ivy).unwrap();
+        let held: usize = packages.iter().map(|p| p.prototypes.len()).sum();
+        assert_eq!(held, ivy.len());
+        for package in &packages {
+            assert_eq!(package.spec.variants.wall_m, Some(plantgen::export::WALL_M));
+            assert!(package.spec.host.is_none());
+            let inputs =
+                plantgen::package::Inputs::new(&package.spec, &plantgen::quality::DRAFT).unwrap();
+            let built = plantgen::package::build(&inputs, 4, &mut |_| {}).unwrap();
+            let keyframes = &built.manifest.variants[0].keyframes;
+            for &(index, keyframe) in &package.prototypes {
+                let prototype = &fill.prototypes()[index as usize];
+                assert!((keyframes[keyframe].age - prototype.age_years).abs() < 1e-9);
+                let (kept, measured) = (
+                    &keyframes[keyframe].size,
+                    fill.size(index as usize).unwrap(),
+                );
+                let near = |a: f64, b: f64| (a - b).abs() <= 1e-9 * a.abs().max(1.0);
+                assert!(
+                    kept.segments == measured.segments
+                        && kept.organs == measured.organs
+                        && near(kept.height, measured.height)
+                        && near(kept.crown_radius, measured.crown_radius)
+                        && near(kept.leaf_area, measured.leaf_area),
+                    "{}: {kept:?} in its package, {measured:?} measured",
+                    prototype.key.stem()
+                );
+                // It climbed the wall: taller than it would stand alone.
+                assert!(kept.height > 2.0, "{} m", kept.height);
+            }
+            // Its own package, not the species' on the ground.
+            let mut ground = package.spec.clone();
+            ground.variants.wall_m = None;
+            let plain = plantgen::package::Inputs::new(&ground, &plantgen::quality::DRAFT).unwrap();
+            assert_ne!(plain.key, inputs.key);
+        }
+    }
+
+    #[test]
     fn ivy_stands_at_the_foot_of_walls_and_herbs_on_a_roof_with_soil() {
         let fill = &*YARD_FILL;
         let site = tile_of(&yard());

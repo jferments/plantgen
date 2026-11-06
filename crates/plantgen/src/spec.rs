@@ -557,7 +557,18 @@ pub struct VariantPlan {
     /// package grows it. Empty: `seeds`.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub dealt_among: Vec<u64>,
+    /// The height in metres of a wall the plant climbs: each variant grows
+    /// at its foot in the open, holding to it as a climber holds to a
+    /// site's walls ([`crate::export::grow_on_wall`]), where a stands
+    /// fill's wall climbers grow ([`crate::fill::Fill::packages`]). None:
+    /// its environments, and its host's wood for a guest.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub wall_m: Option<f64>,
 }
+
+/// The highest wall a spec's variants may grow at the foot of
+/// ([`VariantPlan::wall_m`]), metres.
+pub const MAX_WALL_M: f64 = 50.0;
 
 /// One variant to grow.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
@@ -1517,6 +1528,25 @@ impl PlantSpec {
         {
             return fail("variants.stand_spacing must be 0.05 to 0.5".into());
         }
+        if let Some(wall) = self.variants.wall_m {
+            if !(wall > 0.0 && wall <= MAX_WALL_M) {
+                return fail(format!(
+                    "variants.wall_m must be above 0 and at most {MAX_WALL_M} m, found {wall}"
+                ));
+            }
+            // At a wall's foot a plant grows in the open on the wall
+            // alone: no other setting, and no host's wood.
+            if self.variants.environments != [Environment::Open]
+                || !self.variants.conditions.is_empty()
+                || self.host.is_some()
+            {
+                return fail(
+                    "variants.wall_m grows the plant at a wall's foot in the open: \
+                     its environments must be only open, with no conditions and no host"
+                        .into(),
+                );
+            }
+        }
         // Each variant is named by its environment and seed, so a
         // conditions document's preset labels its variants and may not be
         // an environment's or another document's.
@@ -2248,6 +2278,51 @@ mod tests {
                 });
             },
             "roots prop must be between 0 and 256, found 1000",
+        );
+    }
+
+    #[test]
+    fn a_wall_to_climb_is_grown_at_in_the_open_alone() {
+        let mut ivy = PlantSpec::builtin("hedera-helix").unwrap();
+        ivy.host = None;
+        ivy.variants.conditions.clear();
+        ivy.variants.environments = vec![Environment::Open];
+        ivy.variants.wall_m = Some(6.0);
+        ivy.validate().unwrap();
+        // It serializes only when stated, so no other spec's key moves.
+        let text = serde_json::to_string(&ivy).unwrap();
+        assert!(text.contains("\"wall_m\":6"));
+        ivy.variants.wall_m = None;
+        assert!(!serde_json::to_string(&ivy).unwrap().contains("wall_m"));
+        let refused = |change: &dyn Fn(&mut PlantSpec), expected: &str| {
+            let mut changed = ivy.clone();
+            changed.variants.wall_m = Some(6.0);
+            change(&mut changed);
+            let message = changed.validate().unwrap_err().0;
+            assert!(message.contains(expected), "{message}");
+        };
+        refused(
+            &|spec| spec.variants.wall_m = Some(0.0),
+            "variants.wall_m must be above 0",
+        );
+        refused(
+            &|spec| spec.variants.wall_m = Some(80.0),
+            "variants.wall_m must be above 0 and at most 50 m",
+        );
+        refused(
+            &|spec| spec.variants.environments = vec![Environment::Open, Environment::Interior],
+            "its environments must be only open",
+        );
+        refused(
+            &|spec| {
+                spec.host = Some(HostSpec {
+                    species: "pseudotsuga-menziesii".into(),
+                    age: 30.0,
+                    environment: Environment::Open,
+                    seed: 1,
+                });
+            },
+            "no host",
         );
     }
 
