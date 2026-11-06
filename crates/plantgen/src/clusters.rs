@@ -238,6 +238,9 @@ pub struct Cluster {
     pub droop: f64,
     /// Degrees of arc a corymb's units cover round its top; 0 is flat.
     pub dome: f64,
+    /// The share of a flat-topped corymb's top what it bears fills where
+    /// its spread is unset; 0 where it is not packed.
+    pub fill: f64,
     pub stalk: [f32; 3],
     /// The spathe's length, a share of the axis; 0 where there is none
     /// (always on a branch).
@@ -304,7 +307,63 @@ impl Cluster {
         if let Some(unit) = spec.unit {
             cluster.size_units(spec, unit, spec.flowers.is_some());
         }
+        if cluster.kind == ClusterKind::Corymb && cluster.dome <= 0.0 && cluster.fill > 0.0 {
+            let fill = cluster.fill;
+            cluster.packed_corymb(spec, fill);
+        }
         cluster
+    }
+
+    /// Leans a corymb's pedicels or branches whose taxa leave `spread`
+    /// unset just far enough that what they bear covers `fill` of its top
+    /// ([`Inflorescence::fill`]), each branch that is itself a corymb
+    /// packed first: a yarrow's compound corymb stands in one plate of
+    /// heads rather than as tufts on bare branches. A unit is taken as
+    /// wide as it is long; $`N`$ things of half-width $`b`$ cover $`f`$ of
+    /// a disc of radius $`b\sqrt{N/f}`$, their centres reaching
+    /// $`b\,(\sqrt{N/f} - 1)`$ from the axis, which the lowest node's
+    /// pedicel reaches leaning $`\sigma`$ over the axis above it: $`1 - l`$,
+    /// less a branch's own length, as a branch stands upright at its tip
+    /// ([`axis`]); $`\sigma`$ between 5 and 70 degrees. Returns the
+    /// half-width of the corymb's top.
+    fn packed_corymb(&mut self, given: &Inflorescence, fill: f64) -> f64 {
+        let mut s = self.size.clamp(0.005, 1.0);
+        let fill = fill.clamp(0.1, 1.0);
+        let (count, half) = match self.branch.as_deref_mut() {
+            Some(branch) if branch.kind == ClusterKind::Corymb && branch.branch.is_none() => {
+                let empty = Inflorescence::default();
+                let inner = given.branch.as_deref().unwrap_or(&empty);
+                if given.size.is_none() && inner.size.is_none() && inner.spread.is_none() {
+                    // The branch as long as lets its units, leaning its
+                    // spread, just fill its top: a short corymb of heads on
+                    // a long ray, not a tall one.
+                    let unit = branch.size.clamp(0.005, 1.0) * s;
+                    let top = 0.5 * unit * math::sqrt(f64::from(branch.flowers.max(1)) / fill);
+                    let rise = (1.0 - branch.peduncle.clamp(0.0, 0.95))
+                        * math::tan(math::radians(branch.spread.clamp(5.0, 70.0)));
+                    s = ((top - 0.5 * unit).max(0.0) / rise).clamp((unit / 0.9).max(0.05), 0.6);
+                    self.size = s;
+                    branch.size = (unit / s).clamp(0.005, 1.0);
+                    (self.branches, top)
+                } else {
+                    (self.branches, s * branch.packed_corymb(inner, fill))
+                }
+            }
+            Some(_) => (self.branches, 0.5 * s),
+            None => (self.flowers, 0.5 * s),
+        };
+        let across = math::sqrt(f64::from(count.max(1)) / fill);
+        let low = self.peduncle.clamp(0.0, 1.0).min(1.0 - s);
+        let rise = if self.branch.is_some() {
+            1.0 - s - low
+        } else {
+            1.0 - low
+        };
+        if given.spread.is_none() && rise > 1e-6 {
+            let reach = half * (across - 1.0).max(0.0);
+            self.spread = math::degrees(math::atan(reach / rise)).clamp(5.0, 70.0);
+        }
+        rise * math::tan(math::radians(self.spread.clamp(0.0, 89.0))) + half
     }
 
     /// A unit's length over the organ, `unit`, sizes the innermost axis's
@@ -407,6 +466,7 @@ impl Cluster {
             taper: spec.taper.unwrap_or(0.0),
             droop: spec.droop.unwrap_or(0.0),
             dome: spec.dome.unwrap_or(0.0),
+            fill: spec.fill.unwrap_or(0.0),
             stalk,
             spathe: if level == 1 {
                 spec.spathe.unwrap_or(0.0)
@@ -582,6 +642,7 @@ impl Cluster {
             ("taper", spec.taper, 0.0, 1.0),
             ("droop", spec.droop, 0.0, 180.0),
             ("dome", spec.dome, 0.0, 180.0),
+            ("fill", spec.fill, 0.1, 1.0),
             ("spathe", spec.spathe, 0.0, 3.0),
             ("spathe_width", spec.spathe_width, 0.1, 1.5),
             ("spathe_hood", spec.spathe_hood, 0.0, 120.0),
@@ -1881,14 +1942,20 @@ fn axis(cluster: &Cluster, unit: Unit, turn: f64) -> Axis {
                 let low = y0.min(1.0 - s);
                 let y = low + (1.0 - s - low) * place(i / m);
                 // Long enough that every unit's tip is level with the
-                // organ's.
-                let stalk = ((1.0 - y) / math::cos(sigma).max(0.2) - s * t).max(0.0);
+                // organ's; a branch turns upright at its tip, so the
+                // corymb it bears stands level with the others.
+                let stalk = if bearing {
+                    ((1.0 - s * t - y) / math::cos(sigma).max(0.2)).max(0.0)
+                } else {
+                    ((1.0 - y) / math::cos(sigma).max(0.2) - s * t).max(0.0)
+                };
                 let attach = Vec3::Y * y;
-                let direction = lean(sigma, around);
+                let leaning = lean(sigma, around);
+                let direction = if bearing { Vec3::Y } else { leaning };
                 slots.push(Slot {
                     anchor: y,
                     attach,
-                    base: attach + direction * stalk,
+                    base: attach + leaning * stalk,
                     direction,
                     length: s * t,
                     radial: radial(around),
@@ -3278,6 +3345,50 @@ mod tests {
             .iter()
             .fold((f64::MAX, f64::MIN), |(l, h), &t| (l.min(t), h.max(t)));
         assert!(high - low < 0.1 * high, "{low}..{high}");
+    }
+
+    #[test]
+    fn a_dense_compound_corymb_fills_one_level_plate() {
+        // A yarrow's array: 9 branches of 6 heads, each head 0.09 of the
+        // organ, its spread left to the packing.
+        let given = |fill: Option<f64>| Inflorescence {
+            branches: Some(9),
+            unit: Some(0.09),
+            peduncle: Some(0.5),
+            fill,
+            ..spec(ClusterKind::Corymb, 6)
+        };
+        let dense = Cluster::of(&given(Some(0.82)));
+        let open = Cluster::of(&given(None));
+        // Its branches are as short as their heads allow, not 0.4.
+        assert!(dense.size < 0.2, "{}", dense.size);
+        assert!((open.size - 0.4).abs() < 1e-12);
+        for cluster in [&dense, &open] {
+            let laid = layout(cluster, Unit::Head, 0.0, 0);
+            assert_eq!(laid.units.len(), 54);
+            // Every head's face level with the others: the branches turn
+            // upright, so each one's corymb is not tilted with it.
+            let faces: Vec<f64> = laid
+                .units
+                .iter()
+                .map(|p| p.base.y + p.direction.y * p.length)
+                .collect();
+            let (low, high) = faces
+                .iter()
+                .fold((f64::MAX, f64::MIN), |(l, h), &t| (l.min(t), h.max(t)));
+            assert!(high - low < 0.06, "{low}..{high}");
+        }
+        // Packed, the heads cover most of the plate: the disc through the
+        // outermost heads holds them at about the share asked.
+        let laid = layout(&dense, Unit::Head, 0.0, 0);
+        let reach = laid
+            .units
+            .iter()
+            .map(|p| math::sqrt(p.base.x * p.base.x + p.base.z * p.base.z))
+            .fold(0.0, f64::max)
+            + 0.045;
+        let covered = 54.0 * 0.045 * 0.045 / (reach * reach);
+        assert!((0.4..1.0).contains(&covered), "{covered}");
     }
 
     #[test]

@@ -2493,6 +2493,15 @@
       "optional": true,
       "why": "the shape a corymb's flowers make together: level across its top, a dome, or a ball, as a mophead hydrangea's"
     },
+    "inflorescence_density": {
+      "group": "flowers",
+      "organ": "inflorescence",
+      "type": "enum",
+      "values": ["dense", "open"],
+      "when": {"inflorescence": ["corymb"]},
+      "optional": true,
+      "why": "whether a corymb's flowers or heads crowd edge to edge in one plate (a yarrow's) or stand apart on their pedicels"
+    },
     "inflorescence_length_m": {
       "group": "flowers",
       "organ": "inflorescence",

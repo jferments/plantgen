@@ -1700,4 +1700,14 @@ pub mod venation;
 /// outlines drew neither, and 17 more compound-leaved species (roses,
 /// brambles, rowans, sumacs, hemp) change with their stated leaflet
 /// tips. Every other leaf draws as it did.
-pub const GENERATOR_REVISION: u32 = 209;
+///
+/// 214: a compound corymb's branches turn upright at their tips, so the
+/// corymb each bears stands level with the others in one flat top (a
+/// rowan's, a Catalina ironwood's); before, each leaned with its branch.
+/// A corymb that floras call dense (`inflorescence_density`, the
+/// inflorescence's `fill`) leans its pedicels and branches just far
+/// enough that its heads or flowers fill its top, its branches as short
+/// as their heads allow: a yarrow's 5 to 12 tufts of heads in one plate,
+/// each head sized from its involucre and rays (FNA), where hand values
+/// drew a cone of bare pedicels. Every other cluster draws as it did.
+pub const GENERATOR_REVISION: u32 = 214;

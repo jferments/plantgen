@@ -305,6 +305,10 @@
       "map": {"inflorescence_outline": {"flat_topped": 0, "rounded": 90, "globose": 180}},
       "why": "A flat-topped corymb's flowers stand level; a rounded one's lie on a half sphere, a globose one's round a ball."
     },
+    "appearance.organs.*.inflorescence.fill": {
+      "map": {"inflorescence_density": {"dense": 0.82}},
+      "why": "A dense corymb's heads or flowers stand edge to edge in one plate, as a compound umbel's umbellets do: its pedicels and branches lean just far enough that what they bear covers most of its top (0.82 of it, a crowd of discs). An open one keeps its pedicels' usual lean."
+    },
     "appearance.organs.*.inflorescence.droop": {
       "map": {"inflorescence_posture": {"erect": 0, "nodding": 90, "pendent": 180}},
       "why": "An erect inflorescence's axis stays straight; a nodding one bends over by a quarter turn toward its tip, a pendent one by half a turn, so it hangs."
@@ -838,6 +842,7 @@
     "rules.appearance.organs.*.shape.hairs": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a hairy fruit (Rosaceae, bramble fruits, 2026-10-19), a choice of the model's: fine pale hairs over the skin pale its colour by up to an eighth, glabrous none, puberulent 0.3 of that, pubescent 0.6, tomentose all of it."},
     "rules.appearance.organs.*.season": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a plant's year from the months floras give, a choice of the model's (seasonal looks, 2026-10-16): its flowers show in the months it flowers in and its fruit in the months it is ripe in, as the season rules set their days, where they had shown all year and never fruited."},
     "rules.appearance.organs.fruit.accent": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours unripe fruit, a choice of the model's (seasonal looks, 2026-10-16): green as the leaves are, since floras state the ripe colour and seldom the unripe one."},
+    "rules.appearance.organs.*.inflorescence.fill": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a corymb that floras call dense, a choice of the model's (yarrow, 2026-11-06): its heads or flowers fill 0.82 of its top, the share a compound umbel's umbellets fill (crate::clusters), as VicFlora's 'capitula in dense compound corymbs' and the iNaturalist photographs of yarrow show one plate of heads with no gaps between its branches."},
     "rules.appearance.organs.*.inflorescence.dome": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a corymb's outline, a choice of the model's (batch 3 review, 2026-10-18): floras word a corymb flat-topped, rounded (convex) or globose, as Dendrology (2019) p. 323 does a mophead hydrangea's; the three are drawn as tips level, on a half sphere and round a ball."},
     "rules.appearance.organs.fruit.inflorescence.unit": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a cluster in fruit, a choice of the model's (seasonal looks, 2026-10-16): each fruit as long, for the cluster's length, as floras measure the fruit, as its flowers are drawn as wide as they measure the flower."},
     "rules.appearance.organs.fruit.shape.seeds": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws the seeds of an open aggregate, a choice of the model's (magnoliid fruit, 2026-10-17): two follicles in three split, each showing its seed."},
