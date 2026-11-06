@@ -81,6 +81,11 @@ Paper 36).
 - Yard trees: crowns cover most of a yard cell, with Douglas-fir, redcedar
   and dogwood; bigleaf maple fades early because its spec's lifespan reads
   50 years.
+- Lot at 10 years: a thicket of Scouler's willow and hawthorn up to 4.7 m,
+  over little blackberry or broom (shrubs 3%). Its floor holds no logs, as
+  cleared ground, but is 61% moss: neither the willow nor the hawthorn has
+  a `shed.json` yet, so the fill does not know their fallen leaves keep
+  moss down.
 - Thirteen members have no niche yet, so they suit every site and stand
   half tolerant of shade (`plantc fill` names them): hawthorn, rowan,
   butterfly bush, Pacific rhododendron, rugosa rose, ivy, orange
