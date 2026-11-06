@@ -525,14 +525,22 @@ Usage:
                 [--focus X,Y,Z --span M]]]
       Fill one map tile with plant communities (each a JSON file: an id
       and members, each a species, optionally the layer it keeps to and
-      its abundance) as the library API's Fill does, and write
+      its abundance; origin planted for a yard's or street's kept
+      trees) as the library API's Fill does, and write
       DIR/tiles/X_Y.json (header, ground cover and far canopy per stand
       cell, stand numbers) and DIR/tiles/X_Y.bin (32-byte instances;
       docs/LIBRARY-API.md). Each community's stand is developed at each of
       --ages years since disturbance (default 10,20,40,80,160,320,640);
       a stand cell takes the nearest. Without --stands (a StandMap:
-      cell_m, cols and cells), the first community covers the tile at
-      --years since disturbance (default 100). Every prototype is measured
+      cell_m, cols and cells, each with its community, its
+      years_since_disturbance and optionally its ground's moisture, 0 to
+      1, for a creek's bank or a lake's shore), the first community
+      covers the tile at --years since disturbance (default 100). A
+      member without a niche is named on stderr: it suits every site.
+      A map's cells may be as
+      fine as a city's yards and verges (4 m): each reads its window of one
+      stand tile laid out for its block of cells about 40 m across, so fine
+      cells cost little more than coarse ones. Every prototype is measured
       first, its size kept in DIR/prototypes so a later fill grows none
       again. --prototypes used (the default) also exports, into
       DIR/prototypes with prototypes.json, each prototype the tile places
@@ -3590,6 +3598,31 @@ const PAVEMENT_POOL: [&str; 17] = [
 
 /// A species of the pool for the yearly step: its facts from the library,
 /// and its size by age grown once in open ground.
+/// Says which members of the communities have no niche: each suits every
+/// site and stands as half tolerant of shade, so it comes up wherever its
+/// community grows, under a closed canopy too.
+fn warn_without_niche(communities: &[api::Community]) {
+    let library = library();
+    let mut missing: Vec<&str> = communities
+        .iter()
+        .flat_map(|community| &community.members)
+        .map(|member| member.species.as_str())
+        .filter(|id| {
+            library
+                .entry(id)
+                .is_some_and(|entry| matches!(entry.niche(), Ok(None)))
+        })
+        .collect();
+    missing.sort_unstable();
+    missing.dedup();
+    if !missing.is_empty() {
+        eprintln!(
+            "note: no niche for {}: each suits every site and stands half tolerant of shade",
+            missing.join(", ")
+        );
+    }
+}
+
 fn colonist(id: &str, ages: &[f64]) -> Result<plantgen::succession::Colonist, String> {
     use plantgen::succession::{Colonist, Size};
     let spec = load_spec(id)?;
@@ -6397,6 +6430,7 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
             api::Community::from_json(&text).map_err(|error| format!("{path}: {error}"))
         })
         .collect::<Result<Vec<_>, String>>()?;
+    warn_without_niche(&communities);
     let tile = options
         .flags
         .get("tile")
