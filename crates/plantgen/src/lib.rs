@@ -1674,4 +1674,10 @@ pub mod venation;
 /// five yellow disc florets (`disc_florets`, `disc_colour`), in place of a
 /// hand-set cluster of twelve. The open plant-identification judge names
 /// both better.
+/// Forty-three species lose hand-set bloom colours and bloom sizes where a
+/// rule gives them from their flora's flower colour and size: the rule's
+/// values replace what was set by eye, and the judge names them a little
+/// better (16 views better, 8 worse). Families where the judge preferred
+/// the hand values, and six plants whose fruit the rule drew outside its
+/// stated size, keep them.
 pub const GENERATOR_REVISION: u32 = 207;
