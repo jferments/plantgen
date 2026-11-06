@@ -413,6 +413,38 @@ pub const OLDEST_AGE: f64 = 1_000.0;
 /// foliage: a 55 cm Douglas-fir with its crown from 51 m up.
 pub const STAND_SPACING: f64 = 0.115;
 
+/// The share of a fully stocked stand's stems whose crowns stand among
+/// each other: the dominant and codominant trees, whose crowns make the
+/// canopy, while the intermediate and suppressed trees stand under them.
+/// [`STAND_SPACING`] spaces all of a stand's stems, but a crown meets only
+/// the crowns at its own height, so a plant's like stand
+/// `1 / sqrt(DOMINANT_SHARE)` times farther apart than the stand's stems
+/// ([`class_spacing`]). With all stems as its neighbours, a Douglas-fir
+/// grown in a stand reached 0.6 of the crown width Crookston's equation
+/// gives a stand-grown tree of its diameter, height and crown length at 35
+/// years (Forest Vegetation Simulator, Pacific Northwest Coast variant), and
+/// the trees under the canopy were poles; laid out to the plots' layer
+/// covers, a 35-year Douglas-fir stand held 3,934 trees a hectare over 5 cm
+/// across and 62 m² of basal area, twice the 1,790 trees and 36 m² of a
+/// fully stocked stand (McArdle et al. 1961, Table 2, site index 140). At
+/// half the stems it holds 1,726 trees, 38 m² and a 16.8 cm average tree
+/// (16.4 in the table), and at 45 and 80 years 78% and 79% of the table's
+/// trees, as unmanaged stands run below full stocking. The value is this
+/// model's choice, fitted at 35 years.
+pub const DOMINANT_SHARE: f64 = 0.5;
+
+/// How many times farther apart than all of a stand's stems the stems of
+/// a plant's crown class stand while the stand is fully stocked: a
+/// dominant's peers are the other dominants ([`DOMINANT_SHARE`]), and the
+/// trees overtopped by crowns `relative_height` times their own height
+/// stand among those crowns, as far apart as they are for that height.
+/// Past the yield tables' ages the thinning stand's own spacing takes over
+/// once it is wider ([`stand_spacing`]), so old stands grow as before.
+#[must_use]
+pub fn class_spacing(relative_height: f64) -> f64 {
+    relative_height.max(1.0) / DOMINANT_SHARE.sqrt()
+}
+
 /// How a stand of the same age opens past the yield tables' ages, as its
 /// relative spacing at stand ages in years: [`STAND_SPACING`] to 160 years
 /// (McArdle et al. 1961), then opening as the canopy trees die and gaps
@@ -1922,6 +1954,15 @@ mod tests {
         assert!((stand_spacing(305.0) - (STAND_SPACING + 0.27) / 2.0).abs() < 1e-12);
         assert!((stand_spacing(450.0) - 0.27).abs() < 1e-12);
         assert!((stand_spacing(1000.0) - 0.27).abs() < 1e-12);
+    }
+
+    #[test]
+    fn a_crown_class_stands_among_its_own() {
+        // Dominants are half the stems, so they stand sqrt(2) farther
+        // apart; overtopped trees as far apart as the crowns over them.
+        assert!((class_spacing(1.0) - std::f64::consts::SQRT_2).abs() < 1e-12);
+        assert!((class_spacing(0.0) - class_spacing(1.0)).abs() < 1e-12);
+        assert!((class_spacing(1.3) - 1.3 * std::f64::consts::SQRT_2).abs() < 1e-12);
     }
 
     use super::*;

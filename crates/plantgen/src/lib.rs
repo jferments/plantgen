@@ -1711,4 +1711,18 @@ pub mod venation;
 /// Vegetation Simulator's crown-width equation; it holds 757 m² of
 /// foliage at 480 years (Sillett et al. 2018: 630 to 1,480). Every
 /// conifer stays within its reference sizes.
-pub const GENERATOR_REVISION: u32 = 210;
+///
+/// 214: a tree grown in a stand stands among its crown class
+/// ([`spec::class_spacing`]). Its like stood as far apart as all of a
+/// fully stocked stand's stems, so a young stand's crowns were half the
+/// width a stand-grown tree's are and its overtopped trees grew as poles;
+/// now a canopy tree's peers are the half of the stems that are dominant
+/// or codominant ([`spec::DOMINANT_SHARE`]), sqrt(2) farther apart, and
+/// an overtopped tree stands among the crowns over it. Laid out to the
+/// plots' layer covers, a 35-year Douglas-fir stand holds 1,726 trees a
+/// hectare and 38 m² of basal area where it held 3,934 and 62, against
+/// 1,790 and 36 in McArdle et al. (1961). Past the yield tables' ages the
+/// thinning stand's own spacing takes over once it is wider, so a stand
+/// from about 250 years grows as before; a tree come up beneath an older
+/// canopy, and every plant outside a stand, grows as before.
+pub const GENERATOR_REVISION: u32 = 214;
