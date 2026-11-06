@@ -42,6 +42,7 @@
       "leaf_angle": 50,
       "blooms": 1,
       "adult_age": 4,
+      "bloom_size": 0.07,
       "bloom_angle": 20,
       "path_half": 2.35,
       "crown_height": 2.0
@@ -88,6 +89,11 @@
           "spread": 60,
           "pedicel": 0.12
         },
+        "colour": [
+          0.7484,
+          0.0835,
+          0.0331
+        ],
         "accent": [
           0.214,
           0.0331,
