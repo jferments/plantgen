@@ -1679,6 +1679,7 @@ pub mod venation;
 /// base (tapers, points, notches), as simple blades did; and a leaflet
 /// may be twice as broad as long. A vanilla leaf draws three broad lobed
 /// wedges and a redwood sorrel three heart-shaped leaflets, where hand
-/// outlines drew neither, and 44 more compound-leaved species change
-/// with their stated leaflet tips.
+/// outlines drew neither, and 17 more compound-leaved species (roses,
+/// brambles, rowans, sumacs, hemp) change with their stated leaflet
+/// tips. Every other leaf draws as it did.
 pub const GENERATOR_REVISION: u32 = 207;
