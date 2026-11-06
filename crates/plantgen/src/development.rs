@@ -211,6 +211,9 @@ pub fn floor_mosses(
         light: floor_light(tree_cover),
         wetness: moisture.clamp(0.0, 1.0),
         material: crate::substrate::SOIL,
+        // The floor's reaction is not modelled yet: neither acid nor
+        // basic, so no genus is kept off it for its reaction.
+        reaction: 0,
         soil: true,
         hold: 1.0,
     };
