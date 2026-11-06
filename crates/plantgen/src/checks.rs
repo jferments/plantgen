@@ -2290,17 +2290,45 @@ fn outline_shape(outline: &[(f64, f64)], aspect: f64) -> Option<String> {
             }
         }
         words.extend(round.then_some("orbicular"));
+        // A fan: at least as broad as long, widest past the middle, from a
+        // narrow wedge foot.
+        if aspect >= 0.95 && widest > 0.5 && at(0.1) < 0.25 * most {
+            words.insert("flabellate");
+        }
     }
     Some(words.into_iter().collect::<Vec<_>>().join("|"))
 }
 
+/// The deepest notch at the tip that reads as emarginate, not obcordate,
+/// as a share of the blade's length.
+const OBCORDATE_NOTCH: f64 = 0.1;
+
 /// The shape words a leaf card's blade reads as: its outline's
 /// ([`outline_shape`]), and where its basal lobes reach back past the
 /// petiole (`Simple.sinus`), cordate, and reniform too when it is
-/// broader than long (a cordate blade may be).
+/// broader than long (a cordate blade may be); where it is broadest
+/// toward its tip and notched deep there ([`OBCORDATE_NOTCH`]),
+/// obcordate.
 fn card_shape(shape: &Shape) -> Option<String> {
     let (outline, aspect) = card_outline(shape)?;
-    let words = outline_shape(&outline, aspect)?;
+    let mut words = outline_shape(&outline, aspect)?;
+    // A blade broadest toward its tip and notched deep there is a heart
+    // upside down.
+    let notch = match shape {
+        Shape::Simple(s) => s.apex_notch,
+        Shape::Compound(c) => c.apex_notch.unwrap_or(0.0),
+        _ => 0.0,
+    };
+    if notch >= OBCORDATE_NOTCH
+        && words
+            .split('|')
+            .any(|word| ["obovate", "oblanceolate", "spatulate", "flabellate"].contains(&word))
+    {
+        words.push_str("|obcordate");
+        let mut all: Vec<&str> = words.split('|').collect();
+        all.sort_unstable();
+        words = all.join("|");
+    }
     let Shape::Simple(simple) = shape else {
         return Some(words);
     };
@@ -2352,7 +2380,7 @@ fn card_outline(shape: &Shape) -> Option<(Vec<(f64, f64)>, f64)> {
             let form = crate::divided::Form::of(c);
             (
                 sampled(|u| {
-                    outline_profile(c.outline.as_deref(), u, form.widest, form.base, form.tip)
+                    crate::templates::leaflet_profile(c, u, form.widest, form.base, form.tip)
                 }),
                 form.width,
             )
@@ -3932,6 +3960,8 @@ mod tests {
             serde_json::from_str(include_str!("../library/_ranks/phylum/tracheophyta.json"))
                 .unwrap();
         let sinuses = &phylum["rules"]["appearance.organs.leaf.shape.sinus"]["map"]["leaf_shape"];
+        let notches =
+            &phylum["rules"]["appearance.organs.leaf.shape.apex_notch"]["map"]["leaf_shape"];
         // A word's width, or the width its formula falls back to where a
         // flora measures no blade: `first(measured, word's)`.
         let width = |value: &Value| {
@@ -3954,6 +3984,7 @@ mod tests {
                     width: width(&widths[word]),
                     outline: Some(serde_json::from_value(points.clone()).unwrap()),
                     sinus: sinuses[word].as_f64().unwrap_or(0.0),
+                    apex_notch: notches[word].as_f64().unwrap_or(0.0),
                     ..Simple::default()
                 };
                 (word.clone(), card_shape(&Shape::Simple(simple)).unwrap())

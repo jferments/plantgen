@@ -117,8 +117,9 @@
     "seed_dispersal": ["unassisted"],
     "flowering_branches": {"min": 0, "max": 2},
     "height_typical_m": {
-      "min": 0.3,
+      "min": 1.0,
       "max": 2.0,
+      "low": 0.3,
       "typical": 1.4
     },
     "life_span": "biennial",
@@ -212,8 +213,8 @@
     },
     "traits.height_typical_m": {
       "evidence": "SourceInferred",
-      "source": "usfs-feis",
-      "note": "FEIS's Verbascum thapsus review (Gucker 2008, read 2026-10-17): may reach more than 2 m tall in its flowering year; Jepson eFlora: stem 30-200 cm; the page itself could not be opened from here, so the wording is as a web-search excerpt quoted it (2026-10-17)."
+      "source": "gleason-cronquist-1991",
+      "note": "Gleason and Cronquist (1991), Verbascum thapsus (read on SEINet, 2026-11-05): stout, erect, 1-2 m; SEINet's own account (Springer et al. 2009): stems to 200 cm. Jepson eFlora's stem 30-200 cm (a web-search excerpt, 2026-10-17) is kept as the rare low, so a flowering plant is drawn under 1 m about one time in twenty, not one in three. FEIS (Gucker 2008): may reach more than 2 m in its flowering year. Typical 1.4 m as before (2026-11-05)."
     },
     "traits.life_span": {
       "evidence": "SourceInferred",
