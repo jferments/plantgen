@@ -67,6 +67,10 @@
       "rule": "0.1",
       "why": "An old crown stops widening once its height slows: its shoots' floor growth fades past a tenth of the tree's height out from the trunk, down to floor_keep, so the limbs' ends still renew their foliage but no longer carry the crown outward. Branch growth goes on in old Douglas-fir after the tree stops rising and its crown stops spreading, so the crown turns cylindrical, deep and irregular, its lower half held by epicormic shoots (Ishii and McDowell 2002, 450-year trees at Wind River). With the floor fading only in columnar crowns, a Douglas-fir grown 480 years in a stand drew a dome 21 m across over bare limbs: the top whorls, born as its leader slowed, lengthened for two centuries until the top was as wide as the crown, and 99% of its foliage stood in the top fifth of its height, the lower half of the foliated crown holding 9%. With it the crown is 18 m across, foliated from 62 down to 37 m, and that lower half holds 35%, though it holds less foliage (355 m² against 414) on a thinner trunk (74 cm against 86), the pipe model's trunk following its crown; western hemlock's dome at 480 years goes the same way (18% to 40%). Every Pinaceae species' young sizes stay within a few percent of before. Columnar crowns took it first: without it, a 300-year subalpine fir (FEIS: an extremely narrow crown of short branches) grew to .64 of its height across against the photographed old tree's .37, its sides spreading every year after its leader slowed at 60 years; with it, .44 (seed 1), its foliage thinning from 540 m² at 60 years to 350 at 300 as the photographed old trees' crowns go ragged, and its 15- and 60-year crown widths unchanged (60-year leaf area 670 to 540 m², dbh 42 to 39 cm)."
     },
+    "generator.params.floor_keep_limb": {
+      "rule": "0",
+      "why": "Past floor_reach an old limb's own axis stops lengthening while its side shoots keep floor_keep and renew its foliage, so the crown stops spreading once the tree stops rising. With every axis keeping floor_keep, a few upper limbs crept outward for three centuries and a 480-year Douglas-fir grown in a stand spread 12 m from its trunk, where the Forest Vegetation Simulator's crown-width equation for a tree of its size gives about 6.5 m; with side shoots stopped too, an old western hemlock lost a quarter of its foliage and its lower crown."
+    },
     "generator.params.limb_light": {
       "rule": "0.003",
       "why": "An old limb is shed for want of light only when its tips catch little light for the wood they carry, a third as readily as the pines' 0.01: a fully branched old limb carries many segments, and at 0.01 limbs whose foliage was well lit were shed for their size, so subalpine fir and western larch lost four fifths of their foliage between 150 and 300 years."
@@ -100,8 +104,8 @@
       "why": "A stem bud sprouts where a twentieth of the open sky's light reaches it: the lower crown of an old Douglas-fir is mostly epicormic (Ishii and McDowell 2002), in deep shade under its own crown."
     },
     "generator.params.stem_epi_vigour": {
-      "rule": "3",
-      "why": "A stem sprout repeats the young tree's form (reiteration; Ishii and McDowell 2002), growing three times as fast as a limb of the old crown would; fitted so a 480-year Douglas-fir grown in a stand holds Sillett et al.'s (2018) foliage."
+      "rule": "1",
+      "why": "A stem sprout grows as a young limb does: epicormic branches fill an old Douglas-fir's crown from within and stay short (Ishii and McDowell 2002; Sillett et al. 2018: old crowns narrow, with few long branches). At three times a limb's vigour, sprouts set from 150 years on reached out 10 m by 250 years, doubling a stand-grown Douglas-fir's crown radius where the Forest Vegetation Simulator's crown-width equation gives about 5.5 m."
     },
     "generator.params.shade_own": {
       "rule": "1",
@@ -156,6 +160,11 @@
       "evidence": "SourceInferred",
       "source": "ishii-ford-2002",
       "note": "Ishii et al. (2002), Tree Physiology 22: 31-40: in old-growth Wind River Douglas-firs, specific needle area increased linearly with decreasing height in the crown, about 0.95 cm2/g per metre, and epicormic shoots carried the highest; foliage is renewed in the lower crown by epicormic shoots. The cost's form is King (1997, Tree Physiology 17: 251-258; pinidae revision 17's shade_cost): needle mass per area 130 + 185 times the light at the apex, g/m2. Checked against Ishii and McDowell (2002): 450-year crowns' live crown ratio 0.64."
+    },
+    "rules.generator.params.floor_keep_limb": {
+      "evidence": "SourceInferred",
+      "source": "fvs-pn-overview",
+      "note": "FVS Staff (2008, revised 2026), Pacific Northwest Coast (PN) variant overview of the Forest Vegetation Simulator, equation 4.4.5 with Crookston's (2005) Douglas-fir coefficients (20205): forest-grown crown width = 6.0227 x BF x DBH^0.54361 x HT^-0.20669 x CL^0.20395 x (BA+1)^-0.00644 x exp(EL)^-0.00378 (feet, inches), about 11 m across for a 250-year stand-grown Douglas-fir (80 cm, 63 m) and 13 m for a 480-year one (134-142 cm). Sillett et al. (2018): tall old Douglas-firs have narrow crowns."
     },
     "rules.generator.params.top_die": {
       "evidence": "SourceInferred",

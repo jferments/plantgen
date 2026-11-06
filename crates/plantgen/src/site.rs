@@ -78,6 +78,12 @@ pub struct Surface {
     /// states it. 0 for a clean surface. The site field
     /// ([`crate::site_field`]) gives it to the patches it covers.
     pub soil_m: f64,
+    /// How acid (−1) or basic (+1) its face is, for the mosses on it,
+    /// where it differs from its material's ([`Surface::reaction`]): an
+    /// asphalt shingle roof is `built` but its granules are coloured
+    /// crushed rock with no lime, so neutral (0). `None` keeps the
+    /// material's.
+    pub reaction: Option<i8>,
 }
 
 impl Surface {
@@ -91,7 +97,20 @@ impl Surface {
             clear: false,
             colour: None,
             soil_m: 0.0,
+            reaction: None,
         }
+    }
+
+    /// How acid (−1) or basic (+1) its face is: the surface's own where it
+    /// states one, else its material's: built faces (mortar, concrete,
+    /// cement tiles) basic, bark and wood acid, rock and soil either (0).
+    #[must_use]
+    pub fn reaction(&self) -> i8 {
+        self.reaction.unwrap_or(match self.material {
+            BUILT => 1,
+            BARK | WOOD => -1,
+            _ => 0,
+        })
     }
 
     pub(crate) fn thin(&self) -> bool {

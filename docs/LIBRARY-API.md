@@ -157,16 +157,31 @@ Ok(())
 
 - **Stands that develop.** A stand cell is drawn at the stand age
   (`FillSettings::stand_ages`, 10 to 640 years unless chosen) nearest its
-  years since disturbance. A young stand's trees are one cohort grown as
-  in the open; once its crowns close (35 years for Douglas-fir's 500-year
-  lifespan) they grow as in a closed stand and the canopy covers 85% of
-  the ground, falling to 70% in old growth's gaps; from a fifth of the
-  pioneers' lifespan shade-tolerant trees establish under them, fewer of
-  the older. Shrubs and herbs fill their layers' cover where enough light
-  reaches them, and herbs take the ground an open canopy leaves: 90% of
-  a meadow or a stand just after its disturbance. How many stems a cell
-  holds follows from the crowns, so a stand of narrow crowns holds more
-  than one of wide ones.
+  years since disturbance, its first cohort's trees grown to that age. A
+  young stand's trees grow as in the open until half its years to closure
+  (17 years for Douglas-fir's 500-year lifespan), then as in a stand.
+  Once the crowns close (35 years) the cohort's dominants overtop part
+  of it: those trees grow as overtopped trees do and stand in the middle
+  layer, two fifths of them suppressed, grown as at half the stand's
+  years, in the lower layer; the shade-intolerant among them die out
+  through maturation. From a fifth of the pioneers' lifespan
+  shade-tolerant trees establish under them, fewer of the older, and
+  stand in whichever layer their height puts them. Each layer covers
+  what western Oregon's wet conifer inventory plots find (McIntosh, Gray
+  and Garman 2009, PNW-GTR-794): in a closed young stand the upper trees
+  70%, the middle and lower trees 27% together, shrubs 45% and herbs
+  28%; in old growth 45%, 63%, 50% and 15%. Shrubs and herbs fill their
+  layers where enough light reaches them, herbs beneath shrubs in their
+  shade, and herbs take 90% of a meadow where no tree suits. How many
+  stems a cell holds follows from the crowns, so a stand of narrow crowns
+  holds more than one of wide ones.
+- **Measuring the layers.** `fill.layer_cover(&plan)` (`LayerCover`)
+  measures a filled tile as inventory crews measure a stand: trees 1.4 m
+  or taller in upper, middle and lower layers (thirds of the tallest
+  tree's height, as the fill lays the layers out), each layer's
+  crowns seen from above and counted once, their stems and mean heights,
+  and the shrubs and placed herbs beneath. `plantc fill` prints it, so a
+  fill can be set beside plot data.
 - **Edges.** A stand's first row of trees beside open ground (a bare
   cell, or a stand whose canopy stands under half as tall: a clearcut or
   a young stand beside an old one) grows as an `edge`, its crown free
@@ -281,14 +296,67 @@ Ok(())
   i16 x4 snorm rotation quaternion (z up), f16 scale, u16 age in tenths
   of a year, i8 x2 tint (lightness, hue shift), u16 extra (a climber's
   cut back to its wall, `WallClip::from_extra`; 0 for any other plant).
-  `Instance::from_bytes` reads them back. Schema 3 (`INSTANCE_SCHEMA`):
-  in schema 2 a climber's extra was its wall's top alone, in decimetres.
+  `Instance::from_bytes` reads them back. Schema 4 (`INSTANCE_SCHEMA`):
+  the instances are as in schema 3, and the tile JSON gained the forest
+  floor and the logs (below) and the day it shows (`day`); in schema 2 a
+  climber's extra was its wall's top alone, in decimetres.
+- **The day of the year** a tile shows is its settings' day
+  (`FillSettings::options.day`, 196, mid-July, unless chosen; the
+  plan's and the JSON's `day`). Each prototype is drawn on it, so a
+  deciduous tree, shrub or vine stands bare in winter, puts out pale
+  leaves in spring and turns in autumn as its leaves' year
+  (`appearance.organs.leaf.leafing`) says. The stand is the same every
+  day: only what shows changes. A herb that dies back
+  (`development::Shoots`, from its `leaf_habit`, `life_span` and leaf
+  and flowering months) is placed only while its shoots are up; herbs of
+  every season are laid out together, those up in summer covering what
+  the plots give, so a spring herb keeps its place among them. A bare
+  crown lets more light through (`development::BARE_CROWN_LIGHT`,
+  against 0.1 in full leaf, from light measured under a leafless and a
+  leafy deciduous canopy), so a herb whose shoots stand in spring is
+  judged by the light under a still bare canopy. `stats.crowns_in_leaf`
+  is the share of tree crowns in leaf that day. Prototypes a write kept
+  are drawn again for a new day where their species' looks change with
+  the year.
 - **Ground cover and far canopy** come per stand cell in the plan
   (`cover`: kind and fraction; `canopy`: height, cover, colour), for
   hosts that draw ground cover and far forest with their own systems.
   The canopy's colour is its trees' foliage in full light, linear RGB,
   each species' weighed by its crowns' area, so a maple stand reads
-  lighter than a fir one from afar.
+  lighter than a fir one from afar. On the tile's day a deciduous crown's
+  leaves are tinted as they unfold and turn, and a bare crown shows its
+  twigs: its cover counts as the light they stop, so a bare maple stand
+  hides less than half the ground and reads grey-brown.
+- **The forest floor** comes per stand cell too (`cover[k].floor`,
+  `Floor`): the shares of the ground under litter, moss and logs (side
+  by side, together at most 1, the rest bare soil) and under herbs (over
+  them). Moss grows where crowns close, the ground is moist and few
+  shrubs, herbs or broad leaves cover it (`development::ground_moss`,
+  fitted to the Puget Trough's plots); litter lies under the crowns over
+  the rest. `floor.mosses` names up to three moss genera with their
+  shares of the cell's moss, by their index in the plan's
+  `floor_mosses` (the JSON's `floor_mosses`): the library's mosses that
+  fit a shaded, moist floor (`development::floor_mosses`), the fastest
+  spreading leading after a disturbance and the deepest wefts later, as
+  Hylocomium does in old growth. A host can tint its ground with each
+  genus's `mosses::MossKind::far_colour`.
+- **Logs** lie on a natural stand's floor (`TilePlan::logs`, the JSON's
+  `logs`; none in a planted or kept stand): each with the species it
+  fell from, the floor under its middle (as an instance's position),
+  the way its axis runs from its large end (`yaw`, radians from east), how
+  far its small end rises (`pitch`) and its shape
+  (`deadwood::Shape`: length, both ends' widths, decay class 1-5,
+  seed). How many, how large and how rotted follow the age of the stand,
+  as 196 Douglas-fir plots measured them (Spies, Franklin and Thomas
+  1988: about 600 a hectare covering a tenth of the floor in young
+  stands, fewest in mature ones). Draw each with your own meshes, or
+  with `deadwood::draw(&log.shape, appearance, level)`, a mesh in the
+  log's own frame (axis along +x, up +y, the floor at y = 0): its
+  species' bark while it keeps bark (alpha minus the radius, as a plant's
+  bark), bare and mossy wood as it rots, oval and sunk in class V.
+  `plantc logs --render logs.png` draws the five classes side by side.
+  `plantc fill ... --render` draws the logs and the floor; `--cut 2.5`
+  leaves out everything above 2.5 m to show it.
 
 From the command line, `plantc fill` does the same (`--ages` chooses the
 stand ages, `--herbs no` leaves herbs to the ground cover, `--edges no`

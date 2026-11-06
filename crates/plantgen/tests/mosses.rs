@@ -127,27 +127,32 @@ fn the_library_describes_wall_mosses_by_genus() {
 #[test]
 fn moss_keeps_to_open_faces_and_favours_the_shaded_side() {
     let site = wall_site();
-    let cover = mosses::grow(&site, &library_kinds(), &settings());
-    assert!(
-        cover.colonies.len() > 20,
-        "only {} colonies",
-        cover.colonies.len()
-    );
+    let kinds = library_kinds();
+    // An upright face carries few colonies, so the faces are compared
+    // over four seeds: one large mat can decide a single seed.
     let (mut north, mut south) = (0.0, 0.0);
-    for colony in &cover.colonies {
-        let [x, y, z] = colony.centre;
-        // Never on the board kept clear, nor under the slab lying on it.
-        let on_board = (-2.5..=-1.5).contains(&x) && (1.0..=2.0).contains(&z) && y < 0.3004;
+    for seed in 1..=4 {
+        let cover = mosses::grow(&site, &kinds, &MossSettings { seed, ..settings() });
         assert!(
-            !on_board,
-            "a colony at {:?} on the board or under the slab",
-            colony.centre
+            cover.colonies.len() > 20,
+            "only {} colonies",
+            cover.colonies.len()
         );
-        let area = std::f64::consts::PI * colony.radius_m * colony.radius_m;
-        if colony.normal[2] < -0.9 {
-            north += area;
-        } else if colony.normal[2] > 0.9 {
-            south += area;
+        for colony in &cover.colonies {
+            let [x, y, z] = colony.centre;
+            // Never on the board kept clear, nor under the slab lying on it.
+            let on_board = (-2.5..=-1.5).contains(&x) && (1.0..=2.0).contains(&z) && y < 0.3004;
+            assert!(
+                !on_board,
+                "a colony at {:?} on the board or under the slab",
+                colony.centre
+            );
+            let area = std::f64::consts::PI * colony.radius_m * colony.radius_m;
+            if colony.normal[2] < -0.9 {
+                north += area;
+            } else if colony.normal[2] > 0.9 {
+                south += area;
+            }
         }
     }
     // Sun from the south dries the south face; the north stays damp.
@@ -336,4 +341,106 @@ fn moss_leaves_take_their_outline_from_leaf_shape() {
     assert!(kind("Grimmia").blade_widest() < 0.5);
     assert!((kind("Grimmia").blade_width(kind("Grimmia").blade_widest()) - 1.0).abs() < 1e-9);
     assert!(kind("Grimmia").blade_width(1.0) < 0.05);
+}
+
+#[test]
+fn a_drawn_cover_writes_as_a_glb_any_reader_opens() {
+    let site = wall_site();
+    let cover = mosses::grow(&site, &library_kinds(), &settings());
+    let moss = cover.draw(
+        &site,
+        &DrawOptions {
+            detail: Detail::Shell,
+            capsules: false,
+            ..DrawOptions::default()
+        },
+    );
+    let (low, high) = site.bounds();
+    let ground = site.drawn(low, high, Vec3::ZERO);
+    let file = plantgen::gltf::coloured_glb(
+        &[("site", &ground, false), ("moss", &moss, true)],
+        "PlantGen moss",
+        serde_json::json!({}),
+    );
+    let summary = plantgen::gltf::check(&file).expect("a valid glTF file");
+    assert_eq!(summary.nodes, 2);
+    assert_eq!(
+        summary.triangles,
+        (moss.indices.len() + ground.indices.len()) / 3
+    );
+    // Plain float positions, normals and colours: no extension a reader
+    // must know, so Blender's importer opens it as it is.
+    let glb = plantgen::gltf::Glb::read(&file).unwrap();
+    assert!(glb.json.get("extensionsRequired").is_none());
+    assert!(
+        glb.json
+            .pointer("/meshes/1/primitives/0/attributes/COLOR_0")
+            .is_some()
+    );
+}
+
+#[test]
+fn a_tree_over_a_wooden_deck_lets_moss_grow_there() {
+    use plantgen::conditions::Envelope;
+    // A wooden deck 3 m square, 2 m up, in the open.
+    let mut parts = (Vec::new(), Vec::new(), Vec::new());
+    cuboid(
+        Vec3::new(-4.0, -0.3, -4.0),
+        Vec3::new(4.0, 0.0, 4.0),
+        Surface::solid(SOIL),
+        &mut parts,
+    );
+    cuboid(
+        Vec3::new(-1.5, 1.9, -1.5),
+        Vec3::new(1.5, 2.0, 1.5),
+        Surface::solid(WOOD),
+        &mut parts,
+    );
+    let site = SiteMesh::with_surfaces(&parts.0, &parts.1, &parts.2).unwrap();
+    let kinds = library_kinds();
+    let deck_moss = |cover: &MossCover| -> f64 {
+        cover
+            .colonies
+            .iter()
+            .filter(|colony| colony.centre[1] > 1.99 && colony.normal[1] > 0.9)
+            .map(|colony| std::f64::consts::PI * colony.radius_m * colony.radius_m)
+            .sum()
+    };
+    let open = mosses::grow(&site, &kinds, &settings());
+    assert_eq!(
+        mosses::grow_under(&site, &kinds, &settings(), &[]),
+        open,
+        "no canopy, the same cover"
+    );
+    // A broadleaf crown south of the deck, over it: 3 m across the
+    // radius from 3 to 9 m up, shade 0.27 a metre.
+    let crown = Envelope {
+        centre_m: [0.0, -2.0],
+        base_m: 3.0,
+        top_m: 9.0,
+        radius_m: 3.0,
+        density: 0.27,
+    };
+    let shaded = mosses::grow_under(&site, &kinds, &settings(), std::slice::from_ref(&crown));
+    assert_eq!(shaded.canopy, vec![crown]);
+    // Out of the sun the boards stay damp longer (OSU Extension: roof
+    // mosses do best where trees shade them).
+    let (before, after) = (deck_moss(&open), deck_moss(&shaded));
+    assert!(
+        after > before * 2.0,
+        "deck {before:.4} m2 open, {after:.4} m2 under the tree"
+    );
+}
+
+#[test]
+fn a_surface_may_say_its_face_is_neutral_where_its_material_is_basic() {
+    // Asphalt shingles are built but neutral; mortar stays basic, shakes acid.
+    assert_eq!(Surface::solid(BUILT).reaction(), 1);
+    assert_eq!(Surface::solid(WOOD).reaction(), -1);
+    assert_eq!(Surface::solid(SOIL).reaction(), 0);
+    let asphalt = Surface {
+        reaction: Some(0),
+        ..Surface::solid(BUILT)
+    };
+    assert_eq!(asphalt.reaction(), 0);
 }
