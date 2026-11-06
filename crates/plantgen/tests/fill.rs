@@ -760,6 +760,33 @@ fn a_tile_as_one_gltf_file_draws_every_plant_as_an_instance() {
         assert_eq!(summary.instances, expected, "meshopt {meshopt}");
         assert_eq!(summary.triangles, triangles, "meshopt {meshopt}");
     }
+    // Cut into 10 m cells at levels 2 and 3: every plant is in one cell,
+    // a cell's files draw what the whole tile's do there, and the coarser
+    // level is enough from farther.
+    let whole = plantgen::gltf::check(&plan.glb(&prototypes, &dir, 3, true).unwrap()).unwrap();
+    let files = plan
+        .glb_cells(&prototypes, &dir, 10.0, &[2, 3], true)
+        .expect("tile cells");
+    let (index_name, index) = files.last().expect("an index");
+    assert_eq!(index_name, "1_2/cells.json");
+    let index: serde_json::Value = serde_json::from_slice(index).expect("json");
+    let cells = index["cells"].as_array().expect("cells");
+    assert_eq!(files.len(), cells.len() * 2 + 1);
+    let placed: u64 = cells.iter().map(|c| c["instances"].as_u64().unwrap()).sum();
+    assert_eq!(usize::try_from(placed).unwrap(), plan.instances.len());
+    let mut drawn = 0;
+    for (name, glb) in &files[..files.len() - 1] {
+        let summary = plantgen::gltf::check(glb).expect("a valid cell file");
+        if name.ends_with("-lod3.glb") {
+            drawn += summary.instances;
+        }
+    }
+    assert_eq!(drawn, whole.instances);
+    for cell in cells {
+        let levels = cell["levels"].as_array().unwrap();
+        let from = |i: usize| levels[i]["from_m"].as_f64().unwrap();
+        assert!(from(0) < from(1), "{cell}");
+    }
     let _ = std::fs::remove_dir_all(&dir);
 }
 
@@ -857,9 +884,15 @@ mod on_a_site_field {
             smaller += usize::from(s.scale < 0.9 * d.scale);
         }
         assert!(smaller > 0, "no plant was held back by 3 cm of soil");
-        // Firs have no `soil@1`, so only the herbs count for less.
-        assert!(shallow.stats.basal_area_m2_per_ha <= deep.stats.basal_area_m2_per_ha);
-        assert!(shallow.stats.canopy_cover <= deep.stats.canopy_cover);
+        // The firs too: 3 cm of soil holds a conifer back as it does a
+        // herb.
+        assert!(
+            shallow.stats.basal_area_m2_per_ha < 0.9 * deep.stats.basal_area_m2_per_ha,
+            "{} {}",
+            shallow.stats.basal_area_m2_per_ha,
+            deep.stats.basal_area_m2_per_ha
+        );
+        assert!(shallow.stats.canopy_cover < deep.stats.canopy_cover);
     }
 
     /// Ground 40 m across under a slab with one 2 cm crack across it, east
