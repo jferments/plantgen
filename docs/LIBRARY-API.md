@@ -162,13 +162,15 @@ Ok(())
   (17 years for Douglas-fir's 500-year lifespan), then as in a stand.
   Once the crowns close (35 years) the cohort's dominants overtop part
   of it: those trees grow as overtopped trees do and stand in the middle
-  layer, and the shade-intolerant among them die out through maturation.
-  From a fifth of the pioneers' lifespan shade-tolerant trees establish
-  under them, fewer of the older. Each layer covers what western
-  Oregon's wet conifer inventory plots find (McIntosh, Gray and Garman
-  2009, PNW-GTR-794): in a closed young stand the upper trees 70%, the
-  middle 22%, shrubs 45% and herbs 28%; in old growth 45%, 40%, 55% (the
-  lower trees with the shrubs) and 15%. Shrubs and herbs fill their
+  layer, two fifths of them suppressed, grown as at half the stand's
+  years, in the lower layer; the shade-intolerant among them die out
+  through maturation. From a fifth of the pioneers' lifespan
+  shade-tolerant trees establish under them, fewer of the older, and
+  stand in whichever layer their height puts them. Each layer covers
+  what western Oregon's wet conifer inventory plots find (McIntosh, Gray
+  and Garman 2009, PNW-GTR-794): in a closed young stand the upper trees
+  70%, the middle and lower trees 27% together, shrubs 45% and herbs
+  28%; in old growth 45%, 63%, 50% and 15%. Shrubs and herbs fill their
   layers where enough light reaches them, herbs beneath shrubs in their
   shade, and herbs take 90% of a meadow where no tree suits. How many
   stems a cell holds follows from the crowns, so a stand of narrow crowns

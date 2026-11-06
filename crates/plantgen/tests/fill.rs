@@ -348,7 +348,8 @@ fn every_prototype_is_a_cohort_of_a_stand_in_each_seed() {
         "{keys:?}"
     );
     // The firs at the stands' own ages, the closed stand's also as an
-    // edge and as overtopped; the yarrow at its oldest.
+    // edge and as overtopped, its suppressed trees grown as at half its
+    // years; the yarrow at its oldest.
     for (index, prototype) in fill.prototypes().iter().enumerate() {
         assert!((f64::from(prototype.key.age_tenths) / 10.0 - prototype.age_years).abs() < 0.05);
         assert!(
@@ -367,6 +368,7 @@ fn every_prototype_is_a_cohort_of_a_stand_in_each_seed() {
         firs,
         [
             (Environment::Open, 100),
+            (Environment::Suppressed, 200),
             (Environment::Edge, 400),
             (Environment::Interior, 400),
             (Environment::Suppressed, 400)

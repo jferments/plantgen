@@ -62,6 +62,26 @@ pub const INGROWTH_DECAY: f64 = 0.25;
 /// there, 11.9 m, as one 25.
 pub const RELEASE_CATCH_UP: f64 = 1.0 / 3.0;
 
+/// The share of an overtopped cohort ([`Cohort::overtopped`]) that falls
+/// into the suppressed crown class, the lower tree layer, the rest
+/// standing in the middle layer as intermediate trees. Western Oregon's
+/// wet conifer plots hold a lower layer a quarter to two fifths as wide
+/// as the middle one from 15 to 105 years (McIntosh et al. 2009: 5% under
+/// 19% in unthinned 15-45-year Douglas-fir, table 4; 10% under 26% at 65
+/// years, 17% under 44% at 85), and a suppressed tree's crown is narrower
+/// than an intermediate's, so somewhat fewer than half its stems. The
+/// value is this model's choice.
+pub const SUPPRESSED_SHARE: f64 = 0.4;
+
+/// The share of the stand's age at which a suppressed tree is grown, with
+/// the overtopped preset ([`crate::spec::Environment::Suppressed`]): it
+/// fell behind early and grows as an overtopped tree of half its years.
+/// The plots' lower layer stands about a fifth as high as their upper
+/// (4.2 m under 20.5 m in table 4 of McIntosh et al. 2009), as such a
+/// Douglas-fir does in this model's growth (about 4 m at 15 years under
+/// a 30-year stand's 20 m). The value is this model's choice.
+pub const SUPPRESSED_AGE: f64 = 0.5;
+
 /// Herb cover where no tree suits the ground: a meadow. Grassland herbs
 /// cover most of the ground, and restored Willamette Valley wet prairies
 /// reached more than 100% total cover (layers counted apart) within three
@@ -75,22 +95,24 @@ pub const OPEN_HERB: f64 = 0.9;
 /// 35 to 65 years (McIntosh, Gray and Garman 2009, PNW-GTR-794, figs. 2
 /// and 9, 298 inventory plots): the upper tree layer 68-74%, the middle
 /// 19-26% (the trees the dominants overtop, most of them Douglas-firs:
-/// shade-tolerant trees are 3.5 of its 19.4 points in their table 4),
-/// shrubs 41-48% and forbs, ferns and grasses 22-33%. Capitol Forest's
-/// 65-year Douglas-fir stands beside Olympia measured shrubs 40% and
-/// overstory 77% (Evans, Halpern and McKenzie 2012, The Bryologist 115:
-/// 278-294).
-pub const CLOSED_LAYERS: [f64; 4] = [0.70, 0.22, 0.45, 0.28];
+/// shade-tolerant trees are 3.5 of its 19.4 points in their table 4) and
+/// the lower 6-10%, shrubs 41-48% and forbs, ferns and grasses 22-33%.
+/// The subcanopy here is the middle and lower tree layers together, the
+/// lower trees standing under the middle's crowns as often as elsewhere
+/// (22% and 6%, 27% together). Capitol Forest's 65-year Douglas-fir
+/// stands beside Olympia measured shrubs 40% and overstory 77% (Evans,
+/// Halpern and McKenzie 2012, The Bryologist 115: 278-294).
+pub const CLOSED_LAYERS: [f64; 4] = [0.70, 0.27, 0.45, 0.28];
 
 /// Each layer's cover in old growth, [`Stage::HorizontalDiversification`]'s
 /// and after: the upper tree layer falls to 36-47% as the pioneers die,
 /// the middle rises to 34-42% and the lower trees to 35-51% (McIntosh et
-/// al. 2009, stands 200 to over 300 years, few plots); the understorey
-/// covers about half the ground and herbs 6% (Spies and Franklin 1991,
-/// PNW-GTR-285: 52% and 6.4% in old growth against 46% and about 3% in
-/// young stands). The shrub layer here holds the lower trees too, as
-/// [`layer_of`] places saplings among the shrubs.
-pub const OLD_LAYERS: [f64; 4] = [0.45, 0.40, 0.55, 0.15];
+/// al. 2009, stands 200 to over 300 years, few plots), 63% together as
+/// [`CLOSED_LAYERS`] adds them; the understorey covers about half the
+/// ground and herbs 6% (Spies and Franklin 1991, PNW-GTR-285: 52% and
+/// 6.4% in old growth against 46% and about 3% in young stands), here
+/// herbs 15% for the plots' 11-14% of forbs and ferns.
+pub const OLD_LAYERS: [f64; 4] = [0.45, 0.63, 0.50, 0.15];
 
 /// A stage of the sere.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -143,18 +165,19 @@ impl Stage {
         }
     }
 
-    /// Ground covered by each layer's crowns, canopy, subcanopy, shrub
-    /// and herb ([`Layer::ALL`]), seen from above, each layer's crowns
-    /// counted once where they overlap, as inventory crews measure them
-    /// (McIntosh et al. 2009, figs. 2 and 9, western Oregon's wet conifer
-    /// stands). Before closure the tree layers close in step with the
-    /// years (upper 7, 32 and 62% at 5, 15 and 25 years; middle 1, 11 and
-    /// 17%), shrubs already cover 36-53% and herbs fall from 47% to 27%
-    /// as the crowns close. A closed stand holds [`CLOSED_LAYERS`]; in
-    /// maturation the upper layer thins and the shrubs and herbs grow
-    /// (upper 47-64%, middle 22-30%, shrubs 46-57%, herbs 26-47% from 75
-    /// to 115 years); old growth holds [`OLD_LAYERS`], vertical
-    /// diversification halfway to it.
+    /// Ground covered by each layer's crowns, canopy, subcanopy (the
+    /// middle and lower tree layers), shrub and herb ([`Layer::ALL`]),
+    /// seen from above, each layer's crowns counted once where they
+    /// overlap, as inventory crews measure them (McIntosh et al. 2009,
+    /// figs. 2 and 9, western Oregon's wet conifer stands). Before closure
+    /// the tree layers close in step with the years (upper 7, 32 and 62%
+    /// at 5, 15 and 25 years; middle 1, 11 and 17%), shrubs already cover
+    /// 36-53% and herbs fall from 47% to 27% as the crowns close. A closed
+    /// stand holds [`CLOSED_LAYERS`]; in maturation the upper layer thins
+    /// and the lower layers, shrubs and herbs grow (upper 47-64%, middle
+    /// 22-30% over lower 10-17%, together 37% as [`CLOSED_LAYERS`] adds
+    /// them, shrubs 46-57%, herbs 26-47% from 75 to 115 years); old growth
+    /// holds [`OLD_LAYERS`], vertical diversification halfway to it.
     #[must_use]
     pub fn cover(self, age: f64, lifespan: f64) -> [f64; 4] {
         let [canopy, subcanopy, shrub, herb] = CLOSED_LAYERS;
@@ -172,7 +195,7 @@ impl Stage {
                 ]
             }
             Self::Exclusion => CLOSED_LAYERS,
-            Self::Maturation => [0.6, 0.26, 0.52, 0.36],
+            Self::Maturation => [0.6, 0.37, 0.52, 0.36],
             Self::VerticalDiversification => between(0.5),
             Self::HorizontalDiversification | Self::PioneerLoss => OLD_LAYERS,
         }
@@ -256,7 +279,9 @@ pub struct Development {
 ///    nothing at [`PIONEERS_GONE`]. Once the crowns close, the cohort's
 ///    dominants overtop part of it ([`Cohort::overtopped`]), in the same
 ///    shares: the middle layer of a young stand is mostly these trees
-///    (McIntosh et al. 2009; [`CLOSED_LAYERS`]). Overtopped trees
+///    (McIntosh et al. 2009; [`CLOSED_LAYERS`]), and its lower layer the
+///    suppressed among them ([`SUPPRESSED_SHARE`], grown as at
+///    [`SUPPRESSED_AGE`] of the stand's years). Overtopped trees
 ///    intolerant of shade die out through maturation, from
 ///    [`REINITIATION`] to [`VERTICAL`] of the pioneers' lifespan, as
 ///    young stands' many small Douglas-firs do (Spies and Franklin 1991:
@@ -346,21 +371,27 @@ pub fn develop_as(candidates: &[Candidate], age: f64, origin: Origin) -> Develop
                     overtopped: false,
                 });
             }
-            // Its overtopped share, once the crowns close.
+            // Its overtopped share, once the crowns close: intermediate
+            // trees at its age, suppressed ones grown as at a younger.
             let persists = if candidate.shade_tolerance >= TOLERANT {
                 1.0
             } else {
                 1.0 - smoothstep(REINITIATION, VERTICAL, age / lifespan)
             };
             if !planted && stage != Stage::Establishment && weight * persists > 0.0 {
-                cohorts.push(Cohort {
-                    candidate: index,
-                    age: drawn,
-                    weight: weight * persists,
-                    pioneer: true,
-                    released: false,
-                    overtopped: true,
-                });
+                for (share, at) in [
+                    (1.0 - SUPPRESSED_SHARE, drawn),
+                    (SUPPRESSED_SHARE, drawn * SUPPRESSED_AGE),
+                ] {
+                    cohorts.push(Cohort {
+                        candidate: index,
+                        age: at,
+                        weight: weight * persists * share,
+                        pioneer: true,
+                        released: false,
+                        overtopped: true,
+                    });
+                }
             }
             // Ingrowth under the canopy.
             if !planted && candidate.shade_tolerance >= TOLERANT {
@@ -598,9 +629,14 @@ mod tests {
         let pool = [fir(), hemlock(), fern()];
         let young = develop(&pool, 60.0);
         assert_eq!(young.stage, Stage::Exclusion);
-        // Only the first cohort's trees, both at 60 years, mostly fir.
+        // Only the first cohort's trees, both at 60 years (their
+        // suppressed grown as at 30), mostly fir.
         let trees: Vec<&Cohort> = young.cohorts.iter().filter(|c| c.candidate < 2).collect();
-        assert!(trees.iter().all(|c| c.pioneer && c.age == 60.0));
+        assert!(
+            trees
+                .iter()
+                .all(|c| c.pioneer && (c.age == 60.0 || (c.overtopped && c.age == 30.0)))
+        );
         let weight = |d: &Development, i: usize| -> f64 {
             d.cohorts
                 .iter()
@@ -753,7 +789,7 @@ mod tests {
         // growth's upper layer thins as its middle and lower fill.
         let at = |age: f64| Stage::at(age, 500.0).cover(age, 500.0);
         let young = at(50.0);
-        assert!((0.65..0.75).contains(&young[0]) && (0.18..0.27).contains(&young[1]));
+        assert!((0.65..0.75).contains(&young[0]) && (0.2..0.3).contains(&young[1]));
         assert!(young[2] > 0.4 && young[3] < 0.34);
         let old = at(500.0);
         assert!(old[0] < young[0] && old[1] > young[1] && old[2] > young[2]);
@@ -781,6 +817,14 @@ mod tests {
             .map(|c| c.weight)
             .sum();
         assert!((overtopped(60.0, 0) - dominants).abs() < 1e-9);
+        // Some of them suppressed, grown as at half the stand's years.
+        let suppressed: f64 = develop(&pool, 60.0)
+            .cohorts
+            .iter()
+            .filter(|c| c.overtopped && c.candidate == 0 && c.age < 60.0)
+            .map(|c| c.weight)
+            .sum();
+        assert!((suppressed - SUPPRESSED_SHARE * dominants).abs() < 1e-9);
         // Overtopped Douglas-firs are gone by vertical diversification;
         // overtopped hemlocks stay.
         assert!(overtopped(150.0, 0) < overtopped(60.0, 0));
@@ -791,7 +835,7 @@ mod tests {
             develop(&pool, 80.0)
                 .cohorts
                 .iter()
-                .filter(|c| c.pioneer)
+                .filter(|c| c.pioneer && !c.overtopped)
                 .all(|c| c.age == 80.0)
         );
     }

@@ -3192,8 +3192,14 @@ impl Fill {
             .iter()
             .map(|(index, candidate, share, size, species, overtopped)| {
                 let mut layer = development::layer_of(&candidates[*candidate], size.height, top);
-                // An overtopped tree stands under the canopy, however tall.
-                if *overtopped && layer == niche::Layer::Canopy {
+                // An overtopped tree stands under the canopy, however tall,
+                // and a tree in the lower layer, a sapling or a suppressed
+                // tree, fills the trees' cover beneath it with the middle
+                // layer's (the subcanopy's cover is the two together:
+                // development::CLOSED_LAYERS), not the shrubs'.
+                if (*overtopped && layer == niche::Layer::Canopy)
+                    || (candidates[*candidate].tree() && layer == niche::Layer::Shrub)
+                {
                     layer = niche::Layer::Subcanopy;
                 }
                 let member = stand_tile::Member {
