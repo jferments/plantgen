@@ -280,8 +280,8 @@ Usage:
   plantc moss <site.json> [--years N] [--seed N] [--latitude DEG]
               [--box X0,Y0,Z0,X1,Y1,Z1] [--out COVER.json] [--cover COVER.json]
               [--render FILE.png [--view VIEW] [--size PIXELS] [--from south|north]
-               [--focus X,Y,Z [--span METRES]] [--wet 0..1]
-               [--detail patch|shell|shoots|near] [--capsules yes|no]]
+               [--focus X,Y,Z | --genus GENUS] [--span METRES] [--wet 0..1]
+               [--detail tint|patch|shell|shoots|near] [--capsules yes|no]]
       Grow mosses over a site's faces (plantgen::mosses): every moss genus
       the library gives a colony_form settles where its light, wetness
       and substrate fit (rain on faces turned up, damp at a wall's foot,
@@ -292,7 +292,9 @@ Usage:
       shells of the colonies' forms, or with --detail shoots every shoot's
       leaves and capsules (near: only within --span of --focus); --wet 1
       just rained on, 0 dry (0.4 when left out); --from north looks from
-      the north side.
+      the north side. --genus looks at that genus's widest well-grown
+      colony instead of --focus; a close render prints the genus of the
+      colony it is centred on, for its caption.
   plantc site <site.json> [--out FILE.png] [--view VIEW] [--size PIXELS]
               [--day N] [--quality draft|standard]
               [--focus X,Y,Z [--span METRES]]
@@ -524,14 +526,22 @@ Usage:
                 [--focus X,Y,Z --span M] [--wet W]]]
       Fill one map tile with plant communities (each a JSON file: an id
       and members, each a species, optionally the layer it keeps to and
-      its abundance) as the library API's Fill does, and write
+      its abundance; origin planted for a yard's or street's kept
+      trees) as the library API's Fill does, and write
       DIR/tiles/X_Y.json (header, ground cover and far canopy per stand
       cell, stand numbers) and DIR/tiles/X_Y.bin (32-byte instances;
       docs/LIBRARY-API.md). Each community's stand is developed at each of
       --ages years since disturbance (default 10,20,40,80,160,320,640);
       a stand cell takes the nearest. Without --stands (a StandMap:
-      cell_m, cols and cells), the first community covers the tile at
-      --years since disturbance (default 100). Every prototype is measured
+      cell_m, cols and cells, each with its community, its
+      years_since_disturbance and optionally its ground's moisture, 0 to
+      1, for a creek's bank or a lake's shore), the first community
+      covers the tile at --years since disturbance (default 100). A
+      member without a niche is named on stderr: it suits every site.
+      A map's cells may be as
+      fine as a city's yards and verges (4 m): each reads its window of one
+      stand tile laid out for its block of cells about 40 m across, so fine
+      cells cost little more than coarse ones. Every prototype is measured
       first, its size kept in DIR/prototypes so a later fill grows none
       again. --prototypes used (the default) also exports, into
       DIR/prototypes with prototypes.json, each prototype the tile places
@@ -3201,7 +3211,7 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
         args,
         &[
             "years", "seed", "latitude", "box", "out", "cover", "render", "view", "size", "from",
-            "focus", "span", "wet", "detail", "capsules",
+            "focus", "span", "wet", "detail", "capsules", "genus",
         ],
     )?;
     let given = options.one_positional("a site document")?;
@@ -3271,7 +3281,37 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
     let Some(render) = options.flags.get("render") else {
         return Ok(());
     };
-    let focus = numbers("focus", 3)?.map(|v| Vec3::new(v[0], v[1], v[2]));
+    let mut focus = numbers("focus", 3)?.map(|v| Vec3::new(v[0], v[1], v[2]));
+    // `--genus G`: look at that genus's showpiece colony, so a view named
+    // for a genus shows it and no other.
+    if let Some(genus) = options.flags.get("genus") {
+        if focus.is_some() {
+            return Err("give --genus or --focus, not both".into());
+        }
+        let colony = cover
+            .showpiece(genus)
+            .ok_or_else(|| format!("the cover holds no colony of `{genus}`"))?;
+        let at = cover.view_point(colony);
+        focus = Some(Vec3::new(at[0], at[1], at[2]));
+    }
+    // Name the colony a close view is centred on, for its caption.
+    if let Some(at) = focus
+        && let Some((colony, distance)) = cover.nearest([at.x, at.y, at.z])
+    {
+        let genus = cover
+            .kinds
+            .get(usize::from(colony.kind))
+            .map_or("?", |kind| kind.genus.as_str());
+        out!(
+            "centred on {genus} (colony {:.1} cm across, {:.0} years old, {:.1} cm from the focus {:.4},{:.4},{:.4})",
+            colony.radius_m * 200.0,
+            colony.age,
+            distance * 100.0,
+            at.x,
+            at.y,
+            at.z
+        );
+    }
     let span: f64 = options.number("span")?.unwrap_or(2.0);
     // `tint`: no moss triangles; the site's own surfaces coloured by the
     // moss over them, as a host tints a roof's or wall's texture.
@@ -3546,6 +3586,31 @@ const PAVEMENT_POOL: [&str; 17] = [
 
 /// A species of the pool for the yearly step: its facts from the library,
 /// and its size by age grown once in open ground.
+/// Says which members of the communities have no niche: each suits every
+/// site and stands as half tolerant of shade, so it comes up wherever its
+/// community grows, under a closed canopy too.
+fn warn_without_niche(communities: &[api::Community]) {
+    let library = library();
+    let mut missing: Vec<&str> = communities
+        .iter()
+        .flat_map(|community| &community.members)
+        .map(|member| member.species.as_str())
+        .filter(|id| {
+            library
+                .entry(id)
+                .is_some_and(|entry| matches!(entry.niche(), Ok(None)))
+        })
+        .collect();
+    missing.sort_unstable();
+    missing.dedup();
+    if !missing.is_empty() {
+        eprintln!(
+            "note: no niche for {}: each suits every site and stands half tolerant of shade",
+            missing.join(", ")
+        );
+    }
+}
+
 fn colonist(id: &str, ages: &[f64]) -> Result<plantgen::succession::Colonist, String> {
     use plantgen::succession::{Colonist, Size};
     let spec = load_spec(id)?;
@@ -6362,6 +6427,7 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
             api::Community::from_json(&text).map_err(|error| format!("{path}: {error}"))
         })
         .collect::<Result<Vec<_>, String>>()?;
+    warn_without_niche(&communities);
     let tile = options
         .flags
         .get("tile")

@@ -2011,6 +2011,19 @@ impl Drawer<'_> {
         let dark = scaled(green, 0.55);
         let tip_colour = blend(green, HYALINE, kind.hyaline_share * 1.6);
         let mid_colour = blend(green, HYALINE, (kind.hyaline_share - 0.4).max(0.0) * 1.5);
+        if matches!(kind.dry_posture, DryPosture::Crisped) {
+            self.crisped_blade(
+                base,
+                dir,
+                across,
+                length,
+                width,
+                dry,
+                [dark, mid_colour, tip_colour],
+                seed,
+            );
+            return;
+        }
         let left = mid + flat * (width * 0.5);
         let right = mid - flat * (width * 0.5);
         let centre = mid + keel;
@@ -2039,6 +2052,74 @@ impl Drawer<'_> {
                 [HYALINE, HYALINE, HYALINE],
                 true,
             );
+        }
+    }
+
+    /// A crisped leaf's blade (trait `leaf_dry_posture: crisped`): dry, its
+    /// outer part curls in toward the stem a little more at every piece
+    /// and twists its own way, so the leaf coils (FNA vol. 27,
+    /// Dicranoweisia cirrata: leaves crisped and incurved when dry;
+    /// Ceratodon purpureus: contorted or somewhat crisped when dry);
+    /// moist, it straightens and spreads. Lanceolate: widest about a third
+    /// of the way up, tapering to the apex.
+    #[allow(clippy::too_many_arguments)]
+    fn crisped_blade(
+        &mut self,
+        base: Vec3,
+        dir: Vec3,
+        across: Vec3,
+        length: f64,
+        width: f64,
+        dry: f64,
+        [dark, mid_colour, tip_colour]: [[f32; 3]; 3],
+        seed: u64,
+    ) {
+        const PIECES: u32 = 5;
+        // Negative turns the blade toward the stem (incurved).
+        let curl = 0.12 * (1.0 - dry) - dry * (1.8 + 1.4 * unit(mix(seed, 7)));
+        let spin = dry * (unit(mix(seed, 3)) - 0.5) * 3.2;
+        let lower = 0.3;
+        let half_width = |s: f64| {
+            if s < lower {
+                width * 0.5 * (0.65 + 0.35 * s / lower)
+            } else {
+                width * 0.5 * ((1.0 - s) / (1.0 - lower)).powf(0.8)
+            }
+        };
+        let colour = |s: f64| {
+            if s < lower {
+                blend(dark, mid_colour, s / lower)
+            } else {
+                blend(mid_colour, tip_colour, (s - lower) / (1.0 - lower))
+            }
+        };
+        // The midrib: straight to a third of the way up, then the pieces.
+        let mut rib: Vec<(Vec3, Vec3, f64)> = vec![(base, across, 0.0)];
+        let mut at = base + dir * (length * lower);
+        rib.push((at, across, lower));
+        let mut heading = dir;
+        for piece in 1..=PIECES {
+            let f = f64::from(piece) / f64::from(PIECES);
+            let turn_axis = across.rotate_about(dir, spin * f);
+            heading = heading
+                .rotate_about(turn_axis, curl / f64::from(PIECES))
+                .normalize_or(heading);
+            at += heading * (length * (1.0 - lower) / f64::from(PIECES));
+            let s = lower + (1.0 - lower) * f;
+            let flat = turn_axis.rotate_about(heading, spin * f * 0.5);
+            rib.push((at, flat, s));
+        }
+        for pair in rib.windows(2) {
+            let (a, fa, sa) = pair[0];
+            let (b, fb, sb) = pair[1];
+            let (wa, wb) = (half_width(sa), half_width(sb));
+            let (ca, cb) = (colour(sa), colour(sb));
+            let (a_left, a_right) = (a + fa * wa, a - fa * wa);
+            let (b_left, b_right) = (b + fb * wb, b - fb * wb);
+            self.tri([a_left, b_left, a_right], [ca, cb, ca], true);
+            if wb > 1.0e-9 {
+                self.tri([a_right, b_left, b_right], [ca, cb, cb], true);
+            }
         }
     }
 
@@ -2182,10 +2263,14 @@ impl Drawer<'_> {
         let wet = self.options.hydration;
         let side = any_side(axis).rotate_about(axis, unit(mix(seed, 41)) * std::f64::consts::TAU);
         let length = kind.seta_m * (0.75 + 0.5 * unit(mix(seed, 42)));
-        // An arcuate seta bends right over, its capsule bowed back among
-        // the leaves, the more so when moist (FNA vol. 27, Grimmia).
+        // An arcuate seta bows over in an arc, its capsule among the
+        // leaves (FNA vol. 27, Grimmia: seta arcuate to cygneous; G.
+        // pulvinata: seta arcuate, 3-4 mm). It bends back furthest dry and
+        // stands out when moist (Wikipedia, Grimmia pulvinata: capsules
+        // bend back into the leaves when dry and stand out when moist).
+        // Any genus whose seta_form is arcuate does the same.
         let total_bend = if kind.seta_arcuate {
-            math::radians(110.0 + 40.0 * wet)
+            math::radians(math::lerp(150.0, 85.0, wet.clamp(0.0, 1.0)))
         } else {
             (unit(mix(seed, 43)) - 0.5) * 0.35
         };
@@ -2643,6 +2728,47 @@ impl MossCover {
             }
         }
         out
+    }
+
+    /// The colony whose centre lies nearest `at`, with its distance, for
+    /// naming what a close view shows.
+    #[must_use]
+    pub fn nearest(&self, at: [f64; 3]) -> Option<(&Colony, f64)> {
+        self.colonies
+            .iter()
+            .map(|colony| {
+                let d = (v3(colony.centre) - v3(at)).length();
+                (colony, d)
+            })
+            .min_by(|a, b| a.1.total_cmp(&b.1))
+    }
+
+    /// A genus's showpiece: its widest well-grown colony (radius weighted
+    /// by vigour, age three years at least, so it fruits), for review
+    /// views that must show that genus and no other. `None` when the cover
+    /// holds none of it.
+    #[must_use]
+    pub fn showpiece(&self, genus: &str) -> Option<&Colony> {
+        let kind = self.kinds.iter().position(|kind| kind.genus == genus)?;
+        let score = |colony: &Colony| {
+            colony.radius_m * colony.vigour.clamp(0.0, 1.0) * math::smoothstep(1.0, 3.0, colony.age)
+        };
+        self.colonies
+            .iter()
+            .filter(|colony| usize::from(colony.kind) == kind)
+            .max_by(|a, b| score(a).total_cmp(&score(b)))
+    }
+
+    /// The point a close view of `colony` looks at: its centre raised by
+    /// half its kind's height off the face.
+    #[must_use]
+    pub fn view_point(&self, colony: &Colony) -> [f64; 3] {
+        let height = self
+            .kinds
+            .get(usize::from(colony.kind))
+            .map_or(0.0, |kind| kind.height_m);
+        let at = v3(colony.centre) + v3(colony.normal) * (height * 0.5);
+        [at.x, at.y, at.z]
     }
 
     /// The cover as JSON.

@@ -86,14 +86,18 @@ shoots' older lower parts:
 - Cushions and turfs: crowded upright shoots, a stem every two thirds
   of a leaf length or so, their tips standing clear of the shell; leaves
   in a spiral at the golden angle, standing out more when wet, folded,
-  twisted or crisped when dry as the genus's `leaf_dry_posture` says,
-  with their awns; the older leaves down the shoot in the genus's
+  twisted or crisped when dry as the genus's `leaf_dry_posture` says
+  (a crisped blade is drawn in pieces that curl in toward the stem and
+  twist, so it coils dry and straightens moist), with their awns; the older leaves down the shoot in the genus's
   `older_leaf_colour` (Tortula brown below, Ceratodon tinged red).
 - Mats (pleurocarps): creeping, pinnately branched shoots crossing the
   whole mat and wandering so that they interweave; where the genus's
   `dry_branch_posture` is curled (Homalothecium), the side branches curl
   up and in as the mat dries.
-- Capsules on setae (straight or arcuate), in the posture the genus's
+- Capsules on setae, straight or arcuate (`seta_form`). An arcuate seta
+  bows over 150 degrees dry, its capsule tucked among the leaves, and
+  85 degrees moist, the capsule held out (Wikipedia, *Grimmia pulvinata*;
+  to confirm against Glime). The capsules sit in the posture the genus's
   `capsule_posture` gives, on the share of shoots `capsule_share` gives,
   their lids a short cone, a tall cone or a beak as `operculum_form`
   says.
@@ -175,8 +179,15 @@ cargo build --release -p plantc
 ./target/release/plantc moss docs/sites/moss-wall.json --cover /tmp/cover.json \
   --render /tmp/moss.png --detail shell --focus 0.5,1.2,0 --span 9 --size 1400
 ./target/release/plantc moss docs/sites/moss-wall.json --cover /tmp/cover.json \
-  --render /tmp/moss-close.png --focus -1.583,0.52,0.13 --span 0.07 --view side
+  --render /tmp/grimmia.png --genus Grimmia --span 0.045 --view oblique --wet 0.05
 ```
+
+`--genus G` looks at that genus's widest well-grown colony
+(`MossCover::showpiece`) instead of a `--focus`, and every close render
+prints the genus of the colony it is centred on (`MossCover::nearest`).
+Use it for any view named after a genus, and copy that printed line into
+the caption: round 5 captioned a Tortula cushion as Grimmia because a
+hand-picked focus sat 1.7 cm from the Tortula and 5 cm from the Grimmia.
 
 `moss-shakes.json` is the same site with the shed roofed in cedar shakes
 and the genera of western Oregon and Washington; after 30 years its roof
@@ -195,8 +206,40 @@ seconds to tens of seconds.
 kept off a board kept clear and the slab pressed on it, the shaded side
 of a wall carrying more moss than the sunny one, the same cover every
 time and through JSON, patches far with shells between and shoots near,
-the roof genera of western Oregon and their spore output, moss darker and greener wet than dry, and a cover tinting the surface
-under it with no triangles of its own.
+the roof genera of western Oregon and their spore output, moss darker and greener wet than dry, a cover tinting the surface
+under it with no triangles of its own, and a view named for a genus
+finding a colony of that genus.
+
+## Changing it
+
+- **A new genus** is a rank file under `crates/plantgen/library/<family>/<genus>/genus.json`
+  with `body_plan` leafy, a `colony_form` and the moss traits the others
+  carry, each with a note citing its source. No code names a genus.
+  Moss genera have no species, so a change to them needs no
+  `GENERATOR_REVISION` bump.
+- **Leaf colours** are measured from regional photos (imagekit run
+  `moss-colour-2026-11-05`, Washington iNaturalist photos), not chosen by
+  eye: a genus's hue at moss-canopy brightness.
+- **Check a change** on `moss-wall.json` and `moss-shakes.json`: write
+  down what the floras say each view should show, then render the views
+  and mark each point as matching, close or wrong. Renders that change
+  the cover need a fresh `--years 30 --out` first.
+- **Tests:** `cargo test -p plantgen --test mosses`. The full `species`
+  and `checks` suites are heavy; run them alone, not beside renders.
+- Lay points on a face's outermost side; faces pressed against another
+  or kept clear carry nothing; sample big faces at random, not on a
+  lattice.
+
+## Still open
+
+- Dry *Ceratodon* turf opens gaps between its coiled shoots; FNA calls
+  its leaves only "somewhat crisped", so it may want a weaker coil than
+  *Dicranoweisia*'s, which needs a trait for how strongly a leaf crisps.
+- Roof cushions mostly stay separate where the rooftop study found dense
+  mats; its mats were on tree-shaded roofs, and the test roof has none.
+- Growth rates, spread distances, spore output by fruiting and
+  colonisation order are estimates still to check against Glime's
+  *Bryophyte Ecology*.
 
 ## Into the site fill
 
