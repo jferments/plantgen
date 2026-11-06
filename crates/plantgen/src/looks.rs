@@ -4546,7 +4546,12 @@ impl Compound {
         if form.segments > 0 {
             inner("segments", form.segments)?;
         }
-        check("leaflet_width", self.leaflet_width, 0.01, MOST_LEAFLET_WIDTH)?;
+        check(
+            "leaflet_width",
+            self.leaflet_width,
+            0.01,
+            MOST_LEAFLET_WIDTH,
+        )?;
         if self.teeth > 30 {
             return Err(format!(
                 "compound teeth must be between 0 and 30, found {}",

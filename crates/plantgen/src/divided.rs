@@ -144,8 +144,7 @@ impl Form {
         };
         let pinnule_angle = c.pinnule_angle.unwrap_or(angle);
         let once_pinnate = pattern == Pattern::Pinnate && pinnules == 0 && confluent <= 0.0;
-        let profile_at =
-            |t: f64| crate::templates::leaflet_profile(c, t, widest, blade_base, tip);
+        let profile_at = |t: f64| crate::templates::leaflet_profile(c, t, widest, blade_base, tip);
         let spread = c.spread.unwrap_or_else(|| {
             open_enough(pattern, c.leaflets, pinnules, c.leaflet_width, profile_at)
         });
@@ -165,7 +164,9 @@ impl Form {
         });
         let shaped = c.outline.is_some()
             || c.fanned()
-            || [c.apex_taper, c.apex_point, c.base_taper].iter().any(Option::is_some);
+            || [c.apex_taper, c.apex_point, c.base_taper]
+                .iter()
+                .any(Option::is_some);
         let profile = (shaped || !once_pinnate).then(|| {
             ALONG.map(|t| crate::templates::leaflet_profile(c, t, widest, blade_base, tip))
         });

@@ -2298,9 +2298,17 @@ fn compound(
         // A lateral leaflet's half toward the leaf's foot is the broader
         // where it is oblique; `across` is positive on its left.
         let lateral = leaflet.direction.0.abs() > 1e-6;
-        let oblique = if lateral { s.oblique.unwrap_or(0.0) } else { 0.0 };
+        let oblique = if lateral {
+            s.oblique.unwrap_or(0.0)
+        } else {
+            0.0
+        };
         let toward_foot = across * leaflet.direction.0 < 0.0;
-        let lopsided = if toward_foot { 1.0 + oblique } else { 1.0 - oblique };
+        let lopsided = if toward_foot {
+            1.0 + oblique
+        } else {
+            1.0 - oblique
+        };
         let margin = margins.get(usize::from(across < 0.0));
         // How far along the leaflet the point lies, and where its veins
         // were grown, across and along it, in blade lengths.
