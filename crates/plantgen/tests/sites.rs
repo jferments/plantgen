@@ -635,6 +635,32 @@ mod succession {
     }
 
     #[test]
+    fn a_herb_in_a_crack_roots_into_the_base_and_grows_part_way() {
+        // Its roots go down the 2 cm crack into the gravel base under the
+        // slab as an open-ground herb's of its age would; held to its
+        // stunted crown's size, they stopped in the crack's 6 cm of grit
+        // and the herb stayed a few millimetres tall.
+        let site = lot(false);
+        let places = microsites(&site, 2);
+        let herb = &pool()[1];
+        let in_crack = places
+            .iter()
+            .find(|p| (p.z - 2.0).abs() < 0.03 && p.x.abs() < 2.0)
+            .expect("a microsite in the 2 cm crack");
+        let (open_height, _) = herb.size_at(3.0);
+        let (rs, height, crown) = herb.supply(in_crack, 3.0, 1.0);
+        assert!(rs < 1.0, "the crack holds it back ({rs})");
+        assert!(
+            height > open_height / 3.0 && height < open_height,
+            "{height:.3} m tall in the crack, {open_height:.3} m in open ground"
+        );
+        assert!(crown > 0.03, "a crown {crown:.3} m across");
+        // The same from any first guess.
+        let (again, _, _) = herb.supply(in_crack, 3.0, 0.01);
+        assert!((again - rs).abs() < 0.02, "{again} {rs}");
+    }
+
+    #[test]
     fn trees_take_hold_in_a_pothole_not_in_a_hairline_crack() {
         // Plan K3: a pothole with 7 cm of soil grows a young tree in ten
         // years; a hairline crack's soil carries none past its first year.

@@ -1678,4 +1678,9 @@ pub mod venation;
 /// standing 2.8 and 3.4 m taller on their new leaders with 1,125 and 1,219
 /// m² of foliage. Every other plant, and every tree before its top dies,
 /// grows as before.
-pub const GENERATOR_REVISION: u32 = 207;
+///
+/// 208: conifers are held back by their soil (`soil@1` in the pinidae
+/// program, its revision 21) as broadleaf trees, herbs and grasses are:
+/// one rooted in a crack or a thin soil grows as a shaded one does. Grown
+/// with no rooting limits, as every package is, a conifer grows as before.
+pub const GENERATOR_REVISION: u32 = 208;

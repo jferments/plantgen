@@ -598,6 +598,25 @@ pub struct MossSettings {
     pub ground: bool,
 }
 
+impl MossSettings {
+    /// The settings for a fill tile `tile_m` metres across whose
+    /// south-west corner is (x, z) `corner` in the site's frame (north is
+    /// -Z, so the tile runs from `corner[1] - tile_m` to `corner[1]` in z),
+    /// grown for `years` from `seed`: the tile's columns at every height,
+    /// otherwise the defaults. A fill grows a tile's moss with these
+    /// beside its plants ([`crate::fill::Site::from_field`]'s corner).
+    #[must_use]
+    pub fn over_tile(corner: [f64; 2], tile_m: f64, years: u32, seed: u64) -> Self {
+        Self {
+            years,
+            seed,
+            low: [corner[0], -1.0e9, corner[1] - tile_m],
+            high: [corner[0] + tile_m, 1.0e9, corner[1]],
+            ..Self::default()
+        }
+    }
+}
+
 impl Default for MossSettings {
     fn default() -> Self {
         Self {
