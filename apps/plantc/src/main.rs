@@ -545,7 +545,10 @@ Usage:
       again. --prototypes used (the default) also exports, into
       DIR/prototypes with prototypes.json, each prototype the tile places
       that is not there yet; all exports every prototype; none only the
-      tile. --herbs no leaves herbs to the ground cover. --edges no grows
+      tile. It prints the stand's numbers, each species', and each
+      layer seen from above as inventory plots measure it (upper, middle
+      and lower trees by thirds of the tallest tree, shrubs, herbs).
+      --herbs no leaves herbs to the ground cover. --edges no grows
       a stand's first row beside a road or clearing as inside the stand,
       not as an edge facing the opening. --site gives the
       flat tile's moisture, heat load, elevation (m) and slope (degrees)
@@ -6574,6 +6577,28 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
         );
         out!(
             "  {species}: {per_ha:.0} trees/ha (mean height {mean:.1} m, tallest {tallest:.1} m), {every:.0} plants/ha in all"
+        );
+    }
+    // Each layer seen from above, as inventory plots measure them.
+    let layers = fill.layer_cover(&plan);
+    if layers.top_m > 0.0 || layers.shrubs > 0.0 || layers.herbs > 0.0 {
+        let band = |at: usize| {
+            format!(
+                "{:.0}% ({:.0}/ha at {:.1} m)",
+                100.0 * layers.trees[at],
+                layers.stems_per_ha[at],
+                layers.heights_m[at]
+            )
+        };
+        out!(
+            "  layers seen from above (tallest tree {:.1} m): upper trees {}, middle {}, lower {}; all trees {:.0}%; shrubs {:.0}%; herbs {:.0}%",
+            layers.top_m,
+            band(0),
+            band(1),
+            band(2),
+            100.0 * layers.all_trees,
+            100.0 * layers.shrubs,
+            100.0 * layers.herbs
         );
     }
     if let Some(png) = options.flags.get("render") {

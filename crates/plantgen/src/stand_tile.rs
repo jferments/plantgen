@@ -131,8 +131,9 @@ impl Placed {
 /// The crowns standing so far, on a raster of [`CELL_M`] cells that wraps.
 struct Raster {
     side: usize,
-    /// For each cell, the crowns over it: (crown base, top) in metres.
-    crowns: Vec<Vec<(f32, f32)>>,
+    /// For each cell, the crowns over it: (crown base, top) in metres,
+    /// and the layer's index in [`Layer::ALL`].
+    crowns: Vec<Vec<(f32, f32, u8)>>,
     /// For each cell, a bit for each layer with a crown over it.
     layers: Vec<u8>,
     /// Cells under each layer's crowns, and under any crown.
@@ -200,8 +201,19 @@ impl Raster {
 
     /// Share of `cells` already holding a crown whose height band meets
     /// [`base`, `top`], and the mean light reaching `top` through the
-    /// crowns above it.
-    fn crowding(&self, cells: &[usize], base: f64, top: f64, transmission: f64) -> (f64, f64) {
+    /// crowns above it, for a plant of layer `layer`. Shrubs and herbs
+    /// grow through each other's layers: an herb beneath a taller shrub
+    /// stands in its shade, not in its room, as a forest's herb layer
+    /// spreads under its shrubs (each layer's cover is its own:
+    /// [`Rules::cover`]). A tree's crown takes room from every layer.
+    fn crowding(
+        &self,
+        cells: &[usize],
+        base: f64,
+        top: f64,
+        transmission: f64,
+        layer: usize,
+    ) -> (f64, f64) {
         if cells.is_empty() {
             return (0.0, 1.0);
         }
@@ -209,10 +221,17 @@ impl Raster {
         for &cell in cells {
             let mut meets = false;
             let mut through = 1.0;
-            for &(low, high) in &self.crowns[cell] {
+            for &(low, high, other) in &self.crowns[cell] {
                 let (low, high) = (f64::from(low), f64::from(high));
+                let beneath = layer >= 2 && usize::from(other) >= 2 && usize::from(other) != layer;
                 if low < top && base < high {
-                    meets = true;
+                    if beneath {
+                        if high > top {
+                            through *= transmission;
+                        }
+                    } else {
+                        meets = true;
+                    }
                 }
                 if low >= top {
                     through *= transmission;
@@ -230,7 +249,7 @@ impl Raster {
 
     fn stamp(&mut self, cells: &[usize], base: f64, top: f64, layer: usize) {
         #[allow(clippy::cast_possible_truncation)]
-        let band = (base as f32, top as f32);
+        let band = (base as f32, top as f32, layer as u8);
         let bit = 1_u8 << layer;
         for &cell in cells {
             self.crowns[cell].push(band);
@@ -337,8 +356,13 @@ pub fn lay_out(members: &[Member], rules: &Rules, seed: u64) -> Vec<Placed> {
                             (at[1] + offset[1]).rem_euclid(rules.tile_m),
                         ];
                         let cells = raster.cells(crown, radius.max(CELL_M * 0.5));
-                        let (crowded, light) =
-                            raster.crowding(&cells, base, top, rules.crown_transmission);
+                        let (crowded, light) = raster.crowding(
+                            &cells,
+                            base,
+                            top,
+                            rules.crown_transmission,
+                            layer_index,
+                        );
                         if light < member.light_needed {
                             continue;
                         }
