@@ -1272,3 +1272,87 @@ mod on_a_site_field {
         );
     }
 }
+
+/// A bigleaf maple stand over vanilla leaf, which dies back in autumn,
+/// and sword fern, which stays green, at one young stand age, on `day`.
+fn maple_wood(day: f64) -> Fill {
+    let community = Community::from_json(
+        r#"{"id": "test-maple-wood", "members": [
+            {"species": "acer-macrophyllum", "layer": "canopy"},
+            {"species": "achlys-triphylla", "layer": "herb"},
+            {"species": "polystichum-munitum", "layer": "herb"}
+        ]}"#,
+    )
+    .expect("community");
+    let mut settings = FillSettings::default();
+    settings.stand_ages = vec![30.0];
+    settings.seeds = 1;
+    settings.options.day = day;
+    let fill = Fill::new(&[community], &settings).expect("fill");
+    // A plant's size is the same every day: the second day reads the
+    // first's.
+    fill.measure(&[], 8, Some(&MAPLE_SIZES)).expect("measured");
+    fill
+}
+
+static MAPLE_SIZES: LazyLock<std::path::PathBuf> = LazyLock::new(|| {
+    std::env::temp_dir().join(format!("plantgen-maple-sizes-{}", std::process::id()))
+});
+
+#[test]
+fn a_tile_shows_its_day_bare_maples_and_vanilla_leaf_down_in_winter() {
+    let site = Site::flat(TileId { x: 5, y: 5 }, 40.0).expect("site");
+    let stands = StandMap::uniform(40.0, 0, 30.0);
+    let (summer, winter) = (maple_wood(196.0), maple_wood(15.0));
+    let (july, january) = (
+        summer.tile(&site, &stands, 3).expect("tile"),
+        winter.tile(&site, &stands, 3).expect("tile"),
+    );
+    assert!((july.day - 196.0).abs() < 1e-9 && (january.day - 15.0).abs() < 1e-9);
+    let species = |fill: &Fill, instance: &Instance| {
+        fill.prototypes()[instance.prototype as usize]
+            .key
+            .species
+            .clone()
+    };
+    let count = |fill: &Fill, plan: &plantgen::api::TilePlan, id: &str| {
+        plan.instances
+            .iter()
+            .filter(|instance| species(fill, instance) == id)
+            .count()
+    };
+    // The same stand both days: the maples and sword ferns stand where
+    // they stood, the vanilla leaf is down in January.
+    for id in ["acer-macrophyllum", "polystichum-munitum"] {
+        let (a, b) = (count(&summer, &july, id), count(&winter, &january, id));
+        assert!(a > 0 && a == b, "{id}: {a} in July, {b} in January");
+    }
+    assert!(count(&summer, &july, "achlys-triphylla") > 0);
+    assert_eq!(count(&winter, &january, "achlys-triphylla"), 0);
+    // The far canopy: the bare crowns hide less of the ground, grey-brown.
+    assert!(
+        july.stats.crowns_in_leaf > 0.99,
+        "{}",
+        july.stats.crowns_in_leaf
+    );
+    assert!(
+        january.stats.crowns_in_leaf < 0.01,
+        "{}",
+        january.stats.crowns_in_leaf
+    );
+    let (leafy, bare) = (july.canopy[0], january.canopy[0]);
+    assert!(
+        bare.cover < 0.6 * leafy.cover && bare.cover > 0.2 * leafy.cover,
+        "{} bare, {} in leaf",
+        bare.cover,
+        leafy.cover
+    );
+    assert!(bare.colour[1] < leafy.colour[1] || bare.colour[0] > leafy.colour[0]);
+    // The crowns' projection, the layers' measure, is the stand's own.
+    assert!((july.stats.canopy_cover - january.stats.canopy_cover).abs() < 1e-9);
+    // The herbs' share of the floor falls with the vanilla leaf; the moss,
+    // which grows through the year, keeps its share.
+    assert!(january.stats.floor[3] < july.stats.floor[3]);
+    assert!((january.stats.floor[1] - july.stats.floor[1]).abs() < 1e-9);
+    std::fs::remove_dir_all(&*MAPLE_SIZES).ok();
+}

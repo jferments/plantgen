@@ -81,7 +81,10 @@ pub use crate::spec::{Environment, PlantSpec};
 /// its spec's years to its old ages. 6: [`Cover`] gained `floor` (each
 /// share of a cell's forest floor, [`Floor`]) and is non-exhaustive, made
 /// with [`Cover::of`]; [`TilePlan`] gained `logs` ([`Log`]) and
-/// `floor_mosses`, the genera [`FloorMoss`] names.
+/// `floor_mosses`, the genera [`FloorMoss`] names, and `day`, the day of
+/// the year it shows; [`TileStats`] gained `crowns_in_leaf`, and a
+/// [`CanopyCell`]'s cover and colour follow the deciduous crowns' leaves
+/// on that day.
 pub const API_VERSION: u32 = 6;
 
 /// The name of the file listing a set of variants ([`VariantSet`]).
