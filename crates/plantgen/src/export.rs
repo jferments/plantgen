@@ -48,7 +48,8 @@
 //! files need none. [`Compression::Meshopt`] also compresses every
 //! vertex, index and instance array (`EXT_meshopt_compression`,
 //! [`crate::meshopt`]), which three.js (with its decoder), Unity's glTFast
-//! and Blender's current importer read. [`Attributes`] leaves out the
+//! and Blender's importer from 5.2 read (checked 2026-11-06; Blender 4.5
+//! LTS refuses it, and [`crate::gltf::unpack`] undoes it). [`Attributes`] leaves out the
 //! growth or wind attributes below for a model that never grows or sways.
 //!
 //! Exports of motion inputs ([`Inputs::with_motion`], `plantc export

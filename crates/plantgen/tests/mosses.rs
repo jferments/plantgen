@@ -313,3 +313,27 @@ fn a_view_named_for_a_genus_finds_that_genus() {
     assert!(found > 0, "the wall grows some genus");
     assert!(cover.showpiece("Sphagnum").is_none());
 }
+
+#[test]
+fn moss_leaves_take_their_outline_from_leaf_shape() {
+    let kinds = library_kinds();
+    let kind = |genus: &str| {
+        kinds
+            .iter()
+            .find(|kind| kind.genus == genus)
+            .unwrap_or_else(|| panic!("the library describes {genus}"))
+    };
+    // FNA: Rosulabryum capillare and Tortula obovate, widest above the
+    // middle; Grimmia pulvinata lanceolate, widest below it.
+    for genus in ["Rosulabryum", "Tortula"] {
+        assert!(!kind(genus).outline.is_empty(), "{genus}");
+        assert!(kind(genus).blade_widest() > 0.5, "{genus}");
+        assert!(
+            kind(genus).blade_width(0.1) < kind(genus).blade_width(0.8),
+            "{genus}"
+        );
+    }
+    assert!(kind("Grimmia").blade_widest() < 0.5);
+    assert!((kind("Grimmia").blade_width(kind("Grimmia").blade_widest()) - 1.0).abs() < 1e-9);
+    assert!(kind("Grimmia").blade_width(1.0) < 0.05);
+}

@@ -373,11 +373,48 @@ plant using it with `EXT_mesh_gpu_instancing`. Its root node sits at the
 tile's south-west corner (+X east, +Y up, -Z north), so tiles laid side by
 side meet. A 40 m tile of an 80-year Douglas-fir stand with yarrow
 (1,047 plants) is 0.7 MiB at the low tier and 1.1 MiB at the mid tier
-with `--compress meshopt`, which three.js and glTFast read; Blender and
-Godot do not read meshopt, so for them write `--compress quantize` (0.9
-and 3.6 MiB). It draws
+with `--compress meshopt`, which three.js, glTFast and Blender 5.2 read;
+Blender 4.5 LTS and Godot do not read meshopt, so for them write
+`--compress quantize` (0.9 and 3.6 MiB), or turn meshopt output into such
+files with
+`plantc unpack DIR --out DIR2` (or `plantgen::gltf::unpack`), which
+undoes the compression in every `.glb` of a fill's folder and copies the
+rest. It draws
 the whole tile at one level; a caller that wants detail by distance reads
 the packed instances and the prototype files as above.
+
+**A tile in cells, each at the detail its distance asks for.** A host
+that reads only glTF can still draw near plants fine and far ones coarse:
+`plantc fill ... --glb-cells 1,2,3 --cell-m 20` (or
+`TilePlan::glb_cells(&prototypes, dir, cell_m, &levels, meshopt)`) cuts
+the tile into cells `cell_m` across and writes each as one such file at
+every level listed, `tiles/X_Y/c<col>_<row>-lod<N>.glb`, each with its
+root at its cell's south-west corner, and an index, `tiles/X_Y/cells.json`.
+For each cell and level the index gives `pixel_m`, the widest a pixel
+may be where it falls, metres, before the level is enough: its triangles
+then cover four pixels each (`TRIANGLE_PIXELS`) over the cell's most
+demanding plant's height times breadth. A host draws a cell at the
+coarsest level whose `pixel_m` is at most `distance x 2 tan(fov_y / 2) /
+pixels_high` at the cell's nearest point; `from_m` is that distance for a
+camera 1080 pixels high and 60 degrees across. A host short of
+triangles lets each cover more pixels: at `k` times as many, every
+`pixel_m` and `from_m` shrinks by the square root of `k`. In 20 m cells of an
+80-year Douglas-fir stand, the high level is enough from 9 m, mid from
+31 m and the cards from 112 m. `docs/examples/cells-viewer.html` draws a
+tile this way with stock three.js: a 120 m tile seen from the ground drew
+8 cells at the high level, 25 at mid and 3 as cards. glTF's own level-of-detail extension,
+`MSFT_lod`, is read by Babylon.js and UnityGLTF but by Blender and
+three.js only through add-ons, so the cells do not rely on it.
+
+**Checked in Blender** (2026-11-06, Blender 4.5.9 LTS and 5.2.3, File >
+Import > glTF 2.0 with its defaults): a 40 m tile of Douglas-fir, bigleaf
+maple and yarrow written with `--compress none` and `--compress
+quantize` (the tile file, every cell file at levels 1 to 3 and every
+prototype file) imports with every triangle the file holds and every
+card texture. Blender 5.2 imports `--compress meshopt` files whole as
+well; Blender 4.5 refuses them ("Extension EXT_meshopt_compression is
+not available on this addon version"), and after `plantc unpack` imports
+them whole.
 
 Dead wood is not placed yet. A climber member (layer `climber`) has one
 prototype per seed grown at the foot of a 6 m brick wall
@@ -474,6 +511,7 @@ Measured on a 4-core cloud machine (2026-11-01): 6 yarrows at 6 years in
 The files are glTF 2.0 that need no PlantGen code. Uncompressed and
 quantized files open in Blender, Godot, Unity (glTFast) and three.js;
 `--compress meshopt` files need a viewer with meshopt decoding, such as
-three.js. The max level is drawn at full detail, which for a flowering
+three.js or Blender 5.2; `plantc unpack` turns them into quantized
+files Blender 4.5 reads. The max level is drawn at full detail, which for a flowering
 herb or an old tree is a lot of triangles: use `--compress` and the
 farther tiers, or a budget, for real-time scenes.

@@ -766,8 +766,23 @@ impl SoilNeed {
     /// below it (`None` where nothing is known, which gives 1).
     #[must_use]
     pub fn ratio(&self, crown: f64, height: f64, volume: impl Fn(f64, f64) -> Option<f64>) -> f64 {
+        self.ratio_rooted(crown, height, volume)
+    }
+
+    /// [`Self::ratio`] for a crown `crown` metres in radius whose roots go
+    /// as deep as a plant's `root_height` tall: a seedling held back by its
+    /// soil sends its root down as deep as one of its age in open ground,
+    /// while its roots spread no farther than its own crown asks
+    /// ([`crate::succession::Colonist::supply`]).
+    #[must_use]
+    pub fn ratio_rooted(
+        &self,
+        crown: f64,
+        root_height: f64,
+        volume: impl Fn(f64, f64) -> Option<f64>,
+    ) -> f64 {
         let reach = self.spread * crown;
-        let down = (height * self.per_height).min(self.depth);
+        let down = (root_height * self.per_height).min(self.depth);
         if crown <= 0.0 || reach <= 0.0 || down <= 0.0 || self.demand <= 0.0 {
             return 1.0;
         }
