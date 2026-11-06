@@ -157,10 +157,12 @@
     "height_typical_m": {"min": 2, "max": 4},
     "woodiness": "woody",
     "leaf_width_m": {"min": 0.03, "max": 0.08},
+    "leaf_base_shape": {"rounded": "usually", "truncate": "often"},
     "sexual_system": "hermaphrodite"
   },
   "evidence": {
     "traits.leaf_shape": {"evidence": "SourceInferred", "source": "abrams-1944", "note": "Abrams, Illustrated Flora of the Pacific States vol. II (1944), read 2026-11-04, Physocarpus capitatus: \"Leaves broadly round-ovate, 3-5-lobed\"."},
+    "traits.leaf_base_shape": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9, Physocarpus capitatus (read 2026-11-06 at efloras.org): \"blade broadly ovate to obovate, (3-)4-8 cm, usually as wide as long, base rounded to truncate or slightly cordate, 3- or 5-lobed\"."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.42, 0.28, 0.18], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.flowering_months": {
       "evidence": "SourceInferred",
