@@ -290,8 +290,10 @@ The cover sits beside the fill as a surface layer, not as plant
 instances. A fill tile over a site field grows its own:
 `MossSettings::over_tile(corner, tile_m, years, seed)` is the box of the
 tile whose south-west corner `Site::from_field` was given, at every
-height, and `grow` on the same mesh the field was measured from gives the
-tile's cover, which a host keeps beside the tile's instances, draws, or
+height, and `grow_under` on the same mesh the field was measured from,
+under the crowns of the tile's own plants two metres tall or more
+(`TilePlan::crowns`; climbers left out, their leaves lie on their wall),
+gives the tile's cover, which a host keeps beside the tile's instances, draws, or
 reads to tint its own textures (`MossCover::tint`, above). `plantc fill
 --field SITE.json --moss YEARS` does this with the genera the site's
 `mosses` list names (all the library's without one), writes the cover to
@@ -301,4 +303,11 @@ patches beyond (`--wet` sets `DrawOptions::hydration`). On the test block
 (DEVELOPERS.md), with the eight Pacific Northwest genera its site names,
 thirty years grow about 39,000 colonies in 12 s on four cores: the shaded
 north slope of the house's roof, toward the street, mossed in clumps; the
-south slope spotted; moss along the curb and the fence's feet.
+south slope spotted; moss along the curb and the fence's feet. Under
+its 28 tree crowns, the moss on the woodland's boulders and
+ground more than doubles (1.7 to 3.7 m², nearly all Dicranoweisia and
+Rosulabryum) and the house's roof, whose north sky the firs block, falls
+from 9.9 to 4.0 m²: its mosses are the sun and part-shade mats and
+cushions of basic stone (Homalothecium, Tortula, Grimmia), and the shade
+mosses of the library are all acid, so nothing takes their place on a
+roof modelled as concrete (`built`).

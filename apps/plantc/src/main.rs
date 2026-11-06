@@ -6633,7 +6633,15 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
             let field = field_site
                 .as_ref()
                 .ok_or("`--moss` grows moss over a site: give `--field SITE.json`")?;
-            let cover = tile_moss(field, tile_m, years, options.number("seed")?.unwrap_or(1))?;
+            // The tile's trees shade the walls and roofs they stand over.
+            let canopy = plan.crowns(&fill, field.corner, MOSS_SHADE_LEAST_M);
+            let cover = tile_moss(
+                field,
+                tile_m,
+                years,
+                options.number("seed")?.unwrap_or(1),
+                &canopy,
+            )?;
             let path = out
                 .join("tiles")
                 .join(format!("{}_{}.moss.json", tile.x, tile.y));
@@ -7054,23 +7062,29 @@ fn site_moss_kinds(
     Ok(kinds)
 }
 
+/// The least height of a fill plant whose crown shades the moss under it,
+/// metres: trees and big shrubs over roofs and walls, not the herbs.
+const MOSS_SHADE_LEAST_M: f64 = 2.0;
+
 /// The mosses `years` grow over the tile of `field` (`plantc fill
-/// --moss YEARS`): the genera its site names, or every genus of the
-/// library, from `seed`.
+/// --moss YEARS`) under the crowns of `canopy`: the genera its site
+/// names, or every genus of the library, from `seed`.
 fn tile_moss(
     field: &FieldSite,
     tile_m: f64,
     years: u32,
     seed: u64,
+    canopy: &[plantgen::conditions::Envelope],
 ) -> Result<plantgen::mosses::MossCover, Failure> {
     use plantgen::mosses::{self, MossSettings};
     let started = Instant::now();
     let kinds = site_moss_kinds(&field.document)?;
     let settings = MossSettings::over_tile(field.corner, tile_m, years, seed);
-    let cover = mosses::grow(&field.mesh, &kinds, &settings);
+    let cover = mosses::grow_under(&field.mesh, &kinds, &settings, canopy);
     out!(
-        "  moss: {} colonies after {years} years in {:.1} s",
+        "  moss: {} colonies after {years} years under {} crowns in {:.1} s",
         cover.colonies.len(),
+        canopy.len(),
         started.elapsed().as_secs_f64()
     );
     for (genus, count, area) in cover.census() {
