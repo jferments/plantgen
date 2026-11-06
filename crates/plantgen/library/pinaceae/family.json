@@ -106,6 +106,14 @@
     "generator.params.shade_own": {
       "rule": "1",
       "why": "A needle grown in shade carries less mass per area than one in the sun, by the light at its own shoot: down an old Douglas-fir's crown its specific needle area rises steadily with depth, and its shaded lower-crown and epicormic shoots are the cheapest (Ishii et al. 2002), as an understorey silver fir's needle mass per area falls with the light at its apex (King 1997). So a shoot shaded by its own crown, not only one on a plant shaded all over, pays the shade needle's lower cost, and an old crown keeps foliage deeper down."
+    },
+    "generator.params.top_die": {
+      "rule": "0.002",
+      "why": "Storms and dieback take old trees' tops, and new leaders (reiterated trunks) rise from the break: Douglas-fir crowns stay simple, as their architectural model has them, until damaged, few trees under 300 years carry reiterated trunks, and many older ones do (Sillett et al. 2018); old-growth trees 'often have multiple or dead tops' (Franklin and Spies). Once the leader's yearly rise is under a twentieth of its fastest (about 215 years in a Douglas-fir), it dies with chance 0.002 a year: about one tree in six by 300 years and two in five by 480."
+    },
+    "generator.params.top_rise": {
+      "rule": "0.05",
+      "why": "A top dies only once the tree has nearly stopped rising (its leader's yearly rise under a twentieth of its fastest): Sillett et al.'s (2018) Cascade Douglas-firs under 300 years kept model-conforming crowns."
     }
   },
   "evidence": {
@@ -148,6 +156,16 @@
       "evidence": "SourceInferred",
       "source": "ishii-ford-2002",
       "note": "Ishii et al. (2002), Tree Physiology 22: 31-40: in old-growth Wind River Douglas-firs, specific needle area increased linearly with decreasing height in the crown, about 0.95 cm2/g per metre, and epicormic shoots carried the highest; foliage is renewed in the lower crown by epicormic shoots. The cost's form is King (1997, Tree Physiology 17: 251-258; pinidae revision 17's shade_cost): needle mass per area 130 + 185 times the light at the apex, g/m2. Checked against Ishii and McDowell (2002): 450-year crowns' live crown ratio 0.64."
+    },
+    "rules.generator.params.top_die": {
+      "evidence": "SourceInferred",
+      "source": "sillett-2018",
+      "note": "Sillett et al. (2018), Forest Ecology and Management 429: 93-114, 60 climbed Douglas-firs: trees under 100 years (Olympic) and 300 years (Cascade) had model-conforming crowns with few if any trunk reiterations; older trees had reiterated trunks and individualized structure, though some over 300 years kept simple crowns; 'decapitation of treetops and branch tips in storms eventually leads to trunk reiteration'. Their Fig. 3 shows reiterated trunks near the top in about a third (Cascade) to a half (Olympic) of the old trees. Rate fitted to those shares."
+    },
+    "rules.generator.params.top_rise": {
+      "evidence": "SourceInferred",
+      "source": "sillett-2018",
+      "note": "Sillett et al. (2018): Cascade Douglas-firs under 300 years kept model-conforming crowns, with few if any reiterated trunks; a twentieth of the fastest rise is reached at about 215 years by the Douglas-fir's height curve."
     }
   }
 }
