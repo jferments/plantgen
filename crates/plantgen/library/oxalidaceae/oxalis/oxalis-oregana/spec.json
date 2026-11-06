@@ -35,8 +35,8 @@
       "fruit_below": 0,
       "buds_above": 1,
       "nod": 0,
-      "leaf_area": 0.536,
-      "basal_area": 0.593,
+      "leaf_area": 0.679,
+      "basal_area": 0.617,
       "basal_piece_area": 0.235,
       "flower_area": 0.317,
       "bud_area": 0.117,
@@ -59,7 +59,7 @@
     "variation": 0.2,
     "organs": {
       "leaf": {
-        "shape": { "template": "compound", "leaflet_width": 1.0, "petiole": 0.4, "spread": 240, "lowest": 1.0, "outline": [[0, 0.05], [0.1, 0.22], [0.3, 0.5], [0.5, 0.74], [0.7, 0.92], [0.85, 1], [0.95, 0.9], [0.99, 0.6], [1, 0]] },
+        "shape": { "template": "compound", "petiole": 0.4, "lowest": 1.0 },
         "face_up": 0.6
       },
       "flower": {
@@ -93,9 +93,10 @@
     "height_typical_m": {"min": 0.05, "max": 0.2},
     "height_max_m": 0.25,
     "rosette": "basal",
-    "leaf_length_m": {"min": 0.02, "max": 0.04},
-    "leaf_width_m": {"min": 0.03, "max": 0.06},
+    "leaf_length_m": {"min": 0.01, "max": 0.045},
+    "leaf_width_m": {"min": 0.02, "max": 0.09},
     "leaf_margin": "entire",
+    "leaf_shape": "obcordate",
     "sexual_system": "hermaphrodite",
     "flowering_months": [3, 4, 5, 6, 7, 8],
     "fruit_size_m": {"min": 0.006, "max": 0.01},
@@ -112,7 +113,7 @@
       "source": "plantgen-authors",
       "note": "The leaf area its `flower` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows: since 2026-10-16 the flower is its family's funnel of clawed petals, where before it opened flat (before, 0.689)."
     },
-    "generator.params.basal_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The area its `basal` look draws on an organ 1 m long (visual forms leaf blades, 2026-10-15; plantc atlas), so it shades with what it shows: its rosette leaves now take the species' leaf rules and draw its compound leaf, where before they drew the generic simple card (0.235); 0.381 until Oxalidaceae stated its obovate leaflets (2026-10-17); 0.305 until the compound card stopped shrinking leaves whose leaflets hang back below their junction (2026-10-19), when leaf_area went from 0.387 to 0.536 too."},
+    "generator.params.basal_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The area its `basal` look draws on an organ 1 m long (visual forms leaf blades, 2026-10-15; plantc atlas), so it shades with what it shows: its rosette leaves now take the species' leaf rules and draw its compound leaf, where before they drew the generic simple card (0.235); 0.381 until Oxalidaceae stated its obovate leaflets (2026-10-17); 0.305 until the compound card stopped shrinking leaves whose leaflets hang back below their junction (2026-10-19), when leaf_area went from 0.387 to 0.536 too. Since 2026-11-05 its leaflets are obcordate, notched at the tip, from its shape word: leaf 0.536 to 0.679, basal 0.593 to 0.617."},
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -166,14 +167,15 @@
     "appearance.organs.leaf.shape": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "The leaf drawn as a palmately compound leaf of three leaflets (spec rework P4), set from its characters by the rules at the flowering plants; before, one broad blade stood in for it. By eye: the leaflets spread evenly round the stalk's tip, each widest near its broad, flat-topped tip (an obcordate leaflet's notch is not drawn) and about as wide as long. The card now holds a stub of the stalk, so the leaf is drawn 6 cm long where its blade was 4.5 cm: each leaflet about 3.5 cm."
+      "note": "The leaf drawn as a palmately compound leaf of three leaflets (spec rework P4), set from its characters by the rules at the flowering plants; before, one broad blade stood in for it. Since 2026-11-05 its leaflets are drawn from its shape word, obcordate (broadest near the tip, notched deep there), where before a hand-drawn outline left the notch out. By hand only the stub of stalk the card holds (0.4 of it) and outer leaflets as long as the middle one (lowest 1), by eye. The card holds a stub of the stalk, so the leaf is drawn 6 cm long where its blade was 4.5 cm: each leaflet about 3.5 cm."
     },
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Oxalis oregana (read 2026-11-05): the three leaflets are heart-shaped, 1-4.5 cm long, on 5-20 cm stalks; a leaflet heart-shaped with its notch at the tip is obcordate, as the guides the species' note cites say. Replaces its family's obovate."},
     "traits.life_span": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 319, Oxalis oregana: life span perennial."},
     "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2393990), as no source read gives it."},
     "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2393990), as no source read gives it."},
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2393990), as no source read gives it."},
-    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2393990), as no source read gives it."},
-    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2393990), as no source read gives it."},
+    "traits.leaf_length_m": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Oxalis oregana (read 2026-11-05): the three leaflets are heart-shaped, 1-4.5 cm long; the length of a palmate leaf's blade is its leaflets'. Replaces a model estimate of 2-4 cm."},
+    "traits.leaf_width_m": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Oxalis oregana (read 2026-11-05): three heart-shaped leaflets 1-4.5 cm long spread from the stalk's tip, so the whole blade is about twice a leaflet's length across, 2-9 cm. Replaces a model estimate of 3-6 cm, which the leaf drawn with its leaflets' stated shape overran (2026-11-05)."},
     "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2393990), as no source read gives it."},
     "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2393990), as no source read gives it."},
     "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2393990), as no source read gives it."},

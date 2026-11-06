@@ -1337,6 +1337,11 @@ impl LayerCover {
     pub const TREE_MIN_M: f64 = 1.4;
 }
 
+/// The mean area one triangle of a plant may cover on screen, pixels,
+/// before a coarser level of it is enough ([`TilePlan::glb_cells`]):
+/// four, about two pixels across.
+pub const TRIANGLE_PIXELS: f64 = 4.0;
+
 /// A filled tile: every placed plant, the ground cover and the far
 /// canopy, per stand cell of the [`StandMap`] it was filled from.
 #[derive(Debug, Clone, PartialEq)]
@@ -1379,6 +1384,47 @@ struct TileHeader<'a> {
 }
 
 impl TilePlan {
+    /// The crowns of the tile's plants at least `least_height_m` tall, as
+    /// the envelopes that shade a site (`crate::mosses::grow_under`), in
+    /// the frame of a site whose tile has its south-west corner at (x, z)
+    /// `corner` (north −Z, as [`crate::mosses::MossSettings::over_tile`]):
+    /// each prototype's measured crown (base, height, radius, leaf area)
+    /// scaled with its instance and stood on its foot. Climbers are left
+    /// out: their leaves lie flat on their wall, not in a crown round
+    /// their foot. So are plants whose size has not been measured.
+    #[must_use]
+    pub fn crowns(
+        &self,
+        fill: &Fill,
+        corner: [f64; 2],
+        least_height_m: f64,
+    ) -> Vec<crate::conditions::Envelope> {
+        self.instances
+            .iter()
+            .filter_map(|instance| {
+                let index = instance.prototype as usize;
+                if fill.prototypes().get(index)?.key.on_wall {
+                    return None;
+                }
+                let size = fill.size(index)?;
+                let scale = f64::from(instance.scale);
+                let height = size.height * scale;
+                if height < least_height_m || size.leaf_area <= 0.0 {
+                    return None;
+                }
+                let [east, north, up] = instance.position.map(f64::from);
+                let crown = crate::conditions::Crown {
+                    base_m: up + size.crown_base.unwrap_or(0.0) * scale,
+                    top_m: up + height,
+                    radius_m: (size.crown_radius * scale).max(0.05),
+                    leaf_area_m2: size.leaf_area * scale * scale,
+                };
+                // The site's (east, north) of the foot: x = corner x +
+                // east, z = corner z − north, and north is −z.
+                Some(crown.envelope([corner[0] + east, north - corner[1]]))
+            })
+            .collect()
+    }
     /// The prototypes the plan places, each once, in order: what to pass
     /// [`Fill::write_prototypes`] for this tile.
     #[must_use]
@@ -1451,6 +1497,35 @@ impl TilePlan {
         meshopt: bool,
     ) -> Result<Vec<u8>, Error> {
         crate::tile_scene::tile_glb(self, prototypes, dir, level, meshopt)
+    }
+
+    /// The tile cut into square cells `cell_m` across, each written as
+    /// one glTF file (as [`Self::glb`]) at every one of `levels`, and an
+    /// index, `X_Y/cells.json`, so a host that reads only glTF draws each
+    /// cell at the level its distance asks for. Each entry is a file's
+    /// name, relative to the tiles' folder (`X_Y/c<col>_<row>-lod<N>.glb`),
+    /// and its bytes; a cell with no plants has none.
+    ///
+    /// The index lists, for each cell and level, `pixel_m`: the widest a
+    /// pixel may be, metres, where it falls, before the level is enough,
+    /// its triangles then covering [`TRIANGLE_PIXELS`]
+    /// pixels each over the most demanding plant's height times breadth;
+    /// and `from_m`, the distance that is for a camera 1080 pixels high
+    /// and 60 degrees across.
+    ///
+    /// # Errors
+    ///
+    /// As [`Self::glb`], or when `cell_m` is not positive or `levels` is
+    /// empty.
+    pub fn glb_cells(
+        &self,
+        prototypes: &[PrototypeFiles],
+        dir: &Path,
+        cell_m: f64,
+        levels: &[usize],
+        meshopt: bool,
+    ) -> Result<Vec<(String, Vec<u8>)>, Error> {
+        crate::tile_scene::tile_cells(self, prototypes, dir, cell_m, levels, meshopt)
     }
 }
 

@@ -1667,4 +1667,37 @@ pub mod venation;
 /// `widest`, `base` or `tip` by hand, the hand outline still wins, except
 /// a hardhack's, which drew obovate leaves where Abrams gives elliptical
 /// to oval ones.
-pub const GENERATOR_REVISION: u32 = 206;
+///
+/// 207: an old pine-family tree's top may die and regrow (`pinidae`
+/// revision 20). Once its leader's yearly rise is under a twentieth of its
+/// fastest (about 215 years in a Douglas-fir), the leader dies with chance
+/// 0.002 a year and one to three new leaders rise from the dead top
+/// (reiterated trunks; Sillett et al. 2018: Douglas-fir crowns stay simple
+/// until damaged, and many trees past 300 years carry reiterated trunks).
+/// About one tree in six has lost its top by 300 years and two in five by
+/// 480: of five 480-year Douglas-firs grown in a stand, seeds 2 and 4 did,
+/// standing 2.8 and 3.4 m taller on their new leaders with 1,125 and 1,219
+/// m² of foliage. Every other plant, and every tree before its top dies,
+/// grows as before.
+///
+/// 208: conifers are held back by their soil (`soil@1` in the pinidae
+/// program, its revision 21) as broadleaf trees, herbs and grasses are:
+/// one rooted in a crack or a thin soil grows as a shaded one does. Grown
+/// with no rooting limits, as every package is, a conifer grows as before.
+///
+/// 209: two herbs drawn as their floras state them, and compound leaves'
+/// leaflets drawn as floras describe them. A common mullein in flower
+/// stands 1-2 m (Gleason and Cronquist), Jepson's 30 cm kept as the rare
+/// low; a vanilla leaf's stalk bears one leaf (Abrams). Leaf shapes gain
+/// flabellate (a fan: sides bowing out from a narrow foot to a lobed or
+/// toothed far edge, rounded or cut square as the apex says) and
+/// obcordate (notched deep at a broad tip); side leaflets stated
+/// asymmetric are lopsided (`lateral_leaflets`); a lobed leaflet's lobe
+/// tips follow `leaflet_lobe_apex`; leaflets take their stated apex and
+/// base (tapers, points, notches), as simple blades did; and a leaflet
+/// may be twice as broad as long. A vanilla leaf draws three broad lobed
+/// wedges and a redwood sorrel three heart-shaped leaflets, where hand
+/// outlines drew neither, and 17 more compound-leaved species (roses,
+/// brambles, rowans, sumacs, hemp) change with their stated leaflet
+/// tips. Every other leaf draws as it did.
+pub const GENERATOR_REVISION: u32 = 209;

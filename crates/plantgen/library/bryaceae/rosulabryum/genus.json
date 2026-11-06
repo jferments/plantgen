@@ -22,6 +22,8 @@
       34
     ],
     "leaf_dry_posture": "twisted",
+    "stem_foliation": "rosulate",
+    "leaf_shape": "obovate",
     "seta_length_m": {
       "min": 0.01,
       "max": 0.03,
@@ -68,6 +70,16 @@
       "evidence": "SourceInferred",
       "source": "fna-28",
       "note": "FNA vol. 28, Rosulabryum (Spence; efloras, read 2026-11-05): plants in open to dense low turfs, green to red-green; stems 0.3-6 cm, usually rosulate; leaves contorted to spirally twisted around the stem when dry; costa usually excurrent in an awn; dioicous mostly; seta straight; capsule nutant to inclined, 2-6 mm. Typical values are R. capillare (Bryum capillare; same volume): small, bright green; stems 0.5-1.5 cm; leaves spirally twisted around the stem dry, obovate, 0.5-2.5 mm, costa long-excurrent, awn sometimes hyaline; capsule inclined, red-brown, cylindric, 3-5 mm; moist shaded soil, soil banks, rotting wood. Bryophytes at Oregon State, rooftop study (nine Willamette Valley roofs; read 2026-11-05 as summarised in a search, the site itself blocked here): Dicranoweisia cirrata very abundant (45% occurrence), Bryum capillare abundant (33%), Racomitrium canescens var. ericoides abundant but infrequent (11%), able to form large mats; Dicranoweisia and Bryum capillare the only two species found on cedar shakes; most roofs had fewer than four species."
+    },
+    "traits.stem_foliation": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Rosulabryum (efloras, read 2026-11-05): stems usually strongly rosulate; R. capillare: stems distinctly singly rosulate, innovations short, rosulate."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Rosulabryum capillare (efloras, read 2026-11-05): leaves obovate, weakly concave, apex acute, costa long-excurrent."
     },
     "traits.leaf_width_m": {
       "evidence": "Authored",

@@ -15,7 +15,7 @@ use std::path::Path;
 use serde_json::{Map, Value, json};
 
 use crate::api::Error;
-use crate::fill::{Instance, PrototypeFiles, TilePlan};
+use crate::fill::{Instance, PrototypeFiles, TRIANGLE_PIXELS, TilePlan};
 use crate::gltf::{Document, Glb, Index};
 
 /// A placement as glTF composes them: translation, rotation (x, y, z, w)
@@ -389,21 +389,64 @@ pub(crate) fn tile_glb(
     level: usize,
     meshopt: bool,
 ) -> Result<Vec<u8>, Error> {
+    let all: Vec<&Instance> = plan.instances.iter().collect();
+    let (glb, _) = scene_glb(
+        plan,
+        &all,
+        [0.0, 0.0],
+        &format!("tile {}_{}", plan.tile.x, plan.tile.y),
+        prototypes,
+        dir,
+        level,
+        meshopt,
+        json!({}),
+    )?;
+    Ok(glb)
+}
+
+/// What [`scene_glb`] drew: each prototype's index and its plants.
+type Placed = Vec<(u32, usize)>;
+
+/// `instances` of `plan` (tile metres) as one GLB at `level`, its root at
+/// `origin` (east, north) in the tile, named `name`; `meta` joins the
+/// scene's `extras.plantgen`.
+#[allow(clippy::too_many_arguments, clippy::too_many_lines)]
+fn scene_glb(
+    plan: &TilePlan,
+    instances: &[&Instance],
+    origin: [f64; 2],
+    name: &str,
+    prototypes: &[PrototypeFiles],
+    dir: &Path,
+    level: usize,
+    meshopt: bool,
+    meta: Value,
+) -> Result<(Vec<u8>, Placed), Error> {
     let mut document = Document::new();
     document.extension("EXT_mesh_gpu_instancing", true);
     if meshopt {
         document.meshopt();
     }
-    // Each prototype's tile instances, in tile order.
+    // Each prototype's instances, in tile order, from the root.
     let mut by_prototype: BTreeMap<u32, Vec<Place>> = BTreeMap::new();
-    for instance in &plan.instances {
+    for instance in instances {
+        #[allow(clippy::cast_possible_truncation)]
+        let local = Instance {
+            position: [
+                (f64::from(instance.position[0]) - origin[0]) as f32,
+                (f64::from(instance.position[1]) - origin[1]) as f32,
+                instance.position[2],
+            ],
+            ..**instance
+        };
         by_prototype
             .entry(instance.prototype)
             .or_default()
-            .push(Place::of_instance(instance));
+            .push(Place::of_instance(&local));
     }
     let mut children = Vec::new();
     let mut listed = Vec::new();
+    let mut drawn_list = Vec::new();
     for (prototype, placed) in &by_prototype {
         let record = prototypes
             .iter()
@@ -460,36 +503,169 @@ pub(crate) fn tile_glb(
             "file": file.file,
             "instances": placed.len(),
         }));
+        drawn_list.push((*prototype, placed.len()));
     }
     #[allow(clippy::cast_precision_loss)]
     let corner = [
-        f64::from(plan.tile.x) * plan.tile_m,
-        f64::from(plan.tile.y) * plan.tile_m,
+        f64::from(plan.tile.x) * plan.tile_m + origin[0],
+        f64::from(plan.tile.y) * plan.tile_m + origin[1],
     ];
     let root = document.node(json!({
-        "name": format!("tile {}_{}", plan.tile.x, plan.tile.y),
+        "name": name,
         "translation": [corner[0], 0.0, -corner[1]],
         "children": children,
     }));
+    let mut about = json!({
+        "format": "plantgen-tile",
+        "generator_revision": crate::GENERATOR_REVISION,
+        "tile": plan.tile,
+        "tile_m": plan.tile_m,
+        "level": level,
+        "instances": instances.len(),
+        "prototypes": listed,
+        "units": "metres; +X east, +Y up, -Z north; the root node sits at the south-west corner of what it holds",
+    });
+    if let (Some(about), Value::Object(meta)) = (about.as_object_mut(), meta) {
+        about.extend(meta);
+    }
     let mut extras = Map::new();
-    extras.insert(
-        "plantgen".into(),
-        json!({
-            "format": "plantgen-tile",
-            "generator_revision": crate::GENERATOR_REVISION,
-            "tile": plan.tile,
-            "tile_m": plan.tile_m,
-            "level": level,
-            "instances": plan.instances.len(),
-            "prototypes": listed,
-            "units": "metres; +X east, +Y up, -Z north; the root node sits at the tile's south-west corner",
-        }),
-    );
-    Ok(document.glb(
-        json!({ "version": "2.0", "generator": format!("plantgen {}", crate::GENERATOR_REVISION) }),
-        &[root],
-        Value::Object(extras),
+    extras.insert("plantgen".into(), about);
+    Ok((
+        document.glb(
+            json!({ "version": "2.0", "generator": format!("plantgen {}", crate::GENERATOR_REVISION) }),
+            &[root],
+            Value::Object(extras),
+        ),
+        drawn_list,
     ))
+}
+
+/// The reference camera of a cell index's `from_m`: 1080 pixels high and
+/// 60 degrees across vertically.
+const REFERENCE_PIXELS: f64 = 1080.0;
+
+/// How wide a pixel may be, metres, where it falls, before `level` of a
+/// plant `height` tall and `radius` in crown, drawn in `triangles`, is
+/// enough: its triangles then cover [`TRIANGLE_PIXELS`] each on average
+/// over its height times its breadth. None for a level with none.
+#[allow(clippy::cast_precision_loss)]
+pub(crate) fn level_pixel(height: f64, radius: f64, triangles: usize) -> Option<f64> {
+    (triangles > 0).then(|| {
+        let area = height.max(0.01) * (2.0 * radius).max(0.01);
+        (area / (TRIANGLE_PIXELS * triangles as f64)).sqrt()
+    })
+}
+
+/// The tile cut into square cells `cell_m` across, each written at every
+/// one of `levels`, and an index: see [`crate::fill::TilePlan::glb_cells`].
+pub(crate) fn tile_cells(
+    plan: &TilePlan,
+    prototypes: &[PrototypeFiles],
+    dir: &Path,
+    cell_m: f64,
+    levels: &[usize],
+    meshopt: bool,
+) -> Result<Vec<(String, Vec<u8>)>, Error> {
+    if !(cell_m.is_finite() && cell_m > 0.0) {
+        return Err(Error(format!("tile cells: a cell {cell_m} m across")));
+    }
+    if levels.is_empty() {
+        return Err(Error("tile cells: no levels".into()));
+    }
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+    let cols = ((plan.tile_m / cell_m).ceil() as usize).max(1);
+    let mut cells: Vec<Vec<&Instance>> = vec![Vec::new(); cols * cols];
+    for instance in &plan.instances {
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let at = |v: f32| ((f64::from(v) / cell_m).floor().max(0.0) as usize).min(cols - 1);
+        cells[at(instance.position[1]) * cols + at(instance.position[0])].push(instance);
+    }
+    let stem = format!("{}_{}", plan.tile.x, plan.tile.y);
+    let s = 2.0 * (std::f64::consts::PI / 6.0).tan() / REFERENCE_PIXELS;
+    let mut files = Vec::new();
+    let mut listed = Vec::new();
+    for (i, instances) in cells.iter().enumerate() {
+        if instances.is_empty() {
+            continue;
+        }
+        let (col, row) = (i % cols, i / cols);
+        #[allow(clippy::cast_precision_loss)]
+        let origin = [col as f64 * cell_m, row as f64 * cell_m];
+        let mut by_level = Vec::new();
+        let mut placed = Vec::new();
+        for &level in levels {
+            let name = format!("{stem}/c{col}_{row}-lod{level}.glb");
+            let (glb, drawn) = scene_glb(
+                plan,
+                instances,
+                origin,
+                &format!("tile {stem} cell {col},{row} level {level}"),
+                prototypes,
+                dir,
+                level,
+                meshopt,
+                json!({ "cell": [col, row], "cell_m": cell_m }),
+            )?;
+            // The narrowest pixel past which this level is enough for
+            // every plant of the cell: the most demanding plant's.
+            let mut pixel = f64::NEG_INFINITY;
+            for (prototype, _) in &drawn {
+                let Some(record) = prototypes.iter().find(|p| p.index == *prototype) else {
+                    continue;
+                };
+                let size = &record.plant.size;
+                let triangles = record
+                    .plant
+                    .levels
+                    .iter()
+                    .find(|l| l.level == level)
+                    .map_or(0, |l| l.triangles);
+                if let Some(p) = level_pixel(size.height, size.crown_radius, triangles) {
+                    pixel = pixel.max(p);
+                }
+            }
+            if placed.is_empty() {
+                placed = drawn;
+            }
+            by_level.push(json!({
+                "level": level,
+                "file": name,
+                "bytes": glb.len(),
+                "pixel_m": pixel.is_finite().then_some(pixel),
+                "from_m": pixel.is_finite().then_some(pixel / s),
+            }));
+            files.push((name, glb));
+        }
+        let tallest = placed
+            .iter()
+            .filter_map(|(p, _)| prototypes.iter().find(|r| r.index == *p))
+            .map(|r| r.plant.size.height)
+            .fold(0.0, f64::max);
+        listed.push(json!({
+            "cell": [col, row],
+            "corner": origin,
+            "tallest_m": tallest,
+            "instances": instances.len(),
+            "levels": by_level,
+        }));
+    }
+    let index = json!({
+        "format": "plantgen-tile-cells",
+        "schema": 1,
+        "generator_revision": crate::GENERATOR_REVISION,
+        "tile": plan.tile,
+        "tile_m": plan.tile_m,
+        "cell_m": cell_m,
+        "cols": cols,
+        "triangle_pixels": TRIANGLE_PIXELS,
+        "reference_camera": { "pixels_high": REFERENCE_PIXELS, "fov_y_degrees": 60.0 },
+        "units": "metres; corner (east, north) from the tile's south-west corner; each file's root node sits at its cell's south-west corner, +X east, +Y up, -Z north",
+        "choose": "draw a cell at the coarsest level whose pixel_m is at most the width a pixel spans at the cell's nearest point: distance x 2 tan(fov_y / 2) / pixels high; from_m is that distance for the reference camera",
+        "cells": listed,
+    });
+    let text = serde_json::to_vec_pretty(&index).map_err(|e| Error(e.to_string()))?;
+    files.push((format!("{stem}/cells.json"), text));
+    Ok(files)
 }
 
 #[cfg(test)]
