@@ -2364,6 +2364,15 @@
       "when": {"body_plan": ["leafy"]},
       "why": "how a moss's leaves lie when it dries out (they spread again when wet): pressed to the stem (appressed), overlapping as when moist (imbricate), wavy (flexuose), curled and contorted (crisped), twisted round the stem (twisted), or curved to one side like a sickle (falcate)"
     },
+    "stem_foliation": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["evenly_foliate", "rosulate", "comose"],
+      "optional": true,
+      "when": {"body_plan": ["leafy"]},
+      "why": "how a moss's leaves sit along its stem: evenly spaced (evenly foliate), crowded and larger in a rosette at the top (rosulate, as in Rosulabryum), or in a looser tuft at the top (comose); evenly foliate when left out"
+    },
     "leaf_dry_crisping": {
       "group": "leaves",
       "organ": "leaf",
