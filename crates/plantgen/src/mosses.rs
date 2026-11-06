@@ -132,6 +132,11 @@ pub struct MossKind {
     /// Linear RGB of the leaves, moist.
     pub colour: [f32; 3],
     pub dry_posture: DryPosture,
+    /// How far a crisped leaf coils when dry, 0 to 1 (trait
+    /// `leaf_dry_crisping`; 1 when left out): "crisped" 1, "somewhat
+    /// crisped" or "contorted" 0.5.
+    #[serde(default = "full_crisping")]
+    pub crisping: f64,
     /// Side branches curl up and inward when dry (trait
     /// `dry_branch_posture` curled).
     #[serde(default)]
@@ -175,6 +180,10 @@ fn default_lid() -> f64 {
 }
 
 /// Older leaves a moss genus gives no colour for: yellow-brown.
+fn full_crisping() -> f64 {
+    1.0
+}
+
 fn default_older_colour() -> [f32; 3] {
     linear(DEFAULT_OLDER)
 }
@@ -347,6 +356,7 @@ impl MossKind {
                 .and_then(colour)
                 .unwrap_or(linear([90, 120, 50])),
             dry_posture,
+            crisping: num("leaf_dry_crisping").unwrap_or(1.0).clamp(0.0, 1.0),
             branches_curl_dry: pick("dry_branch_posture").as_deref() == Some("curled"),
             seta_m: num("seta_length_m").unwrap_or(leaf_length_m * 8.0),
             seta_arcuate: pick("seta_form").as_deref() == Some("arcuate"),
@@ -2000,6 +2010,7 @@ impl Drawer<'_> {
                 length,
                 width,
                 dry,
+                kind.crisping,
                 [dark, mid_colour, tip_colour],
                 seed,
             );
@@ -2052,11 +2063,14 @@ impl Drawer<'_> {
         length: f64,
         width: f64,
         dry: f64,
+        crisping: f64,
         [dark, mid_colour, tip_colour]: [[f32; 3]; 3],
         seed: u64,
     ) {
         const PIECES: u32 = 5;
-        // Negative turns the blade toward the stem (incurved).
+        // Negative turns the blade toward the stem (incurved); a leaf the
+        // flora calls only somewhat crisped coils part way.
+        let dry = dry * crisping;
         let curl = 0.12 * (1.0 - dry) - dry * (1.8 + 1.4 * unit(mix(seed, 7)));
         let spin = dry * (unit(mix(seed, 3)) - 0.5) * 3.2;
         let lower = 0.3;
