@@ -1711,4 +1711,12 @@ pub mod venation;
 /// Vegetation Simulator's crown-width equation; it holds 757 m² of
 /// foliage at 480 years (Sillett et al. 2018: 630 to 1,480). Every
 /// conifer stays within its reference sizes.
-pub const GENERATOR_REVISION: u32 = 210;
+///
+/// 213: the pine family's wood keeps a twentieth of each year's sag
+/// (Pinaceae `bend_set` 0.05, from 0.15), so an old limb's side shoots,
+/// which lengthen for centuries with needles only near their tips, angle
+/// out and down instead of hanging straight down in curtains of bare
+/// strings under a 480-year Douglas-fir's lower crown. Every conifer stays
+/// within its reference sizes; the 480-year Douglas-fir holds 744 m² of
+/// foliage (757 before) and western hemlock 821 m² (835).
+pub const GENERATOR_REVISION: u32 = 213;
