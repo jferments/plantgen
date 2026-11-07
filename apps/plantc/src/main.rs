@@ -291,6 +291,7 @@ Usage:
               [--render FILE.png [--view VIEW] [--size PIXELS] [--from south|north]]
               [--glb FILE.glb] [--focus X,Y,Z | --genus GENUS] [--span METRES]
               [--wet 0..1 | --day 1..365] [--detail tint|patch|shell|shoots|near] [--capsules yes|no]
+              [--exposure camera|sun]
       Grow mosses over a site's faces (plantgen::mosses): every moss genus
       the library gives a colony_form settles where its light, wetness
       and substrate fit (rain on faces turned up, damp at a wall's foot,
@@ -305,7 +306,11 @@ Usage:
       just rained on, 0 dry (0.4 when left out; with --day, as often wet
       as Portland's share of rain days then, 0.6 in January, 0.12 in
       July); --from north looks from
-      the north side. --genus looks at that genus's widest well-grown
+      the north side. A close render (--focus or --genus) is exposed
+      as a camera exposes a photo, metered centre-weighted to 18% grey
+      (raster::METERED_GREY), so shaded moss is as bright as in photos;
+      a view of the whole site for the sun; --exposure sets either.
+      --genus looks at that genus's widest well-grown
       colony instead of --focus; a close render prints the genus of the
       colony it is centred on, for its caption. --glb writes the same
       site and moss as one glTF file (nodes `site` and `moss`, vertex
@@ -3365,7 +3370,7 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
         args,
         &[
             "years", "seed", "latitude", "box", "out", "cover", "render", "view", "size", "from",
-            "focus", "span", "wet", "detail", "capsules", "genus", "glb", "day",
+            "focus", "span", "wet", "detail", "capsules", "genus", "glb", "day", "exposure",
         ],
     )?;
     let given = options.one_positional("a site document")?;
@@ -3579,8 +3584,19 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
             Some(((a + b) * 0.5, (b - a).length() * 0.45))
         }
     };
+    // A close render is exposed as a camera would expose a photo of the
+    // moss, metered to its frame (moss grows in shade, which the fixed
+    // daylight exposure leaves dark); a view of the site, for the sun.
+    let metered = match options.flags.get("exposure").map(String::as_str) {
+        None => focus.is_some(),
+        Some("camera") => true,
+        Some("sun") => false,
+        Some(other) => {
+            return Err(format!("unknown exposure `{other}`; use camera or sun").into());
+        }
+    };
     let templates = Templates::for_plant(&[], &[]);
-    let image = preview::render_on_site(
+    let mut image = preview::render_on_site(
         &PlantMesh::default(),
         &[
             (&ground, raster::Material::Opaque),
@@ -3599,6 +3615,11 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
             fit_plant: false,
         },
     );
+    let exposure = if metered {
+        image.meter(raster::METERED_GREY)
+    } else {
+        1.0
+    };
     let png = raster::encode_png(
         image.width,
         image.height,
@@ -3607,9 +3628,14 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
     .map_err(|error| format!("cannot encode PNG: {error}"))?;
     fs::write(render, png).map_err(|error| format!("cannot write {render}: {error}"))?;
     out!(
-        "wrote {render}: {} triangles of moss, {} of site",
+        "wrote {render}: {} triangles of moss, {} of site, exposed {}",
         moss.triangle_count(),
-        ground.triangle_count()
+        ground.triangle_count(),
+        if metered {
+            format!("for the frame, x{exposure:.2} the sun's")
+        } else {
+            "for the sun".to_owned()
+        }
     );
     Ok(())
 }
