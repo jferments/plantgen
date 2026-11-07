@@ -59,6 +59,12 @@ const GOLDEN: f64 = 2.399_963_229_728_653;
 /// Estimate.
 const OFFSPRING_PER_YEAR: f64 = 2.0;
 
+/// The two measured mosses [`MossKind::far_share`] runs between: (spore
+/// diameter in metres, share of spores beyond 2 m) for *Bryum argenteum*
+/// (spores 8-15 µm, over 80% beyond 2 m) and *Tortula truncata* (25-30 µm,
+/// 30%).
+pub const SPORE_FAR: ((f64, f64), (f64, f64)) = ((11.5e-6, 0.8), (27.5e-6, 0.3));
+
 /// The mean distance beyond its rim a colony's pieces lodge: most fall
 /// within a few centimetres. Estimate.
 const OFFSPRING_THROW_M: f64 = 0.03;
@@ -170,6 +176,11 @@ pub struct MossKind {
     pub capsule_shape: CapsuleShape,
     /// Share of shoots bearing a capsule.
     pub capsule_share: f64,
+    /// Spore diameter, metres (trait `spore_diameter_m`; the 20 µm that
+    /// parts small, far-flying spores from large, local ones when left out,
+    /// During 1979 in Glime vol. 1 p. 522).
+    #[serde(default = "default_spore")]
+    pub spore_m: f64,
     /// Metres a colony's edge moves out in a good year.
     pub spread_m: f64,
     /// Light classes it grows in: shade, part, sun.
@@ -182,6 +193,13 @@ pub struct MossKind {
     pub reaction: i8,
     /// How well it lives through drying out, 0.2 (low) to 1 (high).
     pub tolerance: f64,
+}
+
+/// A spore size unstated in the traits: During's (1979) boundary between
+/// numerous light spores that travel far and few large ones that stay
+/// near (Glime, *Bryophyte Ecology* vol. 1, PDF p. 522).
+fn default_spore() -> f64 {
+    20.0e-6
 }
 
 /// A capsule lid unstated in the traits: a tall cone, between the short
@@ -419,6 +437,7 @@ impl MossKind {
                 _ => default_lid(),
             },
             capsule_share: num("capsule_share").unwrap_or(0.2),
+            spore_m: num("spore_diameter_m").unwrap_or_else(default_spore),
             spread_m: num("colony_spread_m_per_year").unwrap_or(match form {
                 ColonyForm::Cushion => 0.0015,
                 ColonyForm::Turf => 0.003,
@@ -542,6 +561,21 @@ impl MossKind {
     #[must_use]
     pub fn spore_output(&self) -> f64 {
         (self.capsule_share / 0.02).sqrt().clamp(0.3, 3.0)
+    }
+
+    /// The share of its spores that fly beyond a couple of metres and join
+    /// the regional spore rain; the rest fall in or near the colony that
+    /// shed them. Small spores travel far, large ones stay near (Glime,
+    /// *Bryophyte Ecology* vol. 1, PDF pp. 520-522). Straight between two
+    /// measured mosses, by spore diameter: *Bryum argenteum* (spores
+    /// 8-15 µm, FNA vol. 28) sends over 80% beyond 2 m (Miles and Longton
+    /// 1990, 1992), *Tortula truncata* (25-30 µm, FNA vol. 27) 30% (Roads
+    /// and Longton 2003; PDF pp. 594-596). Held to 0.2-0.85.
+    #[must_use]
+    pub fn far_share(&self) -> f64 {
+        let (small, large) = (SPORE_FAR.0.0, SPORE_FAR.1.0);
+        let t = (self.spore_m - small) / (large - small);
+        (SPORE_FAR.0.1 + (SPORE_FAR.1.1 - SPORE_FAR.0.1) * t).clamp(0.2, 0.85)
     }
 
     /// How well it grows in `habitat`, 0 to 1: its fit, times the share of
@@ -1197,12 +1231,13 @@ pub fn grow_under(
                 }
                 let habitat = lodged(face, p);
                 let fits: Vec<f64> = kinds.iter().map(|kind| kind.vigour(&habitat)).collect();
-                // Which kind a spore is, by how many spores each sheds:
-                // the spore rain is mostly of the mosses that fruit freely.
+                // Which kind a spore is, by how many spores each sheds and
+                // how many of them fly far: the spore rain is mostly of the
+                // mosses that fruit freely on small spores.
                 let rain: Vec<f64> = kinds
                     .iter()
                     .zip(&fits)
-                    .map(|(kind, fit)| fit * kind.spore_output())
+                    .map(|(kind, fit)| fit * kind.spore_output() * kind.far_share())
                     .collect();
                 let total: f64 = rain.iter().sum();
                 if total <= 1.0e-6 {

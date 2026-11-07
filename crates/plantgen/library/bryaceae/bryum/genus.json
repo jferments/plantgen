@@ -47,6 +47,10 @@
     ],
     "capsule_posture": "pendent",
     "capsule_share": 0.003,
+    "spore_diameter_m": {
+      "min": 0.000008,
+      "max": 0.000015
+    },
     "substrates": [
       "soil",
       "built",
@@ -101,6 +105,11 @@
       "evidence": "SourceInferred",
       "source": "fna-28",
       "note": "FNA vol. 28, Bryum: operculum weakly convex, short-conic, not rostrate. (efloras, read 2026-11-05)"
+    },
+    "traits.spore_diameter_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Bryum argenteum (Spence; efloras, read 2026-11-05): spores 8-15 µm, shed singly."
     }
   }
 }
