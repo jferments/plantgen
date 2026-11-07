@@ -588,8 +588,10 @@ Usage:
       pool. --moss YEARS grows mosses over the tile for those years
       (the genera the mosses list of the site names, or the library's;
       docs/sites/MOSS.md) and writes DIR/tiles/X_Y.moss.json.
-      --render draws the filled tile on its mesh, each prototype at
-      --level (1 unless given), with its logs and its forest floor's
+      --render draws the filled tile on its mesh, each plant at the
+      coarsest level its size in the image allows (each triangle about
+      four pixels) and no finer than --level (1 unless given), with its
+      logs and its forest floor's
       litter and moss, and its --moss moss, as wet as --wet (0 dry to 1
       just rained on, 0.4 unless given); --cut M leaves out all above M
       metres, to show the floor. --glb LEVEL (0 nearest to 3 farthest)
@@ -7209,9 +7211,10 @@ fn placed_log(log: mesh::Mesh, placed: &api::Log, corner: [f64; 2], offset: Vec3
 }
 
 /// The tile's forest floor drawn over its ground for a render: a grid of
-/// half-metre squares a centimetre above it, each corner moss, litter or
-/// bare soil by its stand cell's shares ([`api::Floor`]), in patches a few
-/// metres across.
+/// half-metre squares a centimetre above it, each corner moss or litter by
+/// its stand cell's shares ([`api::Floor`]), in patches a few metres
+/// across. A square with a corner on neither is left out, so the site's
+/// own ground shows there: bare soil, a lawn, a street.
 fn floor_mesh(plan: &api::TilePlan, field: &FieldSite, offset: Vec3) -> mesh::Mesh {
     const STEP_M: f64 = 0.5;
     let srgb = |c: [u8; 3]| -> [f32; 3] {
@@ -7260,6 +7263,7 @@ fn floor_mesh(plan: &api::TilePlan, field: &FieldSite, offset: Vec3) -> mesh::Me
         0.65 * octave(3.0, salt) + 0.35 * octave(0.9, salt + 1)
     };
     let mut out = mesh::Mesh::default();
+    let mut covered = Vec::new();
     let row = steps + 1;
     for j in 0..=steps {
         for i in 0..=steps {
@@ -7304,6 +7308,7 @@ fn floor_mesh(plan: &api::TilePlan, field: &FieldSite, offset: Vec3) -> mesh::Me
             } else {
                 soil
             };
+            covered.push(colour != soil);
             let up = field.site.height_at(east, north) + 0.01;
             let position = Vec3::new(field.corner[0] + east, up, field.corner[1] - north) + offset;
             out.push(mesh::Vertex::plain(position, Vec3::Y, colour));
@@ -7315,7 +7320,12 @@ fn floor_mesh(plan: &api::TilePlan, field: &FieldSite, offset: Vec3) -> mesh::Me
             let a = (j * row + i) as u32;
             #[allow(clippy::cast_possible_truncation)]
             let b = a + row as u32;
-            out.indices.extend([a, a + 1, b, a + 1, b + 1, b]);
+            if [a, a + 1, b, b + 1]
+                .iter()
+                .all(|&corner| covered[corner as usize])
+            {
+                out.indices.extend([a, a + 1, b, a + 1, b + 1, b]);
+            }
         }
     }
     out
@@ -7486,44 +7496,114 @@ fn render_fill(
     let mut all_looks: Vec<Look> = Vec::new();
     let mut looks_at: BTreeMap<String, usize> = BTreeMap::new();
     let mut bark = None;
-    let mut drawn: BTreeMap<u32, PlantMesh> = BTreeMap::new();
-    for index in used {
-        let (generator, plant) = fill
-            .grow_prototype(index as usize)
-            .map_err(|error| error.to_string())?;
-        let (mut mesh, looks) = generator.draw(&plant, level);
+    let pixels: usize = options.number("size")?.unwrap_or(1600);
+    // `--focus X,Y,Z` in the mesh's frame, framing `--span` metres.
+    let focus = match options.flags.get("focus") {
+        Some(text) => {
+            let point: Vec<f64> = text
+                .split(',')
+                .map(|part| part.trim().parse::<f64>())
+                .collect::<Result<_, _>>()
+                .map_err(|_| format!("`--focus` expects X,Y,Z in metres, found `{text}`"))?;
+            let [x, y, z] = point[..] else {
+                return Err(format!("`--focus` expects X,Y,Z in metres, found `{text}`").into());
+            };
+            let span: f64 = options.number("span")?.unwrap_or(4.0);
+            Some((Vec3::new(x, y, z) + offset, span))
+        }
+        None => None,
+    };
+    // Each plant at the coarsest level, from `--level` to the cards, whose
+    // triangles still cover no more than TRIANGLE_PIXELS pixels each where
+    // it stands (`tile_scene::level_pixel`, as a cell index chooses): a
+    // pixel spans the view's width over the image's, and grows with the
+    // plant's distance from the focus past the view's half width. Drawing
+    // every plant of a 60-year block fill at level 1 took 70 M triangles
+    // and ran out of memory, most of them in herbs a few pixels high.
+    let view_m = focus.map_or(tile_m * 1.05, |(_, span)| span);
+    let pixel_here = |at: Vec3| -> f64 {
+        let centre = focus.map_or(Vec3::ZERO, |(point, _)| point);
+        let away = ((at.x - centre.x).powi(2) + (at.z - centre.z).powi(2)).sqrt();
+        #[allow(clippy::cast_precision_loss)]
+        let pixel = view_m / pixels as f64;
+        pixel * (away / (0.5 * view_m)).max(1.0)
+    };
+    let mut drawn: BTreeMap<(u32, usize), PlantMesh> = BTreeMap::new();
+    let mut grown: BTreeMap<u32, (api::Generator, api::Plant)> = BTreeMap::new();
+    let mut scene = PlantMesh::default();
+    let mut at_level = [0usize; export::LEVELS];
+    for instance in &plan.instances {
+        if !used.contains(&instance.prototype) {
+            continue;
+        }
+        let index = instance.prototype;
+        if let std::collections::btree_map::Entry::Vacant(entry) = grown.entry(index) {
+            entry.insert(
+                fill.grow_prototype(index as usize)
+                    .map_err(|error| error.to_string())?,
+            );
+        }
+        let (generator, plant) = &grown[&index];
+        // Its foot in the drawn frame, as `placed_instance` sets it.
+        let at = Vec3::new(
+            field.corner[0] + f64::from(instance.position[0]),
+            f64::from(instance.position[2]),
+            field.corner[1] - f64::from(instance.position[1]),
+        ) + offset;
+        let pixel = pixel_here(at);
+        let size = fill.size(index as usize);
+        let scale = f64::from(instance.scale);
+        let mut chosen = level;
+        for coarser in level + 1..export::LEVELS {
+            let key = (index, coarser);
+            if !drawn.contains_key(&key) {
+                drawn.insert(key, generator.draw(plant, coarser).0);
+            }
+            let enough = size.and_then(|size| {
+                plantgen::tile_scene::level_pixel(
+                    size.height * scale,
+                    size.crown_radius * scale,
+                    drawn[&key].triangle_count(),
+                )
+            });
+            if enough.is_some_and(|enough| enough <= pixel) {
+                chosen = coarser;
+            } else {
+                break;
+            }
+        }
+        at_level[chosen] += 1;
+        let key = (index, chosen);
+        if !drawn.contains_key(&key) {
+            drawn.insert(key, generator.draw(plant, chosen).0);
+        }
         let species = generator.spec().id.clone();
         let first = *looks_at.entry(species).or_insert_with(|| {
             let first = all_looks.len();
-            all_looks.extend_from_slice(looks);
+            all_looks.extend_from_slice(generator.looks());
             first
         });
+        if bark.is_none() {
+            bark = generator.spec().appearance.bark_params();
+        }
+        let mut mesh = drawn[&key].clone();
         let shift = u8::try_from(first).unwrap_or(u8::MAX);
         for card in &mut mesh.cards {
             card.template = card.template.saturating_add(shift);
         }
-        if bark.is_none() {
-            bark = generator.spec().appearance.bark_params();
-        }
-        drawn.insert(index, mesh);
+        let climber = fill.prototypes()[index as usize].key.on_wall;
+        let placed = placed_instance(&mesh, instance, climber, field.corner, offset);
+        scene = on_host(scene, placed, 0);
     }
     if all_looks.len() > 255 {
         return Err("too many organ types to draw at once; fill with fewer species".into());
     }
     out!(
-        "drew {} prototypes at level {level} in {:.1} s",
-        drawn.len(),
+        "drew {} prototypes, plants at levels 0-3: {:?}, in {:.1} s",
+        grown.len(),
+        at_level,
         started.elapsed().as_secs_f64()
     );
-    let mut scene = PlantMesh::default();
-    for instance in &plan.instances {
-        let Some(plant) = drawn.get(&instance.prototype) else {
-            continue;
-        };
-        let climber = fill.prototypes()[instance.prototype as usize].key.on_wall;
-        let placed = placed_instance(plant, instance, climber, field.corner, offset);
-        scene = on_host(scene, placed, 0);
-    }
     // The logs, each drawn at the level, its bark its species'.
     let mut appearances: BTreeMap<String, Option<spec::Appearance>> = BTreeMap::new();
     for log in &plan.logs {
@@ -7556,23 +7636,6 @@ fn render_fill(
     let view = match options.flags.get("view") {
         Some(name) => View::from_name(name).ok_or_else(|| format!("unknown view `{name}`"))?,
         None => View::ThreeQuarter,
-    };
-    let pixels: usize = options.number("size")?.unwrap_or(1600);
-    // `--focus X,Y,Z` in the mesh's frame, framing `--span` metres.
-    let focus = match options.flags.get("focus") {
-        Some(text) => {
-            let point: Vec<f64> = text
-                .split(',')
-                .map(|part| part.trim().parse::<f64>())
-                .collect::<Result<_, _>>()
-                .map_err(|_| format!("`--focus` expects X,Y,Z in metres, found `{text}`"))?;
-            let [x, y, z] = point[..] else {
-                return Err(format!("`--focus` expects X,Y,Z in metres, found `{text}`").into());
-            };
-            let span: f64 = options.number("span")?.unwrap_or(4.0);
-            Some((Vec3::new(x, y, z) + offset, span))
-        }
-        None => None,
     };
     let moss = match moss {
         Some(cover) => {
