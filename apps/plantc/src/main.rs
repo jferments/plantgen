@@ -2668,7 +2668,7 @@ fn grow_command(args: &[String]) -> Result<(), Failure> {
             .map_or(preset.clone(), |(place, _)| place.over(&preset));
         let half = plantgen::light_profile::half_width(graph, &growth.organ_types, &conditions);
         out!(
-            "  light at {} years across its cell, {:.1} m to each side (mean, 10th, median, 90th percentile):",
+            "  light at {} years across its cell, {:.1} m to each side (mean, 10th, median, 90th percentile; mean under its own crown alone):",
             graph.age,
             half
         );
@@ -2682,12 +2682,13 @@ fn grow_command(args: &[String]) -> Result<(), Failure> {
         .map_err(Failure::from)?;
         for layer in layers.iter().rev().step_by(2) {
             out!(
-                "    {:>5.1} m  {:.3}  {:.3}  {:.3}  {:.3}",
+                "    {:>5.1} m  {:.3}  {:.3}  {:.3}  {:.3}  {:.3}",
                 layer.height_m,
                 layer.mean,
                 layer.p10,
                 layer.median,
-                layer.p90
+                layer.p90,
+                layer.own
             );
         }
     }

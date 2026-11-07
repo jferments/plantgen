@@ -32,6 +32,9 @@ pub struct Layer {
     pub p10: f64,
     pub median: f64,
     pub p90: f64,
+    /// The mean through the plant's own foliage alone, its neighbours
+    /// taken away: what of the shade is its own crown's.
+    pub own: f64,
 }
 
 /// The plant's cell, metres from its stem to each side: half the distance
@@ -129,10 +132,27 @@ pub fn profile(
         &limits,
     )
     .map_err(|error| error.to_string())?;
+    let open = crate::lsys::tools::Neighbourhood::OPEN;
+    let alone = Around {
+        neighbourhood: &open,
+        envelopes: &[],
+        far: None,
+        ..around
+    };
+    let own = crate::lsys::tools::sky_light(
+        &points,
+        &foliage,
+        (cell, extinction),
+        graph.height,
+        &alone,
+        &limits,
+    )
+    .map_err(|error| error.to_string())?;
     Ok(light
         .chunks(across * across)
+        .zip(own.chunks(across * across))
         .enumerate()
-        .map(|(layer, values)| {
+        .map(|(layer, (values, own))| {
             let mut sorted = values.to_vec();
             sorted.sort_by(f64::total_cmp);
             #[allow(
@@ -148,6 +168,7 @@ pub fn profile(
                 p10: quantile(0.1),
                 median: quantile(0.5),
                 p90: quantile(0.9),
+                own: own.iter().sum::<f64>() / own.len() as f64,
             }
         })
         .collect())
