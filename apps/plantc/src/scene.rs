@@ -267,6 +267,8 @@ fn lay_out_stand(
                 crown_base_m: base,
                 crown_radius_m: radius,
                 light_needed: light,
+                leafing: None,
+                light_day: None,
             }
         })
         .collect();
