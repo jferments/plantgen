@@ -1731,4 +1731,12 @@ pub mod venation;
 /// it reached 7.7, on a 148 cm stem where 134, 1.18 of the equation's
 /// width for its size as before. A tree come up beneath an older canopy,
 /// and every plant outside a stand, grows as before.
-pub const GENERATOR_REVISION: u32 = 211;
+///
+/// 212: the pine family's wood keeps a twentieth of each year's sag
+/// (Pinaceae `bend_set` 0.05, from 0.15), so an old limb's side shoots,
+/// which lengthen for centuries with needles only near their tips, angle
+/// out and down instead of hanging straight down in curtains of bare
+/// strings under a 480-year Douglas-fir's lower crown. Every conifer stays
+/// within its reference sizes; the 480-year Douglas-fir holds 744 m² of
+/// foliage (757 before) and western hemlock 821 m² (835).
+pub const GENERATOR_REVISION: u32 = 212;
