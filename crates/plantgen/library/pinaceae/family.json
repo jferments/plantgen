@@ -20,8 +20,8 @@
       "why": "A fir, spruce, hemlock or Douglas-fir holds its branches under its leader (apical control): each year a branch grows about half as far as the leader rises, so the crown is a cone about as wide as its depth, and stays pointed as the leader slows."
     },
     "generator.params.bend_set": {
-      "rule": "0.15",
-      "why": "The family's limbs spring back from most of each year's sag: Farjon gives its branches as horizontal or spreading, the lower ones curving down only at their ends. Keeping half of each year's sag, a limb grown 150 years hung flat against the trunk and the old crown stood as a column."
+      "rule": "0.05",
+      "why": "The family's limbs spring back from most of each year's sag: Farjon gives its branches as horizontal or spreading, the lower ones curving down only at their ends. Keeping half of each year's sag, a limb grown 150 years hung flat against the trunk and the old crown stood as a column. Keeping 0.15, an old limb's side shoots, which lengthen a few centimetres a year for centuries and carry their twigs' needles only near their tips, sagged until a quarter of their length hung straight down: a 480-year Douglas-fir's lower crown read as curtains of bare strings. At 0.05 they angle out and down as branchlets, and every species keeps its reference sizes."
     },
     "generator.params.side_order": {
       "rule": "2",
