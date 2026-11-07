@@ -1,0 +1,120 @@
+{
+  "mesh": "moss-wall.obj",
+  "materials": {
+    "ground": {
+      "as": "soil",
+      "colour": [
+        0.1,
+        0.12,
+        0.06
+      ]
+    },
+    "mortar": {
+      "as": "built",
+      "colour": [
+        0.42,
+        0.4,
+        0.36
+      ]
+    },
+    "brick": {
+      "as": "built",
+      "colour": [
+        0.3,
+        0.1,
+        0.06
+      ]
+    },
+    "coping": {
+      "as": "built",
+      "colour": [
+        0.4,
+        0.39,
+        0.36
+      ]
+    },
+    "hedge": {
+      "as": "wood",
+      "clear": true,
+      "colour": [
+        0.05,
+        0.1,
+        0.04
+      ]
+    },
+    "render": {
+      "as": "built",
+      "colour": [
+        0.55,
+        0.52,
+        0.45
+      ]
+    },
+    "door": {
+      "as": "wood",
+      "clear": true,
+      "colour": [
+        0.2,
+        0.12,
+        0.07
+      ]
+    },
+    "step": {
+      "as": "built",
+      "colour": [
+        0.38,
+        0.37,
+        0.34
+      ]
+    },
+    "deck": {
+      "as": "wood",
+      "clear": true,
+      "colour": [
+        0.25,
+        0.2,
+        0.14
+      ]
+    },
+    "tile": {
+      "as": "wood",
+      "soil_m": 0.002,
+      "colour": [
+        0.24,
+        0.17,
+        0.11
+      ]
+    },
+    "ridge": {
+      "as": "wood",
+      "colour": [
+        0.22,
+        0.16,
+        0.1
+      ]
+    }
+  },
+  "plants": [],
+  "mosses": [
+    "Dicranoweisia",
+    "Rosulabryum",
+    "Niphotrichum",
+    "Homalothecium",
+    "Ceratodon",
+    "Bryum",
+    "Tortula",
+    "Grimmia"
+  ],
+  "canopy": [
+    {
+      "centre_m": [
+        4.25,
+        -3.0
+      ],
+      "base_m": 2.5,
+      "top_m": 10.0,
+      "radius_m": 3.5,
+      "density": 0.27
+    }
+  ]
+}
