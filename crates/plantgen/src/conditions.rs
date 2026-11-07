@@ -424,7 +424,8 @@ impl Layout {
     /// The distance between stems at `age_years` when each crown is
     /// `crown`: its crown class's, or the thinning stand's once that is
     /// wider.
-    fn spacing_m(&self, crown: &Crown, age_years: f64) -> f64 {
+    #[must_use]
+    pub fn spacing_m(&self, crown: &Crown, age_years: f64) -> f64 {
         let opening = crate::spec::stand_spacing(age_years) / crate::spec::STAND_SPACING;
         self.spacing_m
             .max(self.per_height * self.class.max(opening) * crown.top_m)

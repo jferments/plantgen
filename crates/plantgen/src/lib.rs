@@ -62,6 +62,7 @@ pub mod json;
 pub mod lace;
 pub mod leaves;
 pub mod library;
+pub mod light_profile;
 pub mod litter;
 pub mod looks;
 pub mod lsys;
