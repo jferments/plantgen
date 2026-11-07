@@ -1701,6 +1701,17 @@ pub mod venation;
 /// brambles, rowans, sumacs, hemp) change with their stated leaflet
 /// tips. Every other leaf draws as it did.
 ///
+/// 210: old pine-family crowns stop spreading (`pinidae` revision 22). A
+/// limb's own axis stops lengthening past a tenth of the tree's height
+/// from the trunk (`floor_keep_limb` 0) while its side shoots renew its
+/// foliage, and a stem sprout grows as a young limb does
+/// (`stem_epi_vigour` 1, from 3). A Douglas-fir grown in a stand spreads
+/// 6.4 m from its trunk at 250 years where it spread 9.8, and 7.7 m at
+/// 480 where 12.2, against about 5.5 and 6.5 m from the Forest
+/// Vegetation Simulator's crown-width equation; it holds 757 m² of
+/// foliage at 480 years (Sillett et al. 2018: 630 to 1,480). Every
+/// conifer stays within its reference sizes.
+///
 /// 212: broadleaf trees grown in a stand of their like take the form of
 /// forest-grown trees. A stem divides at its fork height only where its
 /// tip has 0.7 of the open sky's light (`fork_light`, broadleaf program
