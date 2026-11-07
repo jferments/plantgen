@@ -43,7 +43,6 @@
       "spur_pairs": 1,
       "leaf_angle": 55,
       "blooms": 2,
-      "bloom_size": 0.05,
       "bloom_angle": 80,
       "path_half": 0.45,
       "lean": 40

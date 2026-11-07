@@ -64,9 +64,7 @@
       },
       "flower": {
         "shape": { "ray_width": 1.1, "disc": 0.5, "involucre": 1.8 },
-        "inflorescence": { "size": 0.075, "spread": 40, "peduncle": 0.55 },
-        "colour": [0.92, 0.9, 0.84],
-        "accent": [0.85, 0.8, 0.6]
+        "inflorescence": { "size": 0.075, "spread": 40, "peduncle": 0.55 }
       }
     }
   },

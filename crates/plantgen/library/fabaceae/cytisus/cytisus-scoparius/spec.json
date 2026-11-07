@@ -129,6 +129,7 @@
     "inflorescence": "solitary",
     "units_per_inflorescence": {"min": 1, "max": 3},
     "flowering_position": "lateral",
+    "short_shoots": true,
     "flower_size_m": {"min": 0.018, "max": 0.025},
     "flower_colour": [255, 205, 0],
     "flowering_months": [4, 5, 6],
@@ -266,6 +267,11 @@
       "evidence": "SourceInferred",
       "source": "abrams-1944",
       "note": "Abrams (vol. 2, 1944, p. 519), Cytisus scoparius: shrub 1-2 m high with angled, bare or sparsely leafy broom-like branches; leaves of 1 to 3 leaflets on petioles 2-10 mm long; leaflets 4-8 mm long, obovate, acute or with a small point; flowers bright yellow, alone or 2 or 3 together in the leaf axils, about 2 cm long (18-20 mm in the key); pedicels 6-10 mm; pod hairy on the edges only; April to June."
+    },
+    "traits.short_shoots": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 519), Cytisus scoparius: \"flowers bright yellow, solitary or 2 or 3 together in the axils of the leaves\" along \"naked or sparingly leafy broom-like branches\": each axil of last year's twigs leafs and flowers from a short shoot that does not grow out, so the twigs flower along their length, not only at a few spur tips."
     },
     "traits.flowering_position": {
       "evidence": "SourceInferred",

@@ -28,7 +28,6 @@
       "wiggle": 5,
       "blooms": 3,
       "adult_age": 5,
-      "bloom_size": 0.045,
       "bloom_angle": 90,
       "space_reach": 2.0,
       "space_kill": 0.6,

@@ -1711,4 +1711,18 @@ pub mod venation;
 /// Vegetation Simulator's crown-width equation; it holds 757 m² of
 /// foliage at 480 years (Sillett et al. 2018: 630 to 1,480). Every
 /// conifer stays within its reference sizes.
-pub const GENERATOR_REVISION: u32 = 210;
+///
+/// 211: a Scotch broom flowers from short shoots in the axils all along
+/// its twigs (`short_shoots`), as Abrams gives its flowers "solitary or 2
+/// or 3 together in the axils of the leaves", where only a few spur tips
+/// flowered; and a rubber rabbitbrush's heads are drawn from its flora's
+/// five yellow disc florets (`disc_florets`, `disc_colour`), in place of a
+/// hand-set cluster of twelve. The open plant-identification judge names
+/// both better.
+/// Forty-three species lose hand-set bloom colours and bloom sizes where a
+/// rule gives them from their flora's flower colour and size: the rule's
+/// values replace what was set by eye, and the judge names them a little
+/// better (16 views better, 8 worse). Families where the judge preferred
+/// the hand values, and six plants whose fruit the rule drew outside its
+/// stated size, keep them.
+pub const GENERATOR_REVISION: u32 = 211;

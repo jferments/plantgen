@@ -31,7 +31,6 @@
       "droop": 0.01,
       "blooms": 2,
       "adult_age": 6,
-      "bloom_size": 0.04,
       "bloom_angle": 40,
       "leaf_area": 0.243,
       "path_half": 5.77

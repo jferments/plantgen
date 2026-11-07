@@ -26,8 +26,7 @@
       "droop": 0.02,
       "lean": 3,
       "wiggle": 4,
-      "path_half": 6,
-      "bloom_size": 0.03
+      "path_half": 6
     }
   },
   "growth": {
