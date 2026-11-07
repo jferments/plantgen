@@ -453,7 +453,10 @@ fn shade_lengthens_shoots_shortens_hair_points_and_sun_yellows_leaves() {
         .find(|kind| kind.genus == "Grimmia")
         .expect("the library describes Grimmia");
     // Part shade, where floras describe a genus, changes nothing.
-    assert!(matches!(grimmia.in_light(0.5), std::borrow::Cow::Borrowed(_)));
+    assert!(matches!(
+        grimmia.in_light(0.5),
+        std::borrow::Cow::Borrowed(_)
+    ));
     // Glime vol. 1: hair-points shorter in shade (Racomitrium, p. 976),
     // shoots taller and leaves smaller in deep shade (pp. 946, 959-960).
     let deep = grimmia.in_light(0.02);
