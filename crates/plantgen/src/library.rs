@@ -1062,6 +1062,26 @@ impl Library {
         Ok(traits)
     }
 
+    /// The rule `key` as the rank file `file` has it: from the nearest
+    /// file up its chain that states it (a genus's own over its
+    /// kingdom's), as [`Library::rank_traits`] does for traits. `None`
+    /// when no file in the chain states it.
+    ///
+    /// # Errors
+    ///
+    /// On a file the library lacks, or a chain [`inherit::chain`] refuses.
+    pub fn rank_rule(&self, file: &str, key: &str) -> Result<Option<Value>, String> {
+        let found = inherit::chain(&self.ranks, file)?;
+        if found.is_empty() {
+            return Err(format!("no rank file {file} in the library"));
+        }
+        Ok(found
+            .iter()
+            .find_map(|rank| rank.shared.rules.get(key))
+            .filter(|rule| !rule.is_null())
+            .cloned())
+    }
+
     /// The folder the library was read from; `None` for the built-in one.
     #[must_use]
     pub fn root(&self) -> Option<&Path> {

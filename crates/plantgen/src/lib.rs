@@ -39,6 +39,7 @@ pub mod clusters;
 pub mod conditions;
 pub mod cores;
 pub mod damage;
+pub mod deadwood;
 pub mod development;
 pub mod divided;
 pub mod drawing;
@@ -1667,7 +1668,51 @@ pub mod venation;
 /// a hardhack's, which drew obovate leaves where Abrams gives elliptical
 /// to oval ones.
 ///
-/// 207: a Scotch broom flowers from short shoots in the axils all along
+/// 207: an old pine-family tree's top may die and regrow (`pinidae`
+/// revision 20). Once its leader's yearly rise is under a twentieth of its
+/// fastest (about 215 years in a Douglas-fir), the leader dies with chance
+/// 0.002 a year and one to three new leaders rise from the dead top
+/// (reiterated trunks; Sillett et al. 2018: Douglas-fir crowns stay simple
+/// until damaged, and many trees past 300 years carry reiterated trunks).
+/// About one tree in six has lost its top by 300 years and two in five by
+/// 480: of five 480-year Douglas-firs grown in a stand, seeds 2 and 4 did,
+/// standing 2.8 and 3.4 m taller on their new leaders with 1,125 and 1,219
+/// m² of foliage. Every other plant, and every tree before its top dies,
+/// grows as before.
+///
+/// 208: conifers are held back by their soil (`soil@1` in the pinidae
+/// program, its revision 21) as broadleaf trees, herbs and grasses are:
+/// one rooted in a crack or a thin soil grows as a shaded one does. Grown
+/// with no rooting limits, as every package is, a conifer grows as before.
+///
+/// 209: two herbs drawn as their floras state them, and compound leaves'
+/// leaflets drawn as floras describe them. A common mullein in flower
+/// stands 1-2 m (Gleason and Cronquist), Jepson's 30 cm kept as the rare
+/// low; a vanilla leaf's stalk bears one leaf (Abrams). Leaf shapes gain
+/// flabellate (a fan: sides bowing out from a narrow foot to a lobed or
+/// toothed far edge, rounded or cut square as the apex says) and
+/// obcordate (notched deep at a broad tip); side leaflets stated
+/// asymmetric are lopsided (`lateral_leaflets`); a lobed leaflet's lobe
+/// tips follow `leaflet_lobe_apex`; leaflets take their stated apex and
+/// base (tapers, points, notches), as simple blades did; and a leaflet
+/// may be twice as broad as long. A vanilla leaf draws three broad lobed
+/// wedges and a redwood sorrel three heart-shaped leaflets, where hand
+/// outlines drew neither, and 17 more compound-leaved species (roses,
+/// brambles, rowans, sumacs, hemp) change with their stated leaflet
+/// tips. Every other leaf draws as it did.
+///
+/// 210: old pine-family crowns stop spreading (`pinidae` revision 22). A
+/// limb's own axis stops lengthening past a tenth of the tree's height
+/// from the trunk (`floor_keep_limb` 0) while its side shoots renew its
+/// foliage, and a stem sprout grows as a young limb does
+/// (`stem_epi_vigour` 1, from 3). A Douglas-fir grown in a stand spreads
+/// 6.4 m from its trunk at 250 years where it spread 9.8, and 7.7 m at
+/// 480 where 12.2, against about 5.5 and 6.5 m from the Forest
+/// Vegetation Simulator's crown-width equation; it holds 757 m² of
+/// foliage at 480 years (Sillett et al. 2018: 630 to 1,480). Every
+/// conifer stays within its reference sizes.
+///
+/// 211: a Scotch broom flowers from short shoots in the axils all along
 /// its twigs (`short_shoots`), as Abrams gives its flowers "solitary or 2
 /// or 3 together in the axils of the leaves", where only a few spur tips
 /// flowered; and a rubber rabbitbrush's heads are drawn from its flora's
@@ -1680,4 +1725,4 @@ pub mod venation;
 /// better (16 views better, 8 worse). Families where the judge preferred
 /// the hand values, and six plants whose fruit the rule drew outside its
 /// stated size, keep them.
-pub const GENERATOR_REVISION: u32 = 207;
+pub const GENERATOR_REVISION: u32 = 211;

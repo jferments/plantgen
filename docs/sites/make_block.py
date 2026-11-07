@@ -6,7 +6,7 @@ the site field (`plantc field`, plantgen::site_field) and stands on it.
 North of a cracked two-lane street, a strip of woodland on uneven ground
 that falls away northward, with boulders and a fallen log. South of it, a
 cracked sidewalk behind a curb, a picket fence, two utility poles with
-their wires, an old house with a mossy south roof (soil gathered on it),
+their wires, an old house roofed in asphalt shingles that gather soil for moss,
 windows and a door kept clear, a hollow where water gathers, and a rocky
 knoll to the south-east with boulders half sunk in it.
 
@@ -222,7 +222,8 @@ def main():
     tiles.append("block-walk.json")
     mesh.solid("curb", box(X0, -0.1, 3.0, X1, WALK_TOP + 0.03, WALK[0]))
 
-    # The old house: walls, a gable roof (its south side mossy), windows
+    # The old house: walls, a gable roof (grit gathered on its south side;
+    # `plantc fill --moss` grows the moss on both), windows
     # and a door kept clear.
     hx0, hx1, hz0, hz1, eave, ridge = -12.0, -4.0, 9.0, 15.0, 2.8, 5.0
     mesh.solid("render", box(hx0, -0.2, hz0, hx1, eave, hz1))
@@ -305,8 +306,14 @@ def main():
             "woodland": {"as": "soil", "colour": [0.14, 0.11, 0.07]},
             "curb": {"as": "built", "colour": [0.45, 0.44, 0.41]},
             "render": {"as": "built", "colour": [0.62, 0.57, 0.48]},
-            "roof": {"as": "built", "colour": [0.22, 0.22, 0.24]},
-            "roof-moss": {"as": "built", "soil_m": 0.04, "colour": [0.20, 0.24, 0.12]},
+            # Asphalt shingles, the commonest house roof in the Pacific
+            # Northwest (Jay, 2026-11-06): built, but their granules are
+            # coloured crushed rock with no lime, so neutral, and the acid
+            # roof mosses (Dicranoweisia, Rosulabryum) hold to them as on
+            # the Oregon State rooftop study's roofs.
+            "roof": {"as": "built", "reaction": "neutral", "colour": [0.22, 0.22, 0.24]},
+            "roof-moss": {"as": "built", "reaction": "neutral", "soil_m": 0.04,
+                          "colour": [0.22, 0.22, 0.24]},
             "glass": {"as": "built", "thin_m": 0.02, "clear": True, "colour": [0.30, 0.38, 0.42]},
             "door": {"as": "wood", "thin_m": 0.04, "clear": True, "colour": [0.28, 0.17, 0.11]},
             "fence": {"as": "wood", "colour": [0.70, 0.68, 0.62]},
@@ -323,6 +330,10 @@ def main():
             {"species": "lonicera-ciliosa", "at": [-15.0, 5.85], "seed": 1, "years": 6},
             {"species": "alnus-rubra", "at": [-4.0, -9.0], "seed": 1, "years": 12},
         ],
+        # The block is in the Pacific Northwest, so its mosses are that
+        # region's (the same list as moss-shakes.json; see make_moss_wall.py).
+        "mosses": ["Dicranoweisia", "Rosulabryum", "Niphotrichum", "Homalothecium",
+                   "Ceratodon", "Bryum", "Tortula", "Grimmia"],
     }
     (HERE / "block.json").write_text(json.dumps(site, indent=1) + "\n")
     print(f"wrote block.obj ({len(mesh.v)} corners), {len(tiles)} crack tiles, block.json")

@@ -20,7 +20,7 @@ carry soil green; wetness and heat load from above.
 
 | Piece | Where | What it does |
 | --- | --- | --- |
-| Site mesh | `crates/plantgen/src/site.rs` | `SiteMesh`: triangles, a `Surface` per triangle (material, `thin_m`, `climb`, `clear`, `soil_m`), and column indexes for vertical lines and rays. Cuts what one plant grows in. |
+| Site mesh | `crates/plantgen/src/site.rs` | `SiteMesh`: triangles, a `Surface` per triangle (material, `thin_m`, `climb`, `clear`, `soil_m`, `reaction`), and column indexes for vertical lines and rays. Cuts what one plant grows in. |
 | Pavement | `crates/plantgen/src/pavement.rs` | `CrackTile` (what a host hands over: slab, cracks, holes, soil in them) and `Pavement` (the tile rasterised; footing, classify, wear, openings). |
 | Pavement colonisation | `crates/plantgen/src/succession.rs` | Which plants come up by themselves in the cracks, year by year, without growing each one. |
 | Site field | `crates/plantgen/src/site_field.rs` | `SiteField`: one tile measured once (ground grid, hosts and patches, crack sites) for stands and other hosts. |
@@ -262,9 +262,13 @@ python3 docs/sites/make_block_fill.py
 ./target/release/plantc fill docs/sites/block-fill/woodland.json \
   docs/sites/block-fill/yard.json --tile 0,0 --tile-m 40 --corner -20,18 \
   --field docs/sites/block.json --stands docs/sites/block-fill/stands.json \
-  --ages 8,60 --seeds 2 --cracks 10 --prototypes none --out /tmp/block-fill \
-  --render /tmp/block-fill.png --size 1600
+  --ages 8,60 --seeds 2 --cracks 10 --moss 30 --prototypes none \
+  --out /tmp/block-fill --render /tmp/block-fill.png --size 1600
 ```
+
+`--moss 30` grows thirty years of moss over the tile and draws it with
+the plants (MOSS.md, "Into the site fill"); leave it out for the plants
+alone.
 
 Add `--focus X,Y,Z --span M --level 0` for a close view: the house is
 about `-8,2.5,12` (span 14), the most broken stretch of street
