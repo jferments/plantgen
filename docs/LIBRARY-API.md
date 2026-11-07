@@ -341,7 +341,8 @@ Ok(())
   Hylocomium does in old growth. A host can tint its ground with each
   genus's `mosses::MossKind::far_colour`.
 - **Logs** lie on a natural stand's floor (`TilePlan::logs`, the JSON's
-  `logs`; none in a planted or kept stand): each with the species it
+  `logs`; none in a planted or kept stand, and on cleared ground only
+  those its own trees drop): each with the species it
   fell from, the floor under its middle (as an instance's position),
   the way its axis runs from its large end (`yaw`, radians from east), how
   far its small end rises (`pitch`) and its shape
@@ -373,7 +374,10 @@ cached by key, so the next tile only grows and draws the ones it adds):
 `docs/examples/communities/wind-river.json` is the old-growth
 Douglas-fir and western hemlock forest of the Wind River plot (Shaw et al.
 2004): fill it at `--years 500 --site 0.5,1,370,5` to check a stand
-against the plot.
+against the plot. The `olympia-*.json` communities beside it cover a
+lowland Puget Sound city, from its forest and creeks to its yards, beds,
+lots, verges and lawns; the folder's `README.md` says which ground each
+belongs on, which are planted, and how they were checked.
 
 `docs/examples/fill-viewer.html` is an example caller with no PlantGen
 code: copy it into the `--out` folder, serve that folder
@@ -460,11 +464,14 @@ open, suppressed; all four when left out) and an `abundance` (a share
 against the others, 1 when left out). A species without a niche needs
 its layer, suits every site and stands half tolerant of shade (`plantc
 fill` names such members). A community is `"origin": "natural"` unless
-it says `"planted"`: a natural stand develops as after a fire (its
-first trees by their intolerance of shade, the tolerant ones coming up
-beneath them later), while a planted one (a yard's, a street's or a
-park's kept trees) holds each tree in proportion to its abundance from
-the start, with nothing coming up beneath. It gives no density: how many stems a cell holds comes from
+it says `"planted"` or `"cleared"`: a natural stand develops as after a
+fire (its first trees by their intolerance of shade, the tolerant ones
+coming up beneath them later), while a planted one (a yard's, a street's
+or a park's kept trees) holds each tree in proportion to its abundance
+from the start, with nothing coming up beneath. A cleared one (a vacant
+lot, a building site, a road's or railway's edge) develops as a natural
+one does on ground no forest left anything on: its floor holds only the
+logs its own trees drop. It gives no density: how many stems a cell holds comes from
 the fill, from the site and the stand's age, not from the caller.
 
 Any plant can be grown past its spec's years to its old ages (doubling
