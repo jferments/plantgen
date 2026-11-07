@@ -1712,7 +1712,7 @@ pub mod venation;
 /// foliage at 480 years (Sillett et al. 2018: 630 to 1,480). Every
 /// conifer stays within its reference sizes.
 ///
-/// 214: a tree grown in a stand stands among its crown class
+/// 211: a tree grown in a stand stands among its crown class
 /// ([`spec::class_spacing`]). Its like stood as far apart as all of a
 /// fully stocked stand's stems, so a young Douglas-fir's crown reached 0.6
 /// of the width the Forest Vegetation Simulator's equation gives a
@@ -1731,4 +1731,4 @@ pub mod venation;
 /// it reached 7.7, on a 148 cm stem where 134, 1.18 of the equation's
 /// width for its size as before. A tree come up beneath an older canopy,
 /// and every plant outside a stand, grows as before.
-pub const GENERATOR_REVISION: u32 = 214;
+pub const GENERATOR_REVISION: u32 = 211;
