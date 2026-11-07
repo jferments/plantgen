@@ -72,10 +72,12 @@ Tech. Bull. 201; site index 130-150 ft at 100 years for Olympia's glacial
 outwash) and the red alder tables (Worthington et al. 1960, PNW Research
 Paper 36).
 
-- Lowland forest at 80 years: about 600 trees and 47.5 m² of basal area a
-  hectare, 77-83% of a fully stocked stand, as real stands run. At 40
-  years Douglas-fir stands 7-10 m below the table's dominant height, and
-  basal area at 150 years is about two thirds of the table's.
+- Lowland forest at 80 years: about 460 trees and 41 m² of basal area a
+  hectare, 80% of a fully stocked stand's trees and 69% of its basal area
+  (456 and 41.3 against 573 and 59.5). At 35 years it holds 1,737 trees
+  and 38.7 m² against the table's 1,790 and 36.4. At 40 years Douglas-fir
+  stands 7-10 m below the table's dominant height, and basal area at 150
+  years is about two thirds of the table's.
 - Alder by water on wet ground: red alder leads, but its stems are about
   half as thick as the table's at 40 years.
 - Yard trees: crowns cover most of a yard cell, with Douglas-fir, redcedar
