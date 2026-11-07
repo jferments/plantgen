@@ -567,7 +567,12 @@ Usage:
       layer seen from above as inventory plots measure it (upper, middle
       and lower trees by thirds of the tallest tree, shrubs, herbs), then
       its forest floor: litter, moss, logs (a hectare, and by decay
-      class) and herbs. --herbs no leaves herbs to the ground cover. --edges no grows
+      class) and herbs. --day N (1 to 365, default 196, mid-July) is the
+      day of the year the tile shows: deciduous crowns bare in winter,
+      letting light and the far canopy's view through, and herbs that
+      die back down; the stand itself is the same every day, and its
+      herbs of every season keep their places. The report gives the share
+      of tree crowns in leaf that day. --herbs no leaves herbs to the ground cover. --edges no grows
       a stand's first row beside a road or clearing as inside the stand,
       not as an edge facing the opening. --site gives the
       flat tile's moisture, heat load, elevation (m) and slope (degrees)
@@ -6739,6 +6744,11 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
         100.0 * stats.canopy_cover,
         stats.leaf_area_index,
         stats.edge_trees_per_ha
+    );
+    out!(
+        "  day {:.0} of the year: tree crowns in leaf {:.0}% (by crown area, each as far as its leaves are out)",
+        plan.day,
+        100.0 * stats.crowns_in_leaf
     );
     let [litter, moss, wood, herbs] = stats.floor;
     let mut decay = [0_usize; 5];
