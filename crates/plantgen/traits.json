@@ -1552,8 +1552,8 @@
       "group": "leaves",
       "organ": "leaf",
       "type": "enum",
-      "values": ["linear", "lanceolate", "oblanceolate", "elliptic", "oblong", "ovate", "obovate", "orbicular", "deltate", "spatulate", "reniform", "cordate"],
-      "why": "a blade's outline, or a compound leaf's leaflets'"
+      "values": ["linear", "lanceolate", "oblanceolate", "elliptic", "oblong", "ovate", "obovate", "orbicular", "deltate", "spatulate", "reniform", "cordate", "flabellate", "obcordate"],
+      "why": "a blade's outline, or a compound leaf's leaflets': from a narrow strap (linear) to as broad as long (orbicular); fan-shaped, straight sides spreading from a narrow foot to a broad rounded far edge (flabellate: a ginkgo's, a vanilla leaf's leaflets); or a heart upside down, broadest near its tip and notched there (obcordate: a wood sorrel's leaflets)"
     },
     "leaf_apex": {
       "group": "leaves",
@@ -2014,6 +2014,24 @@
       "range": [0.0001, 0.5],
       "why": "a grown leaflet's blade, or a fern's pinna, at its widest"
     },
+    "lateral_leaflets": {
+      "group": "leaves",
+      "organ": "leaflet",
+      "type": "enum",
+      "values": ["symmetric", "asymmetric"],
+      "when": {"leaf_division": ["compound"]},
+      "optional": true,
+      "why": "whether a compound leaf's side leaflets are even about their midribs or lopsided, the half toward the leaf's foot the broader, where floras say: a bean's or a vanilla leaf's ('lateral leaflet blades strongly asymmetric', Flora of North America)"
+    },
+    "leaflet_lobe_apex": {
+      "group": "leaves",
+      "organ": "leaflet",
+      "type": "enum",
+      "values": ["acute", "obtuse", "rounded"],
+      "optional": true,
+      "when": {"leaflet_incision": ["lobed", "cleft"]},
+      "why": "the tips of a lobed leaflet's lobes: pointed (a vanilla leaf's), blunt, or rounded (a poison oak's)"
+    },
     "leaflet_incision": {
       "group": "leaves",
       "organ": "leaflet",
@@ -2363,6 +2381,15 @@
       "optional": true,
       "when": {"body_plan": ["leafy"]},
       "why": "how a moss's leaves lie when it dries out (they spread again when wet): pressed to the stem (appressed), overlapping as when moist (imbricate), wavy (flexuose), curled and contorted (crisped), twisted round the stem (twisted), or curved to one side like a sickle (falcate)"
+    },
+    "stem_foliation": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["evenly_foliate", "rosulate", "comose"],
+      "optional": true,
+      "when": {"body_plan": ["leafy"]},
+      "why": "how a moss's leaves sit along its stem: evenly spaced (evenly foliate), crowded and larger in a rosette at the top (rosulate, as in Rosulabryum), or in a looser tuft at the top (comose); evenly foliate when left out"
     },
     "leaf_dry_crisping": {
       "group": "leaves",

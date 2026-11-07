@@ -39,6 +39,7 @@ pub mod clusters;
 pub mod conditions;
 pub mod cores;
 pub mod damage;
+pub mod deadwood;
 pub mod development;
 pub mod divided;
 pub mod drawing;
@@ -1679,10 +1680,42 @@ pub mod venation;
 /// m² of foliage. Every other plant, and every tree before its top dies,
 /// grows as before.
 ///
-/// 210: a card tier draws every cut leaf (a yarrow's, a poison
+/// 208: conifers are held back by their soil (`soil@1` in the pinidae
+/// program, its revision 21) as broadleaf trees, herbs and grasses are:
+/// one rooted in a crack or a thin soil grows as a shaded one does. Grown
+/// with no rooting limits, as every package is, a conifer grows as before.
+///
+/// 209: two herbs drawn as their floras state them, and compound leaves'
+/// leaflets drawn as floras describe them. A common mullein in flower
+/// stands 1-2 m (Gleason and Cronquist), Jepson's 30 cm kept as the rare
+/// low; a vanilla leaf's stalk bears one leaf (Abrams). Leaf shapes gain
+/// flabellate (a fan: sides bowing out from a narrow foot to a lobed or
+/// toothed far edge, rounded or cut square as the apex says) and
+/// obcordate (notched deep at a broad tip); side leaflets stated
+/// asymmetric are lopsided (`lateral_leaflets`); a lobed leaflet's lobe
+/// tips follow `leaflet_lobe_apex`; leaflets take their stated apex and
+/// base (tapers, points, notches), as simple blades did; and a leaflet
+/// may be twice as broad as long. A vanilla leaf draws three broad lobed
+/// wedges and a redwood sorrel three heart-shaped leaflets, where hand
+/// outlines drew neither, and 17 more compound-leaved species (roses,
+/// brambles, rowans, sumacs, hemp) change with their stated leaflet
+/// tips. Every other leaf draws as it did.
+///
+/// 210: old pine-family crowns stop spreading (`pinidae` revision 22). A
+/// limb's own axis stops lengthening past a tenth of the tree's height
+/// from the trunk (`floor_keep_limb` 0) while its side shoots renew its
+/// foliage, and a stem sprout grows as a young limb does
+/// (`stem_epi_vigour` 1, from 3). A Douglas-fir grown in a stand spreads
+/// 6.4 m from its trunk at 250 years where it spread 9.8, and 7.7 m at
+/// 480 where 12.2, against about 5.5 and 6.5 m from the Forest
+/// Vegetation Simulator's crown-width equation; it holds 757 m² of
+/// foliage at 480 years (Sillett et al. 2018: 630 to 1,480). Every
+/// conifer stays within its reference sizes.
+///
+/// 216: a card tier draws every cut leaf (a yarrow's, a poison
 /// hemlock's) on a card of its own before it gives the longest richer
 /// ones: each a flat card first, then crossed bent cards, then bent
 /// ones, from the same triangles. The minimal tier drew 18 of a yarrow's
 /// 54 leaves as crossed cards and baked the rest into dots; it now draws
 /// all 54 in the same 144 triangles, wearing the same pictures.
-pub const GENERATOR_REVISION: u32 = 210;
+pub const GENERATOR_REVISION: u32 = 216;
