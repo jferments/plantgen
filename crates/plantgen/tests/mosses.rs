@@ -504,3 +504,26 @@ fn small_spores_fly_far_and_large_ones_stay_near() {
         assert!((0.2..=0.85).contains(&kind.far_share()), "{}", kind.genus);
     }
 }
+
+#[test]
+fn moss_is_drawn_wet_in_a_portland_winter_and_dry_in_its_summer() {
+    let rain = &mosses::PORTLAND_RAIN_DAYS;
+    // NOAA 1991-2020: 157 rain days a year at Portland airport.
+    let year: f64 = rain.iter().sum();
+    assert!((year - 157.0).abs() < 0.05, "{year}");
+    // Mid-January (day 16) and mid-July (day 197): each month's own share.
+    let january = mosses::hydration_on(16.0, rain);
+    let july = mosses::hydration_on(197.0, rain);
+    assert!((january - 18.7 / 31.0).abs() < 0.02, "{january}");
+    assert!((july - 3.7 / 31.0).abs() < 0.02, "{july}");
+    // Smooth through the turn of the year and within 0 to 1 every day.
+    let (last, first) = (
+        mosses::hydration_on(365.0, rain),
+        mosses::hydration_on(1.0, rain),
+    );
+    assert!((last - first).abs() < 0.01, "{last} {first}");
+    for day in 1..=365 {
+        let wet = mosses::hydration_on(f64::from(day), rain);
+        assert!((0.1..=0.65).contains(&wet), "day {day}: {wet}");
+    }
+}
