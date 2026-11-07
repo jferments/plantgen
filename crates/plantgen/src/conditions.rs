@@ -415,7 +415,8 @@ impl Layout {
             reach_m,
             base_m: crown.base_m,
             top_m: crown.top_m,
-            density: (Crown::EXTINCTION * crown.leaf_area_m2 / (spacing_m * spacing_m * depth))
+            density: (Crown::EXTINCTION * crown.clumping * crown.leaf_area_m2
+                / (spacing_m * spacing_m * depth))
                 .min(10.0),
             one_sided: self.kind == LayoutKind::Edge,
         })
@@ -518,6 +519,11 @@ pub struct Crown {
     pub radius_m: f64,
     /// Its leaves' one-sided area, m².
     pub leaf_area_m2: f64,
+    /// Its clumping index (Nilson 1971): how much less its foliage
+    /// shades, looking up through it, than the same leaf area spread
+    /// evenly through its cylinder, from 0 to 1 ([`Self::with_clumping`]);
+    /// 1 is foliage spread evenly.
+    pub clumping: f64,
 }
 
 impl Crown {
@@ -559,7 +565,69 @@ impl Crown {
             top_m: top.max(base + 0.01),
             radius_m: quantile(radial, 0.9).max(0.05),
             leaf_area_m2: leaves.iter().map(|(_, area)| area).sum(),
+            clumping: 1.0,
         })
+    }
+
+    /// This crown with the clumping index of the leaves at `points` (each
+    /// with its area, m², relative to the plant's foot), measured in
+    /// upright columns `cell` metres square, as the light tool's voxels
+    /// hold them: over the columns within the crown's radius, the mean of
+    /// each column's transmission `exp(−k · L)` (`L` its leaf area over its
+    /// ground) against the transmission of their mean leaf area,
+    /// `Ω = ln(mean exp(−k · L)) / (−k · mean L)` (Nilson 1971, Ecological
+    /// Modelling 2: 9-21; Chen and Black 1992), `k` [`Self::EXTINCTION`].
+    /// A neighbour that is the plant's own crown then shades as that crown
+    /// does: drawn as an even cylinder, a 500-year Douglas-fir's
+    /// neighbours took 80-95% of the light across its stand cell where
+    /// its own crown took 5-30%, and its stand's mid-crown was three to
+    /// four times darker than Parker et al. (2002, Tree Physiology 22:
+    /// 147-157) measured at Wind River.
+    #[must_use]
+    pub fn with_clumping(self, points: impl Iterator<Item = (Vec3, f64)>, cell: f64) -> Self {
+        if !(cell > 0.0 && cell.is_finite()) {
+            return self;
+        }
+        let index = |value: f64| -> i64 {
+            #[allow(clippy::cast_possible_truncation)]
+            let at = (value / cell).floor() as i64;
+            at
+        };
+        let mut columns: std::collections::HashMap<(i64, i64), f64> =
+            std::collections::HashMap::new();
+        let radius = self.radius_m;
+        for (point, area) in points {
+            if area > 0.0 && point.x * point.x + point.z * point.z <= radius * radius {
+                *columns
+                    .entry((index(point.x), index(point.z)))
+                    .or_insert(0.0) += area;
+            }
+        }
+        // Every column whose centre lies within the radius, empty or not.
+        let reach = index(radius) + 1;
+        let ground = cell * cell;
+        let (mut count, mut sum_transmission, mut sum_area) = (0_u32, 0.0, 0.0);
+        for i in -reach..=reach {
+            for k in -reach..=reach {
+                #[allow(clippy::cast_precision_loss)]
+                let (x, z) = ((i as f64 + 0.5) * cell, (k as f64 + 0.5) * cell);
+                if x * x + z * z > radius * radius && !columns.contains_key(&(i, k)) {
+                    continue;
+                }
+                let area = columns.get(&(i, k)).copied().unwrap_or(0.0) / ground;
+                count += 1;
+                sum_transmission += math::exp(-Self::EXTINCTION * area);
+                sum_area += area;
+            }
+        }
+        if count == 0 || sum_area <= 0.0 {
+            return self;
+        }
+        let mean_area = sum_area / f64::from(count);
+        let mean_transmission = sum_transmission / f64::from(count);
+        let clumping =
+            (-math::ln(mean_transmission) / (Self::EXTINCTION * mean_area)).clamp(0.01, 1.0);
+        Self { clumping, ..self }
     }
 
     /// Whether this crown, standing `centre_m` (east, north) from a plant
@@ -581,7 +649,7 @@ impl Crown {
             base_m: self.base_m,
             top_m: self.top_m,
             radius_m: self.radius_m,
-            density: (Self::EXTINCTION * self.leaf_area_m2 / volume).min(10.0),
+            density: (Self::EXTINCTION * self.clumping * self.leaf_area_m2 / volume).min(10.0),
         }
     }
 }
@@ -1520,6 +1588,7 @@ mod tests {
             top_m: 10.0,
             radius_m: 3.0,
             leaf_area_m2: 200.0,
+            clumping: 1.0,
         };
         let placed = |kind, spacing_m| -> Vec<[f64; 2]> {
             Layout {
@@ -1579,6 +1648,7 @@ mod tests {
                 top_m,
                 radius_m: 0.15 * top_m,
                 leaf_area_m2: 100.0,
+                clumping: 1.0,
             };
             layout
                 .envelopes(&crown, age_years)
@@ -1623,6 +1693,7 @@ mod tests {
             top_m: 40.0,
             radius_m: 3.0,
             leaf_area_m2: 150.0,
+            clumping: 1.0,
         };
         let layout = Conditions::preset(Environment::Interior).layout().unwrap();
         let far = layout.far(&crown, 60.0).unwrap();

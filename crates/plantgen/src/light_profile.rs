@@ -89,7 +89,9 @@ pub fn profile(
     let neighbourhood = conditions.neighbourhood();
     let mut envelopes = conditions.envelopes().to_vec();
     let mut far = None;
-    if let (Some(layout), Some(crown)) = (conditions.layout(), Crown::of(foliage.iter().copied())) {
+    let crown = Crown::of(foliage.iter().copied())
+        .map(|crown| crown.with_clumping(foliage.iter().copied(), cell));
+    if let (Some(layout), Some(crown)) = (conditions.layout(), crown) {
         envelopes.extend(layout.envelopes(&crown, graph.age));
         far = layout.far(&crown, graph.age);
     }
