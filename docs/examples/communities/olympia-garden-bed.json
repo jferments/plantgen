@@ -1,0 +1,10 @@
+{"id": "olympia-garden-bed", "origin": "planted", "members": [
+  {"species": "rhododendron-macrophyllum", "layer": "shrub"},
+  {"species": "berberis-aquifolium", "layer": "shrub", "abundance": 0.6},
+  {"species": "ribes-sanguineum", "layer": "shrub", "abundance": 0.4},
+  {"species": "vaccinium-ovatum", "layer": "shrub", "abundance": 0.4},
+  {"species": "rosa-rugosa", "layer": "shrub", "abundance": 0.3},
+  {"species": "buddleja-davidii", "layer": "shrub", "abundance": 0.2},
+  {"species": "hedera-helix", "layer": "climber"},
+  {"species": "lonicera-ciliosa", "layer": "climber", "abundance": 0.2}
+]}

@@ -304,6 +304,55 @@ fn herbs_left_to_the_ground_cover_are_not_placed_and_a_tile_needs_its_sizes() {
 }
 
 #[test]
+fn every_example_community_loads_and_makes_a_fill() {
+    // docs/examples/communities: each file is a community of the
+    // library's species, and together they make one fill, as a city's
+    // stand map uses them.
+    let dir =
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../docs/examples/communities");
+    let mut paths: Vec<_> = std::fs::read_dir(&dir)
+        .expect("examples")
+        .map(|entry| entry.expect("entry").path())
+        .filter(|path| path.extension().is_some_and(|e| e == "json"))
+        .collect();
+    paths.sort();
+    assert!(paths.len() >= 8, "{paths:?}");
+    let communities: Vec<Community> = paths
+        .iter()
+        .map(|path| {
+            let text = std::fs::read_to_string(path).expect("read");
+            let community = Community::from_json(&text)
+                .unwrap_or_else(|error| panic!("{}: {error}", path.display()));
+            let stem = path.file_stem().and_then(|s| s.to_str()).expect("stem");
+            if stem != "wind-river" {
+                assert_eq!(community.id, stem, "{}", path.display());
+            }
+            community
+        })
+        .collect();
+    let planted: Vec<&str> = communities
+        .iter()
+        .filter(|c| c.origin == plantgen::development::Origin::Planted)
+        .map(|c| c.id.as_str())
+        .collect();
+    assert_eq!(
+        planted,
+        ["olympia-garden-bed", "olympia-lawn", "olympia-yard-trees"]
+    );
+    let cleared: Vec<&str> = communities
+        .iter()
+        .filter(|c| c.origin == plantgen::development::Origin::Cleared)
+        .map(|c| c.id.as_str())
+        .collect();
+    assert_eq!(cleared, ["olympia-lot", "olympia-verge"]);
+    let mut settings = FillSettings::default();
+    settings.stand_ages = vec![10.0, 80.0];
+    settings.seeds = 1;
+    let fill = Fill::new(&communities, &settings).expect("fill");
+    assert!(!fill.prototypes().is_empty());
+}
+
+#[test]
 fn a_tile_writes_its_header_and_packed_instances() {
     let fill = fill();
     let site = Site::flat(TileId { x: -1, y: 4 }, 40.0).expect("site");
@@ -399,6 +448,44 @@ fn a_forest_floor_holds_logs_moss_and_litter_and_the_tile_says_so() {
     assert!(meadow.logs.is_empty());
     assert!(meadow.stats.floor[1] < 1e-9 && meadow.stats.floor[2] < 1e-9);
     assert!(meadow.floor_mosses.is_empty());
+}
+
+#[test]
+fn cleared_ground_holds_no_logs_from_a_forest_before_it() {
+    // The same firs, once after a fire and once on a cleared lot: the lot
+    // has no fallen forest on it, only what its own trees drop once they
+    // are as thick as a log.
+    let mut cleared = forest();
+    cleared.id = "test-fir-lot".into();
+    cleared.origin = plantgen::development::Origin::Cleared;
+    let fill = Fill::new(&[forest(), cleared], &settings()).expect("fill");
+    fill.measure(&[], 8, None).expect("measured");
+    let site = Site::flat(TileId { x: 2, y: 3 }, 40.0).expect("site");
+    for age in [10.0, 40.0] {
+        let tile = |community| {
+            fill.tile(&site, &StandMap::uniform(40.0, community, age), 9)
+                .expect("tile")
+        };
+        let (burnt, lot) = (tile(0), tile(1));
+        assert!(
+            burnt.stats.logs_per_ha > 300.0,
+            "{age} y: {}",
+            burnt.stats.logs_per_ha
+        );
+        assert!(
+            lot.stats.logs_per_ha < 0.3 * burnt.stats.logs_per_ha,
+            "{age} y: {} against {}",
+            lot.stats.logs_per_ha,
+            burnt.stats.logs_per_ha
+        );
+        assert!(lot.stats.floor[2] < 0.3 * burnt.stats.floor[2]);
+        // The stands themselves develop alike.
+        let ratio = lot.stats.trees_per_ha / burnt.stats.trees_per_ha.max(1.0);
+        assert!(
+            (0.8..1.25).contains(&ratio) || burnt.stats.trees_per_ha < 1.0,
+            "{ratio}"
+        );
+    }
 }
 
 #[test]

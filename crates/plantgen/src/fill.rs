@@ -3658,16 +3658,6 @@ impl Fill {
         // species of the stand as wide as it, by their basal area; a
         // shrub or a herb whose foot one lies over stands beside it.
         let stand_age = self.settings.stand_ages[key.age];
-        let wood = if members.iter().any(is_tree) {
-            crate::deadwood::DownWood::at(
-                stand_age,
-                stand.lifespan,
-                self.canopy_m(key.community).map_or(0.0, f64::from),
-                self.communities[key.community].origin,
-            )
-        } else {
-            crate::deadwood::DownWood::NONE
-        };
         let trees: Vec<(usize, f64, [f64; 2])> = placed
             .iter()
             .filter(|plant| is_tree(&members[plant.member]))
@@ -3676,6 +3666,29 @@ impl Fill {
                 (species, dbh * plant.scale, plant.at_m)
             })
             .collect();
+        let origin = self.communities[key.community].origin;
+        let mut wood = if members.iter().any(is_tree) {
+            crate::deadwood::DownWood::at(
+                stand_age,
+                stand.lifespan,
+                self.canopy_m(key.community).map_or(0.0, f64::from),
+                origin,
+            )
+        } else {
+            crate::deadwood::DownWood::NONE
+        };
+        if origin == development::Origin::Cleared {
+            // On cleared ground the logs are its own trees': none fall
+            // until they are as thick as a log, and then as many as its
+            // trees that are.
+            #[allow(clippy::cast_precision_loss)]
+            let thick = trees
+                .iter()
+                .filter(|(_, dbh, _)| *dbh >= crate::deadwood::SIZE_CLASSES_M[0][0])
+                .count() as f64
+                / trees.len().max(1) as f64;
+            wood = wood.times(thick);
+        }
         let stems: Vec<crate::deadwood::Stem> = trees
             .iter()
             .map(|(_, dbh, at)| crate::deadwood::Stem {

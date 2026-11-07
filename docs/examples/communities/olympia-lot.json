@@ -1,0 +1,16 @@
+{"id": "olympia-lot", "origin": "cleared", "members": [
+  {"species": "alnus-rubra", "layer": "canopy", "abundance": 0.4},
+  {"species": "salix-scouleriana", "layer": "subcanopy", "abundance": 0.3},
+  {"species": "crataegus-monogyna", "layer": "subcanopy", "abundance": 0.2},
+  {"species": "rubus-armeniacus", "layer": "shrub"},
+  {"species": "cytisus-scoparius", "layer": "shrub", "abundance": 0.6},
+  {"species": "buddleja-davidii", "layer": "shrub", "abundance": 0.3},
+  {"species": "holcus-lanatus", "layer": "herb"},
+  {"species": "dactylis-glomerata", "layer": "herb", "abundance": 0.8},
+  {"species": "daucus-carota", "layer": "herb", "abundance": 0.5},
+  {"species": "cirsium-vulgare", "layer": "herb", "abundance": 0.3},
+  {"species": "jacobaea-vulgaris", "layer": "herb", "abundance": 0.3},
+  {"species": "hypochaeris-radicata", "layer": "herb", "abundance": 0.4},
+  {"species": "equisetum-arvense", "layer": "herb", "abundance": 0.3},
+  {"species": "hedera-helix", "layer": "climber", "abundance": 0.5}
+]}
