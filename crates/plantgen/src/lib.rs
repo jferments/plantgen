@@ -1711,4 +1711,11 @@ pub mod venation;
 /// Vegetation Simulator's crown-width equation; it holds 757 m² of
 /// foliage at 480 years (Sillett et al. 2018: 630 to 1,480). Every
 /// conifer stays within its reference sizes.
-pub const GENERATOR_REVISION: u32 = 210;
+///
+/// 216: a card tier draws every cut leaf (a yarrow's, a poison
+/// hemlock's) on a card of its own before it gives the longest richer
+/// ones: each a flat card first, then crossed bent cards, then bent
+/// ones, from the same triangles. The minimal tier drew 18 of a yarrow's
+/// 54 leaves as crossed cards and baked the rest into dots; it now draws
+/// all 54 in the same 144 triangles, wearing the same pictures.
+pub const GENERATOR_REVISION: u32 = 216;

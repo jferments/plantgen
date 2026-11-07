@@ -258,6 +258,8 @@ pub struct CardStats {
     /// Of the card triangles, those of cut leaves' own cards ([`LACE`]),
     /// paid from a budget of their own.
     pub lace_triangles: usize,
+    /// Cut leaves drawn on cards of their own.
+    pub lace_leaves: usize,
     /// Solid leaves drawn whole ([`WHOLE_LEAF`]).
     pub leaf_triangles: usize,
     /// Texels of all its pictures.
@@ -2034,14 +2036,15 @@ pub fn build_from(
         whole[t] = true;
     }
     // Cut leaves (a yarrow's, a wild carrot's) each go on a leaf card of
-    // their own, the longest first, in at most twice the cards'
-    // triangles: baked into the plant's cards they scattered into dots,
-    // and drawn as midrib lines they read as lines, not feathery blades.
+    // their own, in at most twice the cards' triangles: baked into the
+    // plant's cards they scattered into dots, and drawn as midrib lines
+    // they read as lines, not feathery blades. Every leaf gets a card
+    // before the longest get richer ones ([`lace_forms`]).
     let lace: Vec<LaceLeaf> = if crowned {
         Vec::new()
     } else {
         let mut lace = lace_leaves(graph, looks, &source.wood, &whole, height * LACE_CARD_LEAST);
-        lace.truncate(tier.cards(height) * (CORNERS - 2) * 2 / LACE_CARD_TRIANGLES);
+        lace_forms(&mut lace, tier.cards(height) * (CORNERS - 2) * 2);
         lace
     };
     for leaf in &lace {
@@ -2883,7 +2886,7 @@ pub fn build_from(
             &whole,
             texel * MIN_TEXELS,
             (tier.cards(height) * (CORNERS - 2) * 2)
-                .saturating_sub(lace.len() * LACE_CARD_TRIANGLES),
+                .saturating_sub(lace.iter().map(|leaf| leaf.form.triangles()).sum()),
         );
     }
     // Heads seen face on are baked from the full model, where an umbel or
@@ -3055,6 +3058,7 @@ pub fn build_from(
         }
         lace_cards(&mut part.cards, &lace, &pictured);
         out.stats.lace_triangles = part.cards.triangle_count();
+        out.stats.lace_leaves = lace.len();
         join_cards(&mut out, part);
     }
     out.stats.cards = out
@@ -3399,9 +3403,48 @@ pub const LACE: f64 = 0.3;
 /// the plant's cards.
 const LACE_CARD_LEAST: f64 = 0.03;
 
-/// Triangles in one cut leaf's cards: two crossed cards of two quads
-/// each along its curve.
-const LACE_CARD_TRIANGLES: usize = 8;
+/// How a cut leaf's card is drawn, from the richest: two crossed cards
+/// bent along its curve, one bent card, or one flat card from its foot
+/// to its tip.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum LaceForm {
+    Crossed,
+    Bent,
+    Flat,
+}
+
+impl LaceForm {
+    /// Its triangles: two for each quad.
+    const fn triangles(self) -> usize {
+        match self {
+            Self::Crossed => 8,
+            Self::Bent => 4,
+            Self::Flat => 2,
+        }
+    }
+}
+
+/// Give `lace` (longest first) its cards' forms in `budget` triangles:
+/// first every leaf a flat card, as many as fit, then the longest
+/// crossed cards and the next bent ones from what is left. A plant with
+/// more cut leaves than crossed cards fit (a yarrow's 54 at the minimal
+/// tier, where 18 fitted crossed) keeps all its leaves rather than a
+/// third of them; the longest, seen first, keep their curve and the
+/// card that keeps them from vanishing edge-on.
+fn lace_forms(lace: &mut Vec<LaceLeaf>, budget: usize) {
+    lace.truncate(budget / LaceForm::Flat.triangles());
+    let mut left = budget - lace.len() * LaceForm::Flat.triangles();
+    for richer in [LaceForm::Crossed, LaceForm::Bent] {
+        for leaf in lace.iter_mut().filter(|leaf| leaf.form == LaceForm::Flat) {
+            let more = richer.triangles() - LaceForm::Flat.triangles();
+            if left < more {
+                break;
+            }
+            leaf.form = richer;
+            left -= more;
+        }
+    }
+}
 
 /// A cut leaf drawn in the wood (a yarrow's, a wild carrot's), told cut
 /// by [`LACE`], that the tier draws on a leaf card of its own.
@@ -3412,6 +3455,8 @@ struct LaceLeaf {
     look: usize,
     /// Its triangles in the wood.
     triangles: Vec<usize>,
+    /// How its card is drawn ([`lace_forms`]).
+    form: LaceForm,
     /// Its foot, and its blade's middle in each half, along its curve.
     path: [Vec3; 3],
     /// How far it reaches along its heading, and out from it.
@@ -3531,6 +3576,7 @@ fn lace_leaves(
             organ: o,
             look: usize::from(organ.organ),
             triangles: leaf.iter().map(|p| p.0).collect(),
+            form: LaceForm::Flat,
             path: [
                 organ.position,
                 middles[0].0 * (1.0 / middles[0].1),
@@ -3662,11 +3708,13 @@ fn bake_leaf(
     ))
 }
 
-/// Each of `leaves` as a card bent along its blade's curve, wearing its
-/// look's picture (`pictures`: look, picture index, the picture's along
-/// and across extents, and the leaf it was baked from), stretched to the
-/// leaf's own reach and breadth: two quads, its foot to its blade's
-/// middle to its tip. A leaf whose look has no picture is skipped.
+/// Each of `leaves` as a card wearing its look's picture (`pictures`:
+/// look, picture index, the picture's along and across extents, and the
+/// leaf it was baked from), stretched to the leaf's own reach and
+/// breadth, in its [`LaceForm`]: bent, two quads from its foot to its
+/// blade's middle to its tip, with a second square to it when crossed;
+/// flat, one quad from its foot to its tip. A leaf whose look has no
+/// picture is skipped.
 fn lace_cards(out: &mut Mesh, leaves: &[LaceLeaf], pictures: &[LeafPicture]) {
     for leaf in leaves {
         let Some(&(_, index, (a0, a1), (c0, c1), reach, width)) =
@@ -3683,15 +3731,25 @@ fn lace_cards(out: &mut Mesh, leaves: &[LaceLeaf], pictures: &[LeafPicture]) {
         let tip = second + (second - first) * 0.5;
         let mid = (first + second) * 0.5;
         // Where along the picture each section falls.
-        let spine = [(foot, 0.0), (mid, 0.5), (tip, 1.0)];
+        let bent = [(foot, 0.0), (mid, 0.5), (tip, 1.0)];
+        let flat = [(foot, 0.0), (tip, 1.0)];
+        let spine: &[(Vec3, f64)] = if leaf.form == LaceForm::Flat {
+            &flat
+        } else {
+            &bent
+        };
+        let planes = if leaf.form == LaceForm::Crossed { 2 } else { 1 };
         #[allow(clippy::cast_precision_loss)]
         let index_alpha = index as f32;
         // Its segments stand in several planes (a yarrow's): a second
         // card square to the first, about the leaf's own line, keeps it
         // from vanishing edge-on, each lit as it faces.
-        for (spread, facing) in [(across, normal), (normal, across)] {
+        for (spread, facing) in [(across, normal), (normal, across)]
+            .into_iter()
+            .take(planes)
+        {
             let first_vertex = u32::try_from(out.positions.len()).unwrap_or(u32::MAX);
-            for &(centre, share) in &spine {
+            for &(centre, share) in spine {
                 let x = share * leaf.reach / sa;
                 for y in [c0, c1] {
                     #[allow(clippy::cast_possible_truncation)]
@@ -3707,7 +3765,7 @@ fn lace_cards(out: &mut Mesh, leaves: &[LaceLeaf], pictures: &[LeafPicture]) {
                     });
                 }
             }
-            for i in 0..2_u32 {
+            for i in 0..u32::try_from(spine.len() - 1).unwrap_or(0) {
                 let (a, b, c, d) = (
                     first_vertex + 2 * i,
                     first_vertex + 2 * i + 1,
