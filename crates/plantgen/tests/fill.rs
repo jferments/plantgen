@@ -30,12 +30,13 @@ fn meadow() -> Community {
     .expect("community")
 }
 
-/// Two young stand ages, so the fill grows nothing older than 30 years:
-/// one before the firs' crowns close (Douglas-fir's 500-year lifespan
-/// closes them at 35) and one after.
+/// Two young stand ages, so the fill grows nothing older than 40 years:
+/// one while the firs still grow as in the open (Douglas-fir's 500-year
+/// lifespan closes their crowns at 35, and they grow as in the open to
+/// half that) and one after closure.
 fn settings() -> FillSettings {
     let mut settings = FillSettings::default();
-    settings.stand_ages = vec![20.0, 40.0];
+    settings.stand_ages = vec![10.0, 40.0];
     settings
 }
 
@@ -248,10 +249,10 @@ fn one_tile_holds_many_communities_and_bare_cells() {
 
 #[test]
 fn a_young_stand_is_open_grown_and_closes_as_it_ages() {
-    // Before its crowns close a stand's firs grow as in the open; after,
-    // as in a closed stand, its canopy covering most of the ground
-    // (western Oregon's stands past closure: 60-96%, McIntosh et al.
-    // 2009).
+    // A young stand's firs grow as in the open; once its crowns close, as
+    // in a closed stand, some overtopped by the rest, its canopy covering
+    // most of the ground (western Oregon's stands past closure: 60-96%,
+    // McIntosh et al. 2009).
     let fill = fill();
     let site = Site::flat(TileId { x: 5, y: 5 }, 80.0).expect("site");
     let fir_settings = |years: f32| {
@@ -265,13 +266,14 @@ fn a_young_stand_is_open_grown_and_closes_as_it_ages() {
             .filter(|key| key.species == "pseudotsuga-menziesii")
             .map(|key| key.environment)
             .collect();
+        settings.sort_by_key(|environment| environment.name());
         settings.dedup();
         (settings, plan.stats)
     };
-    let (young, _) = fir_settings(20.0);
+    let (young, _) = fir_settings(10.0);
     assert_eq!(young, [Environment::Open]);
     let (closed, stats) = fir_settings(40.0);
-    assert_eq!(closed, [Environment::Interior]);
+    assert_eq!(closed, [Environment::Interior, Environment::Suppressed]);
     assert!(
         (0.6..0.96).contains(&stats.canopy_cover),
         "canopy cover {}",
@@ -326,6 +328,80 @@ fn a_tile_writes_its_header_and_packed_instances() {
 }
 
 #[test]
+fn a_forest_floor_holds_logs_moss_and_litter_and_the_tile_says_so() {
+    let fill = fill();
+    let site = Site::flat(TileId { x: 2, y: 3 }, 40.0).expect("site");
+    let plan = fill
+        .tile(&site, &StandMap::uniform(40.0, 0, 40.0), 9)
+        .expect("tile");
+    // A young natural stand's logs: about 600 a hectare covering about a
+    // tenth of the floor (Spies, Franklin and Thomas 1988), fewer where
+    // its stems leave no room.
+    let per_ha = plan.stats.logs_per_ha;
+    assert!((300.0..=700.0).contains(&per_ha), "{per_ha} logs/ha");
+    let [litter, moss, wood, herb] = plan.stats.floor;
+    assert!((0.04..=0.14).contains(&wood), "logs cover {wood}");
+    assert!(moss > 0.05 && litter > 0.2, "moss {moss}, litter {litter}");
+    assert!(litter + moss + wood <= 1.0 + 1e-6);
+    assert!(herb >= 0.0);
+    for log in &plan.logs {
+        assert_eq!(log.species, "pseudotsuga-menziesii");
+        assert!((1..=5).contains(&log.shape.decay));
+        assert!(log.shape.butt_m >= log.shape.top_m && log.shape.length_m >= 1.0);
+        for coordinate in &log.position[..2] {
+            assert!((0.0..40.0).contains(coordinate));
+        }
+    }
+    for cover in &plan.cover {
+        let floor = cover.floor;
+        assert!(
+            floor.litter + floor.moss + floor.wood <= 1.0 + 1e-6,
+            "{floor:?}"
+        );
+        // Its moss is named by genus, the shares adding up to the whole.
+        let named: Vec<_> = floor.mosses.iter().flatten().collect();
+        if floor.moss > 0.0 {
+            let total: f32 = named.iter().map(|found| found.share).sum();
+            assert!((total - 1.0).abs() < 0.02, "{floor:?}");
+            assert!(
+                named
+                    .iter()
+                    .all(|found| usize::from(found.genus) < plan.floor_mosses.len())
+            );
+        } else {
+            assert!(named.is_empty());
+        }
+    }
+    // The forest floor's own mosses, not the wall mosses.
+    for genus in &plan.floor_mosses {
+        assert!(
+            ["Kindbergia", "Hylocomium", "Rhytidiadelphus"].contains(&genus.as_str()),
+            "{genus} on a forest floor"
+        );
+    }
+    assert!(!plan.floor_mosses.is_empty());
+    // The tile's JSON carries both.
+    let dir = std::env::temp_dir().join(format!("plantgen-floor-test-{}", std::process::id()));
+    let json = plan.write(&dir).expect("write");
+    let header: serde_json::Value =
+        serde_json::from_str(&std::fs::read_to_string(&json).expect("json")).expect("parse");
+    assert_eq!(
+        header["logs"].as_array().map(Vec::len),
+        Some(plan.logs.len())
+    );
+    assert!(header["cover"][0]["floor"]["moss"].is_number());
+    assert!(header["floor_mosses"].is_array());
+    std::fs::remove_dir_all(dir).ok();
+    // A meadow has no trees to fall: no logs, and no crowns to shade moss.
+    let meadow = fill
+        .tile(&site, &StandMap::uniform(40.0, 1, 40.0), 9)
+        .expect("tile");
+    assert!(meadow.logs.is_empty());
+    assert!(meadow.stats.floor[1] < 1e-9 && meadow.stats.floor[2] < 1e-9);
+    assert!(meadow.floor_mosses.is_empty());
+}
+
+#[test]
 fn every_prototype_is_a_cohort_of_a_stand_in_each_seed() {
     let fill = fill();
     let settings = settings();
@@ -345,9 +421,9 @@ fn every_prototype_is_a_cohort_of_a_stand_in_each_seed() {
         cohorts.len() * usize::from(settings.seeds),
         "{keys:?}"
     );
-    // The firs at the ages nearest the stands' (their keyframes 15 and
-    // 30 years), the closed stand's also as an edge; the yarrow at its
-    // oldest.
+    // The firs at the stands' own ages, the closed stand's also as an
+    // edge and as overtopped, its suppressed trees grown as at half its
+    // years; the yarrow at its oldest.
     for (index, prototype) in fill.prototypes().iter().enumerate() {
         assert!((f64::from(prototype.key.age_tenths) / 10.0 - prototype.age_years).abs() < 0.05);
         assert!(
@@ -365,9 +441,11 @@ fn every_prototype_is_a_cohort_of_a_stand_in_each_seed() {
     assert_eq!(
         firs,
         [
-            (Environment::Open, 150),
-            (Environment::Edge, 300),
-            (Environment::Interior, 300)
+            (Environment::Open, 100),
+            (Environment::Suppressed, 200),
+            (Environment::Edge, 400),
+            (Environment::Interior, 400),
+            (Environment::Suppressed, 400)
         ],
         "{cohorts:?}"
     );
@@ -397,14 +475,23 @@ fn shade_tolerant_conifers_that_came_up_under_the_canopy_grow_beneath_it() {
             .filter(|key| key.species == species)
             .collect()
     };
-    // The pioneers grow in their stand; the hemlocks that came up under
-    // it beneath a canopy as tall as Douglas-fir commonly grows (60 m),
-    // at every age to the 60 years since; the maples, whose program does
-    // not grow them beneath a canopy yet, in the stand.
+    // The pioneers grow in their stand, those their dominants overtop as
+    // overtopped trees; the hemlocks that came up under it beneath a
+    // canopy as tall as Douglas-fir commonly grows (60 m), at every age
+    // to the 60 years since; the maples, whose program does not grow them
+    // beneath a canopy yet, in the stand.
+    let in_stand = |key: &&PrototypeKey| {
+        key.beneath_m.is_none()
+            && matches!(
+                key.environment,
+                Environment::Interior | Environment::Suppressed
+            )
+    };
+    let firs = of("pseudotsuga-menziesii");
+    assert!(firs.iter().all(in_stand), "{firs:?}");
     assert!(
-        of("pseudotsuga-menziesii")
-            .iter()
-            .all(|key| key.environment == Environment::Interior && key.beneath_m.is_none())
+        firs.iter()
+            .any(|key| key.environment == Environment::Suppressed)
     );
     let beneath: Vec<u32> = of("tsuga-heterophylla")
         .iter()
@@ -415,12 +502,7 @@ fn shade_tolerant_conifers_that_came_up_under_the_canopy_grow_beneath_it() {
         })
         .collect();
     assert_eq!(beneath, [50, 150, 300, 600], "{keys:?}");
-    assert!(
-        of("acer-macrophyllum")
-            .iter()
-            .all(|key| key.beneath_m.is_none() && key.environment == Environment::Interior),
-        "{keys:?}"
-    );
+    assert!(of("acer-macrophyllum").iter().all(in_stand), "{keys:?}");
     let young = fill
         .prototypes()
         .iter()
@@ -1189,4 +1271,88 @@ mod on_a_site_field {
             mean(&on_ground)
         );
     }
+}
+
+/// A bigleaf maple stand over vanilla leaf, which dies back in autumn,
+/// and sword fern, which stays green, at one young stand age, on `day`.
+fn maple_wood(day: f64) -> Fill {
+    let community = Community::from_json(
+        r#"{"id": "test-maple-wood", "members": [
+            {"species": "acer-macrophyllum", "layer": "canopy"},
+            {"species": "achlys-triphylla", "layer": "herb"},
+            {"species": "polystichum-munitum", "layer": "herb"}
+        ]}"#,
+    )
+    .expect("community");
+    let mut settings = FillSettings::default();
+    settings.stand_ages = vec![30.0];
+    settings.seeds = 1;
+    settings.options.day = day;
+    let fill = Fill::new(&[community], &settings).expect("fill");
+    // A plant's size is the same every day: the second day reads the
+    // first's.
+    fill.measure(&[], 8, Some(&MAPLE_SIZES)).expect("measured");
+    fill
+}
+
+static MAPLE_SIZES: LazyLock<std::path::PathBuf> = LazyLock::new(|| {
+    std::env::temp_dir().join(format!("plantgen-maple-sizes-{}", std::process::id()))
+});
+
+#[test]
+fn a_tile_shows_its_day_bare_maples_and_vanilla_leaf_down_in_winter() {
+    let site = Site::flat(TileId { x: 5, y: 5 }, 40.0).expect("site");
+    let stands = StandMap::uniform(40.0, 0, 30.0);
+    let (summer, winter) = (maple_wood(196.0), maple_wood(15.0));
+    let (july, january) = (
+        summer.tile(&site, &stands, 3).expect("tile"),
+        winter.tile(&site, &stands, 3).expect("tile"),
+    );
+    assert!((july.day - 196.0).abs() < 1e-9 && (january.day - 15.0).abs() < 1e-9);
+    let species = |fill: &Fill, instance: &Instance| {
+        fill.prototypes()[instance.prototype as usize]
+            .key
+            .species
+            .clone()
+    };
+    let count = |fill: &Fill, plan: &plantgen::api::TilePlan, id: &str| {
+        plan.instances
+            .iter()
+            .filter(|instance| species(fill, instance) == id)
+            .count()
+    };
+    // The same stand both days: the maples and sword ferns stand where
+    // they stood, the vanilla leaf is down in January.
+    for id in ["acer-macrophyllum", "polystichum-munitum"] {
+        let (a, b) = (count(&summer, &july, id), count(&winter, &january, id));
+        assert!(a > 0 && a == b, "{id}: {a} in July, {b} in January");
+    }
+    assert!(count(&summer, &july, "achlys-triphylla") > 0);
+    assert_eq!(count(&winter, &january, "achlys-triphylla"), 0);
+    // The far canopy: the bare crowns hide less of the ground, grey-brown.
+    assert!(
+        july.stats.crowns_in_leaf > 0.99,
+        "{}",
+        july.stats.crowns_in_leaf
+    );
+    assert!(
+        january.stats.crowns_in_leaf < 0.01,
+        "{}",
+        january.stats.crowns_in_leaf
+    );
+    let (leafy, bare) = (july.canopy[0], january.canopy[0]);
+    assert!(
+        bare.cover < 0.6 * leafy.cover && bare.cover > 0.2 * leafy.cover,
+        "{} bare, {} in leaf",
+        bare.cover,
+        leafy.cover
+    );
+    assert!(bare.colour[1] < leafy.colour[1] || bare.colour[0] > leafy.colour[0]);
+    // The crowns' projection, the layers' measure, is the stand's own.
+    assert!((july.stats.canopy_cover - january.stats.canopy_cover).abs() < 1e-9);
+    // The herbs' share of the floor falls with the vanilla leaf; the moss,
+    // which grows through the year, keeps its share.
+    assert!(january.stats.floor[3] < july.stats.floor[3]);
+    assert!((january.stats.floor[1] - july.stats.floor[1]).abs() < 1e-9);
+    std::fs::remove_dir_all(&*MAPLE_SIZES).ok();
 }
