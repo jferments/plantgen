@@ -20,8 +20,8 @@
       "why": "A fir, spruce, hemlock or Douglas-fir holds its branches under its leader (apical control): each year a branch grows about half as far as the leader rises, so the crown is a cone about as wide as its depth, and stays pointed as the leader slows."
     },
     "generator.params.bend_set": {
-      "rule": "0.15",
-      "why": "The family's limbs spring back from most of each year's sag: Farjon gives its branches as horizontal or spreading, the lower ones curving down only at their ends. Keeping half of each year's sag, a limb grown 150 years hung flat against the trunk and the old crown stood as a column."
+      "rule": "0.05",
+      "why": "The family's limbs spring back from most of each year's sag: Farjon gives its branches as horizontal or spreading, the lower ones curving down only at their ends. Keeping half of each year's sag, a limb grown 150 years hung flat against the trunk and the old crown stood as a column. Keeping 0.15, an old limb's side shoots, which lengthen a few centimetres a year for centuries and carry their twigs' needles only near their tips, sagged until a quarter of their length hung straight down: a 480-year Douglas-fir's lower crown read as curtains of bare strings. At 0.05 they angle out and down as branchlets, and every species keeps its reference sizes."
     },
     "generator.params.side_order": {
       "rule": "2",
@@ -82,6 +82,14 @@
     "generator.params.seg_min": {
       "rule": "0.04",
       "why": "An old limb's slow shoots, a centimetre or two a year, are laid down as one shoot every few years with the same needle area, so a fully branched old crown keeps its side shoots within the program's module and segment limits: laid down every year, old Douglas-fir and western hemlock passed them unless their inner side shoots were shed or cut short (side_years), which left their lower limbs bare whips. Young shoots, longer than 4 cm a year, grow as before. Not 8 cm: a held shoot's spray is as large as its years' together and a spray draws its needles a share of its length, so at 8 cm the median drawn needle passed the floras' extremes (Douglas-fir 4.0 cm against 2 to 3, grand fir 6.4 against 3.5 to 5); at 4 cm, with a held shoot's foliage drawn at two places along it (pinidae), Douglas-fir draws 3.4 cm over three plants."
+    },
+    "generator.params.seg_side": {
+      "rule": "0.2",
+      "why": "An old tree's side shoots hold their growth until they reach 20 cm and lay it down as one shoot, drawing its foliage at one place for each three years held: an old crown's side shoots grow a centimetre or two a year for a century and more, and four fifths of their 4 cm segments were bare wood older than twenty years (a 320-year Douglas-fir grown in a stand: 344,000 segments, 317,000 of them side shoots), so a 500-year Douglas-fir at a stand's edge passed the program's 2 million segment limit near 400 years. With it (from seg_age) the edge tree has 1.02 million segments at 500 years, and a 480-year Douglas-fir in a stand 258,000 (724,000 before) with 844 m² of foliage (757). 12 cm left the edge tree at 1.5 million. The pines lay down every year's shoot (seg_min 0) and are unchanged."
+    },
+    "generator.params.seg_age": {
+      "rule": "100",
+      "why": "seg_side comes in from 100 years and is in full by 200, so young trees grow as before: a held shoot's needles appear only when it is laid down, and young trees' foliage is mostly on their side shoots, so from the first year 20 cm took two fifths of a 60-year western hemlock's and grand fir's foliage and a quarter of a Douglas-fir's. An old crown is short of light more than of needles: at 480 years the Douglas-fir holds more foliage with it, not less."
     },
     "generator.params.bud_length": {
       "rule": "0.1",

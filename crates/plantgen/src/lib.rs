@@ -1731,4 +1731,20 @@ pub mod venation;
 /// it reached 7.7, on a 148 cm stem where 134, 1.18 of the equation's
 /// width for its size as before. A tree come up beneath an older canopy,
 /// and every plant outside a stand, grows as before.
-pub const GENERATOR_REVISION: u32 = 211;
+///
+/// 212: the pine family's wood keeps a twentieth of each year's sag
+/// (Pinaceae `bend_set` 0.05, from 0.15), so an old limb's side shoots,
+/// which lengthen for centuries with needles only near their tips, angle
+/// out and down instead of hanging straight down in curtains of bare
+/// strings under a 480-year Douglas-fir's lower crown. Every conifer stays
+/// within its reference sizes; the 480-year Douglas-fir holds 744 m² of
+/// foliage (757 before) and western hemlock 821 m² (835).
+///
+/// 213: an old conifer's side shoots lay down a segment every 20 cm
+/// (`pinidae` revision 23, Pinaceae `seg_side` 0.2, coming in from 100
+/// years and in full by 200), drawing their foliage at one place for each
+/// three years they hold. A 500-year Douglas-fir at a stand's edge, which
+/// passed the 2 million segment limit near 400 years, has 1.02 million; a
+/// 480-year Douglas-fir in a stand has 258,000 (724,000 before) and 844 m²
+/// of foliage (757). Young trees grow as before.
+pub const GENERATOR_REVISION: u32 = 213;
