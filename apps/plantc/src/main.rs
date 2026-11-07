@@ -542,7 +542,8 @@ Usage:
       Fill one map tile with plant communities (each a JSON file: an id
       and members, each a species, optionally the layer it keeps to and
       its abundance; origin planted for a yard's or street's kept
-      trees) as the library API's Fill does, and write
+      trees, cleared for a lot's or a road edge's ground) as the
+      library API's Fill does, and write
       DIR/tiles/X_Y.json (header, ground cover, forest floor and far
       canopy per stand cell, the logs on its floor, stand numbers) and
       DIR/tiles/X_Y.bin (32-byte instances;
