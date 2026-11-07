@@ -2474,8 +2474,9 @@ impl Fill {
     /// neighbourhood the canopy's; an old plant past its spec's years
     /// grows on to its age, as a grown-old spec does
     /// ([`PlantSpec::grown_old`]). A climber grown at the foot of a wall
-    /// has no package yet (a spec states no wall to grow on), so the
-    /// prototypes of one are left out.
+    /// grows there in its package too ([`crate::spec::VariantPlan::wall_m`],
+    /// [`crate::export::WALL_M`]), to its prototype's age, as
+    /// [`Generator::grow_ages_on_wall`] grows it, with no host's wood.
     ///
     /// # Errors
     ///
@@ -2485,9 +2486,6 @@ impl Fill {
         let mut packages = Vec::new();
         for growth in self.growths(&wanted) {
             let first = &self.prototypes[growth[0] as usize];
-            if first.key.on_wall {
-                continue;
-            }
             let ages: Vec<f64> = growth
                 .iter()
                 .map(|index| self.prototypes[*index as usize].age_years)
@@ -2511,7 +2509,17 @@ impl Fill {
             spec.variants.dealt_among = std::mem::take(&mut spec.variants.seeds);
             spec.variants.seeds = vec![key.seed];
             spec.variants.conditions.clear();
-            if let Some(&oldest) = ages.last() {
+            if key.on_wall {
+                // At the wall's foot in the open, holding to the wall, and
+                // grown only to its age, as its prototype is; no yield
+                // table measured it there.
+                spec.variants.wall_m = Some(crate::export::WALL_M);
+                spec.host = None;
+                spec.allometry.clear();
+                if let Some(&oldest) = ages.last() {
+                    spec.growth.years = oldest;
+                }
+            } else if let Some(&oldest) = ages.last() {
                 spec.growth.years = spec.growth.years.max(oldest);
             }
             spec.growth.keyframes = ages;
@@ -3650,16 +3658,6 @@ impl Fill {
         // species of the stand as wide as it, by their basal area; a
         // shrub or a herb whose foot one lies over stands beside it.
         let stand_age = self.settings.stand_ages[key.age];
-        let wood = if members.iter().any(is_tree) {
-            crate::deadwood::DownWood::at(
-                stand_age,
-                stand.lifespan,
-                self.canopy_m(key.community).map_or(0.0, f64::from),
-                self.communities[key.community].origin,
-            )
-        } else {
-            crate::deadwood::DownWood::NONE
-        };
         let trees: Vec<(usize, f64, [f64; 2])> = placed
             .iter()
             .filter(|plant| is_tree(&members[plant.member]))
@@ -3668,6 +3666,29 @@ impl Fill {
                 (species, dbh * plant.scale, plant.at_m)
             })
             .collect();
+        let origin = self.communities[key.community].origin;
+        let mut wood = if members.iter().any(is_tree) {
+            crate::deadwood::DownWood::at(
+                stand_age,
+                stand.lifespan,
+                self.canopy_m(key.community).map_or(0.0, f64::from),
+                origin,
+            )
+        } else {
+            crate::deadwood::DownWood::NONE
+        };
+        if origin == development::Origin::Cleared {
+            // On cleared ground the logs are its own trees': none fall
+            // until they are as thick as a log, and then as many as its
+            // trees that are.
+            #[allow(clippy::cast_precision_loss)]
+            let thick = trees
+                .iter()
+                .filter(|(_, dbh, _)| *dbh >= crate::deadwood::SIZE_CLASSES_M[0][0])
+                .count() as f64
+                / trees.len().max(1) as f64;
+            wood = wood.times(thick);
+        }
         let stems: Vec<crate::deadwood::Stem> = trees
             .iter()
             .map(|(_, dbh, at)| crate::deadwood::Stem {

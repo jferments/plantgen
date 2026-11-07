@@ -1,0 +1,16 @@
+{"id": "olympia-yard-trees", "origin": "planted", "members": [
+  {"species": "pseudotsuga-menziesii", "layer": "canopy", "environments": ["open", "edge"]},
+  {"species": "acer-macrophyllum", "layer": "canopy", "abundance": 0.6, "environments": ["open", "edge"]},
+  {"species": "thuja-plicata", "layer": "canopy", "abundance": 0.4, "environments": ["open", "edge"]},
+  {"species": "cornus-nuttallii", "layer": "subcanopy", "abundance": 0.3, "environments": ["open", "edge"]},
+  {"species": "sorbus-aucuparia", "layer": "subcanopy", "abundance": 0.2, "environments": ["open", "edge"]},
+  {"species": "crataegus-monogyna", "layer": "subcanopy", "abundance": 0.1, "environments": ["open", "edge"]},
+  {"species": "festuca-rubra", "layer": "herb", "abundance": 1.0},
+  {"species": "poa-annua", "layer": "herb", "abundance": 0.6},
+  {"species": "holcus-lanatus", "layer": "herb", "abundance": 0.4},
+  {"species": "trifolium-repens", "layer": "herb", "abundance": 0.4},
+  {"species": "hypochaeris-radicata", "layer": "herb", "abundance": 0.3},
+  {"species": "taraxacum-sect-taraxacum", "layer": "herb", "abundance": 0.3},
+  {"species": "plantago-major", "layer": "herb", "abundance": 0.2},
+  {"species": "hedera-helix", "layer": "climber"}
+]}
