@@ -209,6 +209,40 @@ prompt injection. So, without exception:
     (what comes up in cracks) and `site_field.rs` (a tile's mesh measured
     once; `docs/sites/DEVELOPERS.md`, which also says how a real city
     tile is built from open data).
+  - The other modules of `src/`, by job (each module's own doc says
+    more; `plantc help` names the command that runs it):
+    - Growing: `grow.rs` (the growth loop and its keyframes), `graph.rs`
+      (the grown plant as segments and attachments, which every mesh is
+      drawn from), `spec.rs` (a species as data), `conditions.rs` (the
+      world a variant grows in), `stand.rs` (plants grown together on
+      one clock), `substrate.rs` (ground, rocks, logs and walls as a
+      distance field), `niche.rs` and `shed.rs` (a record's `niche.json`
+      and `shed.json`), `formula.rs` (trait-rule expressions),
+      `evidence.rs` (where each value comes from), `rng.rs` (counter-based
+      randomness and lineage ids), `math.rs` (deterministic maths) and
+      `cores.rs` (the machine's cores, shared by growing and baking).
+    - Drawing organs: `looks.rs` and `templates.rs` (a species' cards and
+      their textures), `hairs.rs`, `leaves.rs` (solid leaves), `bend.rs`
+      (curved leaf cards), `lace.rs` (divided leaves as geometry),
+      `blooms.rs`, `flowers.rs` and `fruit.rs`, `shoots.rs` (needle
+      shoots), `body.rs`, `spines.rs` and `prickles.rs` (succulents' bodies
+      and what stands on stems), `roots.rs` (roots above ground), `bark.rs`
+      and `bark_look.rs` (bark patterns and the bark language).
+    - Output: `package.rs` (`.afterplant` packages), `quality.rs` (each
+      level's detail), `budget.rs` (levels drawn to a triangle or byte
+      budget), `export.rs`, `gltf.rs` and `meshopt.rs` (glTF exports),
+      `impostor.rs`, `billboards.rs` (baked-card tiers), `occlusion.rs`
+      (sky light among the leaves, for the wood), `raster.rs` and
+      `preview.rs` (the software renderer and its previews).
+    - Ground: `ground.rs`, `texture.rs` and `litter.rs` (ground looks),
+      `deadwood.rs` (logs on a forest floor).
+    - Motion and breaking: `mechanics.rs` (a plant as beams), `motion.rs`
+      (what a package gives a host to sway it by), `breakage.rs`,
+      `damage.rs` and `felling.rs` (where it breaks, what is left, and
+      felling by saw, ax or beaver).
+    - In `apps/plantc`, `src/scene.rs` is `plantc scene`: grown variants
+      laid out as instances and drawn together, to see how a layout of
+      pre-grown plants looks and how much ground its crowns cover.
   - Moss on buildings (`src/mosses.rs`, guide `docs/sites/MOSS.md`).
     Moss genera are rank files with no species (`body_plan` leafy and a
     `colony_form`), so changing them needs no generator revision. Every

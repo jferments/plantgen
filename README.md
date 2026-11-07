@@ -115,7 +115,9 @@ with every flower, fruit and spine drawn as its own mesh (`--parts on`).*
   roads or walls. Each prototype is grown once and each stand laid out
   once for a whole city: a 512 m tile of Olympia, Washington, with its
   buildings and roads and seven communities, fills in about 14 s the
-  first time and in a tenth of a second after that. `plantc fill` does
+  first time and in a tenth of a second after that. A tile shows one
+  day of the year (`--day`): deciduous crowns bare out of leaf, and only
+  the herbs that are above ground that day. `plantc fill` does
   it from the command line and `plantgen::api::Fill` from code
   ([docs/LIBRARY-API.md](docs/LIBRARY-API.md),
   [docs/sites/DEVELOPERS.md](docs/sites/DEVELOPERS.md)).
@@ -181,7 +183,9 @@ and each spikelet's glumes (`plantc organs`), its card textures and the
 ground's looks, building packages, exporting a plant as glTF, listing the
 sources a species' values cite (`plantc sources cite ID` finds every value
 that names one), and a species' characters and what each family has
-stated so far (`plantc traits`, `plantc audit`).
+stated so far (`plantc traits`, `plantc audit`), and laying grown
+variants out as instances to draw a stand together (`plantc scene`, each
+plant at the detail its size on screen can show).
 `--library DIR` reads species and programs from a folder on top of the
 built-in ones, so you can write your own.
 
