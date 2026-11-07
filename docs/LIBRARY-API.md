@@ -276,9 +276,14 @@ Ok(())
   `prototypes[k].1`: the same plant, at the same size, as `fill.measure`
   grows. A tree come up beneath a canopy keeps the canopy as its
   variant's neighbourhood, and an old tree grows on past its spec's
-  years. A climber grown at a wall's foot has no package yet.
+  years. A climber grown at a wall's foot grows at the foot of the same
+  6 m wall in its package (`spec.variants.wall_m`, `export::WALL_M`),
+  only to its prototype's age; draw it cut back to the wall it stands at
+  by its instance's `extra` (`WallClip`). In the package's frame, as in
+  the prototype's, the wall's face is the plane z = -0.3, facing +z.
   `plantc fill ... --packages DIR` builds them and lists in
-  `DIR/packages.json` which package and keyframe draws each prototype.
+  `DIR/packages.json` which package and keyframe draws each prototype,
+  with `wall_m` for a wall climber's.
 - **Parts of tall plants.** A prototype 6 m or taller is also written in
   parts (`FillSettings::parts`, on by default): its bole under the crown
   and its crown in up to four bands sized by its own height, each limb

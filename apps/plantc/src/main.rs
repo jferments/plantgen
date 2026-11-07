@@ -608,8 +608,9 @@ Usage:
       --prototypes all), one per species, setting and seed with a
       keyframe at each of their ages, as plantc build builds one
       (--profile, --cards), into DIR, and lists in DIR/packages.json
-      which package and keyframe draws each prototype (wall climbers
-      have none yet).
+      which package and keyframe draws each prototype. A wall climber's
+      package grows it at the foot of a wall 6 m high, as the fill does;
+      draw it cut to its wall by the instance's extra.
   plantc inspect <package.afterplant>
       Check every object of a package and summarise it.
   plantc unpack <FILE.glb|DIR> --out <FILE.glb|DIR>
@@ -6988,15 +6989,6 @@ fn write_fill_packages(
     dir: &Path,
 ) -> Result<(), Failure> {
     let packages = fill.packages(which).map_err(|error| error.to_string())?;
-    let left_out = fill
-        .prototypes()
-        .iter()
-        .enumerate()
-        .filter(|(index, prototype)| {
-            prototype.key.on_wall
-                && (which.is_empty() || which.contains(&u32::try_from(*index).unwrap_or(u32::MAX)))
-        })
-        .count();
     let started = Instant::now();
     let mut listed = Vec::new();
     for package in &packages {
@@ -7012,14 +7004,19 @@ fn write_fill_packages(
                 })
             })
             .collect();
-        listed.push(serde_json::json!({
+        let mut entry = serde_json::json!({
             "species": package.spec.id,
             "file": path
                 .file_name()
                 .map(|name| name.to_string_lossy().into_owned())
                 .unwrap_or_default(),
             "prototypes": held,
-        }));
+        });
+        // A wall climber's package grew at the foot of a wall this high.
+        if let Some(wall) = package.spec.variants.wall_m {
+            entry["wall_m"] = serde_json::json!(wall);
+        }
+        listed.push(entry);
     }
     let list = serde_json::json!({
         "schema": 1,
@@ -7030,14 +7027,9 @@ fn write_fill_packages(
     let text = serde_json::to_string_pretty(&list).map_err(|error| error.to_string())?;
     fs::write(&path, text).map_err(|error| format!("{}: {error}", path.display()))?;
     out!(
-        "built {} packages in {:.1} s{}: {}",
+        "built {} packages in {:.1} s: {}",
         packages.len(),
         started.elapsed().as_secs_f64(),
-        if left_out > 0 {
-            format!(" ({left_out} wall climbers have none yet)")
-        } else {
-            String::new()
-        },
         path.display()
     );
     Ok(())
