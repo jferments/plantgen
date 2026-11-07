@@ -1711,4 +1711,11 @@ pub mod venation;
 /// Vegetation Simulator's crown-width equation; it holds 757 m² of
 /// foliage at 480 years (Sillett et al. 2018: 630 to 1,480). Every
 /// conifer stays within its reference sizes.
-pub const GENERATOR_REVISION: u32 = 210;
+///
+/// 211: thin limbs a far level drops stay whole. Wood at least 0.35 of
+/// the level's thinnest (`mesh::LIMB_SHARE`), borne by wood the level draws, is drawn as
+/// at most three sticks end to end along its own axis, not gathered
+/// with the twigs into sticks at each cell's mean place: a shade-grown
+/// bigleaf maple's braided leaders, as thin as its farthest level's
+/// thinnest wood, were drawn there as pieces floating over gaps.
+pub const GENERATOR_REVISION: u32 = 211;
