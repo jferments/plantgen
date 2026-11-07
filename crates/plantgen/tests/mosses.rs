@@ -444,3 +444,29 @@ fn a_surface_may_say_its_face_is_neutral_where_its_material_is_basic() {
     };
     assert_eq!(asphalt.reaction(), 0);
 }
+
+#[test]
+fn shade_lengthens_shoots_shortens_hair_points_and_sun_yellows_leaves() {
+    let kinds = library_kinds();
+    let grimmia = kinds
+        .iter()
+        .find(|kind| kind.genus == "Grimmia")
+        .expect("the library describes Grimmia");
+    // Part shade, where floras describe a genus, changes nothing.
+    assert!(matches!(
+        grimmia.in_light(0.5),
+        std::borrow::Cow::Borrowed(_)
+    ));
+    // Glime vol. 1: hair-points shorter in shade (Racomitrium, p. 976),
+    // shoots taller and leaves smaller in deep shade (pp. 946, 959-960).
+    let deep = grimmia.in_light(0.02);
+    assert!(grimmia.hair_point_m > 0.0);
+    assert!(deep.hair_point_m < 0.5 * grimmia.hair_point_m);
+    assert!(deep.height_m > 1.4 * grimmia.height_m);
+    assert!(deep.leaf_length_m < grimmia.leaf_length_m);
+    // Carotenoids in full sun (Ceratodon, p. 1735): less blue against red.
+    let sun = grimmia.in_light(1.0);
+    let ratio = |c: [f32; 3]| c[2] / c[0].max(1.0e-6);
+    assert!(ratio(sun.colour) < 0.8 * ratio(grimmia.colour));
+    assert!((sun.hair_point_m - grimmia.hair_point_m).abs() < 1e-12);
+}
