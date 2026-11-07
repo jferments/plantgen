@@ -596,6 +596,13 @@ impl<'a> Lace<'a> {
     /// of the leaf's droop, so none strays from the arc its leaflets
     /// follow.
     fn pieces(&self, from: Vec3, to: Vec3) -> usize {
+        // Only the nearest level draws the arc: farther levels are seen
+        // too far off for a few millimetres to show, and the card tiers
+        // bake from level 1, where every extra ring costs a leaf drawn
+        // whole its place in the tier's budget.
+        if !self.midrib {
+            return 1;
+        }
         let turn = (self.droop * (to.y - from.y)).abs();
         #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
         let pieces = (turn / math::radians(ARC_PIECE)).ceil().clamp(1.0, 32.0) as usize;

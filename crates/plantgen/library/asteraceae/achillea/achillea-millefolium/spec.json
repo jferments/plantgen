@@ -33,8 +33,8 @@
       "nod": 0,
       "basal_leaves": 4,
       "basal_angle": 60,
-      "leaf_area": 0.034,
-      "basal_area": 0.027,
+      "leaf_area": 0.048,
+      "basal_area": 0.032,
       "basal_piece_area": 0.235,
       "flower_area": 0.141,
       "bud_area": 0.89,
@@ -51,16 +51,13 @@
     "seeds": [1]
   },
   "appearance": {
-    "bark": [0.25, 0.3, 0.15],
-    "foliage": [0.07, 0.15, 0.05],
-    "foliage_shade": [0.02, 0.05, 0.02],
     "variation": 0.2,
     "organs": {
       "leaf": {
-        "shape": { "template": "compound", "leaflets": 61, "pinnules": 7, "leaflet_width": 0.3, "teeth": 0, "petiole": 0.05, "angle": 60, "pinnule_angle": 45, "largest": 0.4, "lowest": 0.35, "widest": 0.35, "tip": 0.6, "base": 0.5 }
+        "shape": { "template": "compound", "leaflets": 61, "pinnules": 7, "leaflet_width": 0.3, "teeth": 0, "petiole": 0.05, "angle": 60, "pinnule_angle": 60, "largest": 0.4, "lowest": 0.35, "widest": 0.35, "tip": 0.6, "base": 0.5 }
       },
       "basal": {
-        "shape": { "template": "compound", "leaflets": 81, "pinnules": 7, "leaflet_width": 0.3, "teeth": 0, "petiole": 0.15, "angle": 60, "pinnule_angle": 45, "largest": 0.4, "lowest": 0.35, "widest": 0.35, "tip": 0.6, "base": 0.5 }
+        "shape": { "template": "compound", "leaflets": 81, "pinnules": 7, "leaflet_width": 0.3, "teeth": 0, "petiole": 0.15, "angle": 60, "pinnule_angle": 60, "largest": 0.4, "lowest": 0.35, "widest": 0.35, "tip": 0.6, "base": 0.5 }
       },
       "flower": {
         "shape": { "ray_width": 1.1, "disc": 0.5, "involucre": 1.8 },
@@ -96,7 +93,8 @@
     "receptacle_shape": "convex",
     "fruit_size_m": {"min": 0.001, "max": 0.002},
     "leaf_length_m": {"min": 0.05, "max": 0.2, "high": 0.4},
-    "leaf_width_m": {"min": 0.006, "max": 0.025},
+    "leaf_width_m": {"min": 0.008, "max": 0.035},
+    "leaf_colour": [94, 120, 60],
     "ray_colour": [250, 250, 245],
     "disc_colour": [240, 236, 220],
     "involucre_height_m": {"min": 0.004, "max": 0.007, "high": 0.009},
@@ -132,7 +130,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: an aromatic herb with feathery, finely divided leaves and flat-topped clusters of small white flowers. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: an aromatic herb with feathery, finely divided leaves and flat-topped clusters of small white flowers. Not fitted to measurements. leaf_area (0.048) and basal_area (0.032) are the shares of a 1 m card the stem and basal leaves draw (species test `builtin_species_shade_with_the_area_they_draw`), raised on 2026-11-07 when the leaves were drawn wider and their lobes fuller."
     },
     "allometry": {
       "evidence": "Authored",
@@ -197,17 +195,22 @@
     "appearance.organs.leaf.shape": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "The blade drawn dissected (spec rework P4): a twice-divided leaf whose segments run together along a winged rachis, its pattern and the running together from its characters by the rules at the flowering plants; before, separate toothed leaflets stood along a rachis. Counts and form by eye from iNaturalist photographs (2026-10-17): a narrow strap of many short primary segments set close, about one segment's width apart, 30 pairs on a stem leaf and 40 on a basal one, at about 60 degrees to the rachis, each cut into about 7 short lobes, each about a third as wide as long; the segments longest 0.4 of the way up and shorter toward both ends, the blade's oblong to lanceolate outline (its shape word is the blade's, so the card sets its segments' own form by hand)."
+      "note": "The blade drawn dissected (spec rework P4): a twice-divided leaf whose segments run together along a winged rachis, its pattern and the running together from its characters by the rules at the flowering plants; before, separate toothed leaflets stood along a rachis. Counts and form by eye from iNaturalist photographs (2026-10-17): a narrow strap of many short primary segments set close, about one segment's width apart, 30 pairs on a stem leaf and 40 on a basal one, at about 60 degrees to the rachis, each cut into about 7 short lobes, each about a third as wide as long, spreading about 60 degrees from the segment's own rachis so the lobes fan out and the leaf reads as a feathery strap (2026-11-07, re-read against iNaturalist observations 758272, 126222917, 196397969, 391805083 and 488340760: at 45 degrees the lobes lay along their segment and the leaf drew as a wire with ticks beside every photo; lobes half as wide as long filled the blade so far that the card tiers baked the leaves into the plant's cards as dots); the segments longest 0.4 of the way up and shorter toward both ends, the blade's oblong to lanceolate outline (its shape word is the blade's, so the card sets its segments' own form by hand)."
     },
     "appearance.organs.basal.shape": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "The blade drawn dissected (spec rework P4): a twice-divided leaf whose segments run together along a winged rachis, its pattern and the running together from its characters by the rules at the flowering plants; before, separate toothed leaflets stood along a rachis. Counts and form by eye from iNaturalist photographs (2026-10-17): a narrow strap of many short primary segments set close, about one segment's width apart, 30 pairs on a stem leaf and 40 on a basal one, at about 60 degrees to the rachis, each cut into about 7 short lobes, each about a third as wide as long; the segments longest 0.4 of the way up and shorter toward both ends, the blade's oblong to lanceolate outline (its shape word is the blade's, so the card sets its segments' own form by hand)."
+      "note": "The blade drawn dissected (spec rework P4): a twice-divided leaf whose segments run together along a winged rachis, its pattern and the running together from its characters by the rules at the flowering plants; before, separate toothed leaflets stood along a rachis. Counts and form by eye from iNaturalist photographs (2026-10-17): a narrow strap of many short primary segments set close, about one segment's width apart, 30 pairs on a stem leaf and 40 on a basal one, at about 60 degrees to the rachis, each cut into about 7 short lobes, each about a third as wide as long, spreading about 60 degrees from the segment's own rachis so the lobes fan out and the leaf reads as a feathery strap (2026-11-07, re-read against iNaturalist observations 758272, 126222917, 196397969, 391805083 and 488340760: at 45 degrees the lobes lay along their segment and the leaf drew as a wire with ticks beside every photo; lobes half as wide as long filled the blade so far that the card tiers baked the leaves into the plant's cards as dots); the segments longest 0.4 of the way up and shorter toward both ends, the blade's oblong to lanceolate outline (its shape word is the blade's, so the card sets its segments' own form by hand)."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Hue measured from iNaturalist photos where the leaves fill the frame (2026-11-07; observations 391805083, 126222917 and 488340760; plantgen-claude project-files/library-api/yarrow-2026-11-07/): the median green pixel's linear red is 0.6 of its green and its blue 0.24, yellower than the herb green the plant was drawn in (0.47, 0.33). Photos are exposed brighter than leaves are, so only the hue comes from them; the green channel is a basal-leaf green as other forbs state it (sRGB 120). The stems take it as a herb's do, where they were drawn pale yellow-grey beside near-black leaves."
     },
     "traits.leaf_width_m": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Set by hand from iNaturalist photos (2026-10-17): a leaf about 10 cm long held against a hand is a strap 1.2 to 1.5 cm wide, about 7 times as long as wide; the range runs from the shortest leaves, 5 cm long at that shape, to the longer ones. Abrams and Ferris give lengths only."
+      "note": "Measured by eye from iNaturalist photos: in 2026-10-17 a leaf about 10 cm long held against a hand (observation 758272) was a strap 1.2 to 1.5 cm wide, about 7 times as long as wide; on 2026-11-07 the flat-lying basal and stem leaves of observations 126222917, 196397969, 391805083 and 488340760 are 5 to 6 times as long as wide, so the range runs from the shortest leaves, 5 cm long at about 6 times as long as wide, to 20 cm ones at about 6 (0.008 to 0.035 m). Abrams and Ferris give lengths only."
     },
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",
