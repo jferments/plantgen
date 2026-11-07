@@ -420,6 +420,7 @@ fn a_tree_over_a_wooden_deck_lets_moss_grow_there() {
         top_m: 9.0,
         radius_m: 3.0,
         density: 0.27,
+        growing: false,
     };
     let shaded = mosses::grow_under(&site, &kinds, &settings(), std::slice::from_ref(&crown));
     assert_eq!(shaded.canopy, vec![crown]);

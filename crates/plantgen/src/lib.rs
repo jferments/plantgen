@@ -1711,4 +1711,16 @@ pub mod venation;
 /// Vegetation Simulator's crown-width equation; it holds 757 m² of
 /// foliage at 480 years (Sillett et al. 2018: 630 to 1,480). Every
 /// conifer stays within its reference sizes.
-pub const GENERATOR_REVISION: u32 = 210;
+///
+/// 212: broadleaf trees grown in a stand of their like take the form of
+/// forest-grown trees. A stem divides at its fork height only where its
+/// tip has 0.7 of the open sky's light (`fork_light`, broadleaf program
+/// revision 33, a rule at the decurrent trees), so a stand-grown bigleaf
+/// maple keeps one trunk to 8-12 m where it divided at 3.7 m into two
+/// leaders that braided round each other; in the open it divides as
+/// before. And its neighbours' crowns take only the room on their side of
+/// the line halfway between the stems, above their tops too
+/// ([`conditions::Envelope::claims`]), so its crown stays within its
+/// share of the stand (radius 2.3 m at 3.1 m spacing, where it spread
+/// 5.5 m into a flat cap over its neighbours).
+pub const GENERATOR_REVISION: u32 = 212;
