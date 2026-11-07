@@ -470,3 +470,37 @@ fn shade_lengthens_shoots_shortens_hair_points_and_sun_yellows_leaves() {
     assert!(ratio(sun.colour) < 0.8 * ratio(grimmia.colour));
     assert!((sun.hair_point_m - grimmia.hair_point_m).abs() < 1e-12);
 }
+
+#[test]
+fn small_spores_fly_far_and_large_ones_stay_near() {
+    let kinds = library_kinds();
+    let kind = |genus: &str| {
+        kinds
+            .iter()
+            .find(|kind| kind.genus == genus)
+            .unwrap_or_else(|| panic!("the library describes {genus}"))
+    };
+    // The two measured mosses the rule runs between (Glime vol. 1,
+    // pp. 594-596): Bryum argenteum over 80% beyond 2 m.
+    let bryum = kind("Bryum");
+    assert!(
+        (bryum.spore_m - 11.5e-6).abs() < 1.0e-9,
+        "{}",
+        bryum.spore_m
+    );
+    assert!(bryum.far_share() > 0.75, "{}", bryum.far_share());
+    // Dicranoweisia's spores (15-20 µm) are larger: fewer fly far.
+    let dicranoweisia = kind("Dicranoweisia");
+    assert!(dicranoweisia.far_share() < bryum.far_share() - 0.05);
+    // A genus whose flora gives no spore size stands at During's 20 µm.
+    let grimmia = kind("Grimmia");
+    assert!((grimmia.spore_m - 20.0e-6).abs() < 1.0e-12);
+    assert!(
+        (0.5..0.6).contains(&grimmia.far_share()),
+        "{}",
+        grimmia.far_share()
+    );
+    for kind in &kinds {
+        assert!((0.2..=0.85).contains(&kind.far_share()), "{}", kind.genus);
+    }
+}

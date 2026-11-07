@@ -64,8 +64,9 @@ Niphotrichum and Ceratodon; the north slope stays at about 64%.
 `grow` walks the years. Each year spores land on every face in the region
 (`arrivals_per_m2`, default 40). Where one lands, a genus is drawn by its
 vigour there times the spores it sheds (`MossKind::spore_output`, the
-square root of its `capsule_share` against a fiftieth, from 0.3 to 3), so
-the spore rain is mostly of the mosses that fruit freely, and the genus
+square root of its `capsule_share` against a fiftieth, from 0.3 to 3)
+times the share of them that fly far (`MossKind::far_share`), so the
+spore rain is mostly of the mosses that fruit freely on small spores, and the genus
 starts a colony with a chance of half its vigour, unless a colony already
 covers the spot. A site document may name its region's genera in a
 `mosses` list; spores of the others do not reach it. Colonies two years old or more also shed pieces (broken shoots, gemmae,
@@ -74,7 +75,20 @@ beyond their rim and take root more readily than a spore, since they need
 no protonema. Most of a moss's realized dispersal is that near, and on walls
 the pieces lodge along a seam and grow into cushions that join, so moss
 spreads in clumps and fills the gaps between its colonies rather than
-standing in separate discs. Then every colony's edge moves out by
+standing in separate discs.
+
+How far spores fly goes by their size (trait `spore_diameter_m`, from the
+floras): small spores travel far, large ones mostly fall in or near the
+colony that shed them (Glime, *Bryophyte Ecology* vol. 1, PDF pp.
+520-522). `far_share` runs straight between two measured mosses
+(`SPORE_FAR`): *Bryum argenteum*, spores 8-15 µm, sends over 80% beyond
+2 m (Miles and Longton 1990, 1992), and *Tortula truncata*, 25-30 µm,
+30% (Roads and Longton 2003; pp. 594-596), held to 0.2-0.85. A genus
+whose flora gives no size stands at During's 20 µm boundary (0.53):
+*Grimmia*, *Hypnum*, *Hylocomium*, *Rhytidiadelphus*. The near spores
+are not added to the pieces a colony sheds; those are sized as before.
+
+Then every colony's edge moves out by
 its genus's `colony_spread_m_per_year`, more when vigorous, until:
 
 - it meets a neighbour (cushions and turfs press together; a mat's
@@ -190,7 +204,7 @@ renderer has alpha.
 
 ## The genera
 
-Nine genera, each in its own rank file under `crates/plantgen/library/`
+Twelve genera, each in its own rank file under `crates/plantgen/library/`
 with evidence from the *Flora of North America* vols. 27 and 28,
 *Bryophyte Biology* and, for the roofs of western Oregon and Washington,
 Oregon State's rooftop study (nine Willamette Valley roofs: *Dicranoweisia
@@ -208,6 +222,14 @@ var. *ericoides* 11%; cedar shakes carry more moss than asphalt or metal):
 | *Dicranoweisia* | Rhabdoweisiaceae | crisped cushions, freely fruiting, yellow setae | PNW roofs and shakes, trunks |
 | *Niphotrichum* (*Racomitrium* in older books) | Grimmiaceae | mats, hoary when dry | PNW roofs, gravel, rock |
 | *Rosulabryum* (*Bryum capillare*) | Bryaceae | bright green turfs, leaves twisted dry, inclined red-brown capsules | shaded roofs, shakes, rotting wood |
+| *Kindbergia* (*K. oregana*) | Brachytheciaceae | pinnate mats | shaded soil and wood; the first moss of a young forest floor |
+| *Hylocomium* (*H. splendens*) | Hylocomiaceae | wefts of stair-step fronds | old forest floors; soil, wood and rock under trees |
+| *Rhytidiadelphus* (*R. loreus*) | Hylocomiaceae | soft wefts | shaded forest floors, logs and rock |
+
+The last three came with the stands thread's forest floor (#367,
+`development::floor_mosses`); the floor and the buildings draw from the
+same genera, so a shaded patch of soil beside a wall grows the floor's
+wefts.
 
 Every value comes from traits that any moss genus may carry; adding a
 genus means adding its rank file with `body_plan` leafy and a
@@ -276,7 +298,8 @@ under it with no triangles of its own, and a view named for a genus
 finding a colony of that genus, a drawn cover writing as a glTF file
 with no required extensions, a tree's crown over a wooden deck letting
 moss grow there, a surface stating its own reaction, and shade
-shortening hair-points and lengthening shoots while sun yellows leaves. A unit test in
+shortening hair-points and lengthening shoots while sun yellows leaves,
+and small spores flying farther than large ones. A unit test in
 `mosses.rs` checks that neighbouring classes fit fully where they meet.
 
 ## Changing it
@@ -309,9 +332,9 @@ shortening hair-points and lengthening shoots while sun yellows leaves. A unit t
   rooftop study's "over 40%"; whether they should join into mats is for
   photos to say.
 - Spread rates match Glime's *Bryophyte Ecology* in order (clones 6-8
-  mm a year, shoots 1.4-15 mm); spore output by fruiting, how far spores
-  fall (*Tortula truncata* 70% within 2 m, p. 594) and colonisation
-  order are still estimates. A colony at no vigour still spreads at three
+  mm a year, shoots 1.4-15 mm); spore output by fruiting and
+  colonisation order are still estimates, and how far spores fly rests
+  on two measured mosses. A colony at no vigour still spreads at three
   tenths of its genus's rate, so the cover of an upright face, where
   vigour is low, hangs on a few colonies.
 - The library has no shade moss of basic stone and mortar
