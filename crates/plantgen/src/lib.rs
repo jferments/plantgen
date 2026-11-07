@@ -1739,4 +1739,12 @@ pub mod venation;
 /// strings under a 480-year Douglas-fir's lower crown. Every conifer stays
 /// within its reference sizes; the 480-year Douglas-fir holds 744 m² of
 /// foliage (757 before) and western hemlock 821 m² (835).
-pub const GENERATOR_REVISION: u32 = 212;
+///
+/// 213: an old conifer's side shoots lay down a segment every 20 cm
+/// (`pinidae` revision 23, Pinaceae `seg_side` 0.2, coming in from 100
+/// years and in full by 200), drawing their foliage at one place for each
+/// three years they hold. A 500-year Douglas-fir at a stand's edge, which
+/// passed the 2 million segment limit near 400 years, has 1.02 million; a
+/// 480-year Douglas-fir in a stand has 258,000 (724,000 before) and 844 m²
+/// of foliage (757). Young trees grow as before.
+pub const GENERATOR_REVISION: u32 = 213;
