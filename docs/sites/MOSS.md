@@ -164,6 +164,19 @@ rained on) sets the leaf angles and colour: wet moss is darker and a
 deeper green, dry moss paler, duller and yellower, its hair-points and
 hyaline tips greying it the more.
 
+How wet to draw it can follow the season: `mosses::hydration_on(day,
+rain_days)` gives the share of days with rain at that time of year,
+straight between the middles of the months, and
+`mosses::PORTLAND_RAIN_DAYS` holds Portland airport's (NOAA 1991-2020
+normals: 157 rain days a year, 18.7 in January, 3.7 in July). Mosses take
+water from rain, not dew (*Grimmia pulvinata* on walls, Proctor 2004 in
+Glime vol. 1 p. 1303), so a Portland roof is drawn wet in winter (0.60
+mid-January) and dry, crisped and pale in summer (0.12 mid-July).
+`plantc moss` and `plantc fill` use it when `--day` is given without
+`--wet`. That the share of rain days stands for how often moss is wet is
+an estimate; a wet spell outlasts its rain (1.7 times, Proctor), but no
+book gives Portland's hours of wet moss.
+
 A colony also looks as the light where it settled makes it
 (`Colony::light`, `MossKind::in_light`; Glime vol. 1). Floras describe a
 genus in part shade (light 0.45 to 0.65), so there nothing changes. In
