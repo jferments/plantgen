@@ -131,7 +131,13 @@ shoots' older lower parts:
   in a spiral at the golden angle, standing out more when wet, folded,
   twisted or crisped when dry as the genus's `leaf_dry_posture` says
   (a crisped blade is drawn in pieces that curl in toward the stem and
-  twist, so it coils dry and straightens moist), with their awns; the older leaves down the shoot in the genus's
+  twist, so it coils dry and straightens moist, as far as
+  `leaf_dry_crisping` says: 1 "crisped", 0.5 "somewhat crisped" or
+  "contorted", 0.3 "slightly crisped"; a twisted leaf stands out from
+  the stem with its outer blade swept round it), with their awns; each
+  leaf's outline from the genus's `leaf_shape`, through the kingdom's leaf
+  outlines; a `stem_foliation` of `rosulate` crowds a stem's top leaves
+  into a rosette (*Rosulabryum*); the older leaves down the shoot in the genus's
   `older_leaf_colour` (Tortula brown below, Ceratodon tinged red).
 - Mats (pleurocarps): creeping, pinnately branched shoots crossing the
   whole mat and wandering so that they interweave; where the genus's
@@ -337,9 +343,6 @@ and small spores flying farther than large ones. A unit test in
 
 ## Still open
 
-- Dry *Ceratodon* turf opens gaps between its coiled shoots; FNA calls
-  its leaves only "somewhat crisped", so it may want a weaker coil than
-  *Dicranoweisia*'s, which needs a trait for how strongly a leaf crisps.
 - Roof cushions on the test roof mostly stay separate, up to about 3 cm
   across, though the north slope's cover (64%) already matches the
   rooftop study's "over 40%"; whether they should join into mats is for
