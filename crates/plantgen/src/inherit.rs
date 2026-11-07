@@ -4099,7 +4099,7 @@ fn forget<V>(origins: &mut BTreeMap<String, V>, path: &str) {
 }
 
 /// Whether `path` is `outer` or lies inside it.
-fn within(path: &str, outer: &str) -> bool {
+pub(crate) fn within(path: &str, outer: &str) -> bool {
     path == outer
         || (path.len() > outer.len()
             && path.starts_with(outer)
