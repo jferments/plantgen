@@ -149,6 +149,99 @@ pub const fn niche_source(id: &str) -> &'static str {
     panic!("the built-in library has no species with this id")
 }
 
+/// A species with the rules over the hands ([`Library::rules_over_hand`]).
+#[derive(Debug, Clone, PartialEq)]
+pub struct RulesOverHand {
+    /// Its spec as it inherits it with the hand values taken out.
+    pub inherited: Inherited,
+    /// Each hand-set value taken out, in the order taken.
+    pub taken: Vec<Taken>,
+}
+
+/// A value a file set by hand where a rule would set it.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Taken {
+    /// The path the rule sets, such as `appearance.organs.bloom.colour`.
+    pub path: String,
+    /// The file that set it by hand, as [`Inherited::origins`] writes it.
+    pub file: String,
+    /// Whether the rule set the path once the value was out. If not, the
+    /// rule has no fact to read there, and the hand value was put back.
+    pub ruled: bool,
+}
+
+/// The part of the rank files `ranks` a label names: `<file>` for its
+/// shared values, `<file>, forms.<form>` for a growth form's.
+fn part_of<'a>(label: &str, ranks: &'a mut [RankFile]) -> Option<&'a mut Part> {
+    let (rank_file, form) = match label.split_once(", forms.") {
+        Some((rank_file, form)) => (rank_file, Some(form)),
+        None => (label, None),
+    };
+    let rank = ranks.iter_mut().find(|rank| rank.file == rank_file)?;
+    match form {
+        Some(form) => rank.forms.get_mut(form),
+        None => Some(&mut rank.shared),
+    }
+}
+
+/// The values of the file a label names: the species' own (`file`), or
+/// a part of a rank file.
+fn values_of<'a>(
+    label: &str,
+    file: &str,
+    own: &'a mut Value,
+    ranks: &'a mut [RankFile],
+) -> Option<&'a mut serde_json::Map<String, Value>> {
+    if label == file {
+        own.as_object_mut()
+    } else {
+        part_of(label, ranks).map(|part| &mut part.values)
+    }
+}
+
+/// Put the value at `path` (or the list holding it) back into `into`
+/// from `from`, the same file as written.
+fn put_back(
+    into: &mut serde_json::Map<String, Value>,
+    from: &serde_json::Map<String, Value>,
+    path: &str,
+) {
+    match path.split_once('.') {
+        None => {
+            if let Some(value) = from.get(path) {
+                into.insert(path.to_string(), value.clone());
+            }
+        }
+        Some((key, rest)) => match from.get(key) {
+            Some(Value::Object(inner)) => {
+                let slot = into
+                    .entry(key.to_string())
+                    .or_insert_with(|| Value::Object(serde_json::Map::new()));
+                if let Value::Object(slot) = slot {
+                    put_back(slot, inner, rest);
+                }
+            }
+            Some(value) => {
+                into.insert(key.to_string(), value.clone());
+            }
+            None => {}
+        },
+    }
+}
+
+/// Take the value at `path` out of `values`: the value itself, or the
+/// list holding it (a list is one value). Whether anything was there.
+fn take_out(values: &mut serde_json::Map<String, Value>, path: &str) -> bool {
+    match path.split_once('.') {
+        None => values.remove(path).is_some(),
+        Some((key, rest)) => match values.get_mut(key) {
+            Some(Value::Object(inner)) => take_out(inner, rest),
+            Some(Value::Array(_)) => values.remove(key).is_some(),
+            _ => false,
+        },
+    }
+}
+
 /// Species and programs: the built-in ones, or a folder's on top of them.
 #[derive(Debug, Clone)]
 pub struct Library {
@@ -1188,6 +1281,143 @@ impl Library {
         let own: Value = serde_json::from_str(&entry.own)
             .map_err(|error| SpecError(format!("{}: {error}", entry.file())))?;
         inherit::inherit(&entry.file(), &own, &above, &self.params).map_err(SpecError)
+    }
+
+    /// The species `id`'s spec with the rules over the hands: every value
+    /// a file set by hand where a rule of its chain would set it (`plantc
+    /// spec` reads "not set, set by hand in …") taken out of that file, and
+    /// the rule's value drawn in its place. A path whose rule then sets
+    /// nothing (it has no fact to read) keeps its hand values, nearest
+    /// first, as before: there is no rule to judge there, only a missing
+    /// fact. Values are taken round by round, as taking one out may reveal
+    /// a farther file's under it. Looks a file set as a whole, and card
+    /// fields a rule's card would drop, stay as they are.
+    ///
+    /// With it the rules alone can be judged against the hand values on
+    /// the same plants, and `plantc hand` counts where a hand value hides a
+    /// missing fact.
+    ///
+    /// # Errors
+    ///
+    /// Fails as [`Library::inherited`] does.
+    pub fn rules_over_hand(&self, id: &str) -> Result<RulesOverHand, SpecError> {
+        let entry = self.known(id)?;
+        let file = entry.file();
+        let original: Value = serde_json::from_str(&entry.own)
+            .map_err(|error| SpecError(format!("{file}: {error}")))?;
+        let originals: Vec<RankFile> = inherit::above(&self.ranks, &entry.family, &entry.genus)
+            .map_err(SpecError)?
+            .into_iter()
+            .cloned()
+            .collect();
+        let mut own = original.clone();
+        let mut ranks = originals.clone();
+        let mut taken: Vec<Taken> = Vec::new();
+        let run = |own: &Value, ranks: &[RankFile]| {
+            let above: Vec<&RankFile> = ranks.iter().collect();
+            inherit::inherit(&file, own, &above, &self.params).map_err(SpecError)
+        };
+        // Each round takes out at least one value, and the files hold only
+        // so many: the bound only guards a loop the code cannot make.
+        let mut settled = false;
+        for _ in 0..64 {
+            let inherited = run(&own, &ranks)?;
+            let mut took = false;
+            for (path, (_, outcome)) in &inherited.rules {
+                let Some(label) = outcome
+                    .as_deref()
+                    .and_then(|why| why.strip_prefix("set by hand in "))
+                else {
+                    continue;
+                };
+                if let Some(values) = values_of(label, &file, &mut own, &mut ranks)
+                    && take_out(values, path)
+                {
+                    took = true;
+                    taken.push(Taken {
+                        path: path.clone(),
+                        file: label.to_string(),
+                        ruled: false,
+                    });
+                }
+            }
+            if !took {
+                settled = true;
+                break;
+            }
+        }
+        if !settled {
+            return Err(SpecError(format!(
+                "{id}: taking out hand-set values did not settle in 64 rounds"
+            )));
+        }
+        // Put back what no rule replaced, from the files as written. A value
+        // put back may stop a rule that set another path (a card field a
+        // rule's card would drop), so it goes round until every value still
+        // out has its rule's.
+        let mut rounds = 0;
+        loop {
+            let inherited = run(&own, &ranks)?;
+            let mut back = false;
+            for one in &mut taken {
+                let ruled = matches!(inherited.rules.get(&one.path), Some((_, None)));
+                if one.ruled == ruled && (ruled || rounds > 0) {
+                    continue;
+                }
+                one.ruled = ruled;
+                if ruled {
+                    continue;
+                }
+                let mut written = original.clone();
+                let mut written_ranks = originals.clone();
+                let Some(from) = values_of(&one.file, &file, &mut written, &mut written_ranks)
+                else {
+                    continue;
+                };
+                let from = from.clone();
+                if let Some(into) = values_of(&one.file, &file, &mut own, &mut ranks) {
+                    put_back(into, &from, &one.path);
+                    back = true;
+                }
+            }
+            rounds += 1;
+            if !back {
+                break;
+            }
+            if rounds > 64 {
+                return Err(SpecError(format!(
+                    "{id}: putting back hand-set values did not settle in 64 rounds"
+                )));
+            }
+        }
+        // The notes on what was taken go with it.
+        for one in taken.iter().filter(|one| one.ruled) {
+            if one.file == file {
+                if let Some(notes) = own.get_mut("evidence").and_then(Value::as_object_mut) {
+                    notes.retain(|note, _| !inherit::within(note, &one.path));
+                }
+            } else if let Some(part) = part_of(&one.file, &mut ranks) {
+                part.notes
+                    .retain(|note, _| !inherit::within(note, &one.path));
+            }
+        }
+        let inherited = run(&own, &ranks)?;
+        Ok(RulesOverHand { inherited, taken })
+    }
+
+    /// The species `id` drawn with the rules over the hands
+    /// ([`Library::rules_over_hand`]): `plantc --rules-only`.
+    ///
+    /// # Errors
+    ///
+    /// Fails as [`Library::rules_over_hand`] does, or if the spec left is
+    /// not valid.
+    pub fn spec_rules_only(&self, id: &str) -> Result<PlantSpec, SpecError> {
+        let ruled = self.rules_over_hand(id)?;
+        let text = serde_json::to_string(&ruled.inherited.spec)
+            .map_err(|error| SpecError(error.to_string()))?;
+        PlantSpec::from_json_in(&text, self)
+            .map_err(|error| SpecError(format!("{id} with the rules over the hands: {error}")))
     }
 
     /// The effective spec of a spec file's `text` (`file` names it in
@@ -3258,6 +3488,70 @@ mod tests {
             library.entry("thuja-plicata").unwrap().source(),
             source("thuja-plicata")
         );
+    }
+
+    /// With the rules over the hands, a value set by hand where a rule
+    /// gives one is taken out and the rule draws it; one whose rule has
+    /// no fact to read stays as set.
+    #[test]
+    fn rules_over_hand_takes_out_only_what_a_rule_replaces() {
+        let library = Library::builtin();
+        let ruled = library.rules_over_hand("acer-circinatum").unwrap();
+        let taken = |path: &str| {
+            ruled
+                .taken
+                .iter()
+                .find(|taken| taken.path == path)
+                .unwrap_or_else(|| panic!("{path} not taken"))
+        };
+        let density = taken("generator.params.space_density");
+        assert!(density.ruled);
+        assert_eq!(density.file, "sapindaceae/acer/acer-circinatum/spec.json");
+        assert_eq!(
+            ruled.inherited.rules["generator.params.space_density"],
+            ("_ranks/clade/spermatophyta.json".to_string(), None)
+        );
+        // No leaf colour stated: the hand foliage stays.
+        assert!(!taken("appearance.foliage").ruled);
+        let hand = library.inherited("acer-circinatum").unwrap();
+        assert_eq!(
+            crate::inherit::find(
+                ruled.inherited.spec.as_object().unwrap(),
+                "appearance.foliage"
+            ),
+            crate::inherit::find(hand.spec.as_object().unwrap(), "appearance.foliage")
+        );
+        // Its evidence note for the shoot spacing goes with it, and the
+        // spec left is valid.
+        assert_ne!(
+            ruled
+                .inherited
+                .notes
+                .get("generator.params.space_density")
+                .map(String::as_str),
+            Some("sapindaceae/acer/acer-circinatum/spec.json")
+        );
+        let spec = library.spec_rules_only("acer-circinatum").unwrap();
+        assert!(
+            (spec.generator.params["space_density"]
+                - library.spec("acer-circinatum").unwrap().generator.params["space_density"])
+                .abs()
+                > 1e-9
+        );
+    }
+
+    /// Every species of the library is a valid spec with the rules over
+    /// the hands, so the whole library can be drawn and judged that way.
+    #[test]
+    fn every_species_draws_with_the_rules_over_the_hands() {
+        let library = Library::builtin();
+        let failed: Vec<String> = library
+            .species()
+            .iter()
+            .filter_map(|entry| library.spec_rules_only(&entry.id).err())
+            .map(|error| error.to_string())
+            .collect();
+        assert!(failed.is_empty(), "{}", failed.join("\n"));
     }
 
     /// The rules at the vascular plants set the leaves at a node and the
