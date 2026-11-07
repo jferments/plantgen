@@ -43,11 +43,19 @@ site's origin, `base_m` and `top_m` in the site's y, `radius_m`, and
 metre; `Crown::envelope` gives it from a grown plant). `grow_under`
 dims every sky and sun ray of a face's habitat by exp(−density × its
 path inside each crown), as plant light does; less sun dries the face
-less, so it is wetter too. Rain is left as it is: a crown catches some
-and drips the rest. OSU Extension: roof mosses do best on north slopes,
+less, so it is wetter too. A crown holds back part of the rain: each
+rain ray loses `RAIN_HELD` (0.35) times the share of it the crown stops
+(a beech canopy holds 19% and runs 11% down its trunk, a spruce 39% and
+3%: Nihlgård 1970 in Glime, *Bryophyte Ecology* vol. 1, p. 1482 of the
+mirror's PDF). It gives some back as drip under its rim: `RIM_DRIP`
+(0.3, an estimate) times how much the crown stops, falling off inward
+and outward over a third of its radius (Tamm 1953, in *Bryophyte
+Biology*: *Hylocomium* grows fastest under the edge of a spruce crown).
+In this wet climate rain hardly limits a roof, so both move cover by a
+few points. OSU Extension: roof mosses do best on north slopes,
 "especially where trees shade them". `moss-shakes-tree.json` is the
 shake roof with a broadleaf crown (leaf area index 4) over its south
-slope: after 30 years that slope carries 58% moss against 11% in the
+slope: after 30 years that slope carries 55% moss against 11% in the
 open, Dicranoweisia and Rosulabryum in place of the sun-tolerant
 Niphotrichum and Ceratodon; the north slope stays at about 64%.
 
@@ -141,6 +149,20 @@ moss is, so only the hue comes from them. A shell is darker by
 rained on) sets the leaf angles and colour: wet moss is darker and a
 deeper green, dry moss paler, duller and yellower, its hair-points and
 hyaline tips greying it the more.
+
+A colony also looks as the light where it settled makes it
+(`Colony::light`, `MossKind::in_light`; Glime vol. 1). Floras describe a
+genus in part shade (light 0.45 to 0.65), so there nothing changes. In
+shade (light falling from 0.45 to 0.15) hair-points shorten by up to
+three fifths (*Racomitrium* 50-100% shorter in shade, Tallis 1959,
+p. 976) and leaves darken, red and blue falling against green (more
+chlorophyll as a canopy closes: *Brachythecium rutabulum*, p. 1757). In
+deep shade (0.2 to 0.03) shoots etiolate: half again as tall, leaves a
+fifth shorter and a quarter narrower, paler and yellower (pp. 946,
+959-960). In full sun (0.65 to 1) carotenoids yellow the leaves: red up
+three tenths, blue down two fifths (*Ceratodon* golden at
+carotenoid:chlorophyll 0.55 in sun, green at 0.35 in shade, p. 1735).
+Covers written before `light` was saved read as part shade.
 
 ### Tint: the level with no triangles
 
@@ -253,7 +275,8 @@ the roof genera of western Oregon and their spore output, moss darker and greene
 under it with no triangles of its own, and a view named for a genus
 finding a colony of that genus, a drawn cover writing as a glTF file
 with no required extensions, a tree's crown over a wooden deck letting
-moss grow there, and a surface stating its own reaction. A unit test in
+moss grow there, a surface stating its own reaction, and shade
+shortening hair-points and lengthening shoots while sun yellows leaves. A unit test in
 `mosses.rs` checks that neighbouring classes fit fully where they meet.
 
 ## Changing it
@@ -285,19 +308,19 @@ moss grow there, and a surface stating its own reaction. A unit test in
   across, though the north slope's cover (64%) already matches the
   rooftop study's "over 40%"; whether they should join into mats is for
   photos to say.
-- Growth rates, spread distances, spore output by fruiting and
-  colonisation order are estimates still to check against Glime's
-  *Bryophyte Ecology*. A colony at no vigour still spreads at three
+- Spread rates match Glime's *Bryophyte Ecology* in order (clones 6-8
+  mm a year, shoots 1.4-15 mm); spore output by fruiting, how far spores
+  fall (*Tortula truncata* 70% within 2 m, p. 594) and colonisation
+  order are still estimates. A colony at no vigour still spreads at three
   tenths of its genus's rate, so the cover of an upright face, where
   vigour is low, hangs on a few colonies.
 - The library has no shade moss of basic stone and mortar
   (*Rhynchostegium*, *Brachythecium*, *Amblystegium* on shaded walls),
   so a shaded concrete face loses its sun mosses and nothing takes
   their place.
-- A crown's drip and the still, humid air under it are not modelled:
-  shade only dries a face less. Tamm (1953, in *Bryophyte Biology*):
-  *Hylocomium splendens* grows fastest under the edges of spruce crowns,
-  where shade is not too deep and crown drip brings water and nutrients.
+- The still, humid air under a crown is not modelled beyond its shade,
+  nor the nutrients its throughfall carries (3-9 kg N/ha a year, Glime
+  pp. 1481, 1658); `RIM_DRIP` is an estimate no book sizes.
 
 ## Into the site fill
 
