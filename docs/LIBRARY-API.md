@@ -303,14 +303,35 @@ Ok(())
   cut back to its wall, `WallClip::from_extra`; 0 for any other plant).
   `Instance::from_bytes` reads them back. Schema 4 (`INSTANCE_SCHEMA`):
   the instances are as in schema 3, and the tile JSON gained the forest
-  floor and the logs (below); in schema 2 a climber's extra was its
-  wall's top alone, in decimetres.
+  floor and the logs (below) and the day it shows (`day`); in schema 2 a
+  climber's extra was its wall's top alone, in decimetres.
+- **The day of the year** a tile shows is its settings' day
+  (`FillSettings::options.day`, 196, mid-July, unless chosen; the
+  plan's and the JSON's `day`). Each prototype is drawn on it, so a
+  deciduous tree, shrub or vine stands bare in winter, puts out pale
+  leaves in spring and turns in autumn as its leaves' year
+  (`appearance.organs.leaf.leafing`) says. The stand is the same every
+  day: only what shows changes. A herb that dies back
+  (`development::Shoots`, from its `leaf_habit`, `life_span` and leaf
+  and flowering months) is placed only while its shoots are up; herbs of
+  every season are laid out together, those up in summer covering what
+  the plots give, so a spring herb keeps its place among them. A bare
+  crown lets more light through (`development::BARE_CROWN_LIGHT`,
+  against 0.1 in full leaf, from light measured under a leafless and a
+  leafy deciduous canopy), so a herb whose shoots stand in spring is
+  judged by the light under a still bare canopy. `stats.crowns_in_leaf`
+  is the share of tree crowns in leaf that day. Prototypes a write kept
+  are drawn again for a new day where their species' looks change with
+  the year.
 - **Ground cover and far canopy** come per stand cell in the plan
   (`cover`: kind and fraction; `canopy`: height, cover, colour), for
   hosts that draw ground cover and far forest with their own systems.
   The canopy's colour is its trees' foliage in full light, linear RGB,
   each species' weighed by its crowns' area, so a maple stand reads
-  lighter than a fir one from afar.
+  lighter than a fir one from afar. On the tile's day a deciduous crown's
+  leaves are tinted as they unfold and turn, and a bare crown shows its
+  twigs: its cover counts as the light they stop, so a bare maple stand
+  hides less than half the ground and reads grey-brown.
 - **The forest floor** comes per stand cell too (`cover[k].floor`,
   `Floor`): the shares of the ground under litter, moss and logs (side
   by side, together at most 1, the rest bare soil) and under herbs (over
