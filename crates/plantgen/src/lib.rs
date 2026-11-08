@@ -91,6 +91,7 @@ pub mod shed;
 pub mod shoots;
 pub mod site;
 pub mod site_field;
+pub mod snags;
 pub mod spec;
 pub mod spikelets;
 pub mod spines;

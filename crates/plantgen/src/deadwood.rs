@@ -452,7 +452,7 @@ pub fn lay(wood: &DownWood, stems: &[Stem], tile_m: f64, seed: u64) -> Vec<Laid>
 }
 
 /// The nine shifts of a tile that wraps: itself and its eight neighbours.
-fn images(tile_m: f64) -> impl Iterator<Item = [f64; 2]> {
+pub(crate) fn images(tile_m: f64) -> impl Iterator<Item = [f64; 2]> {
     (0..9).map(move |k| {
         #[allow(clippy::cast_precision_loss)]
         let shift = |d: i32| f64::from(d - 1) * tile_m;
@@ -492,13 +492,13 @@ fn segment_segment(p: [[f64; 2]; 2], q: [[f64; 2]; 2]) -> f64 {
 
 /// Sides round a log, and the most metres between its rings, at each
 /// level of detail (0 nearest to 3 farthest).
-const SIDES: [u32; 4] = [16, 10, 6, 4];
-const RING_STEP_M: [f64; 4] = [0.35, 0.9, 2.5, 1.0e9];
+pub(crate) const SIDES: [u32; 4] = [16, 10, 6, 4];
+pub(crate) const RING_STEP_M: [f64; 4] = [0.35, 0.9, 2.5, 1.0e9];
 
 /// A value from 0 to 1 that varies smoothly round the log (`angle`) and
 /// along it (`along`, metres) at `scale` metres, seeded by `seed`: two
 /// waves round and along, wrapped so it joins up round the log.
-fn wave(seed: u64, salt: u64, angle: f64, along: f64, scale: f64) -> f64 {
+pub(crate) fn wave(seed: u64, salt: u64, angle: f64, along: f64, scale: f64) -> f64 {
     let phase = |k: u64| rng::unit(rng::hash_words(&[seed, salt, k])) * 2.0 * math::PI;
     let a = math::sin(2.0 * angle + along / scale + phase(0));
     let b = math::sin(3.0 * angle - 1.7 * along / scale + phase(1));
@@ -506,12 +506,12 @@ fn wave(seed: u64, salt: u64, angle: f64, along: f64, scale: f64) -> f64 {
     (0.5 + 0.25 * a + 0.15 * b + 0.1 * c).clamp(0.0, 1.0)
 }
 
-fn linear(srgb: [u8; 3]) -> [f32; 3] {
+pub(crate) fn linear(srgb: [u8; 3]) -> [f32; 3] {
     #[allow(clippy::cast_possible_truncation)]
     srgb.map(|byte| crate::texture::srgb_to_linear(byte) as f32)
 }
 
-fn mix(a: [f32; 3], b: [f32; 3], t: f64) -> [f32; 3] {
+pub(crate) fn mix(a: [f32; 3], b: [f32; 3], t: f64) -> [f32; 3] {
     #[allow(clippy::cast_possible_truncation)]
     let t = t.clamp(0.0, 1.0) as f32;
     [
@@ -523,7 +523,7 @@ fn mix(a: [f32; 3], b: [f32; 3], t: f64) -> [f32; 3] {
 
 /// The moss that grows on a log: the species' own bark moss where its
 /// appearance states one, else the default bark moss's colour.
-fn moss_colour(appearance: Option<&Appearance>) -> [f32; 3] {
+pub(crate) fn moss_colour(appearance: Option<&Appearance>) -> [f32; 3] {
     appearance
         .and_then(|appearance| appearance.moss.as_ref())
         .map_or_else(|| crate::looks::Moss::default().colour, |moss| moss.colour)
@@ -739,21 +739,31 @@ pub fn draw(shape: &Shape, appearance: Option<&Appearance>, level: usize) -> Mes
             } else {
                 radius * (1.0 + pick(4))
             };
-            stub(&mut mesh, base, out, stub_r, reach, bark_colour, level);
+            stub(
+                &mut mesh,
+                base,
+                out,
+                stub_r,
+                reach,
+                (bark_colour, true),
+                level,
+            );
         }
     }
     mesh
 }
 
 /// A tapering stub of branch from `base` along `direction`, `reach`
-/// metres long, `radius` thick at its foot, barked.
-fn stub(
+/// metres long, `radius` thick at its foot, coloured `colour`: barked
+/// (its alpha the bark's, as a plant's bark is drawn) when the flag is
+/// set, else bare wood.
+pub(crate) fn stub(
     mesh: &mut Mesh,
     base: Vec3,
     direction: Vec3,
     radius: f64,
     reach: f64,
-    colour: [f32; 3],
+    (colour, barked): ([f32; 3], bool),
     level: usize,
 ) {
     let sides = if level == 0 { 6 } else { 4 };
@@ -773,7 +783,7 @@ fn stub(
             let angle = 2.0 * math::PI * f64::from(side) / f64::from(sides);
             let out = u * math::cos(angle) + v * math::sin(angle);
             #[allow(clippy::cast_possible_truncation)]
-            let alpha = -(r.max(1.0e-4) as f32);
+            let alpha = if barked { -(r.max(1.0e-4) as f32) } else { 1.0 };
             #[allow(clippy::cast_possible_truncation, clippy::cast_precision_loss)]
             let uv = [
                 (f64::from(side) / f64::from(sides)) as f32,

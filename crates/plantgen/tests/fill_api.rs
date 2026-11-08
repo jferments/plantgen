@@ -8,8 +8,8 @@ use std::sync::LazyLock;
 
 use plantgen::api::{
     API_VERSION, Community, Compression, Fill, FillSettings, INSTANCE_BYTES, INSTANCE_SCHEMA,
-    Instance, PROTOTYPES_FILE, PrototypeFiles, Quality, Settings, Site, StandMap, TileId, TilePlan,
-    read_prototypes,
+    Instance, PROTOTYPES_FILE, PrototypeFiles, Quality, Settings, Site, Snag, SnagShape, StandMap,
+    TileId, TilePlan, read_prototypes,
 };
 
 const TILE_M: f64 = 20.0;
@@ -167,7 +167,20 @@ fn an_instance_decodes_from_its_documented_layout() {
 #[test]
 fn a_written_tile_reads_back_and_writes_the_same_bytes() {
     let fill = &*FILL;
-    let plan = plan(fill);
+    let mut plan = plan(fill);
+    // A meadow holds no snags: stand one, made as a caller would.
+    assert!(plan.snags.is_empty());
+    plan.snags.push(Snag::new(
+        "pseudotsuga-menziesii",
+        [3.25, 7.5, 0.0],
+        SnagShape {
+            height_m: 11.3,
+            dbh_m: 0.42,
+            top_m: 0.31,
+            decay: 3,
+            seed: 7,
+        },
+    ));
     let dir = folder("round-trip");
     let json = plan.write(&dir).expect("write");
     assert_eq!(json, dir.join("5_-3.json"));
@@ -193,6 +206,7 @@ fn a_written_tile_reads_back_and_writes_the_same_bytes() {
     assert_eq!(read.canopy, plan.canopy);
     assert_eq!(read.stats, plan.stats);
     assert_eq!(read.logs, plan.logs);
+    assert_eq!(read.snags, plan.snags);
     assert_eq!(read.instance_bytes(), plan.instance_bytes());
     // Written again, the files are the same bytes.
     let again = folder("round-trip-again");
