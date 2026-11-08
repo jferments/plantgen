@@ -6,6 +6,7 @@
   "traits": {
     "podetium_cups": false,
     "podetium_branching": "rich",
+    "podetium_tips": "recurved",
     "podetium_forks": {"min": 2, "max": 4, "typical": 3},
     "podetium_fork_angle_deg": {"min": 25, "max": 50, "typical": 35},
     "podetium_height_m": {"min": 0.04, "max": 0.12, "typical": 0.06},
@@ -20,6 +21,7 @@
       "source": "usfs-feis",
       "note": "Munger 2008, FEIS Cladonia (Cladina) spp. (read 2026-11-08): dense mats of richly branched podetia 4-12 cm tall and 0.6-1.8 mm wide; growth 5.0, 5.3 and 5.4 mm a year (C. stellaris, rangiferina, arbuscula, Seward Peninsula) and 3.9-5.9 in northern Russia; no cups. Typical height 6 cm: C. portentosa, the Puget prairies' reindeer lichen (Calabria et al. 2016), forms mats up to 6 cm tall, and drier sites grow podetia 4-6 cm (Wikipedia, Cladonia portentosa and C. rangiferina)."
     },
+    "traits.podetium_tips": {"evidence": "SourceInferred", "source": "british-lichen-society", "note": "British Lichen Society species accounts (Cladonia portentosa, C. rangiferina, C. arbuscula, C. ciliata; read through a web search 2026-11-08): the terminal branches of C. rangiferina, C. arbuscula and C. ciliata are recurved and turned in one direction, C. ciliata's extreme tips curling down; C. portentosa's stand mostly erect in broccoli-like tufts, any recurved tips not turned one way. The Puget prairies hold C. ciliata, C. portentosa subsp. pacifica and C. rangiferina together (Calabria et al. 2016), so the subgenus takes recurved tips turned every which way."},
     "traits.podetium_forks": {
       "evidence": "SourceInferred",
       "source": "wikipedia",
