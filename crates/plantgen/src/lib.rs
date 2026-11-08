@@ -1712,6 +1712,42 @@ pub mod venation;
 /// foliage at 480 years (Sillett et al. 2018: 630 to 1,480). Every
 /// conifer stays within its reference sizes.
 ///
+/// 211: a tree grown in a stand stands among its crown class
+/// ([`spec::class_spacing`]). Its like stood as far apart as all of a
+/// fully stocked stand's stems, so a young Douglas-fir's crown reached 0.6
+/// of the width the Forest Vegetation Simulator's equation gives a
+/// stand-grown tree its size, and its overtopped trees grew as poles; now
+/// a canopy tree's peers are the half of the stems that are dominant or
+/// codominant ([`spec::DOMINANT_SHARE`]), sqrt(2) farther apart, and an
+/// overtopped tree stands among the crowns over it. Laid out to the plots'
+/// layer covers, a 35-year Douglas-fir stand holds 1,737 trees a hectare
+/// over 5 cm and 39 m² of basal area where it held 3,934 and 62, against
+/// 1,790 and 36 in McArdle et al. (1961); its crowns reach 0.73 of the
+/// equation's width, and 1.06 at 85 years where they reached 0.82. Past
+/// the yield tables' ages the thinning stand's own spacing takes over once
+/// it is wider (from about 250 years for a canopy tree), but a tree that
+/// grew as a dominant keeps the wider crown and thicker stem it grew: at
+/// 480 years a Douglas-fir in a stand reaches 8.5 m from its trunk where
+/// it reached 7.7, on a 148 cm stem where 134, 1.18 of the equation's
+/// width for its size as before. A tree come up beneath an older canopy,
+/// and every plant outside a stand, grows as before.
+///
+/// 212: the pine family's wood keeps a twentieth of each year's sag
+/// (Pinaceae `bend_set` 0.05, from 0.15), so an old limb's side shoots,
+/// which lengthen for centuries with needles only near their tips, angle
+/// out and down instead of hanging straight down in curtains of bare
+/// strings under a 480-year Douglas-fir's lower crown. Every conifer stays
+/// within its reference sizes; the 480-year Douglas-fir holds 744 m² of
+/// foliage (757 before) and western hemlock 821 m² (835).
+///
+/// 213: an old conifer's side shoots lay down a segment every 20 cm
+/// (`pinidae` revision 23, Pinaceae `seg_side` 0.2, coming in from 100
+/// years and in full by 200), drawing their foliage at one place for each
+/// three years they hold. A 500-year Douglas-fir at a stand's edge, which
+/// passed the 2 million segment limit near 400 years, has 1.02 million; a
+/// 480-year Douglas-fir in a stand has 258,000 (724,000 before) and 844 m²
+/// of foliage (757). Young trees grow as before.
+///
 /// 216: a card tier draws every cut leaf (a yarrow's, a poison
 /// hemlock's) on a card of its own before it gives the longest richer
 /// ones: each a flat card first, then crossed bent cards, then bent

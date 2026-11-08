@@ -413,6 +413,38 @@ pub const OLDEST_AGE: f64 = 1_000.0;
 /// foliage: a 55 cm Douglas-fir with its crown from 51 m up.
 pub const STAND_SPACING: f64 = 0.115;
 
+/// The share of a fully stocked stand's stems whose crowns stand among
+/// each other: the dominant and codominant trees, whose crowns make the
+/// canopy, while the intermediate and suppressed trees stand under them.
+/// [`STAND_SPACING`] spaces all of a stand's stems, but a crown meets only
+/// the crowns at its own height, so a plant's like stand
+/// `1 / sqrt(DOMINANT_SHARE)` times farther apart than the stand's stems
+/// ([`class_spacing`]). With all stems as its neighbours, a Douglas-fir
+/// grown in a stand reached 0.6 of the crown width Crookston's equation
+/// gives a stand-grown tree of its diameter, height and crown length at 35
+/// years (Forest Vegetation Simulator, Pacific Northwest Coast variant), and
+/// the trees under the canopy were poles; laid out to the plots' layer
+/// covers, a 35-year Douglas-fir stand held 3,934 trees a hectare over 5 cm
+/// across and 62 m² of basal area, twice the 1,790 trees and 36 m² of a
+/// fully stocked stand (McArdle et al. 1961, Table 2, site index 140). At
+/// half the stems it holds 1,737 trees, 39 m² and a 16.8 cm average tree
+/// (16.4 in the table); at 45 and 80 years 78% and 80% of the table's
+/// trees, and 84% and 69% of its basal area. The value is this model's
+/// choice, fitted at 35 years.
+pub const DOMINANT_SHARE: f64 = 0.5;
+
+/// How many times farther apart than all of a stand's stems the stems of
+/// a plant's crown class stand while the stand is fully stocked: a
+/// dominant's peers are the other dominants ([`DOMINANT_SHARE`]), and the
+/// trees overtopped by crowns `relative_height` times their own height
+/// stand among those crowns, as far apart as they are for that height.
+/// Past the yield tables' ages the thinning stand's own spacing takes over
+/// once it is wider ([`stand_spacing`]).
+#[must_use]
+pub fn class_spacing(relative_height: f64) -> f64 {
+    relative_height.max(1.0) / DOMINANT_SHARE.sqrt()
+}
+
 /// How a stand of the same age opens past the yield tables' ages, as its
 /// relative spacing at stand ages in years: [`STAND_SPACING`] to 160 years
 /// (McArdle et al. 1961), then opening as the canopy trees die and gaps
@@ -557,7 +589,18 @@ pub struct VariantPlan {
     /// package grows it. Empty: `seeds`.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub dealt_among: Vec<u64>,
+    /// The height in metres of a wall the plant climbs: each variant grows
+    /// at its foot in the open, holding to it as a climber holds to a
+    /// site's walls ([`crate::export::grow_on_wall`]), where a stands
+    /// fill's wall climbers grow ([`crate::fill::Fill::packages`]). None:
+    /// its environments, and its host's wood for a guest.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub wall_m: Option<f64>,
 }
+
+/// The highest wall a spec's variants may grow at the foot of
+/// ([`VariantPlan::wall_m`]), metres.
+pub const MAX_WALL_M: f64 = 50.0;
 
 /// One variant to grow.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
@@ -1517,6 +1560,25 @@ impl PlantSpec {
         {
             return fail("variants.stand_spacing must be 0.05 to 0.5".into());
         }
+        if let Some(wall) = self.variants.wall_m {
+            if !(wall > 0.0 && wall <= MAX_WALL_M) {
+                return fail(format!(
+                    "variants.wall_m must be above 0 and at most {MAX_WALL_M} m, found {wall}"
+                ));
+            }
+            // At a wall's foot a plant grows in the open on the wall
+            // alone: no other setting, and no host's wood.
+            if self.variants.environments != [Environment::Open]
+                || !self.variants.conditions.is_empty()
+                || self.host.is_some()
+            {
+                return fail(
+                    "variants.wall_m grows the plant at a wall's foot in the open: \
+                     its environments must be only open, with no conditions and no host"
+                        .into(),
+                );
+            }
+        }
         // Each variant is named by its environment and seed, so a
         // conditions document's preset labels its variants and may not be
         // an environment's or another document's.
@@ -1924,6 +1986,15 @@ mod tests {
         assert!((stand_spacing(1000.0) - 0.27).abs() < 1e-12);
     }
 
+    #[test]
+    fn a_crown_class_stands_among_its_own() {
+        // Dominants are half the stems, so they stand sqrt(2) farther
+        // apart; overtopped trees as far apart as the crowns over them.
+        assert!((class_spacing(1.0) - std::f64::consts::SQRT_2).abs() < 1e-12);
+        assert!((class_spacing(0.0) - class_spacing(1.0)).abs() < 1e-12);
+        assert!((class_spacing(1.3) - 1.3 * std::f64::consts::SQRT_2).abs() < 1e-12);
+    }
+
     use super::*;
 
     #[test]
@@ -2248,6 +2319,51 @@ mod tests {
                 });
             },
             "roots prop must be between 0 and 256, found 1000",
+        );
+    }
+
+    #[test]
+    fn a_wall_to_climb_is_grown_at_in_the_open_alone() {
+        let mut ivy = PlantSpec::builtin("hedera-helix").unwrap();
+        ivy.host = None;
+        ivy.variants.conditions.clear();
+        ivy.variants.environments = vec![Environment::Open];
+        ivy.variants.wall_m = Some(6.0);
+        ivy.validate().unwrap();
+        // It serializes only when stated, so no other spec's key moves.
+        let text = serde_json::to_string(&ivy).unwrap();
+        assert!(text.contains("\"wall_m\":6"));
+        ivy.variants.wall_m = None;
+        assert!(!serde_json::to_string(&ivy).unwrap().contains("wall_m"));
+        let refused = |change: &dyn Fn(&mut PlantSpec), expected: &str| {
+            let mut changed = ivy.clone();
+            changed.variants.wall_m = Some(6.0);
+            change(&mut changed);
+            let message = changed.validate().unwrap_err().0;
+            assert!(message.contains(expected), "{message}");
+        };
+        refused(
+            &|spec| spec.variants.wall_m = Some(0.0),
+            "variants.wall_m must be above 0",
+        );
+        refused(
+            &|spec| spec.variants.wall_m = Some(80.0),
+            "variants.wall_m must be above 0 and at most 50 m",
+        );
+        refused(
+            &|spec| spec.variants.environments = vec![Environment::Open, Environment::Interior],
+            "its environments must be only open",
+        );
+        refused(
+            &|spec| {
+                spec.host = Some(HostSpec {
+                    species: "pseudotsuga-menziesii".into(),
+                    age: 30.0,
+                    environment: Environment::Open,
+                    seed: 1,
+                });
+            },
+            "no host",
         );
     }
 
