@@ -78,7 +78,10 @@ imagekit fetch folder ~/Pictures/plants --licence cc-by --creator "Your Name" --
   other). Silhouette measures need whole plants, and in iNaturalist only
   about one photo in twenty shows one; Pl@ntNet holds tens to hundreds for
   a common European species, few for North American ones. The images come
-  from `bs.plantnet.org`.
+  from `bs.plantnet.org`. With `--organ`, `--n` counts photos of that
+  organ only: a taxon with 60 habit photos held still tops up to `--n`
+  leaf photos with `--organ leaf`. Each row keeps the organ in
+  `source.organ`; an index from before that reads it from `source.why`.
 
 **Fetch by view.** A species needs photos of each view to a target (whole
 plant, leafless, shoot, leaf face-on and underside, flower face and side,
