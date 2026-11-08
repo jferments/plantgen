@@ -94,17 +94,16 @@ Paper 36).
   and the broadleaf crowns' own leaf area is still too thin to say how much
   more an alder's lets through.
 - Prairie on dry ground (`--site 0.3,1,30,0`), a hectare: 2 and 8 years
-  after a fire, old oaks (and a fir) cover 14-16% at 8-9 trees a
-  hectare, under the savanna's 20% (LANDFIRE BpS 11200) and within the
-  under-1 to 49 trees a hectare of the 1800s on Joint Base Lewis-McChord's
-  prairies (Peter and Harrington 2014); thatch covers 28%, then 51%, of the
-  ground. Unburnt for 30 years it has closed (trees 78% from above, 169 a
-  hectare), and at 80 years it holds 116 Douglas-firs a hectare, with the
-  oaks under them, where those prairies hold 122-207 today. Against photos
-  of the Mima Mounds its grasses are still thin tufts where the sod is
-  continuous. Moss covers 11-13% of the ground between them (14% on
-  prairies unburnt for 10 years, Calabria et al. 2020); the Cladonia
-  lichens are not drawn.
+  after a fire, old oaks cover 14-16% at 8-9 trees a hectare, under the
+  savanna's 20% (LANDFIRE BpS 11200) and within the under-1 to 49 trees a
+  hectare of the 1800s on Joint Base Lewis-McChord's prairies (Peter and
+  Harrington 2014). Thatch covers 26%, then 45%, of the ground, moss
+  11-13%, and shrubs 1%, then 13%. Unburnt for 30 years it has closed
+  (trees 78% from above, 177 a hectare). At 80 years it holds 142 trees a
+  hectare, 96 of them Douglas-firs, with the oaks under them; those
+  prairies' fir stands hold 122-207 today. Against photos of the Mima
+  Mounds its grasses are still thin tufts where the sod is continuous,
+  and the Cladonia lichens are not drawn.
 - Yard trees: crowns cover most of a yard cell, with Douglas-fir, redcedar
   and dogwood; bigleaf maple fades early because its spec's lifespan reads
   50 years.
