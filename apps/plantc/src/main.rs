@@ -7607,7 +7607,7 @@ fn render_fill(
             );
         }
         let (generator, plant) = &grown[&index];
-        // Its foot in the drawn frame, as `placed_instance` sets it.
+        // Its foot in the drawn frame, as `plantgen::far::placed` sets it.
         let at = Vec3::new(
             field.corner[0] + f64::from(instance.position[0]),
             f64::from(instance.position[2]),
