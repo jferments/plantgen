@@ -345,6 +345,15 @@ Ok(())
   spreading leading after a disturbance and the deepest wefts later, as
   Hylocomium does in old growth. A host can tint its ground with each
   genus's `mosses::MossKind::far_colour`.
+  Where fires keep a stand open (a community's `fire_years`),
+  `floor.lichen` is the share under Cladonia lichen mats between the
+  grasses, beside the moss: none until 5 years after a fire, 13% of the
+  ground from 20 years (`development::prairie_lichen`, from Calabria et
+  al. 2016's five south Puget Sound prairies), less under closing crowns
+  and shrubs; left out of the JSON where there is none. The lichens
+  themselves are library taxa (`lichens::kinds`: the reindeer lichens,
+  Cladonia subgenus Cladina, first): a host tints the ground with
+  `LichenKind::far_colour` from afar and draws `lichens::draw_mat` near.
 - **Logs** lie on a natural stand's floor (`TilePlan::logs`, the JSON's
   `logs`; none in a planted or kept stand, and on cleared ground only
   those its own trees drop): each with the species it

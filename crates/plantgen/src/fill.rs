@@ -91,6 +91,16 @@ pub struct Member {
     /// Its weight against the other members, 1 unless given.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub abundance: Option<f64>,
+    /// Its mean cover in the community's plots, percent of the ground,
+    /// in place of an abundance: its layer's cover is then split among
+    /// its members as the plots split it, each drawn as often as its
+    /// cover over the area of its crown's disc
+    /// ([`stand_tile::Member::room_radius_m`]), so a bracken that fills
+    /// 7 m² stands as often as 5% of the ground over 7 m² gives, not as
+    /// often as a fescue of 0.08 m². A member that gives it gives its
+    /// layer too, and the other members of that layer give theirs.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub cover: Option<f64>,
 }
 
 impl Member {
@@ -115,6 +125,20 @@ pub struct Community {
     /// unless given.
     #[serde(default, skip_serializing_if = "is_natural")]
     pub origin: development::Origin,
+    /// The mean years between the surface fires that keep it open, for a
+    /// prairie or a savanna: its cells' years since disturbance are then
+    /// the years since their last fire, and its stands develop as
+    /// [`development::develop_kept`] has them, old trees standing over a
+    /// sod the fires leave, and thatch building between the grasses
+    /// ([`Floor::thatch`]). The Willamette Valley and Puget Trough's
+    /// prairies burnt every 10 years on average in LANDFIRE's model of
+    /// them (Biophysical Setting 11200, 2020: 13 years between surface
+    /// fires, 51 between mixed and 290 between replacing ones), most fires
+    /// set by the peoples who lived there; Fort Lewis's prairies are
+    /// burnt every 3 to 5 years (Tveten and Fonda 1999). `None` for a
+    /// stand that only a stand-replacing disturbance starts.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub fire_years: Option<f64>,
 }
 
 #[allow(clippy::trivially_copy_pass_by_ref)]
@@ -155,6 +179,35 @@ impl Community {
                 return Err(Error(format!(
                     "community {}: {} abundance must be 0 or more",
                     self.id, member.species
+                )));
+            }
+            if let Some(cover) = member.cover {
+                let problem = if !(cover.is_finite() && cover >= 0.0) {
+                    Some("cover must be 0 or more")
+                } else if member.abundance.is_some() {
+                    Some("gives both a cover and an abundance")
+                } else if member.layer.is_none() {
+                    Some("gives a cover but no layer")
+                } else {
+                    None
+                };
+                if let Some(problem) = problem {
+                    return Err(Error(format!(
+                        "community {}: {} {problem}",
+                        self.id, member.species
+                    )));
+                }
+            }
+            // A layer's members are weighed alike: by cover or by
+            // abundance.
+            if let Some(other) = self.members.iter().find(|other| {
+                other.layer.is_some()
+                    && other.layer == member.layer
+                    && other.cover.is_some() != member.cover.is_some()
+            }) {
+                return Err(Error(format!(
+                    "community {}: {} and {} keep to one layer, but only one gives its cover",
+                    self.id, member.species, other.species
                 )));
             }
         }
@@ -1195,6 +1248,20 @@ pub struct Floor {
     /// Under logs ([`TilePlan::logs`]) seen from above.
     pub wood: f32,
     pub herb: f32,
+    /// Under dead grass on the ground, where fires keep the stand
+    /// ([`Community::fire_years`]): the thatch that builds between the
+    /// grasses after a fire burns it away ([`development::thatch_built`]),
+    /// on the ground the litter, moss and logs leave. Left out of the JSON
+    /// where there is none.
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub thatch: f32,
+    /// Under Cladonia lichen mats, where fires keep the stand
+    /// ([`Community::fire_years`]): the reindeer and cup lichens that
+    /// come back between the grasses in the years after a fire
+    /// ([`development::prairie_lichen`]), on the ground the logs and moss
+    /// leave. Left out of the JSON where there is none.
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub lichen: f32,
     /// The moss genera of its [`Self::moss`], largest share first, at most
     /// three ([`development::floor_mosses`]); left out of the JSON where
     /// it has no moss.
@@ -1209,6 +1276,11 @@ pub struct FloorMoss {
     pub genus: u16,
     /// Its share of the cell's moss, 0 to 1.
     pub share: f32,
+}
+
+#[allow(clippy::trivially_copy_pass_by_ref)]
+fn is_zero(value: &f32) -> bool {
+    *value == 0.0
 }
 
 #[allow(clippy::trivially_copy_pass_by_ref)]
@@ -1784,6 +1856,8 @@ impl Species {
 struct StandMember {
     species: usize,
     abundance: f64,
+    /// Its cover in the community's plots, percent ([`Member::cover`]).
+    cover: Option<f64>,
     environments: Vec<Environment>,
     layer: Option<Layer>,
     /// Its candidate on a site that suits it fully.
@@ -1806,7 +1880,11 @@ impl StandMember {
                 let most =
                     niche_layers.map_or(0.0, |layers| layers.into_iter().fold(0.0, f64::max));
                 let mut layers = [0.0; 4];
-                layers[slot] = if own > 0.0 {
+                // A member whose plot cover the community gives stands by
+                // that cover, not by its niche's abundance.
+                layers[slot] = if member.cover.is_some() {
+                    1.0
+                } else if own > 0.0 {
                     own
                 } else if most > 0.0 {
                     most
@@ -1831,6 +1909,7 @@ impl StandMember {
         Ok(Self {
             species: at,
             abundance: member.abundance.unwrap_or(1.0),
+            cover: member.cover,
             environments: member.environments(),
             layer: member.layer,
             candidate: Candidate {
@@ -2042,11 +2121,7 @@ impl Fill {
         };
         for community in 0..fill.communities.len() {
             for age in fill.settings.stand_ages.clone() {
-                let stand = development::develop_as(
-                    &fill.candidates(community, None),
-                    age,
-                    fill.communities[community].origin,
-                );
+                let stand = fill.develop(community, &fill.candidates(community, None), age);
                 let canopy = fill.canopy_m(community);
                 for cohort in &stand.cohorts {
                     let member = &fill.stands[community][cohort.candidate];
@@ -2080,6 +2155,23 @@ impl Fill {
                 .collect(),
         );
         Ok(fill)
+    }
+
+    /// Community `community`'s stand `age` years after its disturbance,
+    /// or after its last fire where fires keep it
+    /// ([`Community::fire_years`]).
+    fn develop(
+        &self,
+        community: usize,
+        candidates: &[development::Candidate],
+        age: f64,
+    ) -> development::Development {
+        let community = &self.communities[community];
+        if community.fire_years.is_some() {
+            development::develop_kept(candidates, age, community.origin)
+        } else {
+            development::develop_as(candidates, age, community.origin)
+        }
     }
 
     /// The index of the prototype `key`, added if it is new.
@@ -2213,7 +2305,7 @@ impl Fill {
         let environment = if beneath_m.is_some() || cohort.overtopped {
             Environment::Suppressed
         } else {
-            member.environment(open_grown)
+            member.environment(open_grown || cohort.veteran)
         };
         #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
         let age_tenths = (cohort.age * 10.0).round() as u32;
@@ -3152,12 +3244,44 @@ impl Fill {
             // The mosses grow through the year beneath the summer's herbs.
             let understorey =
                 1.0 - (1.0 - layout.shrub_cover) * (1.0 - layout.summer_herb_cover * kept_herbs);
-            let moss =
+            let kept = self.communities[community].fire_years.is_some();
+            let mut moss =
                 (development::ground_moss(canopy_cover, understorey, moisture, layout.leaf_litter)
                     * (1.0 - wood))
                     .clamp(0.0, 1.0 - wood);
-            let litter = (1.0 - wood - moss).max(0.0)
-                * (canopy_cover / development::LITTER_CLOSURE).min(1.0);
+            if kept {
+                // A prairie's moss grows in the open, between the grasses.
+                moss = moss
+                    .max(development::prairie_moss(self.settings.stand_ages[age]) * (1.0 - wood));
+            }
+            // Under a fire-kept stand's few trees their litter lies only
+            // beneath their crowns: the grass between them carries the
+            // fires that burn it.
+            let reach = if kept {
+                canopy_cover.min(1.0)
+            } else {
+                (canopy_cover / development::LITTER_CLOSURE).min(1.0)
+            };
+            // A prairie's Cladonia mats grow in the open between the
+            // grasses, back some years after each fire.
+            let lichen = if kept {
+                development::prairie_lichen(
+                    self.settings.stand_ages[age],
+                    canopy_cover,
+                    layout.shrub_cover,
+                )
+                .min((1.0 - wood - moss).max(0.0))
+            } else {
+                0.0
+            };
+            let litter = (1.0 - wood - moss - lichen).max(0.0) * reach;
+            let thatch = if kept {
+                (1.0 - wood - moss - lichen - litter).max(0.0)
+                    * herb_cover.min(1.0)
+                    * development::thatch_built(self.settings.stand_ages[age])
+            } else {
+                0.0
+            };
             let shares = [litter, moss, wood, herb_cover];
             for (sum, share) in floor_m2.iter_mut().zip(shares) {
                 *sum += share * cell_m * cell_m;
@@ -3192,6 +3316,8 @@ impl Fill {
                 moss: moss as f32,
                 wood: wood as f32,
                 herb: herb_cover as f32,
+                thatch: thatch as f32,
+                lichen: lichen as f32,
                 mosses,
             };
             #[allow(clippy::cast_possible_truncation)]
@@ -3540,10 +3666,10 @@ impl Fill {
     #[allow(clippy::too_many_lines)]
     fn lay_out(&self, key: &LayoutKey) -> Result<Layout, Error> {
         let candidates = self.candidates(key.community, Some(&key.suits));
-        let stand = development::develop_as(
+        let stand = self.develop(
+            key.community,
             &candidates,
             self.settings.stand_ages[key.age],
-            self.communities[key.community].origin,
         );
         let mut chosen = Vec::new();
         for cohort in &stand.cohorts {
@@ -3616,17 +3742,23 @@ impl Fill {
                         }
                     }
                 }
-                let member = stand_tile::Member {
+                let mut member = stand_tile::Member {
                     id: *index,
                     layer,
                     share: *share,
                     height_m: size.height,
                     crown_base_m: size.crown_base.unwrap_or(0.0),
                     crown_radius_m: size.crown_radius,
+                    foliage_radius_m: size.foliage_radius,
                     light_needed: own.light_needed,
                     leafing: own.leafing.clone(),
                     light_day: own.shoots.map(|shoots| shoots.middle()),
                 };
+                // Drawn as often as its plot cover over its crown's disc.
+                if let Some(cover) = self.stands[key.community][*candidate].cover {
+                    let radius = member.room_radius_m().max(stand_tile::FINE_CELL_M);
+                    member.share *= cover / (std::f64::consts::PI * radius * radius);
+                }
                 let traits = (
                     self.species[*species].spec.appearance.foliage,
                     *species,
@@ -3675,7 +3807,13 @@ impl Fill {
                 (species, dbh * plant.scale, plant.at_m)
             })
             .collect();
-        let origin = self.communities[key.community].origin;
+        // A fire-kept stand's floor holds only its own trees' logs, as
+        // cleared ground's does: no forest stood there before it.
+        let origin = if self.communities[key.community].fire_years.is_some() {
+            development::Origin::Cleared
+        } else {
+            self.communities[key.community].origin
+        };
         let mut wood = if members.iter().any(is_tree) {
             crate::deadwood::DownWood::at(
                 stand_age,
@@ -3820,7 +3958,7 @@ impl Fill {
                 } else {
                     [0.0, 0.0]
                 };
-                let radius = member.crown_radius_m * plant.scale;
+                let radius = member.room_radius_m() * plant.scale;
                 if matches!(member.layer, niche::Layer::Canopy | niche::Layer::Subcanopy) {
                     let area = radius * radius;
                     let (foliage, species, _) = traits[plant.member];
