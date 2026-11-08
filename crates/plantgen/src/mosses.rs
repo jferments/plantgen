@@ -589,6 +589,54 @@ impl MossKind {
     }
 }
 
+/// Days with 0.01 inch (0.25 mm) of rain or more, January to December, at
+/// Portland International Airport: NOAA's 1991-2020 normals (station
+/// USW00024229, as tabled in Wikipedia's "Portland, Oregon", read
+/// 2026-11-07). 157 a year: wet winters, three or four in July and August.
+pub const PORTLAND_RAIN_DAYS: [f64; 12] = [
+    18.7, 15.7, 17.8, 17.4, 13.2, 9.2, 3.7, 3.6, 6.7, 13.5, 18.3, 19.2,
+];
+
+/// How wet moss is drawn on `day` of the year (1 to 365), as
+/// [`DrawOptions::hydration`]: the share of days with rain at that time of
+/// year in `rain_days` (per month, January first), straight between the
+/// middles of the months. Mosses take water only from rain, not from dew
+/// (*Grimmia pulvinata* on walls, Proctor 2004 in Glime, *Bryophyte
+/// Ecology* vol. 1 p. 1303), and a wet spell outlasts its rain, so a rainy
+/// day's moss is drawn wet; the share of rain days is an estimate of how
+/// often moss is wet, not a measured one. Portland: 0.6 in January, 0.12
+/// in July.
+#[must_use]
+pub fn hydration_on(day: f64, rain_days: &[f64; 12]) -> f64 {
+    const LENGTHS: [f64; 12] = [
+        31.0, 28.0, 31.0, 30.0, 31.0, 30.0, 31.0, 31.0, 30.0, 31.0, 30.0, 31.0,
+    ];
+    let mut middles = [0.0; 12];
+    let mut start = 0.0;
+    for (month, length) in LENGTHS.iter().enumerate() {
+        middles[month] = start + 0.5 * length;
+        start += length;
+    }
+    let share = |month: usize| rain_days[month] / LENGTHS[month];
+    let day = (day - 0.5).rem_euclid(365.0);
+    // The month whose middle is at or before `day`, December's before
+    // the middle of January.
+    let before = middles
+        .iter()
+        .rposition(|middle| *middle <= day)
+        .unwrap_or(11);
+    let after = (before + 1) % 12;
+    let from = middles[before];
+    let to = if after == 0 {
+        middles[0] + 365.0
+    } else {
+        middles[after]
+    };
+    let day = if day < from { day + 365.0 } else { day };
+    let t = ((day - from) / (to - from)).clamp(0.0, 1.0);
+    (share(before) + (share(after) - share(before)) * t).clamp(0.0, 1.0)
+}
+
 /// The share of the year a surface of `wetness` stays moist long enough
 /// for mosses to grow.
 fn growing_time(wetness: f64) -> f64 {
