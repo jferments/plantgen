@@ -221,11 +221,16 @@ decompose Cb(s, j) : culm_branches > 0 && j > 1 && rand() < culm_branches ->
 decompose Cb(s, j) -> ;
 
 # A living tiller's older leaves, dead but still on it (revision 11):
-# lower on the tiller than its green blades, so they stand out wider and
-# bend as thatch does. Their draws come after every other draw of the
+# a grass leaf grows up from inside the sheaths of the ones before it, so
+# the older a leaf, the further out and lower on the tiller it stands,
+# and a dead one, without the turgor that held it up, leans out from the
+# tuft. The j-th of dead_leaves leans j / (dead_leaves + 1) of the way
+# from the green blades' angle to the ground, the oldest nearly flat
+# (the model's choice), and bends as thatch does. Their draws come after every other draw of the
 # tiller, so a grass with dead_leaves 0 draws as before.
 decompose Dv(j) : j > 0 ->
-    [ /(j * divergence + 90 + uniform(-roll_spread, roll_spread)) &(leaf_angle * uniform(1.5, 3)) $
+    [ /(j * divergence + 90 + uniform(-roll_spread, roll_spread))
+      &(leaf_angle + (90 - leaf_angle) * j / (dead_leaves + 1) * uniform(0.6, 1)) $
       Db(leaf_length * (1 - exp(-tg / maturity)) * sqrt(rs) * uniform(1 - leaf_spread, 1 + leaf_spread),
          arch * uniform(0.5, 1.5)) ]
     Dv(j - 1);
