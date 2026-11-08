@@ -20,8 +20,8 @@ fn look(spec: &PlantSpec, organ: &str) -> Look {
 
 #[test]
 fn a_heads_varieties_draw_its_rays_across_their_range() {
-    // Yarrow: 5 to 8 rays, rarely 3; 10 to 20 disc florets; 10 to 100
-    // heads in a corymb.
+    // Yarrow: 5 to 8 rays, rarely 3; 10 to 20 disc florets; 10 to over
+    // 100 heads in a corymb (150 at most here).
     let spec = PlantSpec::builtin("achillea-millefolium").unwrap();
     let head = look(&spec, "flower");
     assert_eq!(head.varieties.len(), VARIETIES);
@@ -42,10 +42,11 @@ fn a_heads_varieties_draw_its_rays_across_their_range() {
         Shape::Head(head) => head.florets,
         _ => 0,
     };
+    // A compound corymb's count is each branch's times its branches.
     let heads = |look: &Look| {
-        look.inflorescence
-            .as_ref()
-            .map_or(0, |cluster| cluster.cluster.flowers)
+        look.inflorescence.as_ref().map_or(0, |cluster| {
+            cluster.cluster.flowers * cluster.cluster.branches.max(1)
+        })
     };
     assert_eq!(counts(rays), [5, 6, 7, 8]);
     let florets = counts(florets);
@@ -55,7 +56,7 @@ fn a_heads_varieties_draw_its_rays_across_their_range() {
     );
     let heads = counts(heads);
     assert!(
-        heads[0] >= 10 && heads[3] <= 100 && heads[0] < heads[3],
+        heads[0] >= 10 && heads[3] <= 150 && heads[0] < heads[3],
         "{heads:?}"
     );
     // An organ is drawn as the variety its id picks, and each variety
