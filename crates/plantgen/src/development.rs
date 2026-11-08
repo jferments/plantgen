@@ -839,6 +839,40 @@ pub const VETERAN_AGE: f64 = 0.2;
 /// fire before ([`develop_kept`]), this model's reading of the classes.
 pub const FIRE_FREE_CLOSURE: f64 = 28.0;
 
+/// The share of a fire-kept prairie's ground under moss, long after its
+/// last fire. The south Puget Sound's native prairies are "dominated by
+/// Idaho fescue (Festuca idahoensis var. roemeri) and mosses (especially
+/// Rhacomitrium canescens)" (Chappell, Washington Natural Heritage
+/// Program, Native Vegetation of the South Puget Sound Prairie Landscape:
+/// Idaho fescue "generally occupying 30-70 percent cover"). On Glacial Heritage and
+/// Mima Mounds prairies left unburnt for more than 10 years, the three
+/// commonest mosses covered 7.4% (Racomitrium elongatum, now
+/// Niphotrichum), 3.6% (Rhytidiadelphus triquetrus) and 2.9% (Pleurozium
+/// schreberi) of the ground (Calabria et al. 2020, Plant and Soil 456:
+/// 307-321), 14% together, the value here; the rarer mosses and the
+/// Cladonia lichens add to it.
+pub const PRAIRIE_MOSS: f64 = 0.14;
+
+/// The share of its moss cover a prairie keeps just after a fire: across
+/// five south Puget Sound prairies, burnt plots held about 60% of the
+/// unburnt plots' bryophyte and lichen cover and 18% of their biomass
+/// (Calabria et al. 2016, Northwest Science 90(4), doi 10.3955/046.090.0407).
+pub const MOSS_AFTER_FIRE: f64 = 0.6;
+
+/// The years a prairie's moss takes to grow back after a fire: Calabria et
+/// al. (2020) took plots over 10 years unburnt as undisturbed. The moss
+/// returns over them as `1 - exp(-3 since / years)`, this model's curve.
+pub const PRAIRIE_MOSS_YEARS: f64 = 10.0;
+
+/// The share of a fire-kept prairie's ground under moss `since` years
+/// after its last fire: [`MOSS_AFTER_FIRE`] of [`PRAIRIE_MOSS`] just
+/// after, all of it by [`PRAIRIE_MOSS_YEARS`].
+#[must_use]
+pub fn prairie_moss(since: f64) -> f64 {
+    let back = 1.0 - (-3.0 * since.max(0.0) / PRAIRIE_MOSS_YEARS).exp();
+    PRAIRIE_MOSS * (MOSS_AFTER_FIRE + (1.0 - MOSS_AFTER_FIRE) * back)
+}
+
 /// The years after a fire a grassland's litter takes to build back: in
 /// central Saskatchewan's Fescue Prairie, burnt in early spring and
 /// followed for 11 years, the standing crop rose until about the eighth
@@ -1564,5 +1598,8 @@ mod tests {
         assert_eq!(thatch_built(0.0), 0.0);
         assert!(thatch_built(3.0) > 0.5 && thatch_built(3.0) < 0.6);
         assert!(thatch_built(THATCH_YEARS) > 0.95);
+        // Moss: 60% of a prairie's just after a fire, all of it ten years on.
+        assert!((prairie_moss(0.0) - MOSS_AFTER_FIRE * PRAIRIE_MOSS).abs() < 1e-12);
+        assert!(prairie_moss(PRAIRIE_MOSS_YEARS) > 0.95 * PRAIRIE_MOSS);
     }
 }

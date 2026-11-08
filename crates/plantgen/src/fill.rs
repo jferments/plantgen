@@ -3189,14 +3189,19 @@ impl Fill {
             // The mosses grow through the year beneath the summer's herbs.
             let understorey =
                 1.0 - (1.0 - layout.shrub_cover) * (1.0 - layout.summer_herb_cover * kept_herbs);
-            let moss =
+            let kept = self.communities[community].fire_years.is_some();
+            let mut moss =
                 (development::ground_moss(canopy_cover, understorey, moisture, layout.leaf_litter)
                     * (1.0 - wood))
                     .clamp(0.0, 1.0 - wood);
+            if kept {
+                // A prairie's moss grows in the open, between the grasses.
+                moss = moss
+                    .max(development::prairie_moss(self.settings.stand_ages[age]) * (1.0 - wood));
+            }
             // Under a fire-kept stand's few trees their litter lies only
             // beneath their crowns: the grass between them carries the
             // fires that burn it.
-            let kept = self.communities[community].fire_years.is_some();
             let reach = if kept {
                 canopy_cover.min(1.0)
             } else {
