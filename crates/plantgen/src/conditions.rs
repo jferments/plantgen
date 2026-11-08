@@ -132,9 +132,7 @@ impl Surroundings for Around<'_> {
     }
 
     fn occupied(&self, point: Vec3) -> bool {
-        self.envelopes
-            .iter()
-            .any(|envelope| envelope.contains(point))
+        self.envelopes.iter().any(|envelope| envelope.claims(point))
     }
 
     fn crowded(&self) -> bool {
@@ -335,6 +333,17 @@ pub struct Layout {
     /// height, so the stand thins as it grows; 0: `spacing_m` always.
     #[serde(default, skip_serializing_if = "is_zero")]
     pub per_height: f64,
+    /// How many times `per_height` the stems of the plant's crown class
+    /// stand apart while the stand is fully stocked
+    /// ([`crate::spec::class_spacing`]), until the thinning stand's own
+    /// spacing is wider; 1: all the stand's stems.
+    #[serde(default = "one", skip_serializing_if = "is_one")]
+    pub class: f64,
+}
+
+#[allow(clippy::trivially_copy_pass_by_ref)]
+fn is_one(value: &f64) -> bool {
+    *value == 1.0
 }
 
 /// Where a layout's neighbours stand, on a square grid of its spacing.
@@ -378,7 +387,10 @@ impl Layout {
                 };
                 let centre = [f64::from(east) * spacing_m, f64::from(north) * spacing_m];
                 if placed && crown.reaches(centre, crown.radius_m) {
-                    envelopes.push(crown.envelope(centre));
+                    envelopes.push(Envelope {
+                        growing: true,
+                        ..crown.envelope(centre)
+                    });
                 }
             }
         }
@@ -411,10 +423,12 @@ impl Layout {
     }
 
     /// The distance between stems at `age_years` when each crown is
-    /// `crown`.
+    /// `crown`: its crown class's, or the thinning stand's once that is
+    /// wider.
     fn spacing_m(&self, crown: &Crown, age_years: f64) -> f64 {
         let opening = crate::spec::stand_spacing(age_years) / crate::spec::STAND_SPACING;
-        self.spacing_m.max(self.per_height * opening * crown.top_m)
+        self.spacing_m
+            .max(self.per_height * self.class.max(opening) * crown.top_m)
     }
 
     fn validate(&self) -> Result<(), String> {
@@ -424,7 +438,8 @@ impl Layout {
             Self::LEAST_SPACING_M,
             100.0,
         )?;
-        within("layout per_height", self.per_height, 0.0, 10.0)
+        within("layout per_height", self.per_height, 0.0, 10.0)?;
+        within("layout class", self.class, 1.0, 10.0)
     }
 }
 
@@ -455,6 +470,11 @@ pub struct Envelope {
     pub radius_m: f64,
     /// Shade per metre of this crown, 1/m.
     pub density: f64,
+    /// A crown like the plant's own in its stand, growing as it grows
+    /// ([`Layout::envelopes`]): the room above its top is its own too, on
+    /// its side of the plant.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub growing: bool,
 }
 
 /// The part of a stand of the plant's like beyond its rings of envelopes
@@ -567,6 +587,7 @@ impl Crown {
             top_m: self.top_m,
             radius_m: self.radius_m,
             density: (Self::EXTINCTION * self.leaf_area_m2 / volume).min(10.0),
+            growing: false,
         }
     }
 }
@@ -584,6 +605,25 @@ impl Envelope {
         let (dx, dz) = (point.x - x, point.z - z);
         (self.base_m..=self.top_m).contains(&point.y)
             && dx * dx + dz * dz <= self.radius_m * self.radius_m
+    }
+
+    /// Whether the crown takes `point` from the plant: `point` is inside it,
+    /// or above it in a crown that grows as the plant does (`growing`), and
+    /// nearer its stem than the plant's own. Crowns that meet in a stand
+    /// part along the line halfway between their stems, each keeping its
+    /// side (crown shyness: Rudnicki et al. 2004, Can. J. For. Res. 34:
+    /// 1736). Taken by a neighbour's whole cylinder up to last year's top
+    /// (before generator revision 212), the room round the plant's own stem
+    /// was lost wherever a crown was wider than its spacing, and the room
+    /// above every neighbour was free: a bigleaf maple in a stand of its
+    /// like spread a flat cap of limbs 11 m across over stems 3 m apart.
+    #[must_use]
+    pub fn claims(&self, point: Vec3) -> bool {
+        let (x, z) = self.axis();
+        let (dx, dz) = (point.x - x, point.z - z);
+        let above = self.growing && point.y > self.top_m;
+        (self.contains(point) || (above && dx * dx + dz * dz <= self.radius_m * self.radius_m))
+            && dx * dx + dz * dz < point.x * point.x + point.z * point.z
     }
 
     /// The share of light along `direction` (a unit vector) that reaches
@@ -1031,6 +1071,13 @@ impl Conditions {
                     },
                     spacing_m: neighbourhood.spacing.max(Layout::LEAST_SPACING_M),
                     per_height: neighbourhood.like,
+                    // A tree come up beneath an older canopy grows among
+                    // its like as the stand's stems stand.
+                    class: if neighbourhood.canopy > 0.0 {
+                        1.0
+                    } else {
+                        crate::spec::class_spacing(neighbourhood.relative_height)
+                    },
                 })
             })
     }
@@ -1298,10 +1345,10 @@ mod tests {
         // {"schema":1,"neighbours":{"version":1,"density":0.0,
         // "relative_height":1.0,"canopy":0.0,"spacing":0.0,"one_sided":false,
         // "like":0.115,"layout":{"kind":"interior","spacing_m":0.25,
-        // "per_height":0.115}}}.
+        // "per_height":0.115,"class":1.41421356237309}}}.
         assert_eq!(
             interior.class().to_string(),
-            "0a66def241296c41e8a15f1a9356fdb8222a1efbc06cfa7a5c63db339e36adcb"
+            "f0be858b40d3ac84fcbe799e3c64fb3ab69d9bdcf4cf6d26e9b9d7d16b78789a"
         );
     }
 
@@ -1391,6 +1438,7 @@ mod tests {
             top_m: 10.0,
             radius_m: 2.0,
             density: 0.5,
+            growing: false,
         }
     }
 
@@ -1446,6 +1494,19 @@ mod tests {
         assert!(around.transmission(Vec3::new(4.5, 1.0, 0.0), 1.0, up) < 0.1);
         assert!(around.occupied(Vec3::new(4.5, 3.0, 0.0)));
         assert!(!around.occupied(Vec3::new(0.0, 3.0, 0.0)));
+        // A neighbour wider than the gap between the stems keeps to its
+        // side of the line halfway between them.
+        let wide = [Envelope {
+            radius_m: 6.0,
+            ..crown()
+        }];
+        let crowded = Around {
+            envelopes: &wide,
+            ..around
+        };
+        assert!(crowded.occupied(Vec3::new(2.5, 3.0, 0.0)));
+        assert!(!crowded.occupied(Vec3::new(1.5, 3.0, 0.0)));
+        assert!(!crowded.occupied(Vec3::new(0.0, 3.0, 1.0)));
         let open = Around {
             envelopes: &[],
             ..around
@@ -1504,6 +1565,7 @@ mod tests {
                 kind,
                 spacing_m,
                 per_height: 0.0,
+                class: 1.0,
             }
             .envelopes(&crown, 0.0)
             .iter()
@@ -1547,7 +1609,9 @@ mod tests {
             LayoutKind::Edge
         );
         assert!(Conditions::preset(Environment::Open).layout().is_none());
-        // The nearest neighbours stand STAND_SPACING of the plant's height away.
+        // The nearest neighbours stand STAND_SPACING of the plant's height
+        // away for every stem of the stand, sqrt(2) farther for its crown
+        // class's (spec::class_spacing).
         let nearest_at = |top_m: f64, age_years: f64| {
             let crown = Crown {
                 base_m: 0.3 * top_m,
@@ -1562,14 +1626,33 @@ mod tests {
                 .fold(f64::INFINITY, f64::min)
         };
         let nearest = |top_m: f64| nearest_at(top_m, 60.0);
-        assert!((nearest(8.0) - 0.92).abs() < 1e-9);
-        assert!((nearest(40.0) - 4.6).abs() < 1e-9);
+        let class = std::f64::consts::SQRT_2;
+        assert!((nearest(8.0) - 0.92 * class).abs() < 1e-9);
+        assert!((nearest(40.0) - 4.6 * class).abs() < 1e-9);
         // Never nearer than the least spacing.
         assert!((nearest(0.4) - Layout::LEAST_SPACING_M).abs() < 1e-9);
-        // Past the yield tables' ages it opens as old growth does.
-        assert!((nearest_at(40.0, 160.0) - 4.6).abs() < 1e-9);
+        // Past the yield tables' ages it opens as old growth does, once
+        // the thinning stand is wider than the crown class.
+        assert!((nearest_at(40.0, 160.0) - 4.6 * class).abs() < 1e-9);
         assert!((nearest_at(40.0, 450.0) - 0.27 * 40.0).abs() < 1e-9);
         assert!((nearest_at(40.0, 850.0) - 0.27 * 40.0).abs() < 1e-9);
+        // Overtopped trees stand as far apart as the crowns over them.
+        let overtopped = Conditions::preset(Environment::Suppressed)
+            .layout()
+            .unwrap();
+        assert!((overtopped.class - 1.3 * class).abs() < 1e-9);
+        // A tree come up beneath an older canopy stands among the stand's
+        // stems.
+        let beneath = Conditions::in_neighbourhood(
+            Environment::Interior,
+            Neighbourhood {
+                canopy: 60.0,
+                relative_height: 0.0,
+                density: 0.02,
+                ..Environment::Interior.neighbourhood()
+            },
+        );
+        assert_eq!(beneath.layout().unwrap().class, 1.0);
     }
 
     #[test]
@@ -1582,19 +1665,21 @@ mod tests {
         };
         let layout = Conditions::preset(Environment::Interior).layout().unwrap();
         let far = layout.far(&crown, 60.0).unwrap();
-        // 4.6 m apart, so the layer starts 3.5 rings out.
-        assert!((far.reach_m - 3.5 * 4.6).abs() < 1e-9);
+        // 4.6 m apart for every stem, sqrt(2) farther for its crown
+        // class, so the layer starts 3.5 rings out.
+        assert!((far.reach_m - 3.5 * 4.6 * std::f64::consts::SQRT_2).abs() < 1e-9);
         let foot = Vec3::new(0.0, 1.0, 0.0);
         // Straight up the ray never leaves the rings.
         assert_eq!(far.transmission(foot, Vec3::new(0.0, 1.0, 0.0)), 1.0);
-        // Low in the sky it crosses the layer and is shaded.
+        // Low in the sky it crosses the layer and is shaded: 150 m² of
+        // leaves a crown 6.5 m apart leave 2% of the light.
         let low = Vec3::new(0.894, 0.447, 0.0);
-        assert!(far.transmission(foot, low) < 0.01);
+        assert!(far.transmission(foot, low) < 0.03);
         // At an edge, light from the open side passes.
         let edge = Conditions::preset(Environment::Edge).layout().unwrap();
         let open_side = edge.far(&crown, 60.0).unwrap();
         assert_eq!(open_side.transmission(foot, low), 1.0);
-        assert!(open_side.transmission(foot, Vec3::new(-0.894, 0.447, 0.0)) < 0.01);
+        assert!(open_side.transmission(foot, Vec3::new(-0.894, 0.447, 0.0)) < 0.03);
     }
 
     #[test]
@@ -1612,7 +1697,8 @@ mod tests {
             Some(Layout {
                 kind: LayoutKind::Row,
                 spacing_m: 6.0,
-                per_height: 0.0
+                per_height: 0.0,
+                class: 1.0,
             })
         );
         assert_eq!(row.resolve().layout(), row.layout());
