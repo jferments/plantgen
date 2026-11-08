@@ -3446,8 +3446,24 @@ fn lace_forms(lace: &mut Vec<LaceLeaf>, budget: usize) {
     }
 }
 
+/// Whether organ `o`'s look draws it as lace at the nearest level
+/// ([`crate::lace`]): a divided leaf drawn segment by segment is cut
+/// whatever share of its band its triangles cover, as its segments
+/// overlap and each is drawn with two faces. A yarrow's, drawn as wide as
+/// its flora gives it, covers 0.4 and was baked into dots.
+fn laced(graph: &PlantGraph, looks: &[Look], o: usize) -> bool {
+    graph
+        .organs
+        .get(o)
+        .and_then(|organ| looks.get(usize::from(organ.organ)))
+        .is_some_and(
+            |look| matches!(&look.shape, Shape::Compound(c) if crate::lace::drawn_at(c, 0)),
+        )
+}
+
 /// A cut leaf drawn in the wood (a yarrow's, a wild carrot's), told cut
-/// by [`LACE`], that the tier draws on a leaf card of its own.
+/// by [`LACE`], or drawn as lace ([`laced`]), that the tier draws on a
+/// leaf card of its own.
 #[derive(Debug, Clone)]
 struct LaceLeaf {
     organ: usize,
@@ -3553,7 +3569,7 @@ fn lace_leaves(
         // yarrow's) fills little of that band, as does a narrow one that
         // arches away from it (a beargrass's), and both bake to dashes.
         let area: f64 = leaf.iter().map(|p| p.3).sum();
-        if area >= LACE * reach * 2.0 * widths[o] {
+        if !laced(graph, looks, o) && area >= LACE * reach * 2.0 * widths[o] {
             continue;
         }
         // The blade's own curve: its area's middle in each half.
@@ -3609,7 +3625,7 @@ fn lace_leaves(
                 * 0.5;
         }
         let boxed = (hi.0 - lo.0) * (hi.1 - lo.1);
-        if !(boxed > 0.0) || flat_area >= LACE_FLAT * boxed {
+        if !(boxed > 0.0) || (!laced(graph, looks, o) && flat_area >= LACE_FLAT * boxed) {
             continue;
         }
         found.flat = ((lo.0, hi.0), (lo.1, hi.1));
@@ -3871,7 +3887,7 @@ fn lace_lines(
         // yarrow's) fills little of that band, as does a narrow one that
         // arches away from it (a beargrass's), and both bake to dashes.
         let area: f64 = leaf.iter().map(|p| p.2).sum();
-        if area >= LACE * reach * 2.0 * widths[o].max(least) {
+        if !laced(graph, looks, o) && area >= LACE * reach * 2.0 * widths[o].max(least) {
             continue;
         }
         // The blade's own curve: its area's middle in each half.
