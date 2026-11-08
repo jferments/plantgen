@@ -1773,4 +1773,10 @@ pub mod venation;
 /// ones, from the same triangles. The minimal tier drew 18 of a yarrow's
 /// 54 leaves as crossed cards and baked the rest into dots; it now draws
 /// all 54 in the same 144 triangles, wearing the same pictures.
-pub const GENERATOR_REVISION: u32 = 216;
+///
+/// 217: a grass tiller keeps its older leaves, dead, while it lives
+/// (grass program revision 11, `dead_leaves`, a rule at the grasses
+/// from a genus's `leaf_life_years`). Fescues, whose leaves live about
+/// five months on tillers of two years (Monteiro 2012), carry a skirt
+/// of straw round their green blades; other grasses grow as before.
+pub const GENERATOR_REVISION: u32 = 217;

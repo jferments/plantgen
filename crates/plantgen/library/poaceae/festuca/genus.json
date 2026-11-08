@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Festuca",
+  "traits": {"leaf_life_years": {"min": 0.39, "max": 0.46}},
+  "evidence": {
+    "traits.leaf_life_years": {
+      "evidence": "SourceInferred",
+      "source": "monteiro-2012",
+      "note": "Festuca orthophylla, the one fescue whose leaf life was found measured (Monteiro 2012, as search results quote the thesis; the text itself was not read): a leaf lives 141 days on average on a tussock's outer tillers and 169 on its central ones, about two leaf turnovers a year, on tussocks of about 3200 tillers, 56% of them alive. Read as 0.39 to 0.46 years for the genus until its own species are measured."
+    }
+  }
+}
