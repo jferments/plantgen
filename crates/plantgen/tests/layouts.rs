@@ -50,6 +50,7 @@ fn in_layout(maple: &Maple, kind: LayoutKind, spacing_m: f64) -> Growth {
         kind,
         spacing_m,
         per_height: 0.0,
+        class: 1.0,
     });
     let settings = GrowthSettings {
         conditions: Conditions {

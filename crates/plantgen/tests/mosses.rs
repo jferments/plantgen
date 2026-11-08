@@ -420,6 +420,7 @@ fn a_tree_over_a_wooden_deck_lets_moss_grow_there() {
         top_m: 9.0,
         radius_m: 3.0,
         density: 0.27,
+        growing: false,
     };
     let shaded = mosses::grow_under(&site, &kinds, &settings(), std::slice::from_ref(&crown));
     assert_eq!(shaded.canopy, vec![crown]);
@@ -443,4 +444,87 @@ fn a_surface_may_say_its_face_is_neutral_where_its_material_is_basic() {
         ..Surface::solid(BUILT)
     };
     assert_eq!(asphalt.reaction(), 0);
+}
+
+#[test]
+fn shade_lengthens_shoots_shortens_hair_points_and_sun_yellows_leaves() {
+    let kinds = library_kinds();
+    let grimmia = kinds
+        .iter()
+        .find(|kind| kind.genus == "Grimmia")
+        .expect("the library describes Grimmia");
+    // Part shade, where floras describe a genus, changes nothing.
+    assert!(matches!(
+        grimmia.in_light(0.5),
+        std::borrow::Cow::Borrowed(_)
+    ));
+    // Glime vol. 1: hair-points shorter in shade (Racomitrium, p. 976),
+    // shoots taller and leaves smaller in deep shade (pp. 946, 959-960).
+    let deep = grimmia.in_light(0.02);
+    assert!(grimmia.hair_point_m > 0.0);
+    assert!(deep.hair_point_m < 0.5 * grimmia.hair_point_m);
+    assert!(deep.height_m > 1.4 * grimmia.height_m);
+    assert!(deep.leaf_length_m < grimmia.leaf_length_m);
+    // Carotenoids in full sun (Ceratodon, p. 1735): less blue against red.
+    let sun = grimmia.in_light(1.0);
+    let ratio = |c: [f32; 3]| c[2] / c[0].max(1.0e-6);
+    assert!(ratio(sun.colour) < 0.8 * ratio(grimmia.colour));
+    assert!((sun.hair_point_m - grimmia.hair_point_m).abs() < 1e-12);
+}
+
+#[test]
+fn small_spores_fly_far_and_large_ones_stay_near() {
+    let kinds = library_kinds();
+    let kind = |genus: &str| {
+        kinds
+            .iter()
+            .find(|kind| kind.genus == genus)
+            .unwrap_or_else(|| panic!("the library describes {genus}"))
+    };
+    // The two measured mosses the rule runs between (Glime vol. 1,
+    // pp. 594-596): Bryum argenteum over 80% beyond 2 m.
+    let bryum = kind("Bryum");
+    assert!(
+        (bryum.spore_m - 11.5e-6).abs() < 1.0e-9,
+        "{}",
+        bryum.spore_m
+    );
+    assert!(bryum.far_share() > 0.75, "{}", bryum.far_share());
+    // Dicranoweisia's spores (15-20 µm) are larger: fewer fly far.
+    let dicranoweisia = kind("Dicranoweisia");
+    assert!(dicranoweisia.far_share() < bryum.far_share() - 0.05);
+    // A genus whose flora gives no spore size stands at During's 20 µm.
+    let grimmia = kind("Grimmia");
+    assert!((grimmia.spore_m - 20.0e-6).abs() < 1.0e-12);
+    assert!(
+        (0.5..0.6).contains(&grimmia.far_share()),
+        "{}",
+        grimmia.far_share()
+    );
+    for kind in &kinds {
+        assert!((0.2..=0.85).contains(&kind.far_share()), "{}", kind.genus);
+    }
+}
+
+#[test]
+fn moss_is_drawn_wet_in_a_portland_winter_and_dry_in_its_summer() {
+    let rain = &mosses::PORTLAND_RAIN_DAYS;
+    // NOAA 1991-2020: 157 rain days a year at Portland airport.
+    let year: f64 = rain.iter().sum();
+    assert!((year - 157.0).abs() < 0.05, "{year}");
+    // Mid-January (day 16) and mid-July (day 197): each month's own share.
+    let january = mosses::hydration_on(16.0, rain);
+    let july = mosses::hydration_on(197.0, rain);
+    assert!((january - 18.7 / 31.0).abs() < 0.02, "{january}");
+    assert!((july - 3.7 / 31.0).abs() < 0.02, "{july}");
+    // Smooth through the turn of the year and within 0 to 1 every day.
+    let (last, first) = (
+        mosses::hydration_on(365.0, rain),
+        mosses::hydration_on(1.0, rain),
+    );
+    assert!((last - first).abs() < 0.01, "{last} {first}");
+    for day in 1..=365 {
+        let wet = mosses::hydration_on(f64::from(day), rain);
+        assert!((0.1..=0.65).contains(&wet), "day {day}: {wet}");
+    }
 }
