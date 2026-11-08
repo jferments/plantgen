@@ -555,7 +555,7 @@ Elsewhere as many grow at once as `--threads`. The files do not depend
 on how many grew at once.
 
 Measured on a 4-core, 15 GiB cloud machine (2026-11-08), peak resident
-memory before and after plantgen#PR: one 60-year Douglas-fir 2.85 to
+memory before and after plantgen#395: one 60-year Douglas-fir 2.85 to
 2.47 GiB (heap 2.61 to 1.63 GiB); ten 250-year bigleaf maples on 4
 threads 7.4 to 4.1 GiB; ten 60-year Douglas-firs on 4 threads 10.3 GiB
 to 6.2 GiB. Each plant's own peak fell because `gltf::check` reads one
