@@ -509,6 +509,9 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
                 lifespan: spec.growth.lifespan.unwrap_or(spec.growth.years),
                 ages,
                 suitability,
+                hardwood: plantgen::library::Library::builtin()
+                    .traits_of(id)
+                    .is_ok_and(|traits| Candidate::hardwood_in(&traits)),
             });
             out!("  {id}: suits the site {suitability:.2}");
             let seeds: Vec<u64> = match item["seeds"].as_array() {
