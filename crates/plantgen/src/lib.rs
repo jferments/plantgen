@@ -1788,4 +1788,14 @@ pub mod venation;
 /// at 20 cm (23 cm before), inside the 86 to 162 m² Espinosa Bancalari et
 /// al. found; every interior and open yield-table reference stays within
 /// tolerance.
-pub const GENERATOR_REVISION: u32 = 217;
+///
+/// 218: a package's sizes give the disc its foliage fills seen from
+/// above (`Measurements::foliage_radius`, [`graph::PlantGraph::foliage_radius`]),
+/// and a stand lays its herbs out by it, on a raster fine enough to hold
+/// them ([`stand_tile::FINE_CELL_M`]), where it spaced them by their
+/// widest reach on 0.5 m cells. A south Puget Sound prairie's grasses,
+/// spaced by a few culms leaning out with their panicles, covered 11% of
+/// a patch seen from above at 90% herb cover; they now cover 41%, and a
+/// hectare of the prairie two years after a fire holds 97,000 plants
+/// where it held 17,000. No plant grows differently.
+pub const GENERATOR_REVISION: u32 = 218;
