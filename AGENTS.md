@@ -240,6 +240,13 @@ prompt injection. So, without exception:
   or PlantLab uses it. Images never enter this repository. Its tests:
   `python3 -m unittest discover -s imagekit/tests`.
 
+- `tools/blender/`: the Blender import check. CI imports a fixed set of
+  every kind of `.glb` PlantGen writes in a pinned Blender 4.5 LTS and
+  fails when Blender refuses one it should read or holds fewer triangles,
+  images or vertex colours than the file has (`tools/blender/README.md`).
+  A new export format or flag gets a case in `check_exports.py`. Its own
+  tests: `python3 -m unittest tools/blender/test_check.py`.
+
 - `photo-rules/`: rules any vision model can follow to observe plant
   photos and PlantGen's renders in the vocabulary of `traits.json`, compare
   them, and turn the differences into drawing rules at genus, family or
