@@ -1270,8 +1270,104 @@ fn twigs(
     let continuations = graph.continuations();
     let finest = drawn_segments(graph, &continuations, 0.0);
     let here = drawn_segments(graph, &continuations, lod.min_radius);
+    let widen = math::PI / (f64::from(STICK_SIDES) * math::sin(math::PI / f64::from(STICK_SIDES)));
+    // Limbs: dropped wood at least [`LIMB_SHARE`] of the level's thinnest,
+    // borne by wood the level draws (or by such a limb), each run along
+    // its axis drawn as sticks end to end through its bends. Gathered in
+    // cells with the twigs, a shade-grown maple's braided leaders, as
+    // thin as the far level's thinnest wood, became sticks at each cell's
+    // mean place that missed one another, a trunk in pieces over gaps.
+    let limb_least = LIMB_SHARE * lod.min_radius;
+    let mut in_limb = vec![false; graph.segments.len()];
+    let dropped = |index: usize| finest[index] && !here[index];
+    let mut limb_sticks = 0;
+    let cos_bend = math::cos(math::radians(lod.bend));
+    for start in 0..graph.segments.len() {
+        let segment = &graph.segments[start];
+        let Some(parent) = segment.parent.map(|p| p as usize) else {
+            continue;
+        };
+        if in_limb[start]
+            || !dropped(start)
+            || segment.radius < limb_least
+            || segment.body != 0
+            || !(here[parent] || in_limb[parent])
+        {
+            continue;
+        }
+        let mut chain = vec![start];
+        let mut cursor = start;
+        while let Some(next) = continuations[cursor].map(|n| n as usize) {
+            let following = &graph.segments[next];
+            if !dropped(next) || following.radius < limb_least || following.body != 0 {
+                break;
+            }
+            chain.push(next);
+            cursor = next;
+        }
+        for &index in &chain {
+            in_limb[index] = true;
+        }
+        // Its points: each segment's start, then the last one's end,
+        // without those where it barely bends.
+        let mut points: Vec<(Vec3, f64, usize)> = chain
+            .iter()
+            .map(|&i| (graph.segments[i].start, graph.segments[i].radius, i))
+            .collect();
+        let last = chain[chain.len() - 1];
+        points.push((graph.segments[last].end, end_radii[last], last));
+        // At most [`LIMB_STICKS`] sticks, split where the limb strays
+        // farthest from the sticks so far, while it strays more than
+        // the level's bend allows over the stick's length.
+        let mut cuts = vec![0, points.len() - 1];
+        while cuts.len() <= LIMB_STICKS {
+            let mut worst: Option<(f64, usize)> = None;
+            for pair in cuts.windows(2) {
+                let (a, b) = (points[pair[0]].0, points[pair[1]].0);
+                let run = b - a;
+                let span = run.length();
+                for (k, point) in points.iter().enumerate().take(pair[1]).skip(pair[0] + 1) {
+                    let along = (point.0 - a).dot(run) / (span * span).max(1e-12);
+                    let off = (point.0 - (a + run * along.clamp(0.0, 1.0))).length();
+                    // Off by more than the bend's sine over the run.
+                    let allowed = span * (1.0 - cos_bend * cos_bend).max(0.0).sqrt() * 0.5;
+                    if off > allowed && worst.is_none_or(|(w, _)| off > w) {
+                        worst = Some((off, k));
+                    }
+                }
+            }
+            let Some((_, k)) = worst else { break };
+            cuts.push(k);
+            cuts.sort_unstable();
+        }
+        if let Some(cap) = cap
+            && limb_sticks + cuts.len() - 1 > cap
+        {
+            for &index in &chain {
+                in_limb[index] = false;
+            }
+            continue;
+        }
+        limb_sticks += cuts.len() - 1;
+        let kept: Vec<(Vec3, f64, usize)> = cuts.iter().map(|&k| points[k]).collect();
+        for pair in kept.windows(2) {
+            let ((from, r0, bearer), (to, r1, _)) = (pair[0], pair[1]);
+            let segment = &graph.segments[bearer];
+            stick(
+                out,
+                appearance,
+                sky,
+                (from, to),
+                f64::midpoint(r0, r1),
+                (segment.born, segment.shed),
+                u32::try_from(bearer).unwrap_or(NO_SEGMENT),
+                bearer as u64 ^ (1 << 63),
+                widen,
+            );
+        }
+    }
     for (index, (segment, &end_radius)) in graph.segments.iter().zip(&end_radii).enumerate() {
-        if !finest[index] || here[index] {
+        if !finest[index] || here[index] || in_limb[index] {
             continue;
         }
         let axis = segment.end - segment.start;
@@ -1300,7 +1396,6 @@ fn twigs(
             u32::try_from(index).unwrap_or(NO_SEGMENT),
         ));
     }
-    let widen = math::PI / (f64::from(STICK_SIDES) * math::sin(math::PI / f64::from(STICK_SIDES)));
     // Sticks per cell: as many as the level's thinnest wood a cell long
     // would need for the cell's cover, at most one per twig; under a cap,
     // fewer and thicker, at least one for the cells covering most while
@@ -1318,6 +1413,7 @@ fn twigs(
             })
             .collect();
         let total: usize = wanted.iter().map(|&(_, w)| w).sum();
+        let cap = cap.map(|cap| cap.saturating_sub(limb_sticks));
         match cap {
             Some(cap) if total > cap => {
                 let mut counts: Vec<usize> = wanted
@@ -1458,49 +1554,87 @@ fn twigs(
             if start.y - reach < GROUND {
                 start.y = GROUND + reach;
             }
-            let normal = any_perpendicular(direction);
-            let binormal = direction.cross(normal);
             #[allow(clippy::cast_sign_loss, clippy::cast_possible_truncation)]
             let id = key.0.unsigned_abs()
                 ^ (key.1.unsigned_abs() << 21)
                 ^ (key.2.unsigned_abs() << 42)
                 ^ (g as u64);
-            let bark = Bark::new(appearance, None, None, radius, STICK_SIDES, id);
-            let base = u32::try_from(out.positions.len()).unwrap_or(0);
-            for along in [0.0, length] {
-                for side in 0..=STICK_SIDES {
-                    let angle = 2.0 * math::PI * f64::from(side) / f64::from(STICK_SIDES);
-                    let outward = normal * math::cos(angle) + binormal * math::sin(angle);
-                    let centre = start + direction * along;
-                    #[allow(clippy::cast_possible_truncation)]
-                    let uv = [
-                        (f64::from(side) / f64::from(STICK_SIDES)) as f32,
-                        along as f32,
-                    ];
-                    out.push(Vertex {
-                        position: centre + outward * (radius * widen),
-                        normal: outward,
-                        uv,
-                        color: bark_alpha(
-                            sky.colour(
-                                bark.colour(radius, outward, centre.y, along, angle, 0.0),
-                                sky.light(centre),
-                            ),
-                            radius,
-                        ),
-                        born,
-                        shed,
-                        level: 2,
-                        segment: bearer,
-                    });
-                }
-            }
-            for side in 0..STICK_SIDES {
-                let (a, b) = (base + side, base + STICK_SIDES + 1 + side);
-                out.indices
-                    .extend_from_slice(&[a, a + 1, b, a + 1, b + 1, b]);
-            }
+            stick(
+                out,
+                appearance,
+                sky,
+                (start, start + direction * length),
+                radius,
+                (born, shed),
+                bearer,
+                id,
+                widen,
+            );
         }
+    }
+}
+
+/// Dropped wood at least this share of a level's thinnest wood, borne by
+/// wood the level draws, is a limb drawn end to end ([`twigs`]).
+pub const LIMB_SHARE: f64 = 0.35;
+
+/// The most sticks a limb is drawn as ([`twigs`]).
+pub const LIMB_STICKS: usize = 3;
+
+/// One three-sided stand-in stick ([`twigs`]) from `ends.0` to `ends.1`,
+/// `radius` thick as its cover asks (widened so its three sides cover as
+/// a round stick would), with its bark's colour as lit where it stands.
+#[allow(clippy::too_many_arguments)]
+fn stick(
+    out: &mut Mesh,
+    appearance: &Appearance,
+    sky: &mut Shade<'_>,
+    ends: (Vec3, Vec3),
+    radius: f64,
+    (born, shed): (f64, Option<f64>),
+    bearer: u32,
+    id: u64,
+    widen: f64,
+) {
+    let (start, end) = ends;
+    let length = (end - start).length().max(1e-3);
+    let direction = (end - start).normalize_or(Vec3::Y);
+    let normal = any_perpendicular(direction);
+    let binormal = direction.cross(normal);
+    let bark = Bark::new(appearance, None, None, radius, STICK_SIDES, id);
+    let base = u32::try_from(out.positions.len()).unwrap_or(0);
+    for along in [0.0, length] {
+        for side in 0..=STICK_SIDES {
+            let angle = 2.0 * math::PI * f64::from(side) / f64::from(STICK_SIDES);
+            let outward = normal * math::cos(angle) + binormal * math::sin(angle);
+            let centre = start + direction * along;
+            #[allow(clippy::cast_possible_truncation)]
+            let uv = [
+                (f64::from(side) / f64::from(STICK_SIDES)) as f32,
+                along as f32,
+            ];
+            out.push(Vertex {
+                position: centre + outward * (radius * widen),
+                normal: outward,
+                uv,
+                color: bark_alpha(
+                    sky.colour(
+                        bark.colour(radius, outward, centre.y, along, angle, 0.0),
+                        sky.light(centre),
+                    ),
+                    radius,
+                ),
+                born,
+                shed,
+                level: 2,
+                segment: bearer,
+            });
+        }
+    }
+    for side in 0..STICK_SIDES {
+        let (a, b) = (base + side, base + STICK_SIDES + 1 + side);
+        out.indices
+            .extend_from_slice(&[a, a + 1, b, a + 1, b + 1, b]);
     }
 }
 

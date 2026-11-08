@@ -1747,4 +1747,11 @@ pub mod venation;
 /// passed the 2 million segment limit near 400 years, has 1.02 million; a
 /// 480-year Douglas-fir in a stand has 258,000 (724,000 before) and 844 m²
 /// of foliage (757). Young trees grow as before.
-pub const GENERATOR_REVISION: u32 = 213;
+///
+/// 214: thin limbs a far level drops stay whole. Wood at least 0.35 of
+/// the level's thinnest (`mesh::LIMB_SHARE`), borne by wood the level draws, is drawn as
+/// at most three sticks end to end along its own axis, not gathered
+/// with the twigs into sticks at each cell's mean place: a shade-grown
+/// bigleaf maple's braided leaders, as thin as its farthest level's
+/// thinnest wood, were drawn there as pieces floating over gaps.
+pub const GENERATOR_REVISION: u32 = 214;
