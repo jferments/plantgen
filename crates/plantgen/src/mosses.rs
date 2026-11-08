@@ -34,6 +34,15 @@
 //! on the nearest face of the site under it, and dropped where there is
 //! none within reach (past a wall's corner, over a coping's edge), so no
 //! moss floats.
+//!
+//! Through time: a colony's vigour falls with height on a trunk
+//! ([`trunk_growth`], Pitkin 1975), a cushion grows at most
+//! `cushion_breadth` times wider than high, and with a day of the year
+//! ([`DrawOptions::day`]) capsules are young, ripe, spent or gone by
+//! their genus's `capsule_ripe_months` ([`capsule_stage`]). Close renders
+//! are metered like a camera (`raster::Image::meter`) so shaded moss is
+//! judged at photo brightness. Every value is from a source or marked in
+//! its genus's evidence as fitted to photos (docs/sites/MOSS.md).
 
 use serde::{Deserialize, Serialize};
 use serde_json::{Map, Value};

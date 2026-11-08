@@ -508,8 +508,10 @@ kinds.retain(|k| ["Dicranoweisia", "Rosulabryum", "Niphotrichum"].contains(&k.ge
 let cover = mosses::grow(&site, &kinds, &MossSettings { years: 30, ..Default::default() });
 let json = cover.to_json()?; // and MossCover::from_json to read it back
 
-// Triangles: patches far off, shells, or shoots close up.
-let mesh = cover.draw(&site, &DrawOptions { detail: Detail::Shell, ..Default::default() });
+// Triangles: patches far off, shells, or shoots close up. `day` (1-365)
+// draws each genus's capsules young, ripe, spent or gone for the season;
+// None draws them all ripe.
+let mesh = cover.draw(&site, &DrawOptions { detail: Detail::Shell, day: Some(120.0), ..Default::default() });
 
 // No triangles: colour and coverage (0-1) to bake into the host's texture.
 let tint = cover.tint(0.4); // hydration, 0 dry to 1 wet
