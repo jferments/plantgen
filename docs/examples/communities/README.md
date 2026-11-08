@@ -79,7 +79,12 @@ Paper 36).
   stands 7-10 m below the table's dominant height, and basal area at 150
   years is about two thirds of the table's.
 - Alder by water on wet ground: red alder leads, but its stems are about
-  half as thick as the table's at 40 years.
+  half as thick as the table's at 40 years. Its layers follow western
+  Oregon's wet hardwood plots (McIntosh et al. 2009), not the conifers':
+  herbs cover 43-51% from 15 to 55 years (plots 47-56%). Shrubs cover only
+  31-37% (plots 46-59%): every crown lets a tenth of the light through,
+  and the broadleaf crowns' own leaf area is still too thin to say how much
+  more an alder's lets through.
 - Yard trees: crowns cover most of a yard cell, with Douglas-fir, redcedar
   and dogwood; bigleaf maple fades early because its spec's lifespan reads
   50 years.

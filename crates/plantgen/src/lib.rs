@@ -97,7 +97,7 @@ pub mod substrate;
 pub mod succession;
 pub mod templates;
 pub mod texture;
-mod tile_scene;
+pub mod tile_scene;
 pub mod traits;
 pub mod venation;
 
@@ -1747,4 +1747,30 @@ pub mod venation;
 /// passed the 2 million segment limit near 400 years, has 1.02 million; a
 /// 480-year Douglas-fir in a stand has 258,000 (724,000 before) and 844 m²
 /// of foliage (757). Young trees grow as before.
-pub const GENERATOR_REVISION: u32 = 213;
+///
+/// 214: thin limbs a far level drops stay whole. Wood at least 0.35 of
+/// the level's thinnest (`mesh::LIMB_SHARE`), borne by wood the level draws, is drawn as
+/// at most three sticks end to end along its own axis, not gathered
+/// with the twigs into sticks at each cell's mean place: a shade-grown
+/// bigleaf maple's braided leaders, as thin as its farthest level's
+/// thinnest wood, were drawn there as pieces floating over gaps.
+///
+/// 215: broadleaf trees grown in a stand of their like take the form of
+/// forest-grown trees. A stem divides at its fork height only where its
+/// tip has 0.7 of the open sky's light (`fork_light`, broadleaf program
+/// revision 33, a rule at the decurrent trees), so a stand-grown bigleaf
+/// maple keeps one trunk to 8-12 m where it divided at 3.7 m into two
+/// leaders that braided round each other; in the open it divides as
+/// before. And its neighbours' crowns take only the room on their side of
+/// the line halfway between the stems, above their tops too
+/// ([`conditions::Envelope::claims`]), so its crown stays within its
+/// share of the stand (radius 2.3 m at 3.1 m spacing, where it spread
+/// 5.5 m into a flat cap over its neighbours).
+///
+/// 216: a card tier draws every cut leaf (a yarrow's, a poison
+/// hemlock's) on a card of its own before it gives the longest richer
+/// ones: each a flat card first, then crossed bent cards, then bent
+/// ones, from the same triangles. The minimal tier drew 18 of a yarrow's
+/// 54 leaves as crossed cards and baked the rest into dots; it now draws
+/// all 54 in the same 144 triangles, wearing the same pictures.
+pub const GENERATOR_REVISION: u32 = 216;

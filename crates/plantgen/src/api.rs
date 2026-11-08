@@ -315,6 +315,13 @@ impl Generator {
         Ok(export::grow_on_wall(&self.inputs, seed, ages, wall_m)?)
     }
 
+    /// The looks the cards of every plant it draws index
+    /// ([`Generator::draw`]'s second part).
+    #[must_use]
+    pub fn looks(&self) -> &[crate::looks::Look] {
+        &self.inputs.looks
+    }
+
     /// `plant` drawn at level `level` of its quality's levels of detail
     /// (0 the finest; past the last, the last), on the generator's day,
     /// as a package draws it; and the looks its cards' templates index.

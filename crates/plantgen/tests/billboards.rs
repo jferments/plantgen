@@ -362,18 +362,23 @@ fn a_yarrows_cut_leaves_are_drawn_on_cards_of_their_own() {
     // Baked into the plant's cards, its leaves' fine segments are each
     // less than a texel, and the cards kept them as scattered dots; drawn
     // as midrib lines they read as lines, not feathery blades. Each leaf
-    // is a pair of crossed cards now, wearing a picture of the plant's
-    // own longest leaf laid flat, as far as the tier's budget goes.
-    let (_, _, plants) = carded("achillea-millefolium");
+    // has a card of its own, wearing a picture of the plant's own longest
+    // leaf laid flat: every leaf at both tiers (the minimal tier drew 18
+    // of 54 when each was a pair of crossed cards), the longest crossed.
+    let (height, _, plants) = carded("achillea-millefolium");
+    let mut leaves = Vec::new();
     for (tier, plant) in TIERS.iter().zip(&plants) {
         let lace = plant.stats.lace_triangles;
-        println!("{}: {lace} cut-leaf card triangles", tier.name);
-        assert!(
-            lace >= 18 * 8,
-            "{}: {lace} cut-leaf card triangles",
-            tier.name
+        println!(
+            "{}: {} cut leaves on {lace} card triangles",
+            tier.name, plant.stats.lace_leaves
         );
-        assert_eq!(lace % 8, 0);
+        let budget = tier.cards(height) * (billboards::CORNERS - 2) * 2;
+        assert!(lace <= budget, "{}: {lace} of {budget}", tier.name);
+        assert!(lace >= plant.stats.lace_leaves * 2);
+        // The longest leaf is crossed: more than one flat card each.
+        assert!(lace > plant.stats.lace_leaves * 2, "{}: {lace}", tier.name);
+        leaves.push(plant.stats.lace_leaves);
         // Every leaf card wears one picture, its look's: the same alpha
         // index on the last `lace` triangles' corners.
         let cards = &plant.cards;
@@ -397,6 +402,9 @@ fn a_yarrows_cut_leaves_are_drawn_on_cards_of_their_own() {
             tier.name
         );
     }
+    // The smallest tier draws as many leaves as the low one.
+    assert!(leaves[0] >= 50, "{leaves:?}");
+    assert_eq!(leaves[1], leaves[0], "{leaves:?}");
 }
 
 #[test]
