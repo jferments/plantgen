@@ -507,11 +507,11 @@ pub fn run(
 ) -> Result<ToolOutput, GrowthError> {
     let mut stack = Vec::new();
     let (offsets, children) = scene.children();
-    let has_children = |node: u32| offsets[node as usize + 1] > offsets[node as usize];
+    let tips = scene.tips();
     let anchors: Vec<bool> = scene
         .queries
         .iter()
-        .map(|query| !has_children(query.node))
+        .map(|query| tips[query.node as usize])
         .collect();
 
     // The way the light comes from at each query, under `light@3` only.
@@ -977,10 +977,65 @@ fn light(
     let (cell, extinction, bud) = light_settings(values)?;
     let receivers = light_receivers(scene, anchors, organ_area, bud);
     let split = scene.queries.len();
+    light_of(
+        &receivers,
+        split,
+        (cell, extinction),
+        scene.height,
+        surroundings,
+        limits,
+    )
+}
+
+/// Light from an overcast sky at `points`, as a fraction of open-sky
+/// light, through `foliage` (each with its one-sided leaf area, m²) in
+/// voxels of `cell` metres with extinction coefficient `extinction`, and
+/// past `surroundings` for a plant `height` metres tall: what `light@1`
+/// gives a living tip with no leaf area of its own at each point. A probe
+/// of the light a grown plant stands in (`crate::light_profile`).
+///
+/// # Errors
+///
+/// Fails when the voxels the points and foliage span pass the limit.
+pub fn sky_light(
+    points: &[Vec3],
+    foliage: &[(Vec3, f64)],
+    (cell, extinction): (f64, f64),
+    height: f64,
+    surroundings: &dyn Surroundings,
+    limits: &Limits,
+) -> Result<Vec<f64>, GrowthError> {
+    let receivers: Vec<(Vec3, f64)> = points
+        .iter()
+        .map(|point| (*point, 0.0))
+        .chain(foliage.iter().copied())
+        .collect();
+    light_settings(&[cell, extinction, 0.0])?;
+    let (light, _) = light_of(
+        &receivers,
+        points.len(),
+        (cell, extinction),
+        height,
+        surroundings,
+        limits,
+    )?;
+    Ok(light)
+}
+
+/// [`light`] on its receivers: the first `split` are queries, the rest
+/// organs.
+fn light_of(
+    receivers: &[(Vec3, f64)],
+    split: usize,
+    (cell, extinction): (f64, f64),
+    height: f64,
+    surroundings: &dyn Surroundings,
+    limits: &Limits,
+) -> Result<(Vec<f64>, Vec<f64>), GrowthError> {
     let directions = sky_directions();
     let total_weight: f64 = directions.iter().map(|direction| direction.weight).sum();
     let neighbours = |point: Vec3, direction: &SkyDirection| {
-        surroundings.transmission(point, scene.height, direction.unit)
+        surroundings.transmission(point, height, direction.unit)
     };
     if receivers.is_empty() {
         return Ok((Vec::new(), Vec::new()));
@@ -995,7 +1050,7 @@ fn light(
     };
     let mut low = [i64::MAX; 3];
     let mut high = [i64::MIN; 3];
-    for (point, _) in &receivers {
+    for (point, _) in receivers {
         for (axis, value) in [point.x, point.y, point.z].into_iter().enumerate() {
             let cell_index = index(value);
             low[axis] = low[axis].min(cell_index);
@@ -1032,14 +1087,14 @@ fn light(
         .iter()
         .map(|(point, _)| voxel_of(*point))
         .collect();
-    for (voxel, (_, own)) in cells.iter().zip(&receivers) {
+    for (voxel, (_, own)) in cells.iter().zip(receivers) {
         density[flat(*voxel)] += own / volume;
     }
 
     // Receivers in one voxel with the same leaf area of their own see the
     // same foliage along every direction: each such group takes one depth
     // and one exponential per direction.
-    let (groups, group_of) = light_groups(&cells, &receivers, &flat, nx * ny * nz);
+    let (groups, group_of) = light_groups(&cells, receivers, &flat, nx * ny * nz);
     // A row per direction: `exp(−τ_j)` for every group. The directions
     // share the threads, each sweeping its own copy of the grid.
     let mut factors = vec![0.0_f64; directions.len() * groups.len()];
@@ -1066,7 +1121,7 @@ fn light(
     let mut light = directions_light(
         &directions,
         &factors,
-        &receivers,
+        receivers,
         &group_of,
         &|point, direction| neighbours(point, direction),
         surroundings.clear_sky(),
@@ -3292,6 +3347,7 @@ fn vigour(
         ));
     }
     let count = scene.nodes.len();
+    let is_tip = scene.tips();
     let mut light = vec![0.0; count];
     let mut segments = vec![0_u32; count];
     let mut tips = vec![0_u32; count];
@@ -3306,12 +3362,14 @@ fn vigour(
             let child = child as usize;
             total += light[child];
             segment_count += segments[child];
-            let child_is_tip = offsets[child + 1] == offsets[child]
-                && matches!(scene.nodes[child].kind, NodeKind::Query(_));
+            let child_is_tip = is_tip[child];
             tip_count += tips[child] + u32::from(child_is_tip);
         }
         tips[index] = tip_count;
-        if leaf && let NodeKind::Query(query) = node.kind {
+        if leaf
+            && is_tip[index]
+            && let NodeKind::Query(query) = node.kind
+        {
             total += if lit {
                 let light = query_light[query as usize];
                 if saturation > 0.0 {
@@ -3432,6 +3490,7 @@ pub fn pipe(scene: &Scene, organ_area: &[f64], values: &[f64]) -> Result<Pipes, 
     }
     let (offsets, children) = scene.children();
     let count = scene.nodes.len();
+    let is_tip = scene.tips();
     let mut flow = vec![0.0; count];
     let mut leaf_area = vec![0.0; count];
     let tip_flow = math::pow(tip, exponent);
@@ -3451,7 +3510,7 @@ pub fn pipe(scene: &Scene, organ_area: &[f64], values: &[f64]) -> Result<Pipes, 
     }
     for index in (0..count).rev() {
         let span = offsets[index] as usize..offsets[index + 1] as usize;
-        if span.is_empty() && matches!(scene.nodes[index].kind, NodeKind::Query(_)) {
+        if is_tip[index] {
             flow[index] += tip_flow;
         }
         let from_children: f64 = children[span.clone()]
