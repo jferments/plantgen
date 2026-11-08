@@ -6799,6 +6799,19 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
             100.0 * thatch
         );
     }
+    #[allow(clippy::cast_precision_loss)]
+    let lichen = plan
+        .cover
+        .iter()
+        .map(|cover| f64::from(cover.floor.lichen))
+        .sum::<f64>()
+        / plan.cover.len().max(1) as f64;
+    if lichen > 0.0 {
+        out!(
+            "  Cladonia lichen between the grasses {:.0}% of the ground",
+            100.0 * lichen
+        );
+    }
     // The floor's moss genera, each its share of all the tile's moss.
     let mut genera = vec![0.0_f64; plan.floor_mosses.len()];
     for cover in &plan.cover {
@@ -7261,6 +7274,8 @@ fn floor_mesh(plan: &api::TilePlan, field: &FieldSite, offset: Vec3) -> mesh::Me
     // Dead grass between a fire-kept prairie's grasses, as its ground
     // look draws it from afar.
     let thatch = plantgen::ground::plant_recipe("thatch").map_or(litter, |recipe| recipe.mean);
+    // Cladonia mats between a prairie's grasses, as they look from afar.
+    let lichen = srgb(plantgen::development::CLADONIA_SRGB);
     // Each floor moss genus's colour from afar, as its colonies draw.
     let kinds = plantgen::mosses::kinds(Library::builtin()).unwrap_or_default();
     let genus_colour: Vec<[f32; 3]> = plan
@@ -7318,12 +7333,17 @@ fn floor_mesh(plan: &api::TilePlan, field: &FieldSite, offset: Vec3) -> mesh::Me
                 .get(cell)
                 .map(|cover| cover.floor)
                 .unwrap_or_default();
-            let (m, l) = (f64::from(floor.moss), f64::from(floor.litter));
+            let (m, l) = (
+                f64::from(floor.moss) + f64::from(floor.lichen),
+                f64::from(floor.litter),
+            );
             let surface = (1.0 - f64::from(floor.wood)).max(1e-6);
             // Moss where the patch noise falls under its share of the
             // floor logs leave, litter over the rest as far as it reaches.
             let n = noise(east, north, 0x0f10);
-            let colour = if n < m / surface {
+            let colour = if n < f64::from(floor.lichen) / surface {
+                lichen
+            } else if n < m / surface {
                 // Which genus: patches of each by its share.
                 let mut pick = noise(east, north, 0x0f20);
                 let mut colour = moss;

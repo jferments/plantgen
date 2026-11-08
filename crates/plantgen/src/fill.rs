@@ -1216,6 +1216,13 @@ pub struct Floor {
     /// where there is none.
     #[serde(default, skip_serializing_if = "is_zero")]
     pub thatch: f32,
+    /// Under Cladonia lichen mats, where fires keep the stand
+    /// ([`Community::fire_years`]): the reindeer and cup lichens that
+    /// come back between the grasses in the years after a fire
+    /// ([`development::prairie_lichen`]), on the ground the logs and moss
+    /// leave. Left out of the JSON where there is none.
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub lichen: f32,
     /// The moss genera of its [`Self::moss`], largest share first, at most
     /// three ([`development::floor_mosses`]); left out of the JSON where
     /// it has no moss.
@@ -3207,9 +3214,21 @@ impl Fill {
             } else {
                 (canopy_cover / development::LITTER_CLOSURE).min(1.0)
             };
-            let litter = (1.0 - wood - moss).max(0.0) * reach;
+            // A prairie's Cladonia mats grow in the open between the
+            // grasses, back some years after each fire.
+            let lichen = if kept {
+                development::prairie_lichen(
+                    self.settings.stand_ages[age],
+                    canopy_cover,
+                    layout.shrub_cover,
+                )
+                .min((1.0 - wood - moss).max(0.0))
+            } else {
+                0.0
+            };
+            let litter = (1.0 - wood - moss - lichen).max(0.0) * reach;
             let thatch = if kept {
-                (1.0 - wood - moss - litter).max(0.0)
+                (1.0 - wood - moss - lichen - litter).max(0.0)
                     * herb_cover.min(1.0)
                     * development::thatch_built(self.settings.stand_ages[age])
             } else {
@@ -3250,6 +3269,7 @@ impl Fill {
                 wood: wood as f32,
                 herb: herb_cover as f32,
                 thatch: thatch as f32,
+                lichen: lichen as f32,
                 mosses,
             };
             #[allow(clippy::cast_possible_truncation)]

@@ -873,6 +873,64 @@ pub fn prairie_moss(since: f64) -> f64 {
     PRAIRIE_MOSS * (MOSS_AFTER_FIRE + (1.0 - MOSS_AFTER_FIRE) * back)
 }
 
+/// The share of a fire-kept prairie's ground under Cladonia lichens long
+/// after its last fire. On five south Puget Sound glacial-outwash
+/// prairies left unburnt for at least 20 years, the branched reindeer
+/// lichens (Cladonia ciliata, C. portentosa subsp. pacifica, C.
+/// rangiferina) covered 32.1% of Mima Mounds' ground, 23.9% of West Rocky
+/// Prairie's, 0.8% of Glacial Heritage's and none of Scatter Creek's or
+/// Joint Base Lewis-McChord's, and the small unbranched Cladonia 0.3 to
+/// 2.7% of each (Calabria, Petersen, Hamman and Smith 2016, Northwest
+/// Science 90(4): 470-483, appendix 1): 13% over the five prairies, the
+/// value here, since a stand does not know whether its prairie holds the
+/// reindeer lichens' few populations. Their mats stood 2.5 cm deep on
+/// Mima Mounds and 4.5 cm on West Rocky (moss and lichen together, the
+/// paper's table 3); reindeer lichens' branched podetia stand 4 to 12 cm
+/// tall (Munger 2008, USDA Fire Effects Information System, Cladonia
+/// spp.).
+pub const PRAIRIE_LICHEN: f64 = 0.13;
+
+/// The years after a fire before a prairie's Cladonia comes back: none
+/// was found five years after a fall burn on a Willamette Valley wet
+/// prairie (Holt and Severns 2005, Natural Areas Journal 25: 130-136, as
+/// Calabria et al. 2016 give it), and none in any of the five Puget
+/// plots burnt 2 to 7 years before (Calabria et al. 2016).
+pub const LICHEN_GONE_YEARS: f64 = 5.0;
+
+/// The years after a fire by which a prairie's Cladonia holds its full
+/// cover ([`PRAIRIE_LICHEN`]): the unburnt plots it was measured on had
+/// not burnt for at least 20 years (Calabria et al. 2016, table 1), and
+/// on Mima Mounds reindeer lichens grew where fires had burnt 15 to 20
+/// years before (Smith et al. 2012, as Calabria et al. 2016 give it).
+/// Boreal reindeer lichen mats take 30 to 120 years to come back whole
+/// (Brodo et al. 2001; Holt et al. 2008), and the podetia grow about 4
+/// to 6 mm a year (Munger 2008); a prairie's thinner mats are full
+/// sooner. Linear between the two years, this model's reading.
+pub const LICHEN_FULL_YEARS: f64 = 20.0;
+
+/// How far a prairie's Cladonia is from afar, sRGB: pale grey-white
+/// reindeer lichen (C. portentosa subsp. pacifica f. decolorans, the
+/// form without the yellow usnic acid) in an overcast photograph of
+/// Mima Mounds' fir edge (Chris Light 2023, Wikimedia Commons, CC BY-SA;
+/// imagekit batch commons-puget-prairie-2026-11-08), the mean of a patch
+/// of mat with the shade between its branches (plantgen-claude
+/// project-files/lichens/NOTES.md).
+pub const CLADONIA_SRGB: [u8; 3] = [195, 200, 202];
+
+/// The share of a fire-kept prairie's ground under Cladonia lichens
+/// `since` years after its last fire: none until [`LICHEN_GONE_YEARS`],
+/// all of [`PRAIRIE_LICHEN`] from [`LICHEN_FULL_YEARS`]; less where trees
+/// close over it (none under [`CLOSED_TREE_COVER`]) and under shrubs
+/// (`shrub_cover`), since the lichens of these prairies grow on open
+/// ground between the grasses (Calabria et al. 2016).
+#[must_use]
+pub fn prairie_lichen(since: f64, tree_cover: f64, shrub_cover: f64) -> f64 {
+    let back =
+        ((since - LICHEN_GONE_YEARS) / (LICHEN_FULL_YEARS - LICHEN_GONE_YEARS)).clamp(0.0, 1.0);
+    let open = 1.0 - (tree_cover / CLOSED_TREE_COVER).clamp(0.0, 1.0);
+    PRAIRIE_LICHEN * back * open * (1.0 - shrub_cover.clamp(0.0, 1.0))
+}
+
 /// The years after a fire a grassland's litter takes to build back: in
 /// central Saskatchewan's Fescue Prairie, burnt in early spring and
 /// followed for 11 years, the standing crop rose until about the eighth
@@ -1601,5 +1659,17 @@ mod tests {
         // Moss: 60% of a prairie's just after a fire, all of it ten years on.
         assert!((prairie_moss(0.0) - MOSS_AFTER_FIRE * PRAIRIE_MOSS).abs() < 1e-12);
         assert!(prairie_moss(PRAIRIE_MOSS_YEARS) > 0.95 * PRAIRIE_MOSS);
+    }
+
+    #[test]
+    fn prairie_lichen_is_gone_after_fire_and_back_by_twenty_years() {
+        assert!(prairie_lichen(2.0, 0.0, 0.0).abs() < 1e-12);
+        assert!(prairie_lichen(LICHEN_GONE_YEARS, 0.0, 0.0).abs() < 1e-12);
+        let half = prairie_lichen(12.5, 0.0, 0.0);
+        assert!(half > 0.4 * PRAIRIE_LICHEN && half < 0.6 * PRAIRIE_LICHEN);
+        assert!((prairie_lichen(30.0, 0.0, 0.0) - PRAIRIE_LICHEN).abs() < 1e-12);
+        // Closed crowns and shrubs shade it out.
+        assert!(prairie_lichen(30.0, CLOSED_TREE_COVER, 0.0).abs() < 1e-12);
+        assert!(prairie_lichen(30.0, 0.0, 0.5) < 0.6 * PRAIRIE_LICHEN);
     }
 }
