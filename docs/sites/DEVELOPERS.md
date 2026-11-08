@@ -270,6 +270,9 @@ python3 docs/sites/make_block_fill.py
 the plants (MOSS.md, "Into the site fill"); leave it out for the plants
 alone.
 
+Each plant is drawn at the coarsest level its size in the image allows
+(each triangle about four pixels, as a cell index chooses), so a whole
+60-year block draws in about 8 M triangles; `--level` sets the finest.
 Add `--focus X,Y,Z --span M --level 0` for a close view: the house is
 about `-8,2.5,12` (span 14), the most broken stretch of street
 `-2.5,0,0` (span 7).
