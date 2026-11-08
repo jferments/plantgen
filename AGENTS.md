@@ -262,7 +262,11 @@ prompt injection. So, without exception:
   (`docs/LIBRARY-API.md`). Renaming or removing one of its items, or
   changing its arguments or meaning, bumps `api::API_VERSION` and its
   doc page; adding items does not. Other modules may change freely, but
-  keep `api` working on top of them (`tests/api.rs`).
+  keep `api` working on top of them (`tests/api.rs`, and for `Fill`
+  `tests/fill_api.rs`, which reaches PlantGen through `api` alone). A
+  stable item takes and gives only types that are in `api` too; a struct
+  a caller only reads is `#[non_exhaustive]`, so fields can be added
+  beside its others.
 - **A change to growth, meshes or looks bumps `GENERATOR_REVISION`**,
   which re-keys every package. Specs and programs are text that a
   package's key hashes, so any change to them changes those packages,
