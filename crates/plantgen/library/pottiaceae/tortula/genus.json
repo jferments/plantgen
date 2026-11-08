@@ -61,7 +61,8 @@
       "dry"
     ],
     "colony_spread_m_per_year": 0.002,
-    "operculum_form": "long_conic"
+    "operculum_form": "long_conic",
+    "cushion_breadth": 3.0
   },
   "evidence": {
     "traits": {
@@ -108,6 +109,11 @@
       "evidence": "SourceInferred",
       "source": "fna-27",
       "note": "FNA vol. 27, Tortula muralis (Zander and Eckel; efloras, read 2026-11-07): spores 8-12 µm, spheric; the genus's spores run 13-30(-50) µm in other species."
+    },
+    "traits.cushion_breadth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Fitted to photos by eye (Jay chose it 2026-11-08, no flora gives a breadth): Washington iNaturalist photos of T. muralis (imagekit batch moss-pnw-2026-11-05) show cushions on walls and concrete about three times as wide as high; FNA vol. 27 says forming cushions, Wikipedia no more than 1 cm tall."
     }
   }
 }

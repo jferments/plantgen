@@ -95,7 +95,7 @@ its genus's `colony_spread_m_per_year`, more when vigorous, until:
   creeping shoots run a little over its neighbour's edge);
 - it runs out of surface: half its rim must lie on faces turned as its
   own, a step down a tile's or a brick's edge at most;
-- it reaches its form's size (a cushion a hemisphere, a little wider than high).
+- it reaches its form's size: a cushion as many times wider than high as the genus's `cushion_breadth` says (2.6, a hemisphere a little wider than high, as FNA describes Grimmia pulvinata, when left out; Dicranoweisia 4 and Tortula 3, fitted by eye to Washington photos since no flora gives a breadth).
 
 A colony in a poor place may die (4% a year at no vigour). A colony takes
 the way its surface mostly faces within 3 cm, so a spore lodged on the

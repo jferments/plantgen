@@ -181,6 +181,11 @@ pub struct MossKind {
     /// During 1979 in Glime vol. 1 p. 522).
     #[serde(default = "default_spore")]
     pub spore_m: f64,
+    /// How many times wider than high a cushion grows at most (trait
+    /// `cushion_breadth`; 2.6, a hemisphere a little wider than high,
+    /// FNA vol. 27 Grimmia pulvinata, when left out).
+    #[serde(default = "default_breadth")]
+    pub breadth: f64,
     /// Metres a colony's edge moves out in a good year.
     pub spread_m: f64,
     /// Light classes it grows in: shade, part, sun.
@@ -200,6 +205,10 @@ pub struct MossKind {
 /// near (Glime, *Bryophyte Ecology* vol. 1, PDF p. 522).
 fn default_spore() -> f64 {
     20.0e-6
+}
+
+fn default_breadth() -> f64 {
+    2.6
 }
 
 /// A capsule lid unstated in the traits: a tall cone, between the short
@@ -438,6 +447,7 @@ impl MossKind {
             },
             capsule_share: num("capsule_share").unwrap_or(0.2),
             spore_m: num("spore_diameter_m").unwrap_or_else(default_spore),
+            breadth: num("cushion_breadth").unwrap_or_else(default_breadth),
             spread_m: num("colony_spread_m_per_year").unwrap_or(match form {
                 ColonyForm::Cushion => 0.0015,
                 ColonyForm::Turf => 0.003,
@@ -1398,11 +1408,14 @@ pub fn grow_under(
                 let colony = colonies[i];
                 let kind = &kinds[usize::from(colony.kind)];
                 let mut radius = colony.radius_m + kind.spread_m * (0.3 + 0.7 * colony.vigour);
-                // A cushion grows to a hemisphere at most, a little wider
-                // than high (FNA vol. 27, Grimmia pulvinata: hemispherical
-                // cushions); older ones meet and merge with neighbours.
+                // A cushion grows as wide as its genus's cushions do, a
+                // hemisphere at most for Grimmia (FNA vol. 27, Grimmia
+                // pulvinata: hemispherical cushions), low domes several
+                // times wider than high for Dicranoweisia and Tortula
+                // (`cushion_breadth`); older ones meet and merge with
+                // neighbours.
                 let most = match kind.form {
-                    ColonyForm::Cushion => (kind.height_m * 1.3).max(0.01),
+                    ColonyForm::Cushion => (kind.height_m * kind.breadth * 0.5).max(0.01),
                     ColonyForm::Turf => 0.25,
                     ColonyForm::Mat | ColonyForm::Weft => 0.6,
                 };
