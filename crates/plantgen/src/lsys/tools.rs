@@ -507,11 +507,11 @@ pub fn run(
 ) -> Result<ToolOutput, GrowthError> {
     let mut stack = Vec::new();
     let (offsets, children) = scene.children();
-    let has_children = |node: u32| offsets[node as usize + 1] > offsets[node as usize];
+    let tips = scene.tips();
     let anchors: Vec<bool> = scene
         .queries
         .iter()
-        .map(|query| !has_children(query.node))
+        .map(|query| tips[query.node as usize])
         .collect();
 
     // The way the light comes from at each query, under `light@3` only.
@@ -3347,6 +3347,7 @@ fn vigour(
         ));
     }
     let count = scene.nodes.len();
+    let is_tip = scene.tips();
     let mut light = vec![0.0; count];
     let mut segments = vec![0_u32; count];
     let mut tips = vec![0_u32; count];
@@ -3361,12 +3362,14 @@ fn vigour(
             let child = child as usize;
             total += light[child];
             segment_count += segments[child];
-            let child_is_tip = offsets[child + 1] == offsets[child]
-                && matches!(scene.nodes[child].kind, NodeKind::Query(_));
+            let child_is_tip = is_tip[child];
             tip_count += tips[child] + u32::from(child_is_tip);
         }
         tips[index] = tip_count;
-        if leaf && let NodeKind::Query(query) = node.kind {
+        if leaf
+            && is_tip[index]
+            && let NodeKind::Query(query) = node.kind
+        {
             total += if lit {
                 let light = query_light[query as usize];
                 if saturation > 0.0 {
@@ -3487,6 +3490,7 @@ pub fn pipe(scene: &Scene, organ_area: &[f64], values: &[f64]) -> Result<Pipes, 
     }
     let (offsets, children) = scene.children();
     let count = scene.nodes.len();
+    let is_tip = scene.tips();
     let mut flow = vec![0.0; count];
     let mut leaf_area = vec![0.0; count];
     let tip_flow = math::pow(tip, exponent);
@@ -3506,7 +3510,7 @@ pub fn pipe(scene: &Scene, organ_area: &[f64], values: &[f64]) -> Result<Pipes, 
     }
     for index in (0..count).rev() {
         let span = offsets[index] as usize..offsets[index + 1] as usize;
-        if span.is_empty() && matches!(scene.nodes[index].kind, NodeKind::Query(_)) {
+        if is_tip[index] {
             flow[index] += tip_flow;
         }
         let from_children: f64 = children[span.clone()]

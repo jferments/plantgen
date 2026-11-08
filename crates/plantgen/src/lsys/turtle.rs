@@ -147,6 +147,34 @@ impl Scene {
         }
         (counts, list)
     }
+
+    /// Which nodes are living tips: query modules with nothing grown
+    /// beyond them and no organ of their own. A query that holds organs
+    /// (a module that keeps a shoot's foliage and reads its light) is not
+    /// a bud, so it takes no bud's share of the light, the vigour or the
+    /// pipes.
+    #[must_use]
+    pub fn tips(&self) -> Vec<bool> {
+        let mut has_children = vec![false; self.nodes.len()];
+        for node in &self.nodes {
+            if let Some(parent) = node.parent {
+                has_children[parent as usize] = true;
+            }
+        }
+        let mut holds = vec![false; self.nodes.len()];
+        for organ in &self.organs {
+            if let Some(node) = organ.node {
+                holds[node as usize] = true;
+            }
+        }
+        self.nodes
+            .iter()
+            .enumerate()
+            .map(|(index, node)| {
+                matches!(node.kind, NodeKind::Query(_)) && !has_children[index] && !holds[index]
+            })
+            .collect()
+    }
 }
 
 #[derive(Debug, Clone, Copy)]
