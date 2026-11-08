@@ -128,8 +128,8 @@
       "why": "A top dies only once the tree has nearly stopped rising (its leader's yearly rise under a twentieth of its fastest): Sillett et al.'s (2018) Cascade Douglas-firs under 300 years kept model-conforming crowns."
     },
     "generator.params.twig_shade": {
-      "rule": "1",
-      "why": "A side shoot that cannot pay for its foliage is shed with it: once a twig of a limb's side branch, a year old or more, stands under the light at which it starves, it is shed and its needles fall with its wood (the limbs themselves are left to limb_tip and limb_light), as a branch that cannot pay for its own foliage is lost (branch autonomy, Sprugel et al. 1991). Without it, a 30-year Douglas-fir grown in a stand with its neighbours clumped as its own crown holds 98 m2 of foliage; with it, 88 m2 at 20 cm, inside the 86 to 162 m2 that 22-year Douglas-firs in Oregon stands carry (Espinosa Bancalari et al. 1987), though above the 65 m2 their equation gives that trunk. Needles themselves keep their stated life in any light: conifer needles live longer in shade, not shorter."
+      "rule": "0.25",
+      "why": "A side shoot that cannot pay for its foliage is shed with it: once a twig of a limb's side branch, a year old or more, stands under a quarter of the light at which it starves, it is shed and its needles fall with its wood (the limbs themselves are left to limb_tip and limb_light), as a branch that cannot pay for its own foliage is lost (branch autonomy, Sprugel et al. 1991). A quarter, not the starving light itself: shed there, the twigs inside the lower limbs went too, and a 60-year western hemlock in a stand held 0.21 of its leaf in the lowest quarter of its crown's depth where 22-year Douglas-firs hold 0.35 to 0.42 (Espinosa Bancalari et al. 1987, Table 3); at a quarter it holds 0.30. A 30-year Douglas-fir grown in a stand holds 100 m2 of foliage at 21 cm, inside the 86 to 162 m2 that 22-year Douglas-firs in Oregon stands carry (Espinosa Bancalari et al. 1987). Needles themselves keep their stated life in any light: conifer needles live longer in shade, not shorter."
     },
     "generator.params.pipe_organ": {
       "rule": "0.0075",

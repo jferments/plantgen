@@ -1788,4 +1788,12 @@ pub mod venation;
 /// at 20 cm (23 cm before), inside the 86 to 162 m² Espinosa Bancalari et
 /// al. found; every interior and open yield-table reference stays within
 /// tolerance.
-pub const GENERATOR_REVISION: u32 = 217;
+///
+/// 218: the pine family sheds a starved twig only under a quarter of its
+/// starving light (`twig_shade` 0.25). Shed at the starving light itself,
+/// the twigs inside the lower limbs went too: a 60-year western hemlock in
+/// a stand held 0.21 of its leaf in the lowest quarter of its crown's
+/// depth, where Espinosa Bancalari et al.'s (1987) Douglas-firs hold 0.35
+/// to 0.42; it now holds 0.30. `plantc grow --light` also prints the leaf
+/// in each 2 m band (`light_profile::leaf_by_height`).
+pub const GENERATOR_REVISION: u32 = 218;

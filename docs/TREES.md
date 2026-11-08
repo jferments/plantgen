@@ -40,9 +40,10 @@ A broadleaf tree is grown one year at a time, after Pałubicki et al.
   bud is shed, and the lower stem clears itself. In the pine family
   `shade_death` follows the species' shade-tolerance class in the Silvics
   of North America (tolerant 0.06, intermediate 0.1, intolerant 0.15),
-  and a twig of a limb's side branch that stays below its starving light
-  is shed with its needles (`twig_shade`, branch autonomy), so a crown in
-  a stand holds about the leaf its trunk carries.
+  and a twig of a limb's side branch that stays below a quarter of its
+  starving light is shed with its needles (`twig_shade` 0.25, branch
+  autonomy), so a crown in a stand holds about the leaf its trunk carries
+  and its lower limbs keep their inner twigs.
 - **Wood carries load.** Branches thicken by the pipe model, bend under
   their own weight and their leaves', and hold a set angle from upright by
   reaction wood. The trunk's girth follows the foliage it carries: the
@@ -149,8 +150,8 @@ In this order:
 3. **Numbers third.** `plantc grow SPECIES --years N` prints sizes against
    the reference lines; `plantc measure` gives crown width and height;
    `plantc grow SPECIES --env interior --years N --light` prints the light
-   down through the stand and the share of leaf in each quarter of the
-   crown's depth, to set beside measured canopy profiles (Parker et al.
+   down through the stand, the leaf in each 2 m band and the share of
+   leaf in each quarter of the crown's depth, to set beside measured canopy profiles (Parker et al.
    2002) and crown leaf distributions;
    `plantc validate SPECIES --seeds 3` checks every stated character on
    grown plants, as `tests/checks.rs` does. Grow every species of the
