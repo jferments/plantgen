@@ -32,6 +32,10 @@
     "capsule_shape": "ovoid",
     "operculum_form": "rostrate",
     "capsule_share": 0.02,
+    "spore_diameter_m": {
+      "min": 0.000012,
+      "max": 0.000017
+    },
     "substrates": [
       "soil",
       "wood"
@@ -75,6 +79,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Hue measured: imagekit run moss-colour-2026-11-05 on batch moss-pnw-2026-11-05 (iNaturalist research-grade photos from Washington, script moss_colour.py), Kindbergia oregana, 24 photos: the median of each photo's linear r/g 0.80 and b/g 0.26. Photos are exposed brighter than moss is, so only the hue is taken from them; the brightness is a green reflectance of 0.13, as the other moss genera's colours take it (a lit leaf's, just above the 0.05-0.11 moss canopies reflect in the visible; see Hypnum's note)."
+    },
+    "traits.spore_diameter_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-28",
+      "note": "FNA vol. 28, Kindbergia (Ignatov; efloras, read 2026-11-06): spores 12-17 µm (K. oregana 12-16 µm)."
     }
   }
 }

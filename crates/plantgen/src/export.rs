@@ -859,44 +859,31 @@ pub fn grow_beneath(
 /// of the wall or fence it stands at.
 pub const WALL_M: f64 = 6.0;
 
-/// [`grow_seed_ages`] for a climber at the foot of a wall: its `seed`
-/// grown in the open, 0.3 m south of the south face of a brick wall
-/// `wall_m` high and 8 m long on level soil, holding to the wall as it
-/// would to one in a site's mesh ([`crate::site::SiteMesh::host_round`]),
-/// and kept at each of `ages`. In the plant's frame the wall's face is
-/// the plane z = -0.3, facing +z. The spec's own host is not grown.
+/// The setting at the foot of a brick wall `wall_m` high and 8 m long on
+/// level soil, where a climber grows 0.3 m south of the wall's south face
+/// ([`grow_on_wall`], a spec's [`crate::spec::VariantPlan::wall_m`]): the
+/// open's conditions on the soil there, and the wall to hold to, as a
+/// climber holds to one in a site's mesh
+/// ([`crate::site::SiteMesh::host_round`]). In the plant's frame the
+/// wall's face is the plane z = -0.3, facing +z.
 ///
 /// # Errors
 ///
-/// As [`grow_seed_ages`], and when `wall_m` is not above 0.
-pub fn grow_on_wall(
-    inputs: &Inputs,
-    seed: u64,
-    ages: &[f64],
+/// When `wall_m` is not above 0.
+pub fn wall_setting(
     wall_m: f64,
-) -> Result<Vec<Plant>, PackageError> {
+) -> Result<
+    (
+        crate::conditions::Conditions,
+        Option<std::sync::Arc<crate::lsys::tools::Host>>,
+    ),
+    PackageError,
+> {
     use crate::site::{Cut, SiteMesh, climbable};
     use crate::substrate::{BUILT, SOIL};
-    let spec = &inputs.spec;
     if !(wall_m.is_finite() && wall_m > 0.0) {
         return Err(format_error(format!(
-            "{}: a wall must be above 0 m high, found {wall_m}",
-            spec.id
-        )));
-    }
-    let oldest = spec
-        .old_ages()
-        .last()
-        .copied()
-        .unwrap_or(spec.growth.years)
-        .max(spec.growth.years);
-    if ages.is_empty()
-        || ages.iter().any(|age| !(*age > 0.0 && *age <= oldest))
-        || ages.windows(2).any(|pair| pair[1] <= pair[0])
-    {
-        return Err(format_error(format!(
-            "{} grows for {oldest} years; ages must be above 0, at most that and rise, found {ages:?}",
-            spec.id
+            "a wall must be above 0 m high, found {wall_m}"
         )));
     }
     let mut positions = Vec::new();
@@ -938,6 +925,47 @@ pub fn grow_on_wall(
     let host = site
         .host_round(foot, cut, &climbable)
         .map(std::sync::Arc::new);
+    Ok((conditions, host))
+}
+
+/// [`grow_seed_ages`] for a climber at the foot of a wall: its `seed`
+/// grown in the open at the foot of a wall `wall_m` high
+/// ([`wall_setting`]), holding to it, and kept at each of `ages`. In the
+/// plant's frame the wall's face is the plane z = -0.3, facing +z. The
+/// spec's own host is not grown.
+///
+/// # Errors
+///
+/// As [`grow_seed_ages`], and when `wall_m` is not above 0.
+pub fn grow_on_wall(
+    inputs: &Inputs,
+    seed: u64,
+    ages: &[f64],
+    wall_m: f64,
+) -> Result<Vec<Plant>, PackageError> {
+    let spec = &inputs.spec;
+    if !(wall_m.is_finite() && wall_m > 0.0) {
+        return Err(format_error(format!(
+            "{}: a wall must be above 0 m high, found {wall_m}",
+            spec.id
+        )));
+    }
+    let oldest = spec
+        .old_ages()
+        .last()
+        .copied()
+        .unwrap_or(spec.growth.years)
+        .max(spec.growth.years);
+    if ages.is_empty()
+        || ages.iter().any(|age| !(*age > 0.0 && *age <= oldest))
+        || ages.windows(2).any(|pair| pair[1] <= pair[0])
+    {
+        return Err(format_error(format!(
+            "{} grows for {oldest} years; ages must be above 0, at most that and rise, found {ages:?}",
+            spec.id
+        )));
+    }
+    let (conditions, host) = wall_setting(wall_m)?;
     let (program, params) = spec.program_from(&inputs.program_source)?;
     let growth = crate::grow::grow(
         &program,

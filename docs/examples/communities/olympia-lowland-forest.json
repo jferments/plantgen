@@ -1,0 +1,20 @@
+{"id": "olympia-lowland-forest", "members": [
+  {"species": "pseudotsuga-menziesii", "layer": "canopy"},
+  {"species": "thuja-plicata", "layer": "canopy", "abundance": 0.35},
+  {"species": "tsuga-heterophylla", "layer": "canopy", "abundance": 0.25},
+  {"species": "acer-macrophyllum", "layer": "canopy", "abundance": 0.4},
+  {"species": "alnus-rubra", "layer": "canopy", "abundance": 0.2},
+  {"species": "cornus-nuttallii", "layer": "subcanopy", "abundance": 0.3},
+  {"species": "frangula-purshiana", "layer": "subcanopy", "abundance": 0.3},
+  {"species": "acer-circinatum", "layer": "shrub", "abundance": 0.8},
+  {"species": "corylus-cornuta", "layer": "shrub", "abundance": 0.6},
+  {"species": "oemleria-cerasiformis", "layer": "shrub", "abundance": 0.6},
+  {"species": "gaultheria-shallon", "layer": "shrub", "abundance": 0.8},
+  {"species": "berberis-nervosa", "layer": "shrub", "abundance": 0.7},
+  {"species": "symphoricarpos-albus", "layer": "shrub", "abundance": 0.4},
+  {"species": "rubus-spectabilis", "layer": "shrub", "abundance": 0.3},
+  {"species": "rubus-armeniacus", "layer": "shrub", "abundance": 0.3, "environments": ["edge", "open"]},
+  {"species": "polystichum-munitum", "layer": "herb"},
+  {"species": "pteridium-aquilinum", "layer": "herb", "abundance": 0.3},
+  {"species": "hedera-helix", "layer": "climber", "abundance": 0.5}
+]}
