@@ -24,7 +24,9 @@
 //! inner roll, and half the scatter; in a thrice-divided leaf, each
 //! segment likewise about its pinnule's rachis, where the divisions roll
 //! at all. The leaf then droops over its length as its card would
-//! ([`crate::bend::Bend`]'s droop).
+//! ([`crate::bend::Bend`]'s droop), each rachis and ribbon drawn in
+//! pieces along the arc (at most [`ARC_PIECE`] degrees of it each) so it
+//! runs through the leaflets it bears.
 //!
 //! A leaflet is a ribbon along its midrib, as wide as the card draws it,
 //! with a face on each side, or a round thread, bowed a little, where it
@@ -56,6 +58,12 @@ pub const THREAD: f64 = 10.0;
 /// How far a thread bows from its chord at its middle, as a share of its
 /// length (fennel's threads "slightly curved").
 const THREAD_BOW: f64 = 0.12;
+
+/// The most a straight piece of a rachis or a ribbon turns of the leaf's
+/// droop, in degrees. A 15 cm yarrow leaf drooping 18 degrees bows 6 mm
+/// from its chord, as far as its pinnae reach: drawn as the chord, its
+/// rachis ran beside its pinnae, not through them.
+const ARC_PIECE: f64 = 4.0;
 
 /// How many pieces [`diamond`] reads a blade's width at.
 const DIAMOND_SAMPLES: u32 = 32;
@@ -468,7 +476,7 @@ impl<'a> Lace<'a> {
         } else {
             &[-1.0, 1.0]
         };
-        let n = self.stations;
+        let n = self.stations.max(self.pieces(from, to));
         let diamond = (n == 1 && !self.midrib).then(|| diamond(half)).flatten();
         for (upper, colour) in [(true, colour), (false, self.underside)] {
             let first = u32::try_from(mesh.positions.len()).unwrap_or(u32::MAX);
@@ -560,7 +568,12 @@ impl<'a> Lace<'a> {
         let a = along.cross(Vec3::Z).normalize_or(Vec3::X);
         let b = along.cross(a);
         let first = u32::try_from(mesh.positions.len()).unwrap_or(u32::MAX);
-        for end in [from, to] {
+        // In rings along the droop's arc, so a long rachis follows the
+        // leaflets it bears instead of cutting the chord under them.
+        let pieces = self.pieces(from, to);
+        for ring in 0..=pieces {
+            #[allow(clippy::cast_precision_loss)]
+            let end = from + (to - from) * (ring as f64 / pieces as f64);
             for k in 0..3 {
                 let angle = f64::from(k) * std::f64::consts::TAU / 3.0;
                 let out = a * math::cos(angle) + b * math::sin(angle);
@@ -569,11 +582,31 @@ impl<'a> Lace<'a> {
                 mesh.push(self.vertex(p, normal, colour));
             }
         }
-        for k in 0..3 {
-            let (a, b) = (first + k, first + (k + 1) % 3);
-            let (c, d) = (a + 3, b + 3);
-            mesh.indices.extend_from_slice(&[a, b, d, a, d, c]);
+        for ring in 0..u32::try_from(pieces).unwrap_or(1) {
+            for k in 0..3 {
+                let (a, b) = (first + 3 * ring + k, first + 3 * ring + (k + 1) % 3);
+                let (c, d) = (a + 3, b + 3);
+                mesh.indices.extend_from_slice(&[a, b, d, a, d, c]);
+            }
         }
+    }
+
+    /// How many straight pieces a line from `from` to `to` in the local
+    /// frame is drawn in: enough that none turns more than [`ARC_PIECE`]
+    /// of the leaf's droop, so none strays from the arc its leaflets
+    /// follow.
+    fn pieces(&self, from: Vec3, to: Vec3) -> usize {
+        // Only the nearest level draws the arc: farther levels are seen
+        // too far off for a few millimetres to show, and the card tiers
+        // bake from level 1, where every extra ring costs a leaf drawn
+        // whole its place in the tier's budget.
+        if !self.midrib {
+            return 1;
+        }
+        let turn = (self.droop * (to.y - from.y)).abs();
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let pieces = (turn / math::radians(ARC_PIECE)).ceil().clamp(1.0, 32.0) as usize;
+        pieces
     }
 }
 
@@ -597,8 +630,17 @@ mod tests {
 
     /// `c` drawn flat (no droop) from the origin up `y`, 0.2 m long.
     fn drawn(c: &Compound) -> Mesh {
+        let mut mesh = Mesh::default();
+        let lace = leaf(c, 0.0);
+        lace.draw(&divided::layout(c), &mut mesh);
+        mesh
+    }
+
+    /// A leaf of `c` from the origin up `y`, 0.2 m long, drooping `droop`
+    /// degrees.
+    fn leaf(c: &Compound, droop: f64) -> Lace<'_> {
         let (across, along) = crate::templates::drawn_share(&Shape::Compound(c.clone()));
-        let lace = Lace {
+        Lace {
             c,
             base: Vec3::ZERO,
             heading: Vec3::Y,
@@ -607,7 +649,7 @@ mod tests {
             length: 0.2,
             across,
             along,
-            droop: 0.0,
+            droop: math::radians(droop),
             colour: [0.2, 0.4, 0.2],
             underside: [0.2, 0.3, 0.2],
             accent: [0.3, 0.4, 0.2],
@@ -616,10 +658,60 @@ mod tests {
             id: 7,
             stations: 3,
             midrib: true,
-        };
+        }
+    }
+
+    #[test]
+    fn a_drooping_leafs_rachis_follows_the_arc_its_leaflets_stand_on() {
+        // A yarrow's leaf: 30 pairs of short pinnae on a long rachis,
+        // drooping 18 degrees. Drawn as its chord, the rachis ran up to
+        // 0.04 card lengths beside the pinnae it bears.
+        let c = compound(|c| {
+            c.leaflets = 61;
+            c.pinnules = Some(7);
+            c.segments = None;
+        });
+        let lace = leaf(&c, 18.0);
+        let layout = divided::layout(&c);
+        let rachis = layout.axes[0];
+        assert_eq!(rachis.order, 0);
         let mut mesh = Mesh::default();
-        lace.draw(&divided::layout(c), &mut mesh);
-        mesh
+        lace.draw(&layout, &mut mesh);
+        // The leaf's midline, where the pinnae leave it.
+        let arc: Vec<Vec3> = (0..=2000)
+            .map(|k| {
+                let t = f64::from(k) / 2000.0;
+                lace.world(Vec3::new(
+                    0.0,
+                    rachis.from.1 + (rachis.to.1 - rachis.from.1) * t,
+                    0.0,
+                ))
+            })
+            .collect();
+        let off = |p: Vec3| {
+            arc.iter()
+                .map(|a| (*a - p).length())
+                .fold(f64::MAX, f64::min)
+        };
+        // The rachis is the first tube drawn: rings of three, each piece
+        // from one ring to the next. Halfway along each piece, its edges
+        // stay within a few radii of the arc.
+        let pieces = lace.pieces(
+            Vec3::new(rachis.from.0, rachis.from.1, 0.0),
+            Vec3::new(rachis.to.0, rachis.to.1, 0.0),
+        );
+        assert!(pieces > 1, "{pieces}");
+        let at = |i: usize| {
+            let p = mesh.positions[i];
+            Vec3::new(f64::from(p[0]), f64::from(p[1]), f64::from(p[2]))
+        };
+        let limit = 3.0 * RACHIS[0] * lace.length;
+        for ring in 0..pieces {
+            for k in 0..3 {
+                let middle = (at(3 * ring + k) + at(3 * (ring + 1) + k)) * 0.5;
+                assert!(off(middle) < limit, "piece {ring}: {} m off", off(middle));
+            }
+        }
     }
 
     #[test]

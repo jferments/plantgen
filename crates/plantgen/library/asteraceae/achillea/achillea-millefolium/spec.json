@@ -19,7 +19,7 @@
       "maturity": 1.2,
       "stem_radius": 0.002,
       "wiggle": 2,
-      "nodes": 9,
+      "nodes": 11,
       "bare": 0.05,
       "leaf_peak": 0.1,
       "leaf_angle": 45,
@@ -33,10 +33,10 @@
       "nod": 0,
       "basal_leaves": 4,
       "basal_angle": 60,
-      "leaf_area": 0.034,
-      "basal_area": 0.027,
+      "leaf_area": 0.048,
+      "basal_area": 0.032,
       "basal_piece_area": 0.235,
-      "flower_area": 0.171,
+      "flower_area": 0.141,
       "bud_area": 0.89,
       "fruit_area": 0.89
     }
@@ -51,20 +51,16 @@
     "seeds": [1]
   },
   "appearance": {
-    "bark": [0.25, 0.3, 0.15],
-    "foliage": [0.07, 0.15, 0.05],
-    "foliage_shade": [0.02, 0.05, 0.02],
     "variation": 0.2,
     "organs": {
       "leaf": {
-        "shape": { "template": "compound", "leaflets": 61, "pinnules": 7, "leaflet_width": 0.3, "teeth": 0, "petiole": 0.05, "angle": 60, "pinnule_angle": 45, "largest": 0.4, "lowest": 0.35, "widest": 0.35, "tip": 0.6, "base": 0.5 }
+        "shape": { "template": "compound", "leaflets": 61, "pinnules": 7, "leaflet_width": 0.3, "teeth": 0, "petiole": 0.05, "angle": 60, "pinnule_angle": 60, "largest": 0.4, "lowest": 0.35, "widest": 0.35, "tip": 0.6, "base": 0.5 }
       },
       "basal": {
-        "shape": { "template": "compound", "leaflets": 81, "pinnules": 7, "leaflet_width": 0.3, "teeth": 0, "petiole": 0.15, "angle": 60, "pinnule_angle": 45, "largest": 0.4, "lowest": 0.35, "widest": 0.35, "tip": 0.6, "base": 0.5 }
+        "shape": { "template": "compound", "leaflets": 81, "pinnules": 7, "leaflet_width": 0.3, "teeth": 0, "petiole": 0.15, "angle": 60, "pinnule_angle": 60, "largest": 0.4, "lowest": 0.35, "widest": 0.35, "tip": 0.6, "base": 0.5 }
       },
       "flower": {
-        "shape": { "ray_width": 1.1, "disc": 0.5, "involucre": 1.8 },
-        "inflorescence": { "size": 0.075, "spread": 40, "peduncle": 0.55 },
+        "inflorescence": { "peduncle": 0.55 },
         "colour": [0.92, 0.9, 0.84],
         "accent": [0.85, 0.8, 0.6]
       }
@@ -85,7 +81,7 @@
     "leaf_incision": "dissected",
     "division_pattern": "pinnate",
     "division_order": {"min": 1, "max": 2},
-    "division_planes": "all_round",
+    "division_planes": "segments_round",
     "leaf_shape": {"oblong": "often", "lanceolate": "often"},
     "inflorescence": "corymb",
     "units_per_inflorescence": {"min": 10, "max": 100},
@@ -96,7 +92,8 @@
     "receptacle_shape": "convex",
     "fruit_size_m": {"min": 0.001, "max": 0.002},
     "leaf_length_m": {"min": 0.05, "max": 0.2, "high": 0.4},
-    "leaf_width_m": {"min": 0.006, "max": 0.025},
+    "leaf_width_m": {"min": 0.008, "max": 0.035},
+    "leaf_colour": [94, 120, 60],
     "ray_colour": [250, 250, 245],
     "disc_colour": [240, 236, 220],
     "involucre_height_m": {"min": 0.004, "max": 0.007, "high": 0.009},
@@ -110,23 +107,34 @@
     "perennation": "rhizome",
     "leaf_margin": "entire",
     "inflorescence_length_m": {"min": 0.04, "max": 0.1},
+    "inflorescence_outline": "flat_topped",
+    "inflorescence_density": "dense",
+    "inflorescence_branches": {"min": 5, "max": 12},
+    "involucre_diameter_m": {"min": 0.002, "max": 0.003, "high": 0.005},
+    "ray_length_m": {"min": 0.0015, "max": 0.003},
+    "ray_width_m": {"min": 0.0015, "max": 0.003},
     "leaf_apex": "mucronate"
   },
   "evidence": {
     "traits.division_planes": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",
-      "note": "FEIS's common yarrow review (Aleksoff 1999, read 2026-10-17), after Gleason and Cronquist: the native forms' narrow leaf segments stand in several planes, so the leaf is three-dimensional, where the European form's lie flat. iNaturalist photos of Pacific Northwest plants agree."
+      "note": "FEIS's common yarrow review (Aleksoff 1999, read 2026-10-17), after Gleason and Cronquist: the native forms' narrow leaf segments stand in several planes, so the leaf is three-dimensional, where the European form's lie flat. iNaturalist photos of Pacific Northwest plants agree. It is the segments that stand so: the primary divisions keep two ranks, so the leaf is a feathery strap, oblong or lanceolate in outline as leaf_shape says, as the 28 imagekit photos show it, not a bottlebrush round its rachis."
     },
     "traits.height_typical_m": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",
       "note": "FEIS's common yarrow review (Aleksoff 1999, read 2026-10-15): a perennial forb 11 to 40 inches (30-100 cm) in height with extensive rhizomes."
     },
+    "generator.params.nodes": {
+      "evidence": "Measured",
+      "source": "plantgen-authors",
+      "note": "Leaves up a flowering stem 2 to 6 cm apart, measured against head sizes in iNaturalist photos in the imagekit store (batches lowpoly-cards-2026-10-25, inat-lowpoly-r8-2026-10-29; about 2-3 cm and 4-6 cm in two whole stems); USPTO plant patents give cultivars' internodes 1 to 3.2 cm (PP29408) and up to 2.5 cm (PP36989). 11 nodes over the leafy 0.9 of a 0.7 m stem is 5.7 cm apart, within the photos' range; 9 drew them 7 cm apart. More would not fit the minimal card tier's 144 leaf-card triangles with every leaf on a card of its own and the longest crossed (18 nodes made 107 leaves)."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: an aromatic herb with feathery, finely divided leaves and flat-topped clusters of small white flowers. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: an aromatic herb with feathery, finely divided leaves and flat-topped clusters of small white flowers. Not fitted to measurements. leaf_area (0.048) and basal_area (0.032) are the shares of a 1 m card the stem and basal leaves draw (species test `builtin_species_shade_with_the_area_they_draw`), raised on 2026-11-07 when the leaves were drawn wider and their lobes fuller."
     },
     "allometry": {
       "evidence": "Authored",
@@ -141,7 +149,7 @@
     "appearance.organs.flower": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Its flat-topped array drawn head by head (spec rework L1c): its kind and how many heads it bears come from its characters, by the rules at the flowering plants, and each head's rays from its ray florets, by the daisy family's rule. Each head drawn about 6 mm across, broad rays round a disc half its width, on pedicels from the upper half of the stalk, by eye."
+      "note": "Its flat-topped array drawn head by head (spec rework L1c): its kind, its primary branches, how many heads it bears, its level top and how densely the heads crowd come from its characters, by the rules at the flowering plants, and each head's size and rays from its involucre and ray florets, by the daisy family's rules (2026-11-06; before, each head was set by hand at 6 mm on pedicels leaning 40 degrees, which drew a cone of bare stalks). Broad rays round a disc half the head's width, and the bare stalk below the array's lowest branches, by eye."
     },
     "taxon": {
       "evidence": "Authored",
@@ -191,17 +199,22 @@
     "appearance.organs.leaf.shape": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "The blade drawn dissected (spec rework P4): a twice-divided leaf whose segments run together along a winged rachis, its pattern and the running together from its characters by the rules at the flowering plants; before, separate toothed leaflets stood along a rachis. Counts and form by eye from iNaturalist photographs (2026-10-17): a narrow strap of many short primary segments set close, about one segment's width apart, 30 pairs on a stem leaf and 40 on a basal one, at about 60 degrees to the rachis, each cut into about 7 short lobes, each about a third as wide as long; the segments longest 0.4 of the way up and shorter toward both ends, the blade's oblong to lanceolate outline (its shape word is the blade's, so the card sets its segments' own form by hand)."
+      "note": "The blade drawn dissected (spec rework P4): a twice-divided leaf whose segments run together along a winged rachis, its pattern and the running together from its characters by the rules at the flowering plants; before, separate toothed leaflets stood along a rachis. Counts and form by eye from iNaturalist photographs (2026-10-17): a narrow strap of many short primary segments set close, about one segment's width apart, 30 pairs on a stem leaf and 40 on a basal one, at about 60 degrees to the rachis, each cut into about 7 short lobes, each about a third as wide as long, spreading about 60 degrees from the segment's own rachis so the lobes fan out and the leaf reads as a feathery strap (2026-11-07, re-read against iNaturalist observations 758272, 126222917, 196397969, 391805083 and 488340760: at 45 degrees the lobes lay along their segment and the leaf drew as a wire with ticks beside every photo; lobes half as wide as long filled the blade so far that the card tiers baked the leaves into the plant's cards as dots); the segments longest 0.4 of the way up and shorter toward both ends, the blade's oblong to lanceolate outline (its shape word is the blade's, so the card sets its segments' own form by hand)."
     },
     "appearance.organs.basal.shape": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "The blade drawn dissected (spec rework P4): a twice-divided leaf whose segments run together along a winged rachis, its pattern and the running together from its characters by the rules at the flowering plants; before, separate toothed leaflets stood along a rachis. Counts and form by eye from iNaturalist photographs (2026-10-17): a narrow strap of many short primary segments set close, about one segment's width apart, 30 pairs on a stem leaf and 40 on a basal one, at about 60 degrees to the rachis, each cut into about 7 short lobes, each about a third as wide as long; the segments longest 0.4 of the way up and shorter toward both ends, the blade's oblong to lanceolate outline (its shape word is the blade's, so the card sets its segments' own form by hand)."
+      "note": "The blade drawn dissected (spec rework P4): a twice-divided leaf whose segments run together along a winged rachis, its pattern and the running together from its characters by the rules at the flowering plants; before, separate toothed leaflets stood along a rachis. Counts and form by eye from iNaturalist photographs (2026-10-17): a narrow strap of many short primary segments set close, about one segment's width apart, 30 pairs on a stem leaf and 40 on a basal one, at about 60 degrees to the rachis, each cut into about 7 short lobes, each about a third as wide as long, spreading about 60 degrees from the segment's own rachis so the lobes fan out and the leaf reads as a feathery strap (2026-11-07, re-read against iNaturalist observations 758272, 126222917, 196397969, 391805083 and 488340760: at 45 degrees the lobes lay along their segment and the leaf drew as a wire with ticks beside every photo; lobes half as wide as long filled the blade so far that the card tiers baked the leaves into the plant's cards as dots); the segments longest 0.4 of the way up and shorter toward both ends, the blade's oblong to lanceolate outline (its shape word is the blade's, so the card sets its segments' own form by hand)."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Hue measured from iNaturalist photos where the leaves fill the frame (2026-11-07; observations 391805083, 126222917 and 488340760; plantgen-claude project-files/library-api/yarrow-2026-11-07/): the median green pixel's linear red is 0.6 of its green and its blue 0.24, yellower than the herb green the plant was drawn in (0.47, 0.33). Photos are exposed brighter than leaves are, so only the hue comes from them; the green channel is a basal-leaf green as other forbs state it (sRGB 120). The stems take it as a herb's do, where they were drawn pale yellow-grey beside near-black leaves."
     },
     "traits.leaf_width_m": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Set by hand from iNaturalist photos (2026-10-17): a leaf about 10 cm long held against a hand is a strap 1.2 to 1.5 cm wide, about 7 times as long as wide; the range runs from the shortest leaves, 5 cm long at that shape, to the longer ones. Abrams and Ferris give lengths only."
+      "note": "Measured by eye from iNaturalist photos: in 2026-10-17 a leaf about 10 cm long held against a hand (observation 758272) was a strap 1.2 to 1.5 cm wide, about 7 times as long as wide; on 2026-11-07 the flat-lying basal and stem leaves of observations 126222917, 196397969, 391805083 and 488340760 are 5 to 6 times as long as wide, so the range runs from the shortest leaves, 5 cm long at about 6 times as long as wide, to 20 cm ones at about 6 (0.008 to 0.035 m). Abrams and Ferris give lengths only."
     },
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",
@@ -238,11 +251,6 @@
       "source": "abrams-ferris-1960",
       "note": "Abrams and Ferris vol. 4, A. millefolium (pp. 390-391): plants rhizomatous to tufted; rhizomes short and stout in some varieties, long and slender in others."
     },
-    "appearance.organs.flower.shape.involucre": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "The involucre drawn about 1.8 times as tall as the disc is wide, so its height comes to the flora's 4 to 7 mm on a head drawn 6 mm across (spec rework E1); the daisy family's rule sets it from the involucre's height and width, and no flora read gives yarrow's width."
-    },
     "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2908230), as no source read gives it."},
     "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2908230), as no source read gives it."},
     "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2908230), as no source read gives it."},
@@ -250,7 +258,13 @@
     "traits.perennation": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2908230), as no source read gives it."},
     "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2908230), as no source read gives it."},
     "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2908230), as no source read gives it."},
-    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China, Achillea millefolium (read 2026-10-18): the ultimate leaf segments end in a tiny hard (cartilaginous) point."}
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China, Achillea millefolium (read 2026-10-18): the ultimate leaf segments end in a tiny hard (cartilaginous) point."},
+    "traits.inflorescence_outline": {"evidence": "SourceInferred", "source": "abrams-ferris-1960", "note": "Abrams and Ferris vol. 4, A. millefolium (p. 390): heads numerous, aggregated into flat to round-topped, corymbiform panicles; FNA's arrays are flat-topped (see traits). Word: flat_topped."},
+    "traits.inflorescence_density": {"evidence": "SourceInferred", "source": "vicflora", "note": "VicFlora's account of the species, as quoted in search results (the page itself was not read, 2026-11-06): capitula in dense compound corymbs. The 28 iNaturalist photographs of yarrow in imagekit (batches pilot-asteraceae-2026-10-31 and inat-lowpoly-r8-2026-10-29) agree: one plate of heads with no gaps between its branches. Word: dense."},
+    "traits.inflorescence_branches": {"evidence": "Authored", "source": "plantgen-authors", "note": "Counted by eye from the 28 iNaturalist photographs of yarrow in imagekit (batches pilot-asteraceae-2026-10-31 and inat-lowpoly-r8-2026-10-29) (2026-11-06): each plate is made of about 5 to 12 rounded tufts of heads, one on each primary branch of the compound array Abrams and Ferris (p. 390, 'corymbiform panicles') and VicFlora ('dense compound corymbs') describe. No flora read counts them."},
+    "traits.involucre_diameter_m": {"evidence": "SourceInferred", "source": "fna-19", "note": "FNA's account of the genus Achillea (Trock), as SEINet's copy is quoted in search results (the page itself was not read, 2026-11-06): involucres campanulate to hemispheric, mostly 2-3(-5+) mm diam."},
+    "traits.ray_length_m": {"evidence": "SourceInferred", "source": "fna-19", "note": "FNA's account of the species, as SEINet's copy is quoted in search results (the page itself was not read, 2026-11-06): ray florets (3-)5-8, laminae 1.5-3 x 1.5-3 mm. Abrams and Ferris (p. 390): rays broadly ovate to orbicular."},
+    "traits.ray_width_m": {"evidence": "SourceInferred", "source": "fna-19", "note": "FNA's account of the species, as SEINet's copy is quoted in search results (the page itself was not read, 2026-11-06): ray florets (3-)5-8, laminae 1.5-3 x 1.5-3 mm. Abrams and Ferris (p. 390): rays broadly ovate to orbicular."}
   },
   "provenance": {
     "sources": [

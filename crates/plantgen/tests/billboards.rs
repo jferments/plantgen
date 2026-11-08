@@ -568,13 +568,17 @@ fn a_yarrows_card_tiers_keep_its_tone_from_the_side() {
     // foot: from the side the low cards drew 0.75 as bright as the plant
     // and the corymbs half their cover. Each line is lit as its blade
     // faces now, and each corymb's cone is as deep as its cover from the
-    // side says.
+    // side says. Since the nearest level draws a leaf's rachis along its
+    // droop's arc (revision 217) and the card tiers bake from level 1, the
+    // plant draws a little brighter from the side than the cards: the
+    // minimal cards 0.878 as bright, so the floor is 0.87 (owner's
+    // choice, 2026-11-08).
     for tier in &TIERS {
         let (whole, carded) = full_and_tier("achillea-millefolium", tier);
         let ratio = carded.tone[0] / whole.tone[0];
         println!("{}: tone from the side {ratio:.2}", tier.name);
         assert!(
-            ratio >= 0.88,
+            ratio >= 0.87,
             "{}: from the side the cards draw {ratio:.2} as bright as the plant",
             tier.name
         );

@@ -1773,4 +1773,28 @@ pub mod venation;
 /// ones, from the same triangles. The minimal tier drew 18 of a yarrow's
 /// 54 leaves as crossed cards and baked the rest into dots; it now draws
 /// all 54 in the same 144 triangles, wearing the same pictures.
-pub const GENERATOR_REVISION: u32 = 216;
+///
+/// 217: a compound corymb's branches turn upright at their tips, so the
+/// corymb each bears stands level with the others in one flat top (a
+/// rowan's, a Catalina ironwood's); before, each leaned with its branch.
+/// A corymb that floras call dense (`inflorescence_density`, the
+/// inflorescence's `fill`) leans its pedicels and branches just far
+/// enough that its heads or flowers fill its top, its branches as short
+/// as their heads allow, each tuft's heads side by side (a head leans
+/// with its pedicel, so it stands its own lean nearer the axis): a
+/// yarrow's 5 to 12 tufts of heads in one plate,
+/// each head sized from its involucre and rays (FNA), where hand values
+/// drew a cone of bare pedicels. Every other cluster draws as it did.
+/// A lacy leaf's rachises and ribbons are drawn in pieces along its
+/// droop's arc (`crate::lace`), where each was its chord: a drooping
+/// yarrow leaf's rachis ran 5 to 8 mm beside its pinnae, so they hung in
+/// a row off to one side of it; only the nearest level draws the arc, as
+/// the card tiers bake from level 1. A divided leaf may hold its primary
+/// divisions in two ranks and only their segments all round
+/// (`division_planes` `segments_round`): a yarrow's leaf is a feathery
+/// strap, three-dimensional in its fine parts (FEIS), not a bottlebrush.
+/// Yarrow's heads take the daisy family's rules for their disc, involucre
+/// and rays (FNA's sizes) where hand values drew the involucre as wide as
+/// the head; its leaves are 5 to 6 times as long as wide and take their
+/// colour from photographs.
+pub const GENERATOR_REVISION: u32 = 217;

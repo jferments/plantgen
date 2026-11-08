@@ -2104,10 +2104,10 @@
       "group": "leaves",
       "organ": "leaf",
       "type": "enum",
-      "values": ["flat", "spray", "all_round"],
+      "values": ["flat", "spray", "segments_round", "all_round"],
       "when": {"leaf_division": ["compound"], "leaf_incision": ["lobed", "cleft", "parted", "dissected"]},
       "optional": true,
-      "why": "how a divided leaf's divisions are held: all in one plane, rising loosely out of it as a spray, or standing all round each rachis so the leaf is a bottlebrush"
+      "why": "how a divided leaf's divisions are held: all in one plane, rising loosely out of it as a spray, its primary divisions in its plane with their segments standing all round each division's rachis (a strap, three-dimensional in its fine parts), or every division standing all round each rachis so the leaf is a bottlebrush"
     },
     "cauline_leaves": {
       "group": "leaves",
@@ -2492,6 +2492,15 @@
       "when": {"inflorescence": ["corymb"]},
       "optional": true,
       "why": "the shape a corymb's flowers make together: level across its top, a dome, or a ball, as a mophead hydrangea's"
+    },
+    "inflorescence_density": {
+      "group": "flowers",
+      "organ": "inflorescence",
+      "type": "enum",
+      "values": ["dense", "open"],
+      "when": {"inflorescence": ["corymb"]},
+      "optional": true,
+      "why": "whether a corymb's flowers or heads crowd edge to edge in one plate (a yarrow's) or stand apart on their pedicels"
     },
     "inflorescence_length_m": {
       "group": "flowers",

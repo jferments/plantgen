@@ -3662,6 +3662,13 @@ pub struct Inflorescence {
     /// a half sphere, 180 a ball (a mophead hydrangea's). 0.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub dome: Option<f64>,
+    /// The share of a flat-topped corymb's top its units, or its
+    /// branches' tops, cover, 0.1 to 1, where its pedicels' and branches'
+    /// `spread` is left unset: they lean just far enough to fill it, as a
+    /// yarrow's heads stand in one dense plate. Unset, they lean
+    /// `spread`'s default whatever they bear.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub fill: Option<f64>,
     /// Colour of the axes and pedicels, on the solid and the card; green
     /// unless set, or for a branch its cluster's.
     #[serde(skip_serializing_if = "Option::is_none")]
