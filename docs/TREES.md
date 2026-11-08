@@ -37,10 +37,18 @@ A broadleaf tree is grown one year at a time, after Pałubicki et al.
   rises above the least they have stood in, as when a limb above is shed,
   so a young open-grown oak keeps a clean bole and heavy scaffolds.
 - **Shade kills.** Buds below `shade_death` die, a branch with no living
-  bud is shed, and the lower stem clears itself.
+  bud is shed, and the lower stem clears itself. In the pine family
+  `shade_death` follows the species' shade-tolerance class in the Silvics
+  of North America (tolerant 0.06, intermediate 0.1, intolerant 0.15),
+  and a twig of a limb's side branch that stays below its starving light
+  is shed with its needles (`twig_shade`, branch autonomy), so a crown in
+  a stand holds about the leaf its trunk carries.
 - **Wood carries load.** Branches thicken by the pipe model, bend under
   their own weight and their leaves', and hold a set angle from upright by
-  reaction wood.
+  reaction wood. The trunk's girth follows the foliage it carries: the
+  pine family's pipe values (`pipe_organ`, `pipe_tip`) give a stand-grown
+  Douglas-fir the dbh Espinosa Bancalari et al. (1987) measured for its
+  leaf area.
 
 The parameters come from rules (§3), not from values set by hand for a
 species. A few species still carry older hand-set values (Oregon white
@@ -80,7 +88,9 @@ not invented:
   crown keeps its leaf area.
 - **Neighbours.** Among other crowns or at a stand's edge, the region
   narrows as far as the shade allows (Duchemin et al. 2018), so trees in a
-  stand grow tall and narrow, and toward open sky at an edge.
+  stand grow tall and narrow, and toward open sky at an edge. The
+  neighbours' crowns shade as the plant's own does, with its crown's
+  clumping and its program's light extinction.
 
 What does not work: lumps imposed on the outline ("billows") gave
 clipped-hedge shapes, and hand-set crown bases and growth rates pushed
@@ -138,6 +148,10 @@ In this order:
    phrase against the render.
 3. **Numbers third.** `plantc grow SPECIES --years N` prints sizes against
    the reference lines; `plantc measure` gives crown width and height;
+   `plantc grow SPECIES --env interior --years N --light` prints the light
+   down through the stand and the share of leaf in each quarter of the
+   crown's depth, to set beside measured canopy profiles (Parker et al.
+   2002) and crown leaf distributions;
    `plantc validate SPECIES --seeds 3` checks every stated character on
    grown plants, as `tests/checks.rs` does. Grow every species of the
    family, not just one, and grow them to the oldest age the sources
@@ -169,6 +183,11 @@ birch closer to their photos. These are still off:
 - **Trunks and bark** need the most work: trunk girth and taper, root
   flare, how limbs join the trunk, and bark colour and texture against
   photos.
+- **Conifers in stands** grow as tidy regular cones with stiff level
+  limbs; photos show ragged crowns of uneven limbs, a western hemlock's
+  leader and limb tips drooping. Their leaf sits too high: a 155-year
+  Douglas-fir's mid-crown gets about a third of the light Parker et al.
+  (2002) measured, and its lowest quarter holds too little leaf.
 - **Seedlings**: a young envelope narrower than the spacing of its
   free-space points can leave a seedling waiting years for a shoot.
 

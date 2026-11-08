@@ -197,10 +197,14 @@ Usage:
       a phylum with roots: often right, but worth a look.
   plantc grow <species|spec.json> [--env ENV] [--seed N] [--years N]
               [--conditions FILE|JSON [--from-age N]] [--digest] [--profile]
+              [--light]
       Grow one variant and print its size at every keyframe. --digest
       prints the growth's digest; --profile the seconds each year took,
       by phase (drawing the string, girth and bends, the environment
-      tools, keyframes, rewriting), and the parts standing.
+      tools, keyframes, rewriting), and the parts standing. --light
+      prints the overcast-sky light at the last age every 2 m from the
+      top down, across the plant's cell in its stand (plantgen::
+      light_profile), to set beside a canopy's measured profile.
       --conditions grows it on from --from-age years (0 when left out) in
       a place: a conditions document, as a file or inline, laid over the
       variant's, such as a substrate preset at a tree's scale or
@@ -2586,12 +2590,13 @@ fn validate_command(args: &[String]) -> Result<(), Failure> {
 }
 
 fn grow_command(args: &[String]) -> Result<(), Failure> {
-    // `--digest` and `--profile` take no value.
+    // `--digest`, `--profile` and `--light` take no value.
     let digest = args.iter().any(|arg| arg == "--digest");
     let profile = args.iter().any(|arg| arg == "--profile");
+    let light = args.iter().any(|arg| arg == "--light");
     let args: Vec<String> = args
         .iter()
-        .filter(|arg| *arg != "--digest" && *arg != "--profile")
+        .filter(|arg| *arg != "--digest" && *arg != "--profile" && *arg != "--light")
         .cloned()
         .collect();
     let options = Options::parse(
@@ -2665,6 +2670,47 @@ fn grow_command(args: &[String]) -> Result<(), Failure> {
     };
     for record in package::compare_allometry(&spec, &variant, &growth) {
         out!("  reference at {} years: {}", record.age, record.describe());
+    }
+    if light && let Some(graph) = growth.keyframes.last() {
+        let preset = Conditions::preset(environment);
+        let conditions = place
+            .as_ref()
+            .map_or(preset.clone(), |(place, _)| place.over(&preset));
+        let half = plantgen::light_profile::half_width(graph, &growth.organ_types, &conditions);
+        out!(
+            "  light at {} years across its cell, {:.1} m to each side (mean, 10th, median, 90th percentile; mean under its own crown alone):",
+            graph.age,
+            half
+        );
+        let layers = plantgen::light_profile::profile(
+            graph,
+            &growth.organ_types,
+            &conditions,
+            1.0,
+            (0.4, 0.35),
+        )
+        .map_err(Failure::from)?;
+        for layer in layers.iter().rev().step_by(2) {
+            out!(
+                "    {:>5.1} m  {:.3}  {:.3}  {:.3}  {:.3}  {:.3}",
+                layer.height_m,
+                layer.mean,
+                layer.p10,
+                layer.median,
+                layer.p90,
+                layer.own
+            );
+        }
+        if let Some(quarters) = plantgen::light_profile::crown_quarters(graph, &growth.organ_types)
+        {
+            out!(
+                "  leaf by quarter of the crown's depth, top first: {:.2} {:.2} {:.2} {:.2}",
+                quarters[0],
+                quarters[1],
+                quarters[2],
+                quarters[3]
+            );
+        }
     }
     if digest {
         out!("  digest {}", growth.digest());
