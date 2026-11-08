@@ -162,10 +162,6 @@ pub struct FarCanopy {
     /// north-west corner (as an image is stored), `texels * texels` of
     /// them.
     pub colour: Vec<[u8; 4]>,
-    /// Each texel's normal as a glTF normal map holds it: in the height
-    /// field's frame there (east, north, its normal), 0 to 255 for -1 to
-    /// 1, in the same order.
-    pub normal: Vec<[u8; 3]>,
     /// Each texel's sky view, 0 to 255, in the same order.
     pub sky_view: Vec<u8>,
     pub stats: FarStats,
@@ -217,20 +213,6 @@ impl FarCanopy {
         raster::encode_png(self.texels, self.texels, &rgba).map_err(|e| Error(e.to_string()))
     }
 
-    /// The normal map as a PNG ([`Self::normal`]).
-    ///
-    /// # Errors
-    ///
-    /// When it cannot be encoded.
-    pub fn normal_png(&self) -> Result<Vec<u8>, Error> {
-        let rgba: Vec<u8> = self
-            .normal
-            .iter()
-            .flat_map(|&[r, g, b]| [r, g, b, 255])
-            .collect();
-        raster::encode_png(self.texels, self.texels, &rgba).map_err(|e| Error(e.to_string()))
-    }
-
     /// The sides' pictures as one PNG ([`Self::side`]).
     ///
     /// # Errors
@@ -252,20 +234,9 @@ impl FarCanopy {
     /// When an image cannot be encoded.
     pub fn glb(&self) -> Result<Vec<u8>, Error> {
         let (positions, normals, uvs, indices) = self.mesh();
-        let tangents: Vec<f32> = normals
-            .as_chunks::<3>()
-            .0
-            .iter()
-            .flat_map(|n| {
-                let (t, _) = frame(Vec3::new(f64::from(n[0]), f64::from(n[1]), f64::from(n[2])));
-                #[allow(clippy::cast_possible_truncation)]
-                [t.x as f32, t.y as f32, t.z as f32, 1.0]
-            })
-            .collect();
         let mut document = Document::new();
         let position = document.attribute(&positions, 3, true);
         let normal = document.attribute(&normals, 3, false);
-        let tangent = document.attribute(&tangents, 4, false);
         let uv = document.attribute(&uvs, 2, false);
         let index = document.indices(&indices);
         let sampler = document.sampler(json!({
@@ -278,8 +249,6 @@ impl FarCanopy {
         let colour = document.texture(colour, sampler);
         let sky = document.png("far sky view", &self.sky_view_png()?);
         let sky = document.texture(sky, sampler);
-        let bumps = document.png("far normals", &self.normal_png()?);
-        let bumps = document.texture(bumps, sampler);
         let material = document.material(json!({
             "name": "far canopy",
             "pbrMetallicRoughness": {
@@ -287,7 +256,6 @@ impl FarCanopy {
                 "metallicFactor": 0.0,
                 "roughnessFactor": 1.0,
             },
-            "normalTexture": { "index": bumps },
             "occlusionTexture": { "index": sky },
             "alphaMode": "MASK",
             "alphaCutoff": 0.5,
@@ -323,7 +291,6 @@ impl FarCanopy {
                 "attributes": {
                     "POSITION": position,
                     "NORMAL": normal,
-                    "TANGENT": tangent,
                     "TEXCOORD_0": uv,
                 },
                 "indices": index,
@@ -610,48 +577,6 @@ impl Field<'_> {
         let dn = (self.height(i, nn) - self.height(i, s)) / ((nn - s).max(1) as f64 * self.step);
         Vec3::new(-dx, 1.0, dn).normalize_or(Vec3::Y)
     }
-
-    /// The normal a renderer interpolates at (east, north) metres from
-    /// the south-west corner: its triangle's corners' (the mesh splits
-    /// each square from its south-west to its north-east corner).
-    #[allow(clippy::many_single_char_names)]
-    fn normal_at(&self, east: f64, north: f64) -> Vec3 {
-        let n = self.grid;
-        #[allow(clippy::cast_precision_loss)]
-        let last = (n - 1) as f64;
-        let u = (east / self.step).clamp(0.0, last);
-        let v = (north / self.step).clamp(0.0, last);
-        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-        let (i, j) = (
-            (u.floor() as usize).min(n - 2),
-            (v.floor() as usize).min(n - 2),
-        );
-        #[allow(clippy::cast_precision_loss)]
-        let (fu, fv) = (u - i as f64, v - j as f64);
-        let (a, c) = (self.normal(i, j), self.normal(i + 1, j + 1));
-        let mixed = if fu >= fv {
-            let b = self.normal(i + 1, j);
-            a * (1.0 - fu) + b * (fu - fv) + c * fv
-        } else {
-            let d = self.normal(i, j + 1);
-            a * (1.0 - fv) + d * (fv - fu) + c * fu
-        };
-        mixed.normalize_or(Vec3::Y)
-    }
-}
-
-/// A surface's tangent frame for a normal map over a top-down picture:
-/// the tangent east (+x) laid on the surface, the bitangent north (the
-/// picture's up), as glTF reads them (`cross(normal, tangent)`).
-fn frame(normal: Vec3) -> (Vec3, Vec3) {
-    let along = Vec3::X - normal * normal.dot(Vec3::X);
-    // A wall facing east or west runs north-south.
-    let tangent = if along.length() > 1e-3 {
-        along.normalize_or(Vec3::X)
-    } else {
-        Vec3::new(0.0, 0.0, -normal.x.signum())
-    };
-    (tangent, normal.cross(tangent))
 }
 
 /// `field` (`wide` square, `NEG_INFINITY` where empty) closed over a disc
@@ -810,8 +735,6 @@ fn limit_slope(field: &[f64], wide: usize, rise: f64) -> Vec<f64> {
 struct Sample {
     /// Linear RGB summed over the covered samples.
     colour: [f64; 3],
-    /// Their normals summed, each turned up.
-    normal: [f64; 3],
     covered: usize,
     /// How many of them a plant of the height field covers.
     shell: usize,
@@ -937,7 +860,6 @@ impl Fill {
         };
         let mut depth = vec![f32::INFINITY; pixels * pixels];
         let mut colour = vec![[0.0_f32; 3]; pixels * pixels];
-        let mut normal = vec![[0.0_f32; 3]; pixels * pixels];
         // The tops of the plants that make the height field.
         let mut shell_depth = vec![f32::INFINITY; pixels * pixels];
         let mut plants = 0;
@@ -1038,7 +960,6 @@ impl Fill {
                     depth[k] = d;
                     let c = image.color[k];
                     colour[k] = [c[0], c[1], c[2]];
-                    normal[k] = image.normal[k];
                 }
             }
             let own_cards = if around.is_empty() {
@@ -1125,7 +1046,6 @@ impl Fill {
         let mut samples = vec![
             Sample {
                 colour: [0.0; 3],
-                normal: [0.0; 3],
                 covered: 0,
                 shell: 0,
                 top: f64::NEG_INFINITY,
@@ -1141,11 +1061,6 @@ impl Fill {
                 let sample = &mut samples[(py / ss) * wide + px / ss];
                 for (sum, c) in sample.colour.iter_mut().zip(colour[k]) {
                     *sum += f64::from(c);
-                }
-                // Seen from above, a card faces up.
-                let flip = if normal[k][1] < 0.0 { -1.0 } else { 1.0 };
-                for (sum, n) in sample.normal.iter_mut().zip(normal[k]) {
-                    *sum += flip * f64::from(n);
                 }
                 sample.covered += 1;
                 if shell_depth[k].is_finite() {
@@ -1290,17 +1205,11 @@ impl Fill {
                 covered.push(is_covered);
             }
         }
-        let field = Field {
-            heights: &heights,
-            grid,
-            step,
-        };
 
         // The picture: the tile's own texels.
         #[allow(clippy::cast_precision_loss)]
         let per_texel = (ss * ss) as f64;
         let mut rgba = Vec::with_capacity(texels * texels * 4);
-        let mut normal_out = Vec::with_capacity(texels * texels);
         for y in 0..texels {
             for x in 0..texels {
                 let sample = &samples[(y + margin) * wide + x + margin];
@@ -1316,22 +1225,10 @@ impl Fill {
                 }
                 #[allow(clippy::cast_precision_loss, clippy::cast_possible_truncation)]
                 rgba.push(raster::to_u8((sample.covered as f64 / per_texel) as f32));
-                // Its normal in the height field's frame there (tangent
-                // east, bitangent north, as glTF reads a normal map).
-                let (east, north) = texel_at(x + margin, y + margin);
-                let up = field.normal_at(east, north);
-                let seen = Vec3::new(sample.normal[0], sample.normal[1], sample.normal[2])
-                    .normalize_or(up);
-                let (tangent, bitangent) = frame(up);
-                #[allow(clippy::cast_possible_truncation)]
-                normal_out.push(
-                    [seen.dot(tangent), seen.dot(bitangent), seen.dot(up)]
-                        .map(|v| raster::to_u8((0.5 * v + 0.5) as f32)),
-                );
             }
         }
         impostor::preserve_coverage(&mut rgba);
-        // Empty texels take their nearest covered one's colour and normal,
+        // Empty texels take their nearest covered one's colour,
         // so filtering and mipmaps never blend black into the crowns.
         let kept: Vec<bool> = rgba
             .as_chunks::<4>()
@@ -1341,12 +1238,10 @@ impl Fill {
             .collect();
         let mut colour_out: Vec<[u8; 4]> = rgba.as_chunks::<4>().0.to_vec();
         if let Some(nearest) = impostor::nearest_covered(&kept, texels) {
-            let normals = normal_out.clone();
             for (k, &source) in nearest.iter().enumerate() {
                 if source != k {
                     let [r, g, b, _] = colour_out[source];
                     colour_out[k] = [r, g, b, colour_out[k][3]];
-                    normal_out[k] = normals[source];
                 }
             }
         }
@@ -1454,7 +1349,6 @@ impl Fill {
             side_top_m: side_top,
             covered,
             colour: colour_out,
-            normal: normal_out,
             sky_view: sky_out,
             stats,
             settings: *settings,

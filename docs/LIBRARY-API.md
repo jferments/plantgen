@@ -447,8 +447,8 @@ the tile's own plants, drawn at the farthest level as the cells draw them:
 
 - a picture of the tile from straight above (`FarSettings::texel_m`, half
   a metre unless chosen), its colour under even light with the cover in
-  alpha, a normal map of the cards' facing and a sky-view map (glTF's
-  occlusion map) that darkens the spaces between crowns;
+  alpha, and a sky-view map (glTF's occlusion map) that darkens the
+  spaces between crowns;
 - a height field of the crowns' tops, a vertex every `grid_m` (2 m). Plants
   1.4 m or taller make it (`shell_least_m`); the herbs and shrubs beneath
   are in the picture only. A space between crowns narrower than the stand
@@ -463,15 +463,15 @@ the tile's own plants, drawn at the farthest level as the cells draw them:
 Its root sits at the tile's south-west corner (+X east, +Y up, -Z north)
 like the tile's other files. The scene's extras (and the JSON) give its
 `from_m`: the distance from which a texel is no wider than a pixel for a
-camera 1080 pixels high and 60 degrees across (470 m at half-metre texels),
+camera 1080 pixels high and 60 degrees across (468 m at half-metre texels),
 so a host draws the cells nearer and this farther. A 120 m tile of an
-80-year Douglas-fir stand is 7,680 triangles and 0.8 MiB, where its level-3
+80-year Douglas-fir stand is 7,680 triangles and 0.57 MiB, where its level-3
 cells are 214 MiB uncompressed; at a kilometre the cells' cards are thinner
 than a pixel and read as speckles, while the stand-in stays a closed
 forest. `Fill::canopy_among(&plan, &site, &[&neighbour, ...], &settings)`
 also draws the neighbours' crowns that reach across its sides, so two
 neighbours baked with each other agree along the side they share. Growing
-the prototypes takes the time (two minutes for that tile on four threads);
+the prototypes takes the time (two to four minutes for that tile on four threads);
 a `Fill` keeps what it drew, so the next tile of the same fill grows none
 again.
 
