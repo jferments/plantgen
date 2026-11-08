@@ -114,6 +114,23 @@ pub const CLOSED_LAYERS: [f64; 4] = [0.70, 0.27, 0.45, 0.28];
 /// herbs 15% for the plots' 11-14% of forbs and ferns.
 pub const OLD_LAYERS: [f64; 4] = [0.45, 0.63, 0.50, 0.15];
 
+/// Each layer's cover in a closed broadleaf stand, as [`CLOSED_LAYERS`]
+/// gives a conifer one's: western Oregon's wet hardwood stands of 35 to 65
+/// years (McIntosh, Gray and Garman 2009, PNW-GTR-794, figs. 2 and 9: 82
+/// inventory plots, red alder dominant in 99 of the group's 137 and
+/// bigleaf maple in 25). Their upper tree layer covers 54-69% (64 here),
+/// the middle 27-31% over a lower 4-8% (35 together), as many trees as
+/// beneath the conifers, but shrubs cover 46-59% (50) and forbs, ferns and
+/// grasses 53-56% (54) where the conifers' hold 22-33%: under the alders'
+/// lighter crowns the herb layer is twice as full, and it does not thin as
+/// the trees close (forb cover rose with tree cover in the hardwood plots,
+/// r = 0.12, and fell with it under conifers, r = -0.34, their table 3).
+/// Few hardwood plots are older than 65 years (3 of 137), so a broadleaf
+/// stand holds these covers in every later stage too, this model's choice;
+/// as its pioneers die and conifers come up beneath them, its covers move
+/// toward the conifers' by their share of the trees ([`hardwood_share`]).
+pub const HARDWOOD_LAYERS: [f64; 4] = [0.64, 0.35, 0.50, 0.54];
+
 /// The share of a closed conifer stand's forest floor mosses cover where
 /// nothing grows over them, on moist ground: fitted, with
 /// [`MOSS_UNDER_PLANTS`], to the Puget Trough's second-growth Douglas-fir
@@ -474,8 +491,35 @@ impl Stage {
     /// 22-30% over lower 10-17%, together 37% as [`CLOSED_LAYERS`] adds
     /// them, shrubs 46-57%, herbs 26-47% from 75 to 115 years); old growth
     /// holds [`OLD_LAYERS`], vertical diversification halfway to it.
+    ///
+    /// A broadleaf stand holds [`HARDWOOD_LAYERS`] once closed instead, and
+    /// one of both kinds of trees covers in between by `hardwood`, the
+    /// hardwoods' share of its trees ([`hardwood_share`]).
     #[must_use]
-    pub fn cover(self, age: f64, lifespan: f64) -> [f64; 4] {
+    pub fn cover(self, age: f64, lifespan: f64, hardwood: f64) -> [f64; 4] {
+        let conifer = self.conifer_cover(age, lifespan);
+        let hardwood = hardwood.clamp(0.0, 1.0);
+        if hardwood <= 0.0 {
+            return conifer;
+        }
+        let broadleaf = match self {
+            Self::Establishment => {
+                let closing = (age / (CLOSURE * lifespan.max(1.0))).clamp(0.0, 1.0);
+                let [canopy, subcanopy, shrub, herb] = HARDWOOD_LAYERS;
+                [
+                    canopy * closing,
+                    subcanopy * closing,
+                    shrub,
+                    0.47 + (herb - 0.47) * closing,
+                ]
+            }
+            _ => HARDWOOD_LAYERS,
+        };
+        std::array::from_fn(|i| conifer[i] + (broadleaf[i] - conifer[i]) * hardwood)
+    }
+
+    /// [`Stage::cover`] of a conifer stand.
+    fn conifer_cover(self, age: f64, lifespan: f64) -> [f64; 4] {
         let [canopy, subcanopy, shrub, herb] = CLOSED_LAYERS;
         let between = |share: f64| -> [f64; 4] {
             std::array::from_fn(|i| CLOSED_LAYERS[i] + (OLD_LAYERS[i] - CLOSED_LAYERS[i]) * share)
@@ -515,9 +559,22 @@ pub struct Candidate {
     /// [`crate::niche::Niche::site_response`]): it scales the species'
     /// share of the stand, never how full the stand is.
     pub suitability: f64,
+    /// Whether its wood is a hardwood (the `wood_class` trait: every
+    /// angiosperm's, from the Wood Handbook's division), so a stand of it
+    /// takes a broadleaf stand's covers ([`HARDWOOD_LAYERS`]).
+    pub hardwood: bool,
 }
 
 impl Candidate {
+    /// Whether a species' traits give it a hardwood (`wood_class`
+    /// `"hardwood"`), as [`Candidate::hardwood`] reads it.
+    #[must_use]
+    pub fn hardwood_in(traits: &serde_json::Map<String, serde_json::Value>) -> bool {
+        traits
+            .get("wood_class")
+            .is_some_and(|class| class.as_str() == Some("hardwood"))
+    }
+
     /// Whether it grows into a tree: it has a canopy or subcanopy layer.
     #[must_use]
     pub fn tree(&self) -> bool {
@@ -728,7 +785,7 @@ pub fn develop_as(candidates: &[Candidate], age: f64, origin: Origin) -> Develop
         .filter(|candidate| candidate.tree())
         .map(|candidate| candidate.suitability)
         .fold(0.0_f64, f64::max);
-    let mut cover = stage.cover(age, lifespan);
+    let mut cover = stage.cover(age, lifespan, hardwood_share(candidates, &cohorts));
     let woodland = smoothstep(0.0, 0.5, best);
     cover[0] *= woodland;
     cover[1] *= woodland;
@@ -857,6 +914,26 @@ pub fn layer_of(candidate: &Candidate, height_m: f64, top_m: f64) -> Layer {
     }
 }
 
+/// The hardwoods' share of a stand's trees, 0 to 1: of the weight of its
+/// tree cohorts that are not overtopped (the canopy's, and the ingrowth
+/// beneath it), the share whose candidates are hardwoods
+/// ([`Candidate::hardwood`]). Zero where it holds no trees.
+#[must_use]
+pub fn hardwood_share(candidates: &[Candidate], cohorts: &[Cohort]) -> f64 {
+    let (mut hard, mut all) = (0.0, 0.0);
+    for cohort in cohorts {
+        let candidate = &candidates[cohort.candidate];
+        if !candidate.tree() || cohort.overtopped {
+            continue;
+        }
+        all += cohort.weight;
+        if candidate.hardwood {
+            hard += cohort.weight;
+        }
+    }
+    if all > 0.0 { hard / all } else { 0.0 }
+}
+
 /// The light a plant needs from above to stand in a stand: where its
 /// niche's light response ([`crate::niche::Niche::light_response`])
 /// reaches half, so an intolerant sapling stands only in gaps.
@@ -889,6 +966,7 @@ mod tests {
             lifespan: 500.0,
             ages: vec![5.0, 15.0, 30.0, 60.0, 120.0, 240.0, 480.0],
             suitability: 1.0,
+            hardwood: false,
         }
     }
 
@@ -899,6 +977,7 @@ mod tests {
             lifespan: 400.0,
             ages: vec![5.0, 15.0, 30.0, 60.0, 120.0, 240.0],
             suitability: 1.0,
+            hardwood: false,
         }
     }
 
@@ -909,6 +988,7 @@ mod tests {
             lifespan: 0.0,
             ages: vec![1.0, 3.0, 8.0],
             suitability: 1.0,
+            hardwood: false,
         }
     }
 
@@ -922,8 +1002,8 @@ mod tests {
         assert_eq!(at(500.0), Stage::HorizontalDiversification);
         assert_eq!(at(1000.0), Stage::PioneerLoss);
         // Cover closes by 35 years and the canopy opens in old growth.
-        assert!(at(10.0).cover(10.0, 500.0)[0] < 0.5);
-        assert!(at(500.0).cover(500.0, 500.0)[0] < at(60.0).cover(60.0, 500.0)[0]);
+        assert!(at(10.0).cover(10.0, 500.0, 0.0)[0] < 0.5);
+        assert!(at(500.0).cover(500.0, 500.0, 0.0)[0] < at(60.0).cover(60.0, 500.0, 0.0)[0]);
     }
 
     #[test]
@@ -1089,7 +1169,7 @@ mod tests {
         // closed young stand has an upper layer of about 70% over a middle
         // of about 22%, shrubs over 40% and herbs under a third; old
         // growth's upper layer thins as its middle and lower fill.
-        let at = |age: f64| Stage::at(age, 500.0).cover(age, 500.0);
+        let at = |age: f64| Stage::at(age, 500.0).cover(age, 500.0, 0.0);
         let young = at(50.0);
         assert!((0.65..0.75).contains(&young[0]) && (0.2..0.3).contains(&young[1]));
         assert!(young[2] > 0.4 && young[3] < 0.34);
@@ -1266,5 +1346,41 @@ mod tests {
         let depth = 0.013_f64.ln() / LEAFY_CROWN_LIGHT.ln();
         let bare = BARE_CROWN_LIGHT.powf(depth);
         assert!((0.31..0.40).contains(&bare), "{bare}");
+    }
+
+    #[test]
+    fn a_broadleaf_stand_takes_the_hardwood_plots_covers() {
+        let alder = Candidate {
+            shade_tolerance: 0.2,
+            layers: [1.0, 0.3, 0.0, 0.0],
+            lifespan: 100.0,
+            ages: vec![5.0, 15.0, 30.0, 60.0, 90.0],
+            suitability: 1.0,
+            hardwood: true,
+        };
+        // Closed at 30 years: the wet hardwood plots' covers, herbs twice
+        // the conifers'.
+        let alders = develop(std::slice::from_ref(&alder), 30.0);
+        assert_eq!(alders.cover, HARDWOOD_LAYERS);
+        assert!(alders.cover[3] > 1.5 * CLOSED_LAYERS[3]);
+        // Conifers alone keep theirs.
+        let firs = develop(&[fir()], 60.0);
+        assert_eq!(firs.cover, CLOSED_LAYERS);
+        // Both together cover in between, by the hardwoods' share.
+        let both = [fir(), alder.clone()];
+        let mixed = develop(&both, 60.0);
+        let share = hardwood_share(&both, &mixed.cohorts);
+        assert!((0.0..1.0).contains(&share) && share > 0.0, "{share}");
+        let at = Stage::at(60.0, mixed.lifespan);
+        assert_eq!(mixed.cover, at.cover(60.0, mixed.lifespan, share));
+        assert!(mixed.cover[3] > at.cover(60.0, mixed.lifespan, 0.0)[3]);
+        // Overtopped trees do not count toward the share.
+        let overtopped: Vec<Cohort> = mixed
+            .cohorts
+            .iter()
+            .filter(|cohort| cohort.overtopped)
+            .cloned()
+            .collect();
+        assert_eq!(hardwood_share(&both, &overtopped), 0.0);
     }
 }

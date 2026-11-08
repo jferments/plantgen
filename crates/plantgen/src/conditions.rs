@@ -132,9 +132,7 @@ impl Surroundings for Around<'_> {
     }
 
     fn occupied(&self, point: Vec3) -> bool {
-        self.envelopes
-            .iter()
-            .any(|envelope| envelope.contains(point))
+        self.envelopes.iter().any(|envelope| envelope.claims(point))
     }
 
     fn crowded(&self) -> bool {
@@ -389,7 +387,10 @@ impl Layout {
                 };
                 let centre = [f64::from(east) * spacing_m, f64::from(north) * spacing_m];
                 if placed && crown.reaches(centre, crown.radius_m) {
-                    envelopes.push(crown.envelope(centre));
+                    envelopes.push(Envelope {
+                        growing: true,
+                        ..crown.envelope(centre)
+                    });
                 }
             }
         }
@@ -471,6 +472,11 @@ pub struct Envelope {
     pub radius_m: f64,
     /// Shade per metre of this crown, 1/m.
     pub density: f64,
+    /// A crown like the plant's own in its stand, growing as it grows
+    /// ([`Layout::envelopes`]): the room above its top is its own too, on
+    /// its side of the plant.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub growing: bool,
 }
 
 /// The part of a stand of the plant's like beyond its rings of envelopes
@@ -665,6 +671,7 @@ impl Crown {
             top_m: self.top_m,
             radius_m: self.radius_m,
             density: (self.extinction * self.clumping * self.leaf_area_m2 / volume).min(10.0),
+            growing: false,
         }
     }
 }
@@ -682,6 +689,25 @@ impl Envelope {
         let (dx, dz) = (point.x - x, point.z - z);
         (self.base_m..=self.top_m).contains(&point.y)
             && dx * dx + dz * dz <= self.radius_m * self.radius_m
+    }
+
+    /// Whether the crown takes `point` from the plant: `point` is inside it,
+    /// or above it in a crown that grows as the plant does (`growing`), and
+    /// nearer its stem than the plant's own. Crowns that meet in a stand
+    /// part along the line halfway between their stems, each keeping its
+    /// side (crown shyness: Rudnicki et al. 2004, Can. J. For. Res. 34:
+    /// 1736). Taken by a neighbour's whole cylinder up to last year's top
+    /// (before generator revision 212), the room round the plant's own stem
+    /// was lost wherever a crown was wider than its spacing, and the room
+    /// above every neighbour was free: a bigleaf maple in a stand of its
+    /// like spread a flat cap of limbs 11 m across over stems 3 m apart.
+    #[must_use]
+    pub fn claims(&self, point: Vec3) -> bool {
+        let (x, z) = self.axis();
+        let (dx, dz) = (point.x - x, point.z - z);
+        let above = self.growing && point.y > self.top_m;
+        (self.contains(point) || (above && dx * dx + dz * dz <= self.radius_m * self.radius_m))
+            && dx * dx + dz * dz < point.x * point.x + point.z * point.z
     }
 
     /// The share of light along `direction` (a unit vector) that reaches
@@ -1496,6 +1522,7 @@ mod tests {
             top_m: 10.0,
             radius_m: 2.0,
             density: 0.5,
+            growing: false,
         }
     }
 
@@ -1551,6 +1578,19 @@ mod tests {
         assert!(around.transmission(Vec3::new(4.5, 1.0, 0.0), 1.0, up) < 0.1);
         assert!(around.occupied(Vec3::new(4.5, 3.0, 0.0)));
         assert!(!around.occupied(Vec3::new(0.0, 3.0, 0.0)));
+        // A neighbour wider than the gap between the stems keeps to its
+        // side of the line halfway between them.
+        let wide = [Envelope {
+            radius_m: 6.0,
+            ..crown()
+        }];
+        let crowded = Around {
+            envelopes: &wide,
+            ..around
+        };
+        assert!(crowded.occupied(Vec3::new(2.5, 3.0, 0.0)));
+        assert!(!crowded.occupied(Vec3::new(1.5, 3.0, 0.0)));
+        assert!(!crowded.occupied(Vec3::new(0.0, 3.0, 1.0)));
         let open = Around {
             envelopes: &[],
             ..around

@@ -1681,6 +1681,10 @@ struct Species {
     /// Whether its program grows it beneath a canopy as a shade-suppressed
     /// tree grows ([`BENEATH_PROGRAMS`]).
     grows_beneath: bool,
+    /// Whether its wood is a hardwood (its `wood_class` trait), so its
+    /// stands take a broadleaf stand's covers
+    /// ([`development::HARDWOOD_LAYERS`]).
+    hardwood: bool,
     /// Whether it sheds broad leaves (its `shed` section's foliage), whose
     /// litter buries forest-floor mosses
     /// ([`development::ground_moss`]); needles and sprays of scale leaves
@@ -1733,6 +1737,7 @@ impl Species {
             .and_then(|traits| traits.get("height_max_m").and_then(crate::traits::least))
             .filter(|height| *height > 0.0);
         let shoots = traits.as_ref().and_then(development::Shoots::of_herb);
+        let hardwood = traits.as_ref().is_some_and(Candidate::hardwood_in);
         let leafing = spec
             .appearance
             .organs
@@ -1756,6 +1761,7 @@ impl Species {
             canopy_m,
             grows_beneath,
             leaf_litter,
+            hardwood,
             leafing,
             shoots,
             twig,
@@ -1836,6 +1842,7 @@ impl StandMember {
                 lifespan: spec.growth.lifespan.unwrap_or(spec.growth.years),
                 ages,
                 suitability: 1.0,
+                hardwood: species.hardwood,
             },
         })
     }
