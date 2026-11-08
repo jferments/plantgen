@@ -2,8 +2,11 @@
 
 Each file is a `Community` (`plantgen::api::Community::from_json`): the
 species that grow together in one kind of place, the layer each keeps to,
-how common each is against the others (`abundance`, 1 when left out),
-and, for kept ground, `"origin": "planted"`, or for ground people
+how common each is against the others (`abundance`, 1 when left out, a
+weight on how many of it stand; or `cover`, its mean cover in the
+community's plots, percent, which splits its layer's cover as the plots
+do: each member stands as often as its cover over its crown's area), and,
+for kept ground, `"origin": "planted"`, or for ground people
 cleared or built on, `"origin": "cleared"`. A fill takes a list of them,
 and each cell of a `StandMap` names one by its place in that list
 (`docs/LIBRARY-API.md`, "Stands over a whole map").
@@ -70,7 +73,16 @@ What each holds:
   and Douglas-fir. Fire every 10 years on average (LANDFIRE's model of
   these prairies) keeps a few old oaks and firs over the sod; a cell's
   years since disturbance are the years since its last fire
-  (`development::develop_kept`).
+  (`development::develop_kept`). The herbs and shrubs stand by their
+  cover in the 14 plots of Chappell's Idaho fescue-white-top aster
+  community (Native Vegetation of the South Puget Sound Prairie
+  Landscape, Washington Natural Heritage Program, table 1), each the
+  table's cover times the share of plots it was in (reading the table's
+  "mean relative cover" as its mean where present): Roemer's fescue
+  45%, camas 5.2, bracken 3.2, Scotch broom 2.3, Oregon sunshine (woolly
+  sunflower) 1.9, oatgrass 1.6, yarrow 0.6, junegrass 0.6, spring gold
+  (pomo-celery lomatium) 0.4, serviceberry 0.2, snowberry and Nootka rose
+  0.1.
 
 ## How they were checked, and what is still off
 
@@ -94,16 +106,23 @@ Paper 36).
   and the broadleaf crowns' own leaf area is still too thin to say how much
   more an alder's lets through.
 - Prairie on dry ground (`--site 0.3,1,30,0`), a hectare: 2 and 8 years
-  after a fire, old oaks cover 14-16% at 8-9 trees a hectare, under the
+  after a fire, old oaks cover 14-15% at 8-9 trees a hectare, under the
   savanna's 20% (LANDFIRE BpS 11200) and within the under-1 to 49 trees a
   hectare of the 1800s on Joint Base Lewis-McChord's prairies (Peter and
-  Harrington 2014). Thatch covers 26%, then 45%, of the ground, moss
-  11-13%, and shrubs 1%, then 13%. Unburnt for 30 years it has closed
-  (trees 78% from above, 177 a hectare). At 80 years it holds 142 trees a
-  hectare, 96 of them Douglas-firs, with the oaks under them; those
-  prairies' fir stands hold 122-207 today. Against photos of the Mima
-  Mounds its grasses are still thin tufts where the sod is continuous,
-  and the Cladonia lichens are not drawn.
+  Harrington 2014). Its herbs cover 78-82% of the ground from above, about
+  100,000 plants a hectare, 80,000 of them Roemer's fescue (8 a square
+  metre); moss 36-39% under them (Calabria et al. 2016's plots: 33% just
+  after a fire, 40% long after), thatch 12%, then 23%, and shrubs 3%, then
+  13%. Its trees come into the sod slowly: 16% at 20 fire-free years (a
+  few saplings under 4 m among the old oaks, LANDFIRE's grassland class)
+  and 31% at 30, past LANDFIRE's closed mark at 28 (30% of the ground under
+  trees 5 m tall or more), while its shrubs, mostly Scotch broom, build to
+  33% and 44%. At 80 years it holds 150 trees a hectare, 98 of them
+  Douglas-firs, with the oaks under them; those prairies' fir stands hold
+  122-207 today. A 6 m patch of the grasses alone is 37% covered seen from
+  above. Against photos of the Mima Mounds the sod is now continuous and
+  tawny, but its fescues lack the straw skirt of dead blades, and the
+  Cladonia lichens are not drawn.
 - Yard trees: crowns cover most of a yard cell, with Douglas-fir, redcedar
   and dogwood; bigleaf maple fades early because its spec's lifespan reads
   50 years.

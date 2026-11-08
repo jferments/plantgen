@@ -1492,3 +1492,54 @@ fn a_tile_shows_its_day_bare_maples_and_vanilla_leaf_down_in_winter() {
     assert!((january.stats.floor[1] - july.stats.floor[1]).abs() < 1e-9);
     std::fs::remove_dir_all(&*MAPLE_SIZES).ok();
 }
+
+#[test]
+fn a_meadow_given_by_plot_cover_splits_its_herb_cover_as_the_plots_do() {
+    // Yarrow at 40% of the plots' ground and Roemer's fescue at 10%: the
+    // fescue's tussock fills a wider disc than a yarrow, so by count it
+    // stands less often than a quarter as often, and by area it holds
+    // about a fifth of the herbs' cover.
+    let meadow = Community::from_json(
+        r#"{"id": "test-plot-meadow", "members": [
+            {"species": "achillea-millefolium", "layer": "herb", "environments": ["open"], "cover": 40},
+            {"species": "festuca-roemeri", "layer": "herb", "environments": ["open"], "cover": 10}
+        ]}"#,
+    )
+    .expect("community");
+    let mut settings = FillSettings::default();
+    settings.stand_ages = vec![10.0];
+    settings.seeds = 1;
+    let fill = Fill::new(&[meadow], &settings).expect("fill");
+    fill.measure(&[], 8, None).expect("measured");
+    let site = Site::flat(TileId { x: 0, y: 0 }, 40.0).expect("site");
+    let plan = fill
+        .tile(&site, &StandMap::uniform(40.0, 0, 10.0), 1)
+        .expect("tile");
+    let (mut areas, mut counts) = ([0.0_f64; 2], [0_usize; 2]);
+    for instance in &plan.instances {
+        let key = &fill.prototypes()[instance.prototype as usize].key;
+        let slot = usize::from(key.species == "festuca-roemeri");
+        let size = fill.size(instance.prototype as usize).expect("size");
+        let radius = size.foliage_radius * f64::from(instance.scale);
+        areas[slot] += std::f64::consts::PI * radius * radius;
+        counts[slot] += 1;
+    }
+    let fescue = areas[1] / (areas[0] + areas[1]);
+    assert!(
+        (0.12..0.3).contains(&fescue),
+        "fescue's share {fescue}, {counts:?}"
+    );
+    assert!(counts[1] * 4 < counts[0], "{counts:?}");
+    // A member's cover goes with a layer, and a layer's members weigh
+    // alike.
+    for bad in [
+        r#"{"id": "x", "members": [{"species": "festuca-roemeri", "cover": 10}]}"#,
+        r#"{"id": "x", "members": [
+            {"species": "festuca-roemeri", "layer": "herb", "cover": 10},
+            {"species": "achillea-millefolium", "layer": "herb", "abundance": 1}
+        ]}"#,
+        r#"{"id": "x", "members": [{"species": "festuca-roemeri", "layer": "herb", "cover": 10, "abundance": 1}]}"#,
+    ] {
+        assert!(Community::from_json(bad).is_err(), "{bad}");
+    }
+}

@@ -91,6 +91,16 @@ pub struct Member {
     /// Its weight against the other members, 1 unless given.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub abundance: Option<f64>,
+    /// Its mean cover in the community's plots, percent of the ground,
+    /// in place of an abundance: its layer's cover is then split among
+    /// its members as the plots split it, each drawn as often as its
+    /// cover over the area of its crown's disc
+    /// ([`stand_tile::Member::room_radius_m`]), so a bracken that fills
+    /// 7 m² stands as often as 5% of the ground over 7 m² gives, not as
+    /// often as a fescue of 0.08 m². A member that gives it gives its
+    /// layer too, and the other members of that layer give theirs.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub cover: Option<f64>,
 }
 
 impl Member {
@@ -169,6 +179,35 @@ impl Community {
                 return Err(Error(format!(
                     "community {}: {} abundance must be 0 or more",
                     self.id, member.species
+                )));
+            }
+            if let Some(cover) = member.cover {
+                let problem = if !(cover.is_finite() && cover >= 0.0) {
+                    Some("cover must be 0 or more")
+                } else if member.abundance.is_some() {
+                    Some("gives both a cover and an abundance")
+                } else if member.layer.is_none() {
+                    Some("gives a cover but no layer")
+                } else {
+                    None
+                };
+                if let Some(problem) = problem {
+                    return Err(Error(format!(
+                        "community {}: {} {problem}",
+                        self.id, member.species
+                    )));
+                }
+            }
+            // A layer's members are weighed alike: by cover or by
+            // abundance.
+            if let Some(other) = self.members.iter().find(|other| {
+                other.layer.is_some()
+                    && other.layer == member.layer
+                    && other.cover.is_some() != member.cover.is_some()
+            }) {
+                return Err(Error(format!(
+                    "community {}: {} and {} keep to one layer, but only one gives its cover",
+                    self.id, member.species, other.species
                 )));
             }
         }
@@ -1451,6 +1490,8 @@ impl TilePlan {
                     top_m: up + height,
                     radius_m: (size.crown_radius * scale).max(0.05),
                     leaf_area_m2: size.leaf_area * scale * scale,
+                    clumping: 1.0,
+                    extinction: crate::conditions::Crown::EXTINCTION,
                 };
                 // The site's (east, north) of the foot: x = corner x +
                 // east, z = corner z − north, and north is −z.
@@ -1815,6 +1856,8 @@ impl Species {
 struct StandMember {
     species: usize,
     abundance: f64,
+    /// Its cover in the community's plots, percent ([`Member::cover`]).
+    cover: Option<f64>,
     environments: Vec<Environment>,
     layer: Option<Layer>,
     /// Its candidate on a site that suits it fully.
@@ -1837,7 +1880,11 @@ impl StandMember {
                 let most =
                     niche_layers.map_or(0.0, |layers| layers.into_iter().fold(0.0, f64::max));
                 let mut layers = [0.0; 4];
-                layers[slot] = if own > 0.0 {
+                // A member whose plot cover the community gives stands by
+                // that cover, not by its niche's abundance.
+                layers[slot] = if member.cover.is_some() {
+                    1.0
+                } else if own > 0.0 {
                     own
                 } else if most > 0.0 {
                     most
@@ -1862,6 +1909,7 @@ impl StandMember {
         Ok(Self {
             species: at,
             abundance: member.abundance.unwrap_or(1.0),
+            cover: member.cover,
             environments: member.environments(),
             layer: member.layer,
             candidate: Candidate {
@@ -3694,17 +3742,23 @@ impl Fill {
                         }
                     }
                 }
-                let member = stand_tile::Member {
+                let mut member = stand_tile::Member {
                     id: *index,
                     layer,
                     share: *share,
                     height_m: size.height,
                     crown_base_m: size.crown_base.unwrap_or(0.0),
                     crown_radius_m: size.crown_radius,
+                    foliage_radius_m: size.foliage_radius,
                     light_needed: own.light_needed,
                     leafing: own.leafing.clone(),
                     light_day: own.shoots.map(|shoots| shoots.middle()),
                 };
+                // Drawn as often as its plot cover over its crown's disc.
+                if let Some(cover) = self.stands[key.community][*candidate].cover {
+                    let radius = member.room_radius_m().max(stand_tile::FINE_CELL_M);
+                    member.share *= cover / (std::f64::consts::PI * radius * radius);
+                }
                 let traits = (
                     self.species[*species].spec.appearance.foliage,
                     *species,
@@ -3904,7 +3958,7 @@ impl Fill {
                 } else {
                     [0.0, 0.0]
                 };
-                let radius = member.crown_radius_m * plant.scale;
+                let radius = member.room_radius_m() * plant.scale;
                 if matches!(member.layer, niche::Layer::Canopy | niche::Layer::Subcanopy) {
                     let area = radius * radius;
                     let (foliage, species, _) = traits[plant.member];
