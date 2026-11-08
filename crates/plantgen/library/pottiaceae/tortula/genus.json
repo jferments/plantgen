@@ -42,6 +42,10 @@
       "max": 0.0027
     },
     "capsule_posture": "erect",
+    "capsule_ripe_months": [
+      4,
+      5
+    ],
     "capsule_share": 0.07,
     "spore_diameter_m": {
       "min": 0.000008,
@@ -65,6 +69,11 @@
     "cushion_breadth": 3.0
   },
   "evidence": {
+    "traits.capsule_ripe_months": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Fitted to photos (no flora gives months for this region): Washington iNaturalist photos of T. muralis (imagekit batch moss-pnw-2026-11-05), tallied by the month each was taken, show ripe brown capsules in months 4, 5, young green ones in the months before and spent setae after."
+    },
     "traits": {
       "evidence": "SourceInferred",
       "source": "fna-27",

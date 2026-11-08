@@ -186,6 +186,11 @@ pub struct MossKind {
     /// FNA vol. 27 Grimmia pulvinata, when left out).
     #[serde(default = "default_breadth")]
     pub breadth: f64,
+    /// The months its capsules are ripe, 1 to 12 (trait
+    /// `capsule_ripe_months`); empty when unknown, and then capsules are
+    /// drawn the year round as they ripen.
+    #[serde(default)]
+    pub capsule_months: Vec<u8>,
     /// Metres a colony's edge moves out in a good year.
     pub spread_m: f64,
     /// Light classes it grows in: shade, part, sun.
@@ -448,6 +453,17 @@ impl MossKind {
             capsule_share: num("capsule_share").unwrap_or(0.2),
             spore_m: num("spore_diameter_m").unwrap_or_else(default_spore),
             breadth: num("cushion_breadth").unwrap_or_else(default_breadth),
+            capsule_months: get("capsule_ripe_months")
+                .and_then(Value::as_array)
+                .map(|months| {
+                    months
+                        .iter()
+                        .filter_map(Value::as_u64)
+                        .filter_map(|m| u8::try_from(m).ok())
+                        .filter(|m| (1..=12).contains(m))
+                        .collect()
+                })
+                .unwrap_or_default(),
             spread_m: num("colony_spread_m_per_year").unwrap_or(match form {
                 ColonyForm::Cushion => 0.0015,
                 ColonyForm::Turf => 0.003,
@@ -1617,6 +1633,9 @@ pub struct DrawOptions {
     pub near: Option<(Vec3, f64)>,
     /// Draw capsules on their setae.
     pub capsules: bool,
+    /// The day of the year (1 to 365) drawn, for the capsules' season
+    /// ([`capsule_stage`]); `None` draws every genus's capsules ripe.
+    pub day: Option<f64>,
 }
 
 impl Default for DrawOptions {
@@ -1626,7 +1645,64 @@ impl Default for DrawOptions {
             detail: Detail::Shell,
             near: None,
             capsules: true,
+            day: None,
         }
+    }
+}
+
+/// Months before its capsules ripen that a moss's setae and young green
+/// capsules show, and months after that the old, emptied capsules stay.
+/// Washington photos of Tortula, Grimmia, Ceratodon and Dicranoweisia
+/// (imagekit batch `moss-pnw-2026-11-05`, by the date each was taken) show
+/// young green capsules two to four months before the brown ripe ones and
+/// spent setae for some months after; three both ways is fitted to them.
+pub const CAPSULE_LEAD_MONTHS: f64 = 3.0;
+
+/// How a genus's capsules look on `day` (1 to 365) when they ripen in
+/// `months` (1 to 12): the share of its fertile shoots that show a
+/// sporophyte, and how ripe they are, -1 (just risen, green) through 0
+/// (ripe) to 1 (old and emptied). With no months known, or no day, every
+/// one shows, ripe.
+#[must_use]
+pub fn capsule_stage(months: &[u8], day: Option<f64>) -> (f64, f64) {
+    let Some(day) = day else {
+        return (1.0, 0.0);
+    };
+    if months.is_empty() {
+        return (1.0, 0.0);
+    }
+    // Months from the start of the year, and how far it lies from the
+    // ripe months: before the nearest ripe stretch (negative), in it (0)
+    // or after it (positive), round the year.
+    let now = ((day - 1.0).rem_euclid(365.0) / 365.0) * 12.0;
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+    let ripe = |m: f64| months.contains(&(((m.floor() as i64).rem_euclid(12) + 1) as u8));
+    if ripe(now) {
+        return (1.0, 0.0);
+    }
+    let step = 0.25;
+    let mut ahead = None;
+    let mut behind = None;
+    let mut k = step;
+    while k <= 12.0 {
+        if ahead.is_none() && ripe(now + k) {
+            ahead = Some(k);
+        }
+        if behind.is_none() && ripe(now - k) {
+            behind = Some(k);
+        }
+        k += step;
+    }
+    let (ahead, behind) = (ahead.unwrap_or(12.0), behind.unwrap_or(12.0));
+    if behind <= CAPSULE_LEAD_MONTHS && behind <= ahead {
+        // Old: emptied, fewer as setae break.
+        let t = behind / CAPSULE_LEAD_MONTHS;
+        (1.0 - 0.7 * t, t)
+    } else if ahead <= CAPSULE_LEAD_MONTHS {
+        // Young: setae risen, capsules green and swelling.
+        (1.0, -ahead / CAPSULE_LEAD_MONTHS)
+    } else {
+        (0.0, 0.0)
     }
 }
 
@@ -2252,9 +2328,11 @@ impl Drawer<'_> {
         // 0.7 leaf length, so as many capsules stand on a square
         // centimetre however closely the shoots are drawn.
         let capsule_spacing = (kind.leaf_length_m * 0.7).min(width).max(0.0005);
+        let (showing, _) = capsule_stage(&kind.capsule_months, self.options.day);
         let fertile_share = (kind.capsule_share * (spacing / capsule_spacing).powi(2)).min(1.0)
             * mature
-            * colony.vigour.clamp(0.3, 1.0);
+            * colony.vigour.clamp(0.3, 1.0)
+            * showing;
         if matches!(kind.form, ColonyForm::Mat | ColonyForm::Weft) {
             if shoots {
                 self.mat(
@@ -2802,7 +2880,15 @@ impl Drawer<'_> {
             CapsulePosture::Erect | CapsulePosture::Inclined if !kind.seta_arcuate => 0.2,
             _ => 0.3,
         };
-        let length = kind.capsule_m;
+        // Young capsules are green and still swelling, old ones emptied
+        // and darkened, their lids shed.
+        let (_, ripeness) = capsule_stage(&kind.capsule_months, self.options.day);
+        let capsule_colour = if ripeness < 0.0 {
+            blend(kind.capsule_colour, kind.colour, -ripeness * 0.8)
+        } else {
+            scaled(kind.capsule_colour, 1.0 - 0.4 * ripeness)
+        };
+        let length = kind.capsule_m * (1.0 + 0.25 * ripeness.min(0.0));
         let radius = length * slender;
         let rings = 6;
         let sides: usize = 8;
@@ -2836,7 +2922,7 @@ impl Drawer<'_> {
                 for k in 0..sides {
                     let k1 = (k + 1) % sides;
                     let shade = 0.85 + 0.3 * s;
-                    let col = scaled(kind.capsule_colour, shade);
+                    let col = scaled(capsule_colour, shade);
                     self.tri(
                         [prev[k], ring_points[k], ring_points[k1]],
                         [col, col, col],
@@ -2847,10 +2933,10 @@ impl Drawer<'_> {
             }
             previous = Some(ring_points);
         }
-        // The lid, a short cone.
-        if let Some(prev) = previous {
+        // The lid, a short cone, until the spores are shed.
+        if let Some(prev) = previous.filter(|_| ripeness < 0.5) {
             let lid_tip = last_centre + cap_dir * (length * kind.lid_share);
-            let lid = blend(kind.capsule_colour, [0.35, 0.12, 0.05], 0.4);
+            let lid = blend(capsule_colour, [0.35, 0.12, 0.05], 0.4);
             for k in 0..sides {
                 let k1 = (k + 1) % sides;
                 self.tri([prev[k], lid_tip, prev[k1]], [lid, lid, lid], false);

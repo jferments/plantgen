@@ -3808,6 +3808,13 @@
       "optional": true,
       "why": "a ripe capsule's colour, before it sheds its spores; young capsules are green"
     },
+    "capsule_ripe_months": {
+      "group": "seasons",
+      "organ": "capsule",
+      "type": "months",
+      "optional": true,
+      "why": "the months a moss's capsules stand ripe and brown, lid on or just shed; young green capsules show in the months before and spent ones after"
+    },
     "capsule_posture": {
       "group": "fruit_and_cones",
       "organ": "capsule",

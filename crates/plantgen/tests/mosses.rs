@@ -582,3 +582,30 @@ fn a_trunk_grows_more_moss_low_than_two_metres_up() {
         "{low:.5} m2 at 0.3-1.0 m, {high:.5} at 1.5-2.2 m"
     );
 }
+
+#[test]
+fn capsules_ripen_in_their_months_and_are_young_before_and_spent_after() {
+    use plantgen::mosses::capsule_stage;
+    // Tortula on Washington walls: ripe in April and May.
+    let months = [4, 5];
+    // No day drawn: every capsule ripe.
+    assert_eq!(capsule_stage(&months, None), (1.0, 0.0));
+    // A genus with no months: ripe whatever the day.
+    assert_eq!(capsule_stage(&[], Some(16.0)), (1.0, 0.0));
+    // Late April: ripe.
+    assert_eq!(capsule_stage(&months, Some(120.0)), (1.0, 0.0));
+    // Mid January: young green capsules on every seta.
+    let (showing, ripeness) = capsule_stage(&months, Some(16.0));
+    assert!(
+        (showing - 1.0).abs() < 1e-9 && ripeness < -0.5,
+        "{ripeness}"
+    );
+    // Mid July: spent, and fewer.
+    let (showing, ripeness) = capsule_stage(&months, Some(197.0));
+    assert!(
+        showing < 1.0 && showing > 0.3 && ripeness > 0.3,
+        "{showing} {ripeness}"
+    );
+    // Mid October: none.
+    assert_eq!(capsule_stage(&months, Some(288.0)), (0.0, 0.0));
+}

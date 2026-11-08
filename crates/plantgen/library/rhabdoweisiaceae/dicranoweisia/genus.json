@@ -44,6 +44,11 @@
       42
     ],
     "capsule_posture": "erect",
+    "capsule_ripe_months": [
+      2,
+      3,
+      4
+    ],
     "capsule_share": 0.15,
     "spore_diameter_m": {
       "min": 0.000015,
@@ -73,6 +78,11 @@
     "cushion_breadth": 4.0
   },
   "evidence": {
+    "traits.capsule_ripe_months": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Fitted to photos (no flora gives months for this region): Washington iNaturalist photos of D. cirrata (imagekit batch moss-pnw-2026-11-05), tallied by the month each was taken, show ripe brown capsules in months 2, 3, 4, young green ones in the months before and spent setae after."
+    },
     "traits": {
       "evidence": "SourceInferred",
       "source": "fna-27",
