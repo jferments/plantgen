@@ -1418,6 +1418,8 @@ impl TilePlan {
                     top_m: up + height,
                     radius_m: (size.crown_radius * scale).max(0.05),
                     leaf_area_m2: size.leaf_area * scale * scale,
+                    clumping: 1.0,
+                    extinction: crate::conditions::Crown::EXTINCTION,
                 };
                 // The site's (east, north) of the foot: x = corner x +
                 // east, z = corner z − north, and north is −z.
