@@ -102,8 +102,9 @@ Paper 36).
   hectare), and at 80 years it holds 116 Douglas-firs a hectare, with the
   oaks under them, where those prairies hold 122-207 today. Against photos
   of the Mima Mounds its grasses are still thin tufts where the sod is
-  continuous, and the moss and Cladonia lichen between the grasses are
-  missing: open ground holds no floor moss yet.
+  continuous. Moss covers 11-13% of the ground between them (14% on
+  prairies unburnt for 10 years, Calabria et al. 2020); the Cladonia
+  lichens are not drawn.
 - Yard trees: crowns cover most of a yard cell, with Douglas-fir, redcedar
   and dogwood; bigleaf maple fades early because its spec's lifespan reads
   50 years.
