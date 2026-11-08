@@ -32,6 +32,7 @@ what the ground is, in this order:
 | `olympia-lot.json` | bare ground, building sites, brownfields, within 6 m of a railway | cleared | 10 years |
 | `olympia-verge.json` | a third or more paved: road and path edges, medians | cleared | 1 year (mown) |
 | `olympia-lawn.json` | the rest of the open ground | planted | 1 year (mown) |
+| `olympia-prairie.json` | a remnant or restored prairie (Mima Mounds, Glacial Heritage, Joint Base Lewis-McChord's prairies) | natural, `fire_years` 10 | years since its last fire: 0-10 kept by fire, 30 and more left unburnt |
 
 Cells under a roof, or under 15% soil (paving, water), get none. Wall climbers
 (ivy, orange honeysuckle) stand at the feet of walls and fences in the
@@ -63,6 +64,13 @@ What each holds:
   dandelion, cat's ear, Queen Anne's lace, oxeye daisy and white clover.
 - **Lawn (planted):** red fescue, annual bluegrass, velvet grass and white
   clover with cat's ear, dandelion and plantain; ivy.
+- **Prairie (kept by fire):** Roemer's fescue, California oatgrass and
+  junegrass with camas, yarrow, Oregon sunshine, spring gold and bracken;
+  snowberry, Nootka rose, serviceberry and Scotch broom; Oregon white oak
+  and Douglas-fir. Fire every 10 years on average (LANDFIRE's model of
+  these prairies) keeps a few old oaks and firs over the sod; a cell's
+  years since disturbance are the years since its last fire
+  (`development::develop_kept`).
 
 ## How they were checked, and what is still off
 
@@ -85,6 +93,17 @@ Paper 36).
   31-37% (plots 46-59%): every crown lets a tenth of the light through,
   and the broadleaf crowns' own leaf area is still too thin to say how much
   more an alder's lets through.
+- Prairie on dry ground (`--site 0.3,1,30,0`), a hectare: 2 and 8 years
+  after a fire, old oaks (and a fir) cover 14-16% at 8-9 trees a
+  hectare, under the savanna's 20% (LANDFIRE BpS 11200) and within the
+  under-1 to 49 trees a hectare of the 1800s on Joint Base Lewis-McChord's
+  prairies (Peter and Harrington 2014); thatch covers 28%, then 51%, of the
+  ground. Unburnt for 30 years it has closed (trees 78% from above, 169 a
+  hectare), and at 80 years it holds 116 Douglas-firs a hectare, with the
+  oaks under them, where those prairies hold 122-207 today. Against photos
+  of the Mima Mounds its grasses are still thin tufts where the sod is
+  continuous, and the moss and Cladonia lichen between the grasses are
+  missing: open ground holds no floor moss yet.
 - Yard trees: crowns cover most of a yard cell, with Douglas-fir, redcedar
   and dogwood; bigleaf maple fades early because its spec's lifespan reads
   50 years.

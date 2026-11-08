@@ -1,0 +1,16 @@
+{"id": "olympia-prairie", "fire_years": 10, "members": [
+  {"species": "festuca-roemeri", "layer": "herb"},
+  {"species": "danthonia-californica", "layer": "herb", "abundance": 0.6},
+  {"species": "koeleria-macrantha", "layer": "herb", "abundance": 0.4},
+  {"species": "camassia-quamash", "layer": "herb", "abundance": 0.4},
+  {"species": "achillea-millefolium", "layer": "herb", "abundance": 0.3},
+  {"species": "eriophyllum-lanatum", "layer": "herb", "abundance": 0.3},
+  {"species": "lomatium-utriculatum", "layer": "herb", "abundance": 0.2},
+  {"species": "pteridium-aquilinum", "layer": "herb", "abundance": 0.1},
+  {"species": "symphoricarpos-albus", "layer": "shrub", "abundance": 0.4},
+  {"species": "rosa-nutkana", "layer": "shrub", "abundance": 0.3},
+  {"species": "amelanchier-alnifolia", "layer": "shrub", "abundance": 0.2},
+  {"species": "cytisus-scoparius", "layer": "shrub", "abundance": 0.4},
+  {"species": "quercus-garryana", "layer": "canopy", "abundance": 0.6},
+  {"species": "pseudotsuga-menziesii", "layer": "canopy", "abundance": 0.3}
+]}
