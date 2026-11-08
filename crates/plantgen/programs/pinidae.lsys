@@ -345,9 +345,18 @@
 # outward while its side shoots still renew its foliage. With
 # floor_keep_limb below 0, the default, a plant grows as before.
 #
+# Revision 23 (side shoots hold longer): seg_side sets how long an old
+# tree's side shoots (order 2 and up) hold their growth before laying it
+# down, apart from seg_min, coming in from the tree's age seg_age and in
+# full at twice it, so an old crown's slow side shoots, bare wood but for
+# their tips, cost a segment every several years. A shoot laid down from
+# five or more held years draws its foliage at one place for each three
+# years, so its needles stay near a year's or two's length. With seg_side
+# 0, the default, a plant grows as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem pinidae 22;
+lsystem pinidae 23;
 
 # Height of the leader over time: a Chapman-Richards curve,
 # height = height_max * (1 - exp(-height_rate * age))^height_shape.
@@ -452,6 +461,8 @@ param bend_set = 0.5;          # share of each year's sag the wood keeps
 param straighten = 0.02;       # share of its kept bend the wood straightens each year
 param stem_bend = 0;           # share of its sag the stem takes: reaction wood holds it up
 param reaction = 0.1;          # how far a year's ring turns a limb back up (bend@1)
+param seg_side = 0;            # seg_min for a side shoot (order 2 and up), so an old crown's slow side shoots, bare but for their tips, cost a segment every several years (revision 23); 0: seg_min
+param seg_age = 0;             # the tree's age at which seg_side starts to come in, in full at twice it, so a young tree, whose side shoots carry needles along most of their length, grows as with seg_min (revision 23)
 
 module A queries light;                 # the leader's apex
 module N;                               # nods a young leader shoot over
@@ -473,6 +484,7 @@ module D queries light;                 # a dormant bud on the stem (stem_epi)
 module B(n);                            # n stems still to start
 module U(a) queries light;              # a new leader's apex, rising from a dead top for a years (revision 20)
 module P(n, m);                         # new leaders still to start from a dead top, of m
+module J(m, i, l, n);                   # foliage still to draw at i of m places along a held shoot l long, grown over n years (revision 23)
 
 organ spray foliage area spray_area;
 organ cone cone area cone_area;
@@ -534,7 +546,7 @@ rule C(o, v, s, w, a, n) : o > 1 && side_years > 0 && age >= side_years -> ;
 rule C(o, v, s, w, a, n) : o > side_order && twig_years > 0 && age >= twig_years -> ;
 rule C(o, v, s, w, a, n) : v * pow(side_growth, o - 1) * (apical > 0 ? max((floor_reach > 0 ? max(o > 1 || floor_keep_limb < 0 ? floor_keep : floor_keep_limb, 1 - w / (floor_reach * height)) : 1) * (o > 1 ? max(branch_floor, side_floor) : branch_floor) * (floor_ramp > 0 ? min(1, (height - py) / (floor_ramp * height)) : 1), apical * (apical_light > 0 ? min(1, light / (apical_light * max(0.01, top) * pow(min(1, shade_death / 0.1), 6))) : 1) * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth) / (1 + pow(w / branch_reach, 2))
                      * (0.3 + 0.7 * light) < min_shoot -> ;
-rule C(o, v, s, w, a, n) : seg_min > 0 && height - py > (top_ramp * max(0.05, (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape)) / dt)) && a + v * pow(side_growth, o - 1) * (apical > 0 ? max((floor_reach > 0 ? max(o > 1 || floor_keep_limb < 0 ? floor_keep : floor_keep_limb, 1 - w / (floor_reach * height)) : 1) * (o > 1 ? max(branch_floor, side_floor) : branch_floor) * (floor_ramp > 0 ? min(1, (height - py) / (floor_ramp * height)) : 1), apical * (apical_light > 0 ? min(1, light / (apical_light * max(0.01, top) * pow(min(1, shade_death / 0.1), 6))) : 1) * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth) / (1 + pow(w / branch_reach, 2)) * (top_ramp > 0 ? min(1, max(0.1, (height - py) / (top_ramp * max(0.05, (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape)) / dt)))) : 1) * (0.3 + 0.7 * light) < seg_min ->
+rule C(o, v, s, w, a, n) : seg_min > 0 && height - py > (top_ramp * max(0.05, (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape)) / dt)) && a + v * pow(side_growth, o - 1) * (apical > 0 ? max((floor_reach > 0 ? max(o > 1 || floor_keep_limb < 0 ? floor_keep : floor_keep_limb, 1 - w / (floor_reach * height)) : 1) * (o > 1 ? max(branch_floor, side_floor) : branch_floor) * (floor_ramp > 0 ? min(1, (height - py) / (floor_ramp * height)) : 1), apical * (apical_light > 0 ? min(1, light / (apical_light * max(0.01, top) * pow(min(1, shade_death / 0.1), 6))) : 1) * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth) / (1 + pow(w / branch_reach, 2)) * (top_ramp > 0 ? min(1, max(0.1, (height - py) / (top_ramp * max(0.05, (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape)) / dt)))) : 1) * (0.3 + 0.7 * light) < (o > 1 && seg_side > 0 && t >= seg_age ? seg_min + (seg_side - seg_min) * min(1, (t - seg_age) / max(1, seg_age)) : seg_min) ->
     C(o, v, light < max(shade_floor, shade_death * top) * (shade_cost + (1 - shade_cost) * min(1, shade_own > 0 ? min(top, light) : top)) ? s + 1 : 0, w + v * pow(side_growth, o - 1) * (apical > 0 ? max((floor_reach > 0 ? max(o > 1 || floor_keep_limb < 0 ? floor_keep : floor_keep_limb, 1 - w / (floor_reach * height)) : 1) * (o > 1 ? max(branch_floor, side_floor) : branch_floor) * (floor_ramp > 0 ? min(1, (height - py) / (floor_ramp * height)) : 1), apical * (apical_light > 0 ? min(1, light / (apical_light * max(0.01, top) * pow(min(1, shade_death / 0.1), 6))) : 1) * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth) / (1 + pow(w / branch_reach, 2)) * (top_ramp > 0 ? min(1, max(0.1, (height - py) / (top_ramp * max(0.05, (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape)) / dt)))) : 1) * (0.3 + 0.7 * light), a + v * pow(side_growth, o - 1) * (apical > 0 ? max((floor_reach > 0 ? max(o > 1 || floor_keep_limb < 0 ? floor_keep : floor_keep_limb, 1 - w / (floor_reach * height)) : 1) * (o > 1 ? max(branch_floor, side_floor) : branch_floor) * (floor_ramp > 0 ? min(1, (height - py) / (floor_ramp * height)) : 1), apical * (apical_light > 0 ? min(1, light / (apical_light * max(0.01, top) * pow(min(1, shade_death / 0.1), 6))) : 1) * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth) / (1 + pow(w / branch_reach, 2)) * (top_ramp > 0 ? min(1, max(0.1, (height - py) / (top_ramp * max(0.05, (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape)) / dt)))) : 1) * (0.3 + 0.7 * light), n + 1);
 rule C(o, v, s, w, a, n) -> G(o, a + v * pow(side_growth, o - 1) * (apical > 0 ? max((floor_reach > 0 ? max(o > 1 || floor_keep_limb < 0 ? floor_keep : floor_keep_limb, 1 - w / (floor_reach * height)) : 1) * (o > 1 ? max(branch_floor, side_floor) : branch_floor) * (floor_ramp > 0 ? min(1, (height - py) / (floor_ramp * height)) : 1), apical * (apical_light > 0 ? min(1, light / (apical_light * max(0.01, top) * pow(min(1, shade_death / 0.1), 6))) : 1) * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth) / (1 + pow(w / branch_reach, 2)) * (top_ramp > 0 ? min(1, max(0.1, (height - py) / (top_ramp * max(0.05, (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape)) / dt)))) : 1) * (0.3 + 0.7 * light),
                         needle_years * 2 / (1 + needle_low) * (1 + (needle_low - 1) * max(0, 1 - py / max(height, 0.1))),
@@ -584,7 +596,7 @@ decompose G(o, l, k, w, n) : o > side_order && twig_years > 0 && n >= 2 ->
 decompose G(o, l, k, w, n) : o > side_order && twig_years > 0 ->
     [ Y(k) spray(((spray_base + spray_length * l / n) * sqrt(n)) * 1.458, uniform(-25, 25), spray_droop * 0.5, 1) ]
     F(l);
-decompose G(o, l, k, w, n) : n >= 2 ->
+decompose G(o, l, k, w, n) : n >= 2 && (seg_side <= 0 || n < 5 || t < seg_age) ->
     [ Y(k) spray(spray_base + spray_length * l * 0.5, uniform(-25, 25), spray_droop * 0.5, 1)
       spray(((spray_base + spray_length * l / n) * sqrt(n / 2)) * 0.75, 90 + spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1)
       spray(((spray_base + spray_length * l / n) * sqrt(n / 2)) * 0.75, -90 - spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1)
@@ -593,7 +605,7 @@ decompose G(o, l, k, w, n) : n >= 2 ->
       spray(((spray_base + spray_length * l / n) * sqrt(n / 2)) * 0.75, 90 + spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1)
       spray(((spray_base + spray_length * l / n) * sqrt(n / 2)) * 0.75, -90 - spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1) ]
     E(o, w) F(l) L(o, w + l, l) R(o, w + l, l);
-decompose G(o, l, k, w, n) ->
+decompose G(o, l, k, w, n) : seg_side <= 0 || n < 5 || t < seg_age ->
     [ Y(k) spray(spray_base + spray_length * l, uniform(-25, 25), spray_droop * 0.5, 1)
       spray(((spray_base + spray_length * l / n) * sqrt(n)) * 0.75, 90 + spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1)
       spray(((spray_base + spray_length * l / n) * sqrt(n)) * 0.75, -90 - spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1) ]
@@ -708,3 +720,23 @@ rule A -> G(0, (richards(t + dt, height_max, height_rate, height_shape)
                * (leader_shade * min(1, (top * (1 + leader_half) / (top + leader_half) - (1 - leader_shade) * top) / max(0.01, leader_shade)) + (1 - leader_shade) * light) / bud_length)) : whorl), (bud_length > 0 ? round(whorl * min(1, (richards(t + dt, height_max, height_rate, height_shape)
                 - richards(t, height_max, height_rate, height_shape))
                * (leader_shade * min(1, (top * (1 + leader_half) / (top + leader_half) - (1 - leader_shade) * top) / max(0.01, leader_shade)) + (1 - leader_shade) * light) / bud_length)) : whorl)) /(137.5) A;
+
+# A side shoot laid down from five or more held years (seg_side, revision
+# 23): here at the end, as new rules ahead of the others would shift every
+# plant's random draws.
+decompose G(o, l, k, w, n) ->
+    [ Y(k) J(max(2, ceil(n / 3 - 0.001)), max(2, ceil(n / 3 - 0.001)), l, n) ]
+    E(o, w) F(l) L(o, w + l, l) R(o, w + l, l);
+# A held shoot's foliage at one place for each three of its years
+# (seg_side, revision 23), each spray as large as its share of the years',
+# the next a move (f) up the shoot. One place for each two years drew
+# half as many sprays again as a shoot laid down every few years.
+decompose J(m, i, l, n) : i > 1 ->
+    spray(spray_base + spray_length * l / m, uniform(-25, 25), spray_droop * 0.5, 1)
+    spray(((spray_base + spray_length * l / n) * sqrt(n / m)) * 0.75, 90 + spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1)
+    spray(((spray_base + spray_length * l / n) * sqrt(n / m)) * 0.75, -90 - spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1)
+    f(l / m) J(m, i - 1, l, n);
+decompose J(m, i, l, n) ->
+    spray(spray_base + spray_length * l / m, uniform(-25, 25), spray_droop * 0.5, 1)
+    spray(((spray_base + spray_length * l / n) * sqrt(n / m)) * 0.75, 90 + spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1)
+    spray(((spray_base + spray_length * l / n) * sqrt(n / m)) * 0.75, -90 - spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1);

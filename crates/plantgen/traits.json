@@ -3841,6 +3841,16 @@
       "optional": true,
       "why": "the share of a moss colony's shoots that bear a capsule in its season: high where a flora calls capsules abundant or usually present, low where they are rare or the species dioicous and seldom fruits"
     },
+    "spore_diameter_m": {
+      "group": "fruit_and_cones",
+      "organ": "capsule",
+      "type": "number",
+      "unit": "m",
+      "range": [0.000005, 0.00031],
+      "optional": true,
+      "when": {"body_plan": ["leafy"]},
+      "why": "a moss's spore diameter as the flora gives it: small spores (under about 20 µm) fly far and join the regional spore rain, large ones mostly fall in or near the colony that shed them (20 µm when left out); moss spores run 5 µm (Dawsonia) to 310 µm (Archidium)"
+    },
     "leaf_out_months": {
       "group": "seasons",
       "organ": "leaf",
