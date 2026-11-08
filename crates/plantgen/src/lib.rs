@@ -62,6 +62,7 @@ pub mod json;
 pub mod lace;
 pub mod leaves;
 pub mod library;
+pub mod light_profile;
 pub mod litter;
 pub mod looks;
 pub mod lsys;
@@ -1773,4 +1774,18 @@ pub mod venation;
 /// ones, from the same triangles. The minimal tier drew 18 of a yarrow's
 /// 54 leaves as crossed cards and baked the rest into dots; it now draws
 /// all 54 in the same 144 triangles, wearing the same pictures.
-pub const GENERATOR_REVISION: u32 = 216;
+///
+/// 217: stand-grown pines, spruces, firs and hemlocks carry the trunk
+/// their leaf calls for. A stand's neighbours shade with the plant's own
+/// crown's clumping and its program's light extinction; a module holding
+/// foliage is no longer counted as a living tip; the pine family's pipe
+/// rules follow Espinosa Bancalari et al.'s (1987) leaf to dbh (`pipe_organ`
+/// 0.0075, `pipe_tip` 0.0024, nine hand-set values gone); shoots starve at
+/// the light their silvics shade-tolerance class allows (`shade_death`
+/// 0.06 / 0.1 / 0.15); and a twig of a limb's side branch that stays under
+/// its starving light is shed with its needles (`pinidae` revision 24,
+/// `twig_shade`). A 30-year Douglas-fir in a stand holds 88 m² of foliage
+/// at 20 cm (23 cm before), inside the 86 to 162 m² Espinosa Bancalari et
+/// al. found; every interior and open yield-table reference stays within
+/// tolerance.
+pub const GENERATOR_REVISION: u32 = 217;
