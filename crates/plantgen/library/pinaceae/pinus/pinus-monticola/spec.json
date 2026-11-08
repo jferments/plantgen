@@ -86,6 +86,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "shade_tolerance": "intermediate",
     "height_max_m": {
       "min": 30,
       "max": 50
@@ -113,6 +114,7 @@
     "leaf_margin": "serrate"
   },
   "evidence": {
+    "traits.shade_tolerance": {"evidence": "SourceInferred", "source": "silvics-1990-conifers", "note": "Silvics of North America vol. 1, Western white pine (Graham): \"It is classed as intermediate in shade tolerance when compared to other northwestern tree species\"."},
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",

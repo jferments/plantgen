@@ -31,7 +31,6 @@
       "side_angle": 55,
       "needle_years": 5,
       "spray_droop": 60,
-      "shade_death": 0.06,
       "shade_years": 5,
       "branch_reach": 6.0,
       "bole": 0.12
@@ -136,6 +135,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "shade_tolerance": "tolerant",
     "age_max_years": 800,
     "height_max_m": {
       "min": 23,
@@ -161,6 +161,7 @@
     "leaf_margin": "entire"
   },
   "evidence": {
+    "traits.shade_tolerance": {"evidence": "SourceInferred", "source": "silvics-1990-conifers", "note": "Silvics of North America vol. 1, Mountain hemlock (Means): \"Mountain hemlock is classed as tolerant of shade and other forms of competition\"."},
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",

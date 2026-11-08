@@ -22,7 +22,6 @@
       "branch_angle": 75,
       "upturn": 0.005,
       "spray_droop": 10,
-      "shade_death": 0.07,
       "shade_years": 4,
       "branch_reach": 3.0,
       "bole": 0.05
@@ -116,6 +115,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "shade_tolerance": "tolerant",
     "age_max_years": 250,
     "bark_colour": [128, 128, 122],
     "height_max_m": {
@@ -143,6 +143,7 @@
     "leaf_margin": "entire"
   },
   "evidence": {
+    "traits.shade_tolerance": {"evidence": "SourceInferred", "source": "silvics-1990-conifers", "note": "Silvics of North America vol. 1, Subalpine fir (Alexander, Shearer and Shepperd): where it grows with Engelmann spruce, \"subalpine fir is very shade-tolerant\", much more than spruce, lodgepole pine and aspen (some Cascade ecologists class it intolerant relative to silver fir, grand fir and mountain hemlock)."},
     "traits.age_max_years": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS species review of subalpine fir (Uchytil 1991): heart rots seldom let a tree pass 250 years."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.5, 0.5, 0.48], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "taxon": {

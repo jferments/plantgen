@@ -23,7 +23,6 @@
       "branch_angle": 72,
       "upturn": 0.005,
       "spray_droop": 10,
-      "shade_death": 0.07,
       "shade_years": 4,
       "branch_reach": 6.0,
       "bole": 0.05
@@ -87,6 +86,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "shade_tolerance": "tolerant",
     "age_max_years": {"min": 250, "max": 300},
     "bark_colour": [76, 69, 61],
     "height_max_m": {
@@ -110,6 +110,7 @@
     "leaf_margin": "entire"
   },
   "evidence": {
+    "traits.shade_tolerance": {"evidence": "SourceInferred", "source": "silvics-1990-conifers", "note": "Silvics of North America vol. 1, Grand fir (Foiles, Graham and Olson): its reproduction is favoured by moderate overwood shade, and on dry sites it becomes a shade-tolerant understory and eventually assumes dominance near climax."},
     "traits.age_max_years": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS species review of grand fir (Howard and Aleksoff 2000): heart rots are common in old trees, which often reach 250 years and sometimes pass 300."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.3, 0.27, 0.24], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.height_max_m": {

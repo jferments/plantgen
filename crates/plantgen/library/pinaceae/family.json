@@ -138,6 +138,16 @@
     "generator.params.pipe_tip": {
       "rule": "0.0024",
       "why": "The twig behind a living apex carries its pipe in the same proportion as the foliage's (pipe_organ): 0.79 of the 3 mm it had, so the trunk's girth follows its leaf (Espinosa Bancalari et al. 1987)."
+    },
+    "generator.params.shade_death": {
+      "map": {
+        "shade_tolerance": {
+          "tolerant": 0.06,
+          "intermediate": 0.1,
+          "intolerant": 0.15
+        }
+      },
+      "why": "An apex starves in the shade its silvics class allows: Silvics of North America classes each of the family's trees as tolerant, intermediate or intolerant of shade, and a tolerant tree's shoot lives on 6% of its best-lit shoot's light, an intermediate one's 10% and an intolerant one's 15%. The values are the medians of the ones the species had set by hand, now gone: 0.05 to 0.08 for the six tolerant ones (western and mountain hemlock, Sitka spruce, grand, subalpine and Pacific silver fir), 0.1 and 0.12 for Douglas-fir and whitebark pine, 0.15 for western larch, shore and ponderosa pine. Western hemlock no longer ignores the family's value with its own. Every stand-grown and open-grown conifer with a reference stays within it (Sitka spruce at 60 years -19%, where its own 0.08 drew it -27%)."
     }
   },
   "evidence": {
@@ -210,6 +220,11 @@
       "evidence": "SourceInferred",
       "source": "espinosa-bancalari-1987",
       "note": "Scaled with pipe_organ, by the same 0.79."
+    },
+    "rules.generator.params.shade_death": {
+      "evidence": "SourceInferred",
+      "source": "silvics-1990-conifers",
+      "note": "Classes as Silvics of North America vol. 1 gives them for each species (each species' traits.shade_tolerance note quotes it). The class values are fits, the medians of the hand-set values they replace, checked against McArdle (1961) and the other stand references and the open-grown ones (2026-11-08 runs, plantgen-claude stands/trunks/refit)."
     }
   }
 }

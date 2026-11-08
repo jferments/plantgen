@@ -23,7 +23,6 @@
       "branch_growth": 0.3,
       "spray_base": 0.2,
       "spray_length": 1.1,
-      "shade_death": 0.12,
       "limb_light": 0.003,
       "branch_reach": 3.0,
       "epi_chance": 0
@@ -119,6 +118,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "shade_tolerance": "intermediate",
     "height_max_m": {
       "min": 5,
       "max": 18,
@@ -149,6 +149,7 @@
     "leaf_margin": "entire"
   },
   "evidence": {
+    "traits.shade_tolerance": {"evidence": "SourceInferred", "source": "silvics-1990-conifers", "note": "Silvics of North America vol. 1, Whitebark pine (Arno and Hoff): once rated very intolerant, recent observers believe \"it is intermediate or intolerant, about equivalent to western white pine or interior Douglas-fir\"."},
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",
