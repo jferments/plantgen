@@ -19,7 +19,7 @@
       "maturity": 1.2,
       "stem_radius": 0.002,
       "wiggle": 2,
-      "nodes": 9,
+      "nodes": 11,
       "bare": 0.05,
       "leaf_peak": 0.1,
       "leaf_angle": 45,
@@ -125,6 +125,11 @@
       "evidence": "SourceInferred",
       "source": "usfs-feis",
       "note": "FEIS's common yarrow review (Aleksoff 1999, read 2026-10-15): a perennial forb 11 to 40 inches (30-100 cm) in height with extensive rhizomes."
+    },
+    "generator.params.nodes": {
+      "evidence": "Measured",
+      "source": "plantgen-authors",
+      "note": "Leaves up a flowering stem 2 to 6 cm apart, measured against head sizes in iNaturalist photos in the imagekit store (batches lowpoly-cards-2026-10-25, inat-lowpoly-r8-2026-10-29; about 2-3 cm and 4-6 cm in two whole stems); USPTO plant patents give cultivars' internodes 1 to 3.2 cm (PP29408) and up to 2.5 cm (PP36989). 11 nodes over the leafy 0.9 of a 0.7 m stem is 5.7 cm apart, within the photos' range; 9 drew them 7 cm apart. More would not fit the minimal card tier's 144 leaf-card triangles with every leaf on a card of its own and the longest crossed (18 nodes made 107 leaves)."
     },
     "generator.params": {
       "evidence": "Authored",
