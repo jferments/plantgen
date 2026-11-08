@@ -1766,4 +1766,11 @@ pub mod venation;
 /// ([`conditions::Envelope::claims`]), so its crown stays within its
 /// share of the stand (radius 2.3 m at 3.1 m spacing, where it spread
 /// 5.5 m into a flat cap over its neighbours).
-pub const GENERATOR_REVISION: u32 = 215;
+///
+/// 216: a card tier draws every cut leaf (a yarrow's, a poison
+/// hemlock's) on a card of its own before it gives the longest richer
+/// ones: each a flat card first, then crossed bent cards, then bent
+/// ones, from the same triangles. The minimal tier drew 18 of a yarrow's
+/// 54 leaves as crossed cards and baked the rest into dots; it now draws
+/// all 54 in the same 144 triangles, wearing the same pictures.
+pub const GENERATOR_REVISION: u32 = 216;
