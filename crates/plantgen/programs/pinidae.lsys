@@ -640,8 +640,8 @@ rule S(o) : sd < ground_gap -> %;
 rule S(o) : age > 2 && ntip == 0 -> K;
 rule S(o) : crown_ratio > 0 && age > 2 && py < (1 - crown_ratio) * height -> K;
 rule S(o) : bole > 0 && age > 2 && py < bole * pow(min(1, height / height_max), bole_shape) * height -> K;
-# Revision 24: with twig_shade, a limb's side shoot (order 2 and up) a
-# year old or more is shed, needles and all, once the light at its foot
+# Revision 24: with twig_shade, a twig of a limb's side branch (order 3
+# and up) a year old or more is shed, needles and all, once the light at its foot
 # is under twig_shade times the light at which its shoot would starve
 # (shade_death, shade_floor and shade_cost, priced as an apex's): a twig
 # whose foliage no longer pays for itself is lost (branch autonomy,
@@ -649,7 +649,11 @@ rule S(o) : bole > 0 && age > 2 && py < bole * pow(min(1, height / height_max), 
 # carries (Espinosa Bancalari et al. 1987). It falls at once, its needles
 # with it, rather than standing dead (K) and dropping them before its
 # wood: a needle keeps its stated life (needle_years) in any light.
-rule S(o) : twig_shade > 0 && o > 1 && age >= 1 && light < twig_shade * max(shade_floor, shade_death * top) * (shade_cost + (1 - shade_cost) * min(1, shade_own > 0 ? min(top, light) : top)) -> %;
+# The limb and its own side branches (orders 1 and 2) are left to the
+# limb rules (limb_tip, limb_light): stripped of their shaded shoots,
+# a limb's tips' mean light rose to its lit apex and the lower limbs
+# lived on as bare whips with a tuft at the end.
+rule S(o) : twig_shade > 0 && o > 2 && age >= 1 && light < twig_shade * max(shade_floor, shade_death * top) * (shade_cost + (1 - shade_cost) * min(1, shade_own > 0 ? min(top, light) : top)) -> %;
 rule K : age >= dead_years -> %;
 
 # Revision 5: a branch that sags to within ground_gap of the ground (or

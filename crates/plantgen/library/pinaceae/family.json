@@ -129,7 +129,7 @@
     },
     "generator.params.twig_shade": {
       "rule": "1",
-      "why": "A side shoot that cannot pay for its foliage is shed with it: once a side shoot a year old or more stands under the light at which it starves, it is shed and its needles fall with its wood, as a branch that cannot pay for its own foliage is lost (branch autonomy, Sprugel et al. 1991). Without it, a 30-year Douglas-fir grown in a stand with its neighbours clumped as its own crown holds 98 m2 of foliage; with it, 73 m2 at 19 cm, between the 52 m2 Espinosa Bancalari et al.'s (1987) equation gives that trunk and the 86 to 162 m2 their 22-year Oregon stand trees carried. Needles themselves keep their stated life in any light: conifer needles live longer in shade, not shorter."
+      "why": "A side shoot that cannot pay for its foliage is shed with it: once a twig of a limb's side branch, a year old or more, stands under the light at which it starves, it is shed and its needles fall with its wood (the limbs themselves are left to limb_tip and limb_light), as a branch that cannot pay for its own foliage is lost (branch autonomy, Sprugel et al. 1991). Without it, a 30-year Douglas-fir grown in a stand with its neighbours clumped as its own crown holds 98 m2 of foliage; with it, 88 m2 at 20 cm, inside the 86 to 162 m2 that 22-year Douglas-firs in Oregon stands carry (Espinosa Bancalari et al. 1987), though above the 65 m2 their equation gives that trunk. Needles themselves keep their stated life in any light: conifer needles live longer in shade, not shorter."
     },
     "generator.params.pipe_organ": {
       "rule": "0.0075",
