@@ -65,8 +65,8 @@ fn main() -> Result<(), plantgen::api::Error> {
 | `generator.package(out)` | The species' content-addressed package, as After loads it |
 | `generator.write_variants(&variants, out)` | Many plants, each written as soon as it is drawn, and `variants.json` |
 
-`Options` chooses the quality (`STANDARD`, as packages are built, or
-`DRAFT`) and the day of the year seasoned organs show. `Settings` chooses
+`Options` chooses the quality (`Quality::STANDARD`, as packages are
+built, or `Quality::DRAFT`) and the day of the year seasoned organs show. `Settings` chooses
 compression (`None`, `Quantize`, `Meshopt`), which attributes to keep and
 a budget (`Budget::new(triangles, bytes)` or `Budget::tiers()`), as
 `plantc export`'s flags do. Start from `Options::default()`,
@@ -121,7 +121,7 @@ A set lists each plant's seed, size (height, crown, stem diameter, leaf
 area), files, bytes and triangles per level, and a fingerprint of its
 bytes; `duplicates` names any seed drawn exactly as an earlier one.
 
-## Stands over a whole map: `Fill` (draft)
+## Stands over a whole map: `Fill`
 
 For city- or region-sized scenes, never grow a plant per place. A `Fill`
 develops each community's stand once at a few stand ages (which cohorts
@@ -151,9 +151,75 @@ let site = Site::flat(TileId { x: 12, y: 40 }, 240.0)?;
 let stands = StandMap::uniform(240.0, 0, 120.0); // community 0, 120 years since disturbance
 let plan = fill.tile(&site, &stands, 7)?;
 plan.write("tiles".as_ref())?; // tiles/12_40.json and tiles/12_40.bin
+// Later, in any process: the same plan from its files.
+let again = plantgen::api::TilePlan::read("tiles/12_40.json".as_ref())?;
+assert_eq!(again.instance_bytes(), plan.instance_bytes());
 Ok(())
 }
 ```
+
+### What a caller may rely on (`API_VERSION` 7)
+
+`Fill` is part of the stable API from `API_VERSION` 7. Everything below
+holds until the version goes up; `tests/fill_api.rs` holds the fill to
+it, calling it as you would, through `plantgen::api` alone.
+
+- **Names.** Every item a fill takes or gives is in `plantgen::api`:
+  `Community`, `Member`, `Layer`, `Origin`, `Fill`, `FillSettings`,
+  `Site`, `SiteFactors`, `FieldTile`, `CrackPlant`, `TileId`,
+  `StandMap`, `StandCell`, `TilePlan`, `Instance`, `WallClip`, `Cover`,
+  `CoverKind`, `Floor`, `FloorMoss`, `Log`, `LogShape`, `CanopyCell`,
+  `TileStats`, `LayerCover`, `Prototype`, `PrototypeKey`,
+  `PrototypeFiles`, `PrototypePackage`, `read_prototypes` and the
+  constants `INSTANCE_SCHEMA`, `INSTANCE_BYTES`, `PROTOTYPES_FILE`,
+  `STAND_AGES`, `STAND_CELL_M`, `STAND_SCALE`, `TRIANGLE_PIXELS` and
+  `CLIMBER_SPACING_M`. The rest of `plantgen::fill`
+  (`with_colonists`, `tile_crowns`, `cells_per_layout` and the like) is
+  not, and changes with the generator.
+- **What you build and what you read.** The inputs you make yourself
+  (`TileId`, `StandMap`, `StandCell`, `Member`, `Community`,
+  `CrackPlant`, `Instance`) keep their fields; a field added to one
+  raises `API_VERSION`. What a fill makes (`TilePlan`, `Prototype`,
+  `PrototypeFiles`, `PrototypePackage`, `Cover`, `Floor`, `FloorMoss`,
+  `Log`, `CanopyCell`, `TileStats`, `LayerCover`) is non-exhaustive: read
+  its fields, and make one only through its constructor (`Cover::of`,
+  `Log::new`), so fields can be added beside them. `FillSettings` and
+  `Site` start from `FillSettings::default()` and `Site::flat`,
+  `Site::from_heightfield` or `Site::from_field`.
+- **What changes with `GENERATOR_REVISION`, not the version.** Which
+  plants a tile holds, where, how big, and every byte of every file: the
+  fill models stands better with each revision. The same communities (in
+  the same order), settings, site, stand map, seed and revision give the
+  same bytes in every file, on every machine and thread count.
+- **Prototypes are known by their key.** `PrototypeKey` (and its file
+  stem, `<species>-<setting>-<seed>-<age>y`) is the same plant, the same
+  bytes, in any fill at the same revision and options; cache prototype
+  files by stem and revision. `Instance::prototype` is an index into
+  `fill.prototypes()`, which holds for the fill that wrote it: the same
+  communities in the same order and the same settings. A fill with
+  another community or stand age numbers its prototypes otherwise.
+- **The files** (written by `TilePlan::write`, `Fill::write_prototypes`,
+  `TilePlan::glb` and `TilePlan::glb_cells`, or by `plantc fill`):
+
+  | File | Form | Read it with |
+  | --- | --- | --- |
+  | `tiles/X_Y.json` | JSON, `schema` = `INSTANCE_SCHEMA` (4): `generator_revision`, `tile` (`x`, `y`), `day`, `tile_m`, `cell_m`, `cols`, `instance_bytes` (32), `instances` (how many), `instances_file`, and per stand cell row by row from the south-west `cover` and `canopy`; `stats`, `logs`, `floor_mosses` | `TilePlan::read(path)` (with the `.bin`) |
+  | `tiles/X_Y.bin` | the packed instances back to back, 32 bytes each (below) | `Instance::from_bytes`, or any language by the layout |
+  | `prototypes/prototypes.json` | JSON, `schema` = `INSTANCE_SCHEMA`, `generator_revision`, `prototypes`: each `index`, `key`, `age_years`, `layer`, `plant` (`seed`, `stem`, `size`, `levels`: `level`, `file`, `bytes`, `triangles`; `fingerprint`, SHA-256 of the levels' bytes) and `parts` (`region`, `levels`). It lists every prototype the fill wrote into the folder, not only the last call's | `read_prototypes(dir)` |
+  | `prototypes/<stem>-lodN.glb`, `<stem>-<part>-lodN.glb` | glTF 2.0 binary, a plant at a level (0 nearest), as `Generator::export` writes it; +Y up, the plant's foot at the origin | any glTF reader |
+  | `tiles/X_Y.glb` | glTF 2.0 binary, every plant of the tile at one level with `EXT_mesh_gpu_instancing`, root at the tile's south-west corner (+X east, +Y up, -Z north) | any glTF reader (meshopt files: see below) |
+  | `tiles/X_Y/cells.json`, `tiles/X_Y/c<col>_<row>-lod<N>.glb` | the index (`format` `plantgen-tile-cells`, `schema` 1) and each cell's file, as the whole tile's | JSON, any glTF reader |
+
+  A tile's GLB files place each plant exactly where its packed instance
+  does, so a tile read back from its files (`TilePlan::read`,
+  `read_prototypes`) draws the same bytes as the plan the fill made. A
+  reader refuses a file of a schema it does not know rather than
+  misreading it; the schema goes up whenever a file's form changes.
+  The `<stem>.size.json` and `<stem>.prototype.json` beside the
+  prototypes are the fill's own caches, not part of the contract.
+- **Not built yet.** A far stand-in for a whole tile (one card or
+  height field per tile, for kilometres off) is not in the API; the
+  per-cell `canopy` raster is what a host draws far forest from today.
 
 - **Stands that develop.** A stand cell is drawn at the stand age
   (`FillSettings::stand_ages`, 10 to 640 years unless chosen) nearest its
@@ -455,7 +521,8 @@ well; Blender 4.5 refuses them ("Extension EXT_meshopt_compression is
 not available on this addon version"), and after `plantc unpack` imports
 them whole.
 
-Dead wood is not placed yet. A climber member (layer `climber`) has one
+Standing dead trees (snags) are not placed yet; fallen logs are
+(`TilePlan::logs`, above). A climber member (layer `climber`) has one
 prototype per seed grown at the foot of a 6 m brick wall
 (`Generator::grow_ages_on_wall`, the stem's setting `wall`), to the first
 age its spec measures it that tall. On a tile over a site field

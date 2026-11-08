@@ -23,6 +23,7 @@
 //! by side meet without a seam and a caller can fill any tile alone.
 
 use std::collections::{BTreeMap, HashMap};
+use std::fmt;
 use std::path::Path;
 use std::sync::{Arc, Mutex, OnceLock, PoisonError};
 
@@ -331,6 +332,7 @@ impl PrototypeKey {
 
 /// One plant drawn once and placed many times.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct Prototype {
     pub key: PrototypeKey,
     /// The age it is grown to, years.
@@ -345,6 +347,7 @@ pub const PROTOTYPES_FILE: &str = "prototypes.json";
 /// A prototype as written: its place in [`Fill::prototypes`], its key,
 /// and its files and size as [`Generator::write_variants`] lists a plant.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct PrototypeFiles {
     pub index: u32,
     pub key: PrototypeKey,
@@ -366,6 +369,7 @@ pub struct PrototypeFiles {
 /// variant at keyframe `prototypes[k].1`: the same plant, of the same
 /// size, as [`Fill::measure`] grows.
 #[derive(Debug, Clone)]
+#[non_exhaustive]
 pub struct PrototypePackage {
     /// The species' spec, with one variant (the growth's setting and
     /// seed) and a keyframe at each of its prototypes' ages, grown to the
@@ -381,6 +385,37 @@ struct PrototypeList<'a> {
     schema: u32,
     generator_revision: u32,
     prototypes: &'a [PrototypeFiles],
+}
+
+#[derive(Deserialize)]
+struct PrototypeListFile {
+    schema: u32,
+    generator_revision: u32,
+    prototypes: Vec<PrototypeFiles>,
+}
+
+/// The prototypes listed in `dir`'s [`PROTOTYPES_FILE`], as
+/// [`Fill::write_prototypes`] wrote them there, and the
+/// [`GENERATOR_REVISION`](crate::GENERATOR_REVISION) that drew them. Each
+/// entry's `index` is the [`Instance::prototype`] that draws it, for the
+/// fill (the same communities and settings) that wrote it.
+///
+/// # Errors
+///
+/// When the file cannot be read or parsed, or its `schema` is not
+/// [`INSTANCE_SCHEMA`].
+pub fn read_prototypes(dir: &Path) -> Result<(u32, Vec<PrototypeFiles>), Error> {
+    let path = dir.join(PROTOTYPES_FILE);
+    let fail = |error: &dyn fmt::Display| Error(format!("{}: {error}", path.display()));
+    let text = std::fs::read_to_string(&path).map_err(|e| fail(&e))?;
+    let list: PrototypeListFile = serde_json::from_str(&text).map_err(|e| fail(&e))?;
+    if list.schema != INSTANCE_SCHEMA {
+        return Err(fail(&format!(
+            "schema {}; this reads schema {INSTANCE_SCHEMA}",
+            list.schema
+        )));
+    }
+    Ok((list.generator_revision, list.prototypes))
 }
 
 /// One tile's ground, as the fill reads it: a flat or height-field site,
@@ -406,7 +441,7 @@ pub struct Site {
     /// south-west corner lies in it; `None` for a height-field site.
     pub field: Option<FieldTile>,
     /// Plants that came up by themselves in the tile's pavements
-    /// ([`Site::with_colonists`]), drawn after its stands.
+    /// ([`with_colonists`]), drawn after its stands.
     pub colonists: Vec<CrackPlant>,
 }
 
@@ -428,7 +463,7 @@ pub struct CrackPlant {
 /// A field tile's roof patches that hold soil, by the field cell under
 /// them ([`Site::roofs`]).
 #[derive(Debug, Clone, Default)]
-pub struct Roofs {
+pub(crate) struct Roofs {
     cells: HashMap<u32, u32>,
 }
 
@@ -436,7 +471,7 @@ impl Roofs {
     /// The roof soil at `(east, north)` metres from `site`'s corner, if a
     /// roof patch holding soil lies over it.
     #[must_use]
-    pub fn at(&self, site: &Site, east: f64, north: f64) -> Option<RoofSoil> {
+    pub(crate) fn at(&self, site: &Site, east: f64, north: f64) -> Option<RoofSoil> {
         let tile = site.field.as_ref()?;
         let (x, z) = (tile.corner[0] + east, tile.corner[1] - north);
         let cell = tile.field.cell_at(x, z)?;
@@ -454,7 +489,7 @@ impl Roofs {
 
 /// Soil gathered on a roof where a plant stands ([`Roofs::at`]).
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub struct RoofSoil {
+pub(crate) struct RoofSoil {
     /// The roof's height there, in the field's frame.
     pub height_m: f64,
     /// How deep its soil lies.
@@ -467,7 +502,7 @@ impl RoofSoil {
     /// [`Site::soil_ratio_at`] reads the ground: an even layer `soil_m`
     /// deep all round its foot.
     #[must_use]
-    pub fn soil_ratio(&self, need: &SoilNeed, crown_m: f64, height_m: f64) -> f64 {
+    pub(crate) fn soil_ratio(&self, need: &SoilNeed, crown_m: f64, height_m: f64) -> f64 {
         need.ratio(crown_m, height_m, |reach, down| {
             Some(std::f64::consts::PI * reach * reach * down.min(self.soil_m))
         })
@@ -502,6 +537,61 @@ impl FieldTile {
 #[must_use]
 pub fn moisture_from_wetness(wetness: f64) -> f64 {
     ((wetness - 2.0) / 10.0).clamp(0.0, 1.0)
+}
+
+/// `site`, a field's tile, with the plants that come up by themselves in
+/// its pavements after `years` untended: [`crate::succession::run`]
+/// over `microsites` (the field's site mesh's,
+/// [`crate::succession::microsites`]) with the species of `pool` and
+/// the seed of `sources`, keeping those that stand inside the tile.
+/// Each is drawn as its species' prototype nearest its age, scaled to
+/// its height ([`Fill::tile`]), so the fill must hold every species of
+/// `pool` that comes up.
+///
+/// Not part of [`crate::api`]: it reads [`crate::succession`]'s types,
+/// which change with the generator. A caller of the stable API places
+/// its own [`CrackPlant`]s in [`Site::colonists`].
+///
+/// # Errors
+///
+/// When the site is not a field's tile.
+pub fn with_colonists(
+    mut site: Site,
+    microsites: &[crate::succession::Microsite],
+    pool: &[crate::succession::Colonist],
+    sources: &[crate::succession::Source],
+    settings: &crate::succession::Settings,
+    years: u32,
+) -> Result<Site, Error> {
+    let Some(tile) = &site.field else {
+        return Err(Error(
+            "site: only a site field's tile has pavements for plants to come up in".into(),
+        ));
+    };
+    let corner = tile.corner;
+    let tile_m = site.tile_m;
+    let snapshots = crate::succession::run(microsites, pool, sources, settings, &[years]);
+    let Some(snapshot) = snapshots.into_iter().find(|s| s.year == years) else {
+        return Ok(site);
+    };
+    site.colonists = snapshot
+        .plants
+        .iter()
+        .filter_map(|plant| {
+            let place = &microsites[plant.microsite];
+            let (east, north) = (place.x - corner[0], corner[1] - place.z);
+            let inside = (0.0..tile_m).contains(&east) && (0.0..tile_m).contains(&north);
+            (inside && plant.height > 0.0).then(|| CrackPlant {
+                species: pool[plant.colonist].id.clone(),
+                east,
+                north,
+                age_years: plant.age,
+                height_m: plant.height,
+                crown_m: plant.crown,
+            })
+        })
+        .collect();
+    Ok(site)
 }
 
 /// A height-field site's factors until a caller says: middling moisture,
@@ -642,57 +732,6 @@ impl Site {
         })
     }
 
-    /// This field's tile with the plants that come up by themselves in
-    /// its pavements after `years` untended: [`crate::succession::run`]
-    /// over `microsites` (the field's site mesh's,
-    /// [`crate::succession::microsites`]) with the species of `pool` and
-    /// the seed of `sources`, keeping those that stand inside the tile.
-    /// Each is drawn as its species' prototype nearest its age, scaled to
-    /// its height ([`Fill::tile`]), so the fill must hold every species of
-    /// `pool` that comes up.
-    ///
-    /// # Errors
-    ///
-    /// When the site is not a field's tile.
-    pub fn with_colonists(
-        mut self,
-        microsites: &[crate::succession::Microsite],
-        pool: &[crate::succession::Colonist],
-        sources: &[crate::succession::Source],
-        settings: &crate::succession::Settings,
-        years: u32,
-    ) -> Result<Self, Error> {
-        let Some(tile) = &self.field else {
-            return Err(Error(
-                "site: only a site field's tile has pavements for plants to come up in".into(),
-            ));
-        };
-        let corner = tile.corner;
-        let snapshots = crate::succession::run(microsites, pool, sources, settings, &[years]);
-        let Some(snapshot) = snapshots.into_iter().find(|s| s.year == years) else {
-            return Ok(self);
-        };
-        self.colonists = snapshot
-            .plants
-            .iter()
-            .filter_map(|plant| {
-                let site = &microsites[plant.microsite];
-                let (east, north) = (site.x - corner[0], corner[1] - site.z);
-                let inside =
-                    (0.0..self.tile_m).contains(&east) && (0.0..self.tile_m).contains(&north);
-                (inside && plant.height > 0.0).then(|| CrackPlant {
-                    species: pool[plant.colonist].id.clone(),
-                    east,
-                    north,
-                    age_years: plant.age,
-                    height_m: plant.height,
-                    crown_m: plant.crown,
-                })
-            })
-            .collect();
-        Ok(self)
-    }
-
     /// The rootable soil under `(east, north)`, metres deep: the field
     /// cell's [`crate::site_field::Ground::rooting_m`]; `None` where the
     /// soil goes deeper than roots do, on a height-field site, or where the
@@ -717,7 +756,7 @@ impl Site {
     /// of this, as `soil@1` grows them. 1 on a height-field site or a
     /// plant whose program asks nothing of the soil.
     #[must_use]
-    pub fn soil_ratio_at(
+    pub(crate) fn soil_ratio_at(
         &self,
         east: f64,
         north: f64,
@@ -773,7 +812,7 @@ impl Site {
     /// 0, facing up, not kept clear) by the field cell under them, the
     /// highest where two overlap; none on a height-field site.
     #[must_use]
-    pub fn roofs(&self) -> Roofs {
+    pub(crate) fn roofs(&self) -> Roofs {
         let mut cells = HashMap::new();
         let Some(tile) = &self.field else {
             return Roofs { cells };
@@ -1242,6 +1281,7 @@ impl Cover {
 /// Bryologist 115: 278-294); in the Puget Trough's dense 55-year stands
 /// mosses covered 59% (Thysell and Carey 2001, PNW-GTR-488).
 #[derive(Debug, Clone, Copy, PartialEq, Default, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct Floor {
     pub litter: f32,
     pub moss: f32,
@@ -1271,6 +1311,7 @@ pub struct Floor {
 
 /// One moss genus of a cell's forest floor.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct FloorMoss {
     /// The genus, as its index in [`TilePlan::floor_mosses`].
     pub genus: u16,
@@ -1291,6 +1332,7 @@ fn no_mosses(mosses: &[Option<FloorMoss>; 3]) -> bool {
 /// One log on a tile's forest floor ([`crate::deadwood`]), for a host to
 /// draw with its own meshes or [`crate::deadwood::draw`]'s.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct Log {
     /// The species it fell from, whose bark it keeps while it has bark.
     pub species: String,
@@ -1309,8 +1351,30 @@ pub struct Log {
     pub shape: crate::deadwood::Shape,
 }
 
+impl Log {
+    /// A log of `species` lying at `position`, its axis at `yaw` and its
+    /// small end raised by `pitch`, of `shape`.
+    #[must_use]
+    pub fn new(
+        species: &str,
+        position: [f32; 3],
+        yaw: f32,
+        pitch: f32,
+        shape: crate::deadwood::Shape,
+    ) -> Self {
+        Self {
+            species: species.to_string(),
+            position,
+            yaw,
+            pitch,
+            shape,
+        }
+    }
+}
+
 /// One stand cell of the far canopy.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct CanopyCell {
     pub height_m: f32,
     /// Share of the cell its crowns hide seen from above, 0 to 1: the
@@ -1380,6 +1444,7 @@ fn in_full_leaf() -> f64 {
 /// day ([`TilePlan::day`]): a herb whose shoots are down is not counted, a
 /// bare crown is, as crews project crowns.
 #[derive(Debug, Clone, Copy, PartialEq, Default, Serialize)]
+#[non_exhaustive]
 pub struct LayerCover {
     /// The tallest tree's height, metres, whose thirds part the layers.
     /// (Foresters' top height, the mean of the tallest 100 trees a
@@ -1417,6 +1482,7 @@ pub const TRIANGLE_PIXELS: f64 = 4.0;
 /// A filled tile: every placed plant, the ground cover and the far
 /// canopy, per stand cell of the [`StandMap`] it was filled from.
 #[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive]
 pub struct TilePlan {
     pub tile: TileId,
     /// The day of the year (1 to 365) it shows ([`FillSettings::options`]):
@@ -1455,50 +1521,82 @@ struct TileHeader<'a> {
     floor_mosses: &'a [String],
 }
 
+/// A tile's JSON as [`TilePlan::read`] reads it back.
+#[derive(Deserialize)]
+struct TileFile {
+    schema: u32,
+    tile: TileId,
+    day: f64,
+    tile_m: f64,
+    cell_m: f64,
+    cols: usize,
+    instance_bytes: usize,
+    instances: usize,
+    instances_file: String,
+    cover: Vec<Cover>,
+    canopy: Vec<CanopyCell>,
+    stats: TileStats,
+    #[serde(default)]
+    logs: Vec<Log>,
+    #[serde(default)]
+    floor_mosses: Vec<String>,
+}
+
 impl TilePlan {
-    /// The crowns of the tile's plants at least `least_height_m` tall, as
-    /// the envelopes that shade a site (`crate::mosses::grow_under`), in
-    /// the frame of a site whose tile has its south-west corner at (x, z)
-    /// `corner` (north −Z, as [`crate::mosses::MossSettings::over_tile`]):
-    /// each prototype's measured crown (base, height, radius, leaf area)
-    /// scaled with its instance and stood on its foot. Climbers are left
-    /// out: their leaves lie flat on their wall, not in a crown round
-    /// their foot. So are plants whose size has not been measured.
-    #[must_use]
-    pub fn crowns(
-        &self,
-        fill: &Fill,
-        corner: [f64; 2],
-        least_height_m: f64,
-    ) -> Vec<crate::conditions::Envelope> {
-        self.instances
+    /// Read back a tile [`Self::write`] wrote: its JSON at `json` and the
+    /// packed instances it names beside it. The instances come back to
+    /// their packed precision ([`Instance::from_bytes`]), so writing what
+    /// this reads gives the same bytes again.
+    ///
+    /// # Errors
+    ///
+    /// When a file cannot be read, the JSON is not a tile's, its `schema`
+    /// is not [`INSTANCE_SCHEMA`], or the instance file's length is not
+    /// its `instances` times [`INSTANCE_BYTES`].
+    pub fn read(json: &Path) -> Result<Self, Error> {
+        let fail = |error: &dyn fmt::Display| Error(format!("{}: {error}", json.display()));
+        let text = std::fs::read_to_string(json).map_err(|e| fail(&e))?;
+        let file: TileFile = serde_json::from_str(&text).map_err(|e| fail(&e))?;
+        if file.schema != INSTANCE_SCHEMA || file.instance_bytes != INSTANCE_BYTES {
+            return Err(fail(&format!(
+                "schema {} of {}-byte instances; this reads schema {INSTANCE_SCHEMA} of {INSTANCE_BYTES}",
+                file.schema, file.instance_bytes
+            )));
+        }
+        let bin = json
+            .parent()
+            .unwrap_or_else(|| Path::new("."))
+            .join(&file.instances_file);
+        let bytes = std::fs::read(&bin).map_err(|e| Error(format!("{}: {e}", bin.display())))?;
+        if bytes.len() != file.instances * INSTANCE_BYTES {
+            return Err(Error(format!(
+                "{}: {} bytes, not {} instances of {INSTANCE_BYTES}",
+                bin.display(),
+                bytes.len(),
+                file.instances
+            )));
+        }
+        let instances = bytes
+            .as_chunks::<INSTANCE_BYTES>()
+            .0
             .iter()
-            .filter_map(|instance| {
-                let index = instance.prototype as usize;
-                if fill.prototypes().get(index)?.key.on_wall {
-                    return None;
-                }
-                let size = fill.size(index)?;
-                let scale = f64::from(instance.scale);
-                let height = size.height * scale;
-                if height < least_height_m || size.leaf_area <= 0.0 {
-                    return None;
-                }
-                let [east, north, up] = instance.position.map(f64::from);
-                let crown = crate::conditions::Crown {
-                    base_m: up + size.crown_base.unwrap_or(0.0) * scale,
-                    top_m: up + height,
-                    radius_m: (size.crown_radius * scale).max(0.05),
-                    leaf_area_m2: size.leaf_area * scale * scale,
-                    clumping: 1.0,
-                    extinction: crate::conditions::Crown::EXTINCTION,
-                };
-                // The site's (east, north) of the foot: x = corner x +
-                // east, z = corner z − north, and north is −z.
-                Some(crown.envelope([corner[0] + east, north - corner[1]]))
-            })
-            .collect()
+            .map(Instance::from_bytes)
+            .collect();
+        Ok(Self {
+            tile: file.tile,
+            day: file.day,
+            tile_m: file.tile_m,
+            cell_m: file.cell_m,
+            cols: file.cols,
+            instances,
+            cover: file.cover,
+            canopy: file.canopy,
+            stats: file.stats,
+            logs: file.logs,
+            floor_mosses: file.floor_mosses,
+        })
     }
+
     /// The prototypes the plan places, each once, in order: what to pass
     /// [`Fill::write_prototypes`] for this tile.
     #[must_use]
@@ -1551,7 +1649,8 @@ impl TilePlan {
     }
 
     /// The tile as one GLB that any glTF viewer opens: each prototype the
-    /// tile places, at `level` (0 nearest to 3 farthest), copied once
+    /// tile places, at `level` (0 nearest to 3 farthest), each plant where
+    /// its packed instance ([`Instance::to_bytes`]) puts it, copied once
     /// from its files in `dir` (as [`Fill::write_prototypes`] listed them
     /// in `prototypes`), and a node per prototype mesh drawing every plant
     /// that uses it with `EXT_mesh_gpu_instancing`. The root node sits at
@@ -1570,7 +1669,19 @@ impl TilePlan {
         level: usize,
         meshopt: bool,
     ) -> Result<Vec<u8>, Error> {
-        crate::tile_scene::tile_glb(self, prototypes, dir, level, meshopt)
+        crate::tile_scene::tile_glb(&self.packed(), prototypes, dir, level, meshopt)
+    }
+
+    /// The plan with each instance as its packed form reads back, so a
+    /// tile's GLB files place each plant exactly as its instance file
+    /// does, whether drawn from the plan a fill made or one
+    /// [`Self::read`] read.
+    fn packed(&self) -> Self {
+        let mut plan = self.clone();
+        for instance in &mut plan.instances {
+            *instance = Instance::from_bytes(&instance.to_bytes());
+        }
+        plan
     }
 
     /// The tile cut into square cells `cell_m` across, each written as
@@ -1599,8 +1710,55 @@ impl TilePlan {
         levels: &[usize],
         meshopt: bool,
     ) -> Result<Vec<(String, Vec<u8>)>, Error> {
-        crate::tile_scene::tile_cells(self, prototypes, dir, cell_m, levels, meshopt)
+        crate::tile_scene::tile_cells(&self.packed(), prototypes, dir, cell_m, levels, meshopt)
     }
+}
+
+/// The crowns of `plan`'s plants at least `least_height_m` tall, as
+/// the envelopes that shade a site (`crate::mosses::grow_under`), in
+/// the frame of a site whose tile has its south-west corner at (x, z)
+/// `corner` (north −Z, as [`crate::mosses::MossSettings::over_tile`]):
+/// each prototype's measured crown (base, height, radius, leaf area)
+/// scaled with its instance and stood on its foot. Climbers are left
+/// out: their leaves lie flat on their wall, not in a crown round
+/// their foot. So are plants whose size has not been measured.
+///
+/// Not part of [`crate::api`]: its envelopes are
+/// [`crate::conditions`]'s, which change with the generator.
+#[must_use]
+pub fn tile_crowns(
+    plan: &TilePlan,
+    fill: &Fill,
+    corner: [f64; 2],
+    least_height_m: f64,
+) -> Vec<crate::conditions::Envelope> {
+    plan.instances
+        .iter()
+        .filter_map(|instance| {
+            let index = instance.prototype as usize;
+            if fill.prototypes().get(index)?.key.on_wall {
+                return None;
+            }
+            let size = fill.size(index)?;
+            let scale = f64::from(instance.scale);
+            let height = size.height * scale;
+            if height < least_height_m || size.leaf_area <= 0.0 {
+                return None;
+            }
+            let [east, north, up] = instance.position.map(f64::from);
+            let crown = crate::conditions::Crown {
+                base_m: up + size.crown_base.unwrap_or(0.0) * scale,
+                top_m: up + height,
+                radius_m: (size.crown_radius * scale).max(0.05),
+                leaf_area_m2: size.leaf_area * scale * scale,
+                clumping: 1.0,
+                extinction: crate::conditions::Crown::EXTINCTION,
+            };
+            // The site's (east, north) of the foot: x = corner x +
+            // east, z = corner z − north, and north is −z.
+            Some(crown.envelope([corner[0] + east, north - corner[1]]))
+        })
+        .collect()
 }
 
 /// A set of communities, their stands developed and prototypes chosen
@@ -2748,11 +2906,13 @@ impl Fill {
 
     /// Grow and export the prototypes `which` (indices into
     /// [`Fill::prototypes`]; every one when empty) into `out`, on up to
-    /// `threads` threads, and list them in [`PROTOTYPES_FILE`]; each is
-    /// measured as it is written. A prototype whose record
-    /// (`<stem>.prototype.json`) is in `out` from the same revision is
-    /// kept, not drawn again, so a city's tiles can ask for theirs as they
-    /// come.
+    /// `threads` threads, and list them in [`PROTOTYPES_FILE`] beside the
+    /// ones an earlier call of this fill wrote there ([`read_prototypes`]
+    /// reads the list); each is measured as it is written. A prototype
+    /// whose record (`<stem>.prototype.json`) is in `out` from the same
+    /// revision is kept, not drawn again, so a city's tiles can ask for
+    /// theirs as they come. What it returns is this call's prototypes,
+    /// in index order.
     ///
     /// # Errors
     ///
@@ -2812,11 +2972,36 @@ impl Fill {
             Ok(files)
         })?;
         let mut written: Vec<PrototypeFiles> = written.into_iter().flatten().collect();
+        // The list names every prototype of this fill written here, not
+        // only this call's, so each tile's instances find theirs: an
+        // earlier entry stays while it is this fill's prototype at that
+        // index, at this revision, with its files.
         written.sort_by_key(|files| files.index);
+        let mut listed = written.clone();
+        if let Ok((revision, earlier)) = read_prototypes(out)
+            && revision == crate::GENERATOR_REVISION
+        {
+            let new: std::collections::BTreeSet<u32> =
+                written.iter().map(|files| files.index).collect();
+            listed.extend(earlier.into_iter().filter(|files| {
+                !new.contains(&files.index)
+                    && self
+                        .prototypes
+                        .get(files.index as usize)
+                        .is_some_and(|p| p.key == files.key)
+                    && files
+                        .plant
+                        .levels
+                        .iter()
+                        .chain(files.parts.iter().flat_map(|part| &part.levels))
+                        .all(|level| out.join(&level.file).is_file())
+            }));
+        }
+        listed.sort_by_key(|files| files.index);
         let list = PrototypeList {
             schema: INSTANCE_SCHEMA,
             generator_revision: crate::GENERATOR_REVISION,
-            prototypes: &written,
+            prototypes: &listed,
         };
         let path = out.join(PROTOTYPES_FILE);
         let text = serde_json::to_string_pretty(&list).map_err(|error| Error(error.to_string()))?;
