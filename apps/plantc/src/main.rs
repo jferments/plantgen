@@ -294,7 +294,7 @@ Usage:
               [--box X0,Y0,Z0,X1,Y1,Z1] [--out COVER.json] [--cover COVER.json]
               [--render FILE.png [--view VIEW] [--size PIXELS] [--from south|north]]
               [--glb FILE.glb] [--focus X,Y,Z | --genus GENUS] [--span METRES]
-              [--wet 0..1] [--detail tint|patch|shell|shoots|near] [--capsules yes|no]
+              [--wet 0..1 | --day 1..365] [--detail tint|patch|shell|shoots|near] [--capsules yes|no]
       Grow mosses over a site's faces (plantgen::mosses): every moss genus
       the library gives a colony_form settles where its light, wetness
       and substrate fit (rain on faces turned up, damp at a wall's foot,
@@ -306,7 +306,9 @@ Usage:
       them instead of growing. --render draws the site and its mosses:
       shells of the colonies' forms, or with --detail shoots every shoot's
       leaves and capsules (near: only within --span of --focus); --wet 1
-      just rained on, 0 dry (0.4 when left out); --from north looks from
+      just rained on, 0 dry (0.4 when left out; with --day, as often wet
+      as Portland's share of rain days then, 0.6 in January, 0.12 in
+      July); --from north looks from
       the north side. --genus looks at that genus's widest well-grown
       colony instead of --focus; a close render prints the genus of the
       colony it is centred on, for its caption. --glb writes the same
@@ -595,7 +597,8 @@ Usage:
       --render draws the filled tile on its mesh, each prototype at
       --level (1 unless given), with its logs and its forest floor's
       litter and moss, and its --moss moss, as wet as --wet (0 dry to 1
-      just rained on, 0.4 unless given); --cut M leaves out all above M
+      just rained on; unless given, as often wet as Portland's share of
+      rain days on --day, or 0.4); --cut M leaves out all above M
       metres, to show the floor. --glb LEVEL (0 nearest to 3 farthest)
       also writes DIR/tiles/X_Y.glb: the whole tile as one glTF file,
       each prototype's level LEVEL once and every plant an instance of it
@@ -3376,13 +3379,29 @@ fn logs_command(args: &[String]) -> Result<(), Failure> {
     Ok(())
 }
 
+/// How wet moss is drawn: `--wet` when given; else, with `--day`, as wet
+/// as moss in Portland at that time of year
+/// (`mosses::hydration_on`); else 0.4.
+fn moss_wetness(options: &Options) -> Result<f64, String> {
+    if let Some(wet) = options.number::<f64>("wet")? {
+        return Ok(wet.clamp(0.0, 1.0));
+    }
+    if options.flags.contains_key("day") {
+        return Ok(plantgen::mosses::hydration_on(
+            options.day()?,
+            &plantgen::mosses::PORTLAND_RAIN_DAYS,
+        ));
+    }
+    Ok(0.4)
+}
+
 fn moss_command(args: &[String]) -> Result<(), Failure> {
     use plantgen::mosses::{self, Detail, DrawOptions, MossCover, MossSettings};
     let options = Options::parse(
         args,
         &[
             "years", "seed", "latitude", "box", "out", "cover", "render", "view", "size", "from",
-            "focus", "span", "wet", "detail", "capsules", "genus", "glb",
+            "focus", "span", "wet", "detail", "capsules", "genus", "glb", "day",
         ],
     )?;
     let given = options.one_positional("a site document")?;
@@ -3509,7 +3528,7 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
         }
     };
     let draw = DrawOptions {
-        hydration: options.number::<f64>("wet")?.unwrap_or(0.4).clamp(0.0, 1.0),
+        hydration: moss_wetness(&options)?,
         detail,
         near: focus.map(|at| (at, span)),
         capsules: options.flags.get("capsules").is_none_or(|v| v != "no"),
@@ -7617,7 +7636,7 @@ fn render_fill(
             let mut mesh = cover.draw(
                 &field.mesh,
                 &DrawOptions {
-                    hydration: options.number::<f64>("wet")?.unwrap_or(0.4).clamp(0.0, 1.0),
+                    hydration: moss_wetness(&options)?,
                     detail: Detail::Near,
                     near: Some((at - offset, span * 0.05)),
                     capsules: true,
