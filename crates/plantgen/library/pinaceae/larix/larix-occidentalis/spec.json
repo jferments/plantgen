@@ -23,8 +23,6 @@
       "branch_growth": 0.22,
       "spray_base": 0.12,
       "spray_length": 0.6,
-      "shade_death": 0.15,
-      "pipe_organ": 0.009,
       "branch_reach": 2.5,
       "epi_chance": 0,
       "spur_years": 12,
@@ -126,6 +124,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "shade_tolerance": "intolerant",
     "height_max_m": {
       "min": 30,
       "max": 55,
@@ -160,6 +159,7 @@
     "leaf_margin": "entire"
   },
   "evidence": {
+    "traits.shade_tolerance": {"evidence": "SourceInferred", "source": "silvics-1990-conifers", "note": "Silvics of North America vol. 1, Western larch (Schmidt and Shearer): \"Larch is the most shade-intolerant conifer in the Northern Rockies. Only during the seedling stage can it tolerate partial shading\"."},
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",

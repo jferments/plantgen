@@ -24,7 +24,6 @@
       "branch_growth": 0.28,
       "spray_base": 0.25,
       "spray_length": 1.0,
-      "shade_death": 0.15,
       "branch_reach": 6.0,
       "epi_chance": 0,
       "pipe_exponent": 3,
@@ -125,6 +124,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "shade_tolerance": "intolerant",
     "bark_colour": [97, 51, 26],
     "height_max_m": {
       "min": 27.4,
@@ -154,6 +154,7 @@
     "leaf_margin": "serrate"
   },
   "evidence": {
+    "traits.shade_tolerance": {"evidence": "SourceInferred", "source": "silvics-1990-conifers", "note": "Silvics of North America vol. 1, Ponderosa pine (Oliver and Ryker): more shade tolerant than western larch, less than grand fir and western white pine; \"Overall, it is most accurately classed as intolerant of shade\"."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.38, 0.2, 0.1], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "appearance.bark_look.stages.blackjack": {"evidence": "SourceInferred", "source": "sudworth-1908", "note": "until_diameter_m: text: 'Younger trees, up to 2 feet in diameter ... blackish, narrowly furrowed' (Sudworth); fissures.width_share: word: 'narrowly furrowed'; fissures.spacing_m: inferred (photo)"},
     "appearance.bark_look.stages.plates.fissures.floor_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "text: 'black crevices' (Wikipedia)"},
