@@ -246,11 +246,6 @@
       "source": "abrams-ferris-1960",
       "note": "Abrams and Ferris vol. 4, A. millefolium (pp. 390-391): plants rhizomatous to tufted; rhizomes short and stout in some varieties, long and slender in others."
     },
-    "appearance.organs.flower.shape.involucre": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "The involucre drawn about 1.8 times as tall as the disc is wide, so its height comes to the flora's 4 to 7 mm on a head drawn 6 mm across (spec rework E1); the daisy family's rule sets it from the involucre's height and width, and no flora read gives yarrow's width."
-    },
     "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2908230), as no source read gives it."},
     "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2908230), as no source read gives it."},
     "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2908230), as no source read gives it."},
