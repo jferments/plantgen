@@ -1492,3 +1492,69 @@ fn a_tile_shows_its_day_bare_maples_and_vanilla_leaf_down_in_winter() {
     assert!((january.stats.floor[1] - july.stats.floor[1]).abs() < 1e-9);
     std::fs::remove_dir_all(&*MAPLE_SIZES).ok();
 }
+
+/// A tile's far stand-in (`Fill::canopy`): a closed stand is one surface
+/// above its ground, opaque where its crowns are, a valid glTF file, the
+/// same bytes every time, and two neighbours baked with each other agree
+/// along the side they share.
+#[test]
+fn a_tiles_far_stand_in_covers_its_stand_and_meets_its_neighbour() {
+    use plantgen::api::FarSettings;
+    let fill = fill();
+    let tile_m = 40.0;
+    let settings = FarSettings {
+        texel_m: 1.0,
+        grid_m: 4.0,
+        ..FarSettings::default()
+    };
+    let stands = StandMap::uniform(tile_m, 0, 40.0);
+    let west_site = Site::flat(TileId { x: 0, y: 0 }, tile_m).expect("site");
+    let east_site = Site::flat(TileId { x: 1, y: 0 }, tile_m).expect("site");
+    let west = fill.tile(&west_site, &stands, 3).expect("tile");
+    let east = fill.tile(&east_site, &stands, 3).expect("tile");
+    let far = fill.canopy(&west, &west_site, &settings).expect("far");
+    assert_eq!(far.texels, 40);
+    assert_eq!(far.grid, 11);
+    assert!(far.stats.plants > 0 && far.stats.plants <= west.instances.len());
+    assert!(
+        far.stats.cover > 0.8,
+        "a closed stand covers its tile: {:?}",
+        far.stats
+    );
+    assert!(far.stats.height_m > 5.0, "{:?}", far.stats);
+    let high = far
+        .heights_m
+        .iter()
+        .zip(&far.ground_m)
+        .filter(|(h, g)| **h > **g + 2.0)
+        .count();
+    assert!(
+        high * 10 > far.heights_m.len() * 8,
+        "most vertices stand on crowns"
+    );
+    let glb = far.glb().expect("glb");
+    let summary = plantgen::gltf::check(&glb).expect("a valid file");
+    assert_eq!(summary.materials, 2, "canopy and sides");
+    assert_eq!(summary.triangles, far.stats.triangles);
+    assert!(
+        far.from_m() > 900.0 && far.from_m() < 950.0,
+        "{}",
+        far.from_m()
+    );
+    // The same bytes again, from a fill that has drawn its prototypes.
+    let again = fill.canopy(&west, &west_site, &settings).expect("far");
+    assert_eq!(again.glb().expect("glb"), glb);
+    // Neighbours baked with each other: the west tile's east side is the
+    // east tile's west side.
+    let a = fill
+        .canopy_among(&west, &west_site, &[&east], &settings)
+        .expect("far");
+    let b = fill
+        .canopy_among(&east, &east_site, &[&west], &settings)
+        .expect("far");
+    let n = a.grid;
+    for j in 0..n {
+        let (ha, hb) = (a.heights_m[j * n + n - 1], b.heights_m[j * n]);
+        assert!((ha - hb).abs() < 0.05, "row {j}: {ha} against {hb}");
+    }
+}

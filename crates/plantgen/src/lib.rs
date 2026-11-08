@@ -45,6 +45,7 @@ pub mod divided;
 pub mod drawing;
 pub mod evidence;
 pub mod export;
+pub mod far;
 pub mod felling;
 pub mod fill;
 pub mod flowers;

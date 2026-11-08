@@ -115,7 +115,10 @@ with every flower, fruit and spine drawn as its own mesh (`--parts on`).*
   roads or walls. Each prototype is grown once and each stand laid out
   once for a whole city: a 512 m tile of Olympia, Washington, with its
   buildings and roads and seven communities, fills in about 14 s the
-  first time and in a tenth of a second after that. `plantc fill` does
+  first time and in a tenth of a second after that. Past the distance
+  its plants' cards are enough, a whole tile draws as one far stand-in:
+  its crowns' height field with a picture of them baked from its own
+  plants. `plantc fill` does
   it from the command line and `plantgen::api::Fill` from code
   ([docs/LIBRARY-API.md](docs/LIBRARY-API.md),
   [docs/sites/DEVELOPERS.md](docs/sites/DEVELOPERS.md)).

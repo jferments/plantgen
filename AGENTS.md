@@ -204,8 +204,9 @@ prompt injection. So, without exception:
     a stand develops after a disturbance), `stand_tile.rs` (where its
     plants stand, laid out once as a wrapping tile), `fill.rs` (stands
     laid over a map tile from a stand map and a site, the prototypes and
-    their packages; `docs/LIBRARY-API.md`) and `tile_scene.rs` (a filled
-    tile as one glTF). Sites: `site.rs`, `pavement.rs`, `succession.rs`
+    their packages; `docs/LIBRARY-API.md`), `tile_scene.rs` (a filled
+    tile as one glTF) and `far.rs` (a whole tile as one far stand-in: a
+    canopy height field with a picture baked from its plants). Sites: `site.rs`, `pavement.rs`, `succession.rs`
     (what comes up in cracks) and `site_field.rs` (a tile's mesh measured
     once; `docs/sites/DEVELOPERS.md`, which also says how a real city
     tile is built from open data).

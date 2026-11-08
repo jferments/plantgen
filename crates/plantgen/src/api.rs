@@ -55,6 +55,7 @@ pub use crate::export::{
     Attributes, Budget, Compression, Export, Level, LevelPart, Plant, Region, Settings, Shade,
     crown_regions,
 };
+pub use crate::far::{FarCanopy, FarSettings, FarStats};
 pub use crate::fill::{
     CLIMBER_SPACING_M, CanopyCell, Community, Cover, CoverKind, CrackPlant, FieldTile, Fill,
     FillSettings, Floor, FloorMoss, INSTANCE_BYTES, INSTANCE_SCHEMA, Instance, Layer, LayerCover,
