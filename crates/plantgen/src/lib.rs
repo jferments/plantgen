@@ -1795,7 +1795,12 @@ pub mod venation;
 /// them ([`stand_tile::FINE_CELL_M`]), where it spaced them by their
 /// widest reach on 0.5 m cells. A south Puget Sound prairie's grasses,
 /// spaced by a few culms leaning out with their panicles, covered 11% of
-/// a patch seen from above at 90% herb cover; they now cover 41%, and a
-/// hectare of the prairie two years after a fire holds 97,000 plants
-/// where it held 17,000. No plant grows differently.
+/// a patch seen from above at 90% herb cover; they now cover 37%, and a
+/// hectare of the prairie two years after a fire holds 102,000 plants
+/// where it held 17,000. A community may give its members by plot cover
+/// (`Member::cover` in [`fill`]), the prairie's from Chappell's plots. A
+/// prairie kept by fire is closed by trees (30% cover) at LANDFIRE's 28
+/// fire-free years, not at 16 ([`development::encroached_age`]), and its
+/// moss and lichen carpet is Calabria 2016's 54% (40% moss) where it was
+/// 14%. No plant grows differently.
 pub const GENERATOR_REVISION: u32 = 218;
