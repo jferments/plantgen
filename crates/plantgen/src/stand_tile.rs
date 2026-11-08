@@ -365,6 +365,20 @@ pub fn lay_out(members: &[Member], rules: &Rules, seed: u64) -> Vec<Placed> {
                     member.crown_base_m * scale,
                     member.height_m * scale,
                 );
+                // A layer whose whole cover is less than one crown (a
+                // savanna's few wide oaks on a tile) stands that crown by
+                // chance, as often as its cover over the crown's area, so
+                // over the tiles laid out it covers its share on average
+                // instead of a crown on every tile.
+                let area = std::f64::consts::PI * radius * radius;
+                let share_m2 = target * rules.tile_m * rules.tile_m;
+                if raster.counts[layer_index] == 0
+                    && area > share_m2
+                    && unit(hash_words(&[seed, 6, layer_index as u64])) * area > share_m2
+                {
+                    misses = GIVE_UP;
+                    break;
+                }
                 // A tree's crown may stand off its stem toward room.
                 let reach = if layer_index < 2 {
                     rules.plasticity.max(0.0) * radius
