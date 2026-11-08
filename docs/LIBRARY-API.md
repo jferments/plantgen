@@ -511,6 +511,45 @@ tile this way with stock three.js: a 120 m tile seen from the ground drew
 `MSFT_lod`, is read by Babylon.js and UnityGLTF but by Blender and
 three.js only through add-ons, so the cells do not rely on it.
 
+**A whole tile from afar.** Past the distance at which a tile's cards
+are enough, a tile still holds thousands of plants; games draw forest that
+far as a surface (Bruneton and Neyret 2012 draw it as a z-field, the
+canopy's height over the terrain, with its shading in maps; Serious Sam 4
+splats its farthest forest into the terrain). `Fill::canopy(&plan, &site,
+&FarSettings::default())` (or `plantc fill ... --far 0.5`, written as
+`tiles/X_Y-far.glb` and `tiles/X_Y-far.json`) makes one such stand-in from
+the tile's own plants, drawn at the farthest level as the cells draw them:
+
+- a picture of the tile from straight above (`FarSettings::texel_m`, half
+  a metre unless chosen), its colour under even light with the cover in
+  alpha, and a sky-view map (glTF's occlusion map) that darkens the
+  spaces between crowns;
+- a height field of the crowns' tops, a vertex every `grid_m` (2 m). Plants
+  1.4 m or taller make it (`shell_least_m`); the herbs and shrubs beneath
+  are in the picture only. A space between crowns narrower than the stand
+  is tall (or than `gap_m`, 5 m) is bridged: the surface runs over it no
+  steeper than 60 degrees and the picture shows what lies down there, as
+  dark as the sky it sees lets it be. Wider openings drop to the ground,
+  so a clearing or a road shows the host's ground;
+- skirts down to the ground along the tile's sides, showing each side as
+  seen level from outside (trunks under crowns), so a stand's edge at the
+  side of a tile reads from afar and no crack opens between neighbours.
+
+Its root sits at the tile's south-west corner (+X east, +Y up, -Z north)
+like the tile's other files. The scene's extras (and the JSON) give its
+`from_m`: the distance from which a texel is no wider than a pixel for a
+camera 1080 pixels high and 60 degrees across (468 m at half-metre texels),
+so a host draws the cells nearer and this farther. A 120 m tile of an
+80-year Douglas-fir stand is 7,680 triangles and 0.57 MiB, where its level-3
+cells are 214 MiB uncompressed; at a kilometre the cells' cards are thinner
+than a pixel and read as speckles, while the stand-in stays a closed
+forest. `Fill::canopy_among(&plan, &site, &[&neighbour, ...], &settings)`
+also draws the neighbours' crowns that reach across its sides, so two
+neighbours baked with each other agree along the side they share. Growing
+the prototypes takes the time (two to four minutes for that tile on four threads);
+a `Fill` keeps what it drew, so the next tile of the same fill grows none
+again.
+
 **Checked in Blender** (2026-11-06, Blender 4.5.9 LTS and 5.2.3, File >
 Import > glTF 2.0 with its defaults): a 40 m tile of Douglas-fir, bigleaf
 maple and yarrow written with `--compress none` and `--compress

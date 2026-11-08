@@ -1786,6 +1786,9 @@ pub struct Fill {
     sizes: Arc<Vec<OnceLock<Measurements>>>,
     /// The stand tiles laid out so far.
     laid: Arc<Mutex<HashMap<LayoutKey, Arc<Layout>>>>,
+    /// Prototypes drawn for far stand-ins so far, by index and level
+    /// ([`crate::far`]).
+    pub(crate) drawn: Arc<Mutex<HashMap<(u32, usize), Arc<crate::far::Drawn>>>>,
     /// The library's moss genera, for the forest floors.
     mosses: Vec<crate::mosses::MossKind>,
 }
@@ -2275,6 +2278,7 @@ impl Fill {
             edge_twins: Vec::new(),
             sizes: Arc::new(Vec::new()),
             laid: Arc::new(Mutex::new(HashMap::new())),
+            drawn: Arc::new(Mutex::new(HashMap::new())),
             mosses: crate::mosses::kinds(crate::library::Library::builtin()).map_err(Error)?,
         };
         for community in 0..fill.communities.len() {
@@ -4215,7 +4219,7 @@ fn record_name(key: &PrototypeKey, parts: bool) -> String {
 
 /// Run `count` jobs on up to `threads` threads, each job once; their
 /// results in order, or the first failure.
-fn run_jobs<T: Send>(
+pub(crate) fn run_jobs<T: Send>(
     count: usize,
     threads: usize,
     job: impl Fn(usize) -> Result<T, Error> + Sync,
