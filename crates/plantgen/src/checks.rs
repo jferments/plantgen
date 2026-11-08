@@ -114,7 +114,9 @@
 //! end lived from its birth to then (`leaf_life_years`, each leaf judged
 //! as an organ's size is; a leaf drawn in pieces, a fern's frond, as its
 //! structure); one that fell with its limb, or still stands at the end,
-//! is not counted. A plant is evergreen (`leaf_habit`) where a leaf stands
+//! is not counted. A leaf drawn at the foot of a side shoot, recorded on
+//! the segment the shoot starts from, fell with its limb when that shoot
+//! was shed at the same moment (2026-11-08). A plant is evergreen (`leaf_habit`) where a leaf stands
 //! on it into its second year, else deciduous; a grass blade turned to
 //! thatch is a dead leaf, not one kept. A cone takes to ripen
 //! (`cone_maturation_years`) the seasons the youngest cone drawn ripe has
