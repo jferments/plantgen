@@ -1788,4 +1788,17 @@ pub mod venation;
 /// at 20 cm (23 cm before), inside the 86 to 162 m² Espinosa Bancalari et
 /// al. found; every interior and open yield-table reference stays within
 /// tolerance.
-pub const GENERATOR_REVISION: u32 = 217;
+///
+/// 218: a broadleaf tree's buds die in the shade its shade-tolerance
+/// class allows (`shade_death`, a rule at the decurrent trees): 0.03 of
+/// the open sky's light for a tolerant one, 0.06 for an intermediate one,
+/// 0.12, as every one had, for an intolerant one or one whose class is
+/// not stated. Every broadleaf stand held about 3 m² of leaf over each m²
+/// of its ground, whatever its kind, where under red alder about 17% of
+/// the open's light reaches the understorey (Hanley and Barnard 2014) and
+/// under beech and tulip-poplar at a leaf area index of 5.1, 1.3% (Hudson
+/// et al. 2017). Grown 50 years in a stand of its like, southern magnolia
+/// holds 5.5 m² a m² where it lost every leaf, Oregon ash 4.1 (2.5);
+/// red alder keeps its 3.0. Open-grown crowns stay within the Urban Tree
+/// Database's leaf per crown area.
+pub const GENERATOR_REVISION: u32 = 218;
