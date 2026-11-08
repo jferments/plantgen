@@ -908,21 +908,13 @@ pub const LICHEN_GONE_YEARS: f64 = 5.0;
 /// sooner. Linear between the two years, this model's reading.
 pub const LICHEN_FULL_YEARS: f64 = 20.0;
 
-/// How far a prairie's Cladonia is from afar, sRGB: pale grey-white
-/// reindeer lichen (C. portentosa subsp. pacifica f. decolorans, the
-/// form without the yellow usnic acid) in an overcast photograph of
-/// Mima Mounds' fir edge (Chris Light 2023, Wikimedia Commons, CC BY-SA;
-/// imagekit batch commons-puget-prairie-2026-11-08), the mean of a patch
-/// of mat with the shade between its branches (plantgen-claude
-/// project-files/lichens/NOTES.md).
-pub const CLADONIA_SRGB: [u8; 3] = [195, 200, 202];
-
 /// The share of a fire-kept prairie's ground under Cladonia lichens
 /// `since` years after its last fire: none until [`LICHEN_GONE_YEARS`],
 /// all of [`PRAIRIE_LICHEN`] from [`LICHEN_FULL_YEARS`]; less where trees
 /// close over it (none under [`CLOSED_TREE_COVER`]) and under shrubs
 /// (`shrub_cover`), since the lichens of these prairies grow on open
-/// ground between the grasses (Calabria et al. 2016).
+/// ground between the grasses (Calabria et al. 2016). The library's
+/// lichens ([`crate::lichens`]) say what grows there and how it looks.
 #[must_use]
 pub fn prairie_lichen(since: f64, tree_cover: f64, shrub_cover: f64) -> f64 {
     let back =
