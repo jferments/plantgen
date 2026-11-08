@@ -595,7 +595,7 @@ impl MossKind {
     /// (*Bryophyte Biology* pp. 193, 272-273).
     #[must_use]
     pub fn vigour(&self, habitat: &Habitat) -> f64 {
-        self.fit(habitat) * growing_time(habitat.wetness)
+        self.fit(habitat) * growing_time(habitat.wetness) * habitat.climb
     }
 }
 
@@ -814,6 +814,27 @@ pub struct Habitat {
     /// How well spores and water stay on it: 1 on a face turned up, less
     /// on an upright one.
     pub hold: f64,
+    /// How fast moss grows here for its height up a trunk, against the
+    /// lowest metre: 1 there, half at 1.5-2 m (see [`trunk_growth`]); 1
+    /// off bark.
+    #[serde(default = "full")]
+    pub climb: f64,
+}
+
+fn full() -> f64 {
+    1.0
+}
+
+/// How fast moss grows on a trunk at `height` metres above the ground,
+/// against how it grows 30-100 cm up: *Hypnum cupressiforme* grew half as
+/// much 150-200 cm up a trunk as 30-100 cm up it, 23 May to 6 October
+/// (Pitkin 1975, in Glime, *Bryophyte Ecology* vol. 1 ch. 12-1, p. 1990 of the mirror's copy),
+/// the air drier away from the ground. Straight between the middles of
+/// the two bands (0.65 m and 1.75 m) and held beyond them: the study gives
+/// no other heights, so above 2 m it stays half, an estimate.
+#[must_use]
+pub fn trunk_growth(height: f64) -> f64 {
+    1.0 - 0.5 * math::smoothstep(0.65, 1.75, height).min(1.0)
 }
 
 /// How a region of a site is grown over.
@@ -1041,6 +1062,12 @@ fn habitat_at(
             0.0
         } else {
             0.15 + 0.85 * n.y.max(0.0)
+        },
+        // Up a trunk's side moss grows slower the higher it is.
+        climb: if material == BARK && n.y.abs() < 0.7 {
+            trunk_growth(p.y - ground)
+        } else {
+            1.0
         },
     }
 }

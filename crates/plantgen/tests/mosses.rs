@@ -7,7 +7,7 @@ use plantgen::library::Library;
 use plantgen::math::Vec3;
 use plantgen::mosses::{self, ColonyForm, Detail, DrawOptions, MossCover, MossKind, MossSettings};
 use plantgen::site::{SiteMesh, Surface};
-use plantgen::substrate::{BUILT, SOIL, WOOD};
+use plantgen::substrate::{BARK, BUILT, SOIL, WOOD};
 
 /// A box from `low` to `high`, its faces wound outward.
 fn cuboid(
@@ -527,4 +527,58 @@ fn moss_is_drawn_wet_in_a_portland_winter_and_dry_in_its_summer() {
         let wet = mosses::hydration_on(f64::from(day), rain);
         assert!((0.1..=0.65).contains(&wet), "day {day}: {wet}");
     }
+}
+
+#[test]
+fn moss_grows_half_as_fast_two_metres_up_a_trunk() {
+    use plantgen::mosses::trunk_growth;
+    // Pitkin 1975: growth 150-200 cm up a trunk half that 30-100 cm up.
+    assert!((trunk_growth(0.5) - 1.0).abs() < 1e-9);
+    assert!((trunk_growth(1.8) - 0.5).abs() < 1e-9);
+    let mid = trunk_growth(1.2);
+    assert!(mid > 0.5 && mid < 1.0);
+}
+
+#[test]
+fn a_trunk_grows_more_moss_low_than_two_metres_up() {
+    // A bark column 40 cm square and 3 m tall, under a crown that shades
+    // it, as a trunk stands.
+    let mut parts = (Vec::new(), Vec::new(), Vec::new());
+    cuboid(
+        Vec3::new(-4.0, -0.3, -4.0),
+        Vec3::new(4.0, 0.0, 4.0),
+        Surface::solid(SOIL),
+        &mut parts,
+    );
+    cuboid(
+        Vec3::new(-0.2, 0.0, -0.2),
+        Vec3::new(0.2, 3.0, 0.2),
+        Surface::solid(BARK),
+        &mut parts,
+    );
+    let site = SiteMesh::with_surfaces(&parts.0, &parts.1, &parts.2).unwrap();
+    let cover = mosses::grow(
+        &site,
+        &library_kinds(),
+        &MossSettings {
+            years: 20,
+            arrivals_per_m2: 200.0,
+            ..MossSettings::default()
+        },
+    );
+    let band = |low: f64, high: f64| -> f64 {
+        cover
+            .colonies
+            .iter()
+            .filter(|c| c.normal[1].abs() < 0.5 && c.centre[1] >= low && c.centre[1] < high)
+            .map(|c| std::f64::consts::PI * c.radius_m * c.radius_m)
+            .sum()
+    };
+    let (low, high) = (band(0.3, 1.0), band(1.5, 2.2));
+    // Pitkin 1975: twice the growth 30-100 cm up as 150-200 cm up; the
+    // damp near the ground adds to it.
+    assert!(
+        low > high * 2.0,
+        "{low:.5} m2 at 0.3-1.0 m, {high:.5} at 1.5-2.2 m"
+    );
 }

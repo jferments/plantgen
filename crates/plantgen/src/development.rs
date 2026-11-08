@@ -233,6 +233,7 @@ pub fn floor_mosses(
         reaction: 0,
         soil: true,
         hold: 1.0,
+        climb: 1.0,
     };
     let fits: Vec<f64> = kinds.iter().map(|kind| kind.fit(&habitat)).collect();
     let best = fits.iter().copied().fold(0.0, f64::max);
