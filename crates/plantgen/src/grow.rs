@@ -1072,10 +1072,18 @@ impl<'a> Grower<'a> {
         time.organs = scene.organs.len();
         if self.keep_crown || self.layout.is_some() {
             let area = &self.organ_area;
-            self.crown = Crown::of(scene.organs.iter().map(|organ| {
-                let leaf = area[usize::from(organ.symbol)] * organ.size * organ.size;
-                (organ.position, leaf)
-            }));
+            let leaves = || {
+                scene.organs.iter().map(|organ| {
+                    let leaf = area[usize::from(organ.symbol)] * organ.size * organ.size;
+                    (organ.position, leaf)
+                })
+            };
+            // Its neighbours, its own crown, shade as clumped as it is,
+            // in the light tool's columns.
+            let light = step_settings(program, ToolKind::Light, params, clock, &mut self.stack)
+                .and_then(|values| Some((*values.first()?, *values.get(1)?)))
+                .unwrap_or((0.0, 0.0));
+            self.crown = Crown::of(leaves()).map(|crown| crown.with_clumping(leaves(), light));
         }
 
         let pipes = match pipe_settings(program, params, clock, &mut self.stack) {

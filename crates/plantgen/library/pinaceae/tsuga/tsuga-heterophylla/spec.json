@@ -32,9 +32,7 @@
       "side_angle": 55,
       "needle_years": 5,
       "spray_droop": 45,
-      "shade_death": 0.06,
       "shade_years": 5,
-      "pipe_organ": 0.009,
       "branch_reach": 8.0,
       "bole": 0.15
     }
@@ -104,6 +102,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "shade_tolerance": "tolerant",
     "age_max_years": {"min": 400, "max": 500, "high": 700},
     "height_max_m": {
       "min": 50,
@@ -126,6 +125,7 @@
     "leaf_margin": "entire"
   },
   "evidence": {
+    "traits.shade_tolerance": {"evidence": "SourceInferred", "source": "silvics-1990-conifers", "note": "Silvics of North America vol. 1, Western hemlock (Packee): \"Western hemlock is rated to be very tolerant of shade. Only Pacific yew and Pacific silver fir are considered to have equal or greater tolerance\"."},
     "traits.age_max_years": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS species review of western hemlock (Tesky 1992, after Packee 1990): its oldest trees are usually between 400 and 500 years old, and the oldest recorded passed 700."},
     "traits.height_max_m": {
       "evidence": "SourceInferred",
