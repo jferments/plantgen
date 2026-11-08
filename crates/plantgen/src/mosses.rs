@@ -1859,6 +1859,15 @@ const HYALINE: [f32; 3] = [0.5, 0.51, 0.49];
 /// Bryum argenteum: as bright as Kindbergia's, less saturated).
 const HYALINE_MASSED: [f32; 3] = [0.2, 0.205, 0.195];
 
+/// How far apart a cushion's or turf's shoots stand, in leaf lengths:
+/// close enough that their leafy tips close into one velvety surface, as
+/// they do in photos of Dicranoweisia, Tortula and Grimmia cushions
+/// (imagekit batch `moss-pnw-2026-11-05`, 24 Washington photos a genus).
+/// Fitted to those photos by eye (Jay, 2026-11-08: no published shoot
+/// count was found): at 0.7 the tips stood apart as spiky tufts, at 0.5
+/// they close.
+const SHOOT_SPACING: f64 = 0.5;
+
 /// How much darker a colony's shell is than its lit leaves: the shade
 /// among the shoots that a shell does not draw.
 const CANOPY_SHADE: f64 = 0.62;
@@ -2181,15 +2190,26 @@ impl Drawer<'_> {
         // A cushion's dome or a turf's top has more surface than its
         // footprint, and its shoots stand crowded on it (FNA vol. 27,
         // Tortula muralis: shoots crowded), their leaves interleaving with
-        // their neighbours': a stem every two thirds of a leaf length or
-        // so, so a cushion of Tortula holds some fifty shoots a square
-        // centimetre and a turf of Ceratodon a hundred. Estimate.
+        // their neighbours': a stem every half leaf length, so a cushion
+        // of Tortula holds some hundred shoots a square centimetre. No
+        // book found gives a count for these mosses (Glime vol. 1 gives
+        // 1000 a square decimetre only for Rhytidiadelphus triquetrus,
+        // Bates 1988); `SHOOT_SPACING` is fitted to photos instead (see
+        // its note).
         let surface = 1.0 + (height / radius.max(1.0e-6)).powi(2);
-        let spacing = (kind.leaf_length_m * 0.7).min(width).max(0.0005);
+        let spacing = (kind.leaf_length_m * SHOOT_SPACING)
+            .min(width * SHOOT_SPACING / 0.7)
+            .max(0.0004);
         #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
         let count = (area * surface / (spacing * spacing) * packing).ceil() as usize;
         let mature = math::smoothstep(1.0, 3.0, colony.age);
-        let fertile_share = kind.capsule_share * mature * colony.vigour.clamp(0.3, 1.0);
+        // `capsule_share` is the share of shoots fertile at a stem every
+        // 0.7 leaf length, so as many capsules stand on a square
+        // centimetre however closely the shoots are drawn.
+        let capsule_spacing = (kind.leaf_length_m * 0.7).min(width).max(0.0005);
+        let fertile_share = (kind.capsule_share * (spacing / capsule_spacing).powi(2)).min(1.0)
+            * mature
+            * colony.vigour.clamp(0.3, 1.0);
         if matches!(kind.form, ColonyForm::Mat | ColonyForm::Weft) {
             if shoots {
                 self.mat(

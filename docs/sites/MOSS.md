@@ -164,6 +164,19 @@ rained on) sets the leaf angles and colour: wet moss is darker and a
 deeper green, dry moss paler, duller and yellower, its hair-points and
 hyaline tips greying it the more.
 
+A close render (`plantc moss --render` with `--focus` or `--genus`) is
+exposed as a camera exposes a photo of the moss: `raster::Image::meter`
+brings the frame's luminance, weighted to its middle (centre-weighted
+metering), to 18% grey (`raster::METERED_GREY`; reflected-light meters
+are calibrated to it, ISO 2720). Moss grows in shade, which the fixed
+daylight exposure leaves dark, so before this every close render read
+dull olive beside photos, though its hue and saturation measured close to
+theirs. Metered, the median brightness of the moss in renders of seven
+genera comes within about 0.1 of the photos' (moss pixels' HSV value,
+24 Washington photos a genus, imagekit batch `moss-pnw-2026-11-05`).
+A view of the whole site is still exposed for the sun; `--exposure
+camera|sun` sets either.
+
 How wet to draw it can follow the season: `mosses::hydration_on(day,
 rain_days)` gives the share of days with rain at that time of year,
 straight between the middles of the months, and
