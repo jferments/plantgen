@@ -307,9 +307,29 @@ impl Cluster {
         if let Some(unit) = spec.unit {
             cluster.size_units(spec, unit, spec.flowers.is_some());
         }
-        if cluster.kind == ClusterKind::Corymb && cluster.dome <= 0.0 && cluster.fill > 0.0 {
+        if cluster.kind == ClusterKind::Corymb && cluster.fill > 0.0 {
             let fill = cluster.fill;
-            cluster.packed_corymb(spec, fill);
+            // A rounded corymb's branches, unset, are rounded and packed
+            // as it is.
+            let (dome, given) = (cluster.dome, spec.branch.as_deref());
+            if let Some(branch) = cluster.branch.as_deref_mut()
+                && branch.kind == ClusterKind::Corymb
+            {
+                if given.and_then(|b| b.dome).is_none() {
+                    branch.dome = dome;
+                }
+                if given.and_then(|b| b.fill).is_none() {
+                    branch.fill = fill;
+                }
+            }
+            // On a cap they cover its area, which is wider than its
+            // footprint by $`\sec(\theta/2)`$ squared.
+            let cover = if dome > 0.0 {
+                fill / math::cos(0.5 * math::radians(dome.min(90.0))).powi(2)
+            } else {
+                fill
+            };
+            cluster.packed_corymb(spec, cover.min(2.0));
         }
         cluster
     }
@@ -330,7 +350,9 @@ impl Cluster {
     /// corymb's top.
     fn packed_corymb(&mut self, given: &Inflorescence, fill: f64) -> f64 {
         let mut s = self.size.clamp(0.005, 1.0);
-        let fill = fill.clamp(0.1, 1.0);
+        // Above 1 where a rounded corymb packs its cap: its footprint
+        // holds more than it could flat.
+        let fill = fill.clamp(0.1, 2.0);
         let (count, half) = match self.branch.as_deref_mut() {
             Some(branch) if branch.kind == ClusterKind::Corymb && branch.branch.is_none() => {
                 let empty = Inflorescence::default();
@@ -1925,7 +1947,7 @@ fn axis(cluster: &Cluster, unit: Unit, turn: f64) -> Axis {
                 });
             }
         }
-        ClusterKind::Corymb if cluster.dome > 0.0 => {
+        ClusterKind::Corymb if cluster.dome > 0.0 && cluster.fill <= 0.0 => {
             // Tips on a sphere's cap as wide as the cluster is long, its
             // top at the organ's tip; units spread over it by equal area,
             // each on a pedicel from the axis, the outer ones lower on it.
@@ -1988,6 +2010,9 @@ fn axis(cluster: &Cluster, unit: Unit, turn: f64) -> Axis {
                     radial: radial(around),
                     rank: share(i / m, nodes),
                 });
+            }
+            if cluster.dome > 0.0 && cluster.fill > 0.0 {
+                rounded(&mut slots, cluster.dome, bearing);
             }
         }
         ClusterKind::Umbel | ClusterKind::CompoundUmbel => {
@@ -2054,6 +2079,43 @@ fn axis(cluster: &Cluster, unit: Unit, turn: f64) -> Axis {
         slots,
         stalks: Vec::new(),
         top,
+    }
+}
+
+/// A packed corymb's units or branches, laid out level ([`Cluster::fill`]),
+/// set on a sphere's cap `dome` degrees wide (at most a half sphere) whose
+/// rim passes through the plate's edge: each sinks by the cap's sagitta
+/// where it stands and turns to face out from the sphere's centre, so a
+/// rounded corymb's heads crowd in one rounded mass, as a yarrow's
+/// "round-topped" arrays (Abrams and Ferris vol. 4 p. 390) stand in
+/// photographs, where unpacked on a cap as wide as the cluster is long
+/// they stood apart on bare branches. A branch's own corymb, rounded too,
+/// makes the mass lumpy, tuft by tuft. [`Cluster::packed_corymb`] packs
+/// them to cover the cap, not its footprint.
+fn rounded(slots: &mut [Slot], dome: f64, bearing: bool) {
+    let cap = math::radians(dome.clamp(1.0, 90.0));
+    // The plate's edge: the farthest unit's centre and half its width.
+    let edge = slots
+        .iter()
+        .map(|slot| {
+            let tip = slot.base + slot.direction * if bearing { slot.length } else { 0.0 };
+            math::sqrt(tip.x * tip.x + tip.z * tip.z) + 0.5 * slot.length
+        })
+        .fold(0.0, f64::max);
+    if edge <= 1e-9 {
+        return;
+    }
+    let radius = edge / math::sin(cap);
+    for slot in slots.iter_mut() {
+        let rho = math::sqrt(slot.base.x * slot.base.x + slot.base.z * slot.base.z).min(radius);
+        let sag = radius - math::sqrt(radius * radius - rho * rho);
+        slot.base.y -= sag;
+        if rho > 1e-9 {
+            let out = Vec3::new(slot.base.x / rho, 0.0, slot.base.z / rho);
+            let normal =
+                (out * (rho / radius) + Vec3::Y * (1.0 - sag / radius)).normalize_or(Vec3::Y);
+            slot.direction = normal;
+        }
     }
 }
 
