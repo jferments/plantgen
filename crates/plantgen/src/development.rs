@@ -877,7 +877,7 @@ pub fn prairie_moss(since: f64) -> f64 {
 /// central Saskatchewan's Fescue Prairie, burnt in early spring and
 /// followed for 11 years, the standing crop rose until about the eighth
 /// year and the litter's mass levelled off about the eleventh (Pylypec and
-/// Romo 2003, Journal of Range Management 56: 640-645), while the grasses
+/// Romo 2003, Journal of Range Management 56), while the grasses
 /// themselves were back within 3 to 4.
 pub const THATCH_YEARS: f64 = 11.0;
 
@@ -898,7 +898,7 @@ pub fn thatch_built(since: f64) -> f64 {
 /// they close into woodland and then forest, as LANDFIRE's model has the
 /// open classes close after 28 to 30 fire-free years, and as Douglas-fir
 /// converted Fort Lewis's grasslands to forest within 30 years (Foster
-/// and Shaff 2003, Northwest Science 77: 283-296). Beside it:
+/// and Shaff 2003, Northwest Science 77(4)). Beside it:
 ///
 /// 1. Old trees the fires passed ([`Cohort::veteran`]): each tree
 ///    intolerant of shade, as the thick-barked oaks, pines and
