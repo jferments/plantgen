@@ -1303,6 +1303,15 @@ impl<'a> Trials<'a> {
         )
     }
 
+    /// Drop every kept drawing but those at `chosen` dials and those at
+    /// `from` or past it.
+    fn keep_only(&mut self, chosen: &[f64], from: f64) {
+        self.kept.retain(|&bits, _| {
+            let dial = f64::from_bits(bits);
+            dial >= from || chosen.iter().any(|chosen| chosen.to_bits() == bits)
+        });
+    }
+
     /// The drawing at `dial`'s triangles, and the drawing if it was drawn
     /// for them.
     fn triangles(&mut self, dial: f64) -> (usize, Option<Drawn<'a>>) {
@@ -1388,6 +1397,7 @@ impl<'a> Trials<'a> {
 /// detail along the dial ([`crate::budget`]) that fits its share, and
 /// never more than the level before it. Without a triangle budget, no
 /// level draws more than the quality's level of its number.
+#[allow(clippy::too_many_lines)]
 fn budgeted(
     inputs: &Inputs,
     plant: &Plant,
@@ -1458,6 +1468,12 @@ fn budgeted(
         let cap = caps[level];
         let (dial, _) = crate::budget::most_detail(finest, |dial| trials.taken(dial, cap, bytes))?;
         dials.push(dial);
+        // The next level searches from this dial up: a drawing kept below
+        // it is drawn for no level (unless the nearest searches again for
+        // the bytes the others leave, below).
+        if budget.bytes.is_none() {
+            trials.keep_only(&dials, dial);
+        }
     }
     let triangles = |level: usize| caps[level];
     // The nearest level takes the bytes the others leave.
@@ -1478,6 +1494,10 @@ fn budgeted(
             }
         }
     }
+    // Only the drawings a level is drawn with are kept while the levels
+    // are written: a large tree's other tries held as much again as its
+    // nearest level.
+    trials.keep_only(&dials, f64::INFINITY);
     let mut files: Vec<Level> = Vec::with_capacity(LEVELS);
     let mut finer = None;
     for (level, dial) in dials.into_iter().enumerate() {

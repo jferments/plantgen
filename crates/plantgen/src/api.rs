@@ -48,6 +48,7 @@ use sha2::{Digest, Sha256};
 
 use crate::export;
 use crate::library::Library;
+use crate::memory;
 use crate::package::{self, Inputs};
 use crate::quality;
 
@@ -402,8 +403,9 @@ impl Generator {
     }
 
     /// Grow, export and write each plant of `variants` into `out`, as
-    /// many at once as `variants.threads`, each written as soon as it is
-    /// drawn; then the list of them, [`VARIANTS_FILE`].
+    /// many at once as `variants.threads` and its memory allow
+    /// ([`Variants::memory`]), each written as soon as it is drawn; then
+    /// the list of them, [`VARIANTS_FILE`].
     ///
     /// # Errors
     ///
@@ -437,10 +439,30 @@ impl Generator {
             .collect();
         std::fs::create_dir_all(out)
             .map_err(|error| Error(format!("cannot create {}: {error}", out.display())))?;
-        let threads = variants.threads.clamp(1, seeds.len());
+        let mut threads = variants.threads.clamp(1, seeds.len());
         let next = Mutex::new(0_usize);
         let done: Mutex<Vec<Option<VariantRecord>>> = Mutex::new(vec![None; seeds.len()]);
         let failure: Mutex<Option<Error>> = Mutex::new(None);
+        let write =
+            |index: usize| self.write_one(environment, seeds[index], age, &variants.settings, out);
+        // The first plant alone where memory can be measured, and no more
+        // at once after it than fit in what was free ([`memory`]).
+        let free = variants.memory.or_else(memory::free);
+        if threads > 1
+            && let Some(free) = free
+            && let Some((before, _)) = memory::resident()
+        {
+            let record = write(0)?;
+            report(&record);
+            done.lock()
+                .unwrap_or_else(std::sync::PoisonError::into_inner)[0] = Some(record);
+            *next
+                .lock()
+                .unwrap_or_else(std::sync::PoisonError::into_inner) = 1;
+            if let Some((_, peak)) = memory::resident() {
+                threads = memory::at_once(threads, free, peak.saturating_sub(before));
+            }
+        }
         std::thread::scope(|scope| {
             for _ in 0..threads {
                 scope.spawn(|| {
@@ -459,13 +481,7 @@ impl Generator {
                             *next += 1;
                             *next - 1
                         };
-                        match self.write_one(
-                            environment,
-                            seeds[index],
-                            age,
-                            &variants.settings,
-                            out,
-                        ) {
+                        match write(index) {
                             Ok(record) => {
                                 report(&record);
                                 done.lock()
@@ -630,8 +646,15 @@ pub struct Variants {
     /// How each is written: uncompressed, its levels drawn as tiers (max,
     /// high, mid and low; [`Budget::tiers`]), unless chosen.
     pub settings: Settings,
-    /// How many plants to grow at once; the result does not depend on it.
+    /// How many plants to grow at once, at most; the result does not
+    /// depend on it.
     pub threads: usize,
+    /// The most memory, in bytes, the set may take at once. Where memory
+    /// can be measured (Linux) the first plant grows alone and no more
+    /// grow at once after it than fit, by its measure with
+    /// [`memory::MARGIN`]; unless chosen, what was free when the set
+    /// began ([`memory::free`]).
+    pub memory: Option<u64>,
 }
 
 impl Variants {
@@ -650,6 +673,7 @@ impl Variants {
                 ..Settings::default()
             },
             threads: package::default_threads(),
+            memory: None,
         }
     }
 }

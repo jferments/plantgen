@@ -962,11 +962,12 @@ fn field(value: &Value, name: &str) -> Option<usize> {
 pub fn check(glb: &[u8]) -> Result<Summary, String> {
     let glb = Glb::read(glb)?;
     let root = &glb.json;
-    let array = |name: &str| -> Vec<Value> {
+    // Borrowed, not copied: a large tree's document is hundreds of
+    // megabytes of nodes.
+    let array = |name: &str| -> &[Value] {
         root.get(name)
             .and_then(Value::as_array)
-            .cloned()
-            .unwrap_or_default()
+            .map_or(&[], Vec::as_slice)
     };
     if root.pointer("/asset/version").and_then(Value::as_str) != Some("2.0") {
         return Err("asset.version is not 2.0".into());
@@ -981,17 +982,24 @@ pub fn check(glb: &[u8]) -> Result<Summary, String> {
             return Err(format!("buffer view {index} is outside the buffer"));
         }
     }
-    // Each accessor's components and width.
+    // Each accessor read once for its values and bounds, keeping only its
+    // shape: a large tree's file decoded whole as doubles held several
+    // times the file, more than all the rest of its export.
     let accessors = array("accessors");
-    let mut data: Vec<(Vec<f64>, usize)> = Vec::with_capacity(accessors.len());
+    let mut shapes: Vec<Shape> = Vec::with_capacity(accessors.len());
     for (index, accessor) in accessors.iter().enumerate() {
         let (values, width) = glb.accessor(index)?;
         if values.iter().any(|value| !value.is_finite()) {
             return Err(format!("accessor {index} holds a value that is not finite"));
         }
         check_bounds(index, accessor, &values, width)?;
-        data.push((values, width));
+        shapes.push(Shape {
+            values: values.len(),
+            width,
+            max: values.iter().copied().fold(f64::NEG_INFINITY, f64::max),
+        });
     }
+    let data = Data { glb: &glb, shapes };
     let mut summary = Summary {
         nodes: array("nodes").len(),
         meshes: array("meshes").len(),
@@ -1009,7 +1017,7 @@ pub fn check(glb: &[u8]) -> Result<Summary, String> {
             .and_then(Value::as_array)
             .ok_or(format!("mesh {index} has no primitives"))?
         {
-            mesh_triangles[index] += primitive_triangles(index, primitive, &accessors, &data)?;
+            mesh_triangles[index] += primitive_triangles(index, primitive, accessors, &data)?;
         }
     }
     for (index, node) in array("nodes").iter().enumerate() {
@@ -1031,19 +1039,48 @@ pub fn check(glb: &[u8]) -> Result<Summary, String> {
         summary.instances += count;
         summary.triangles += triangles * count;
     }
-    summary.joints = check_skins(root, &meshes, &data)?;
+    summary.joints = check_skins(root, meshes, &data)?;
     Ok(summary)
+}
+
+/// What [`check`] keeps of an accessor once it is read: how many
+/// components, how many make one element, and the largest.
+struct Shape {
+    values: usize,
+    width: usize,
+    max: f64,
+}
+
+impl Shape {
+    /// How many elements.
+    fn count(&self) -> usize {
+        self.values / self.width.max(1)
+    }
+}
+
+/// A checked file's accessors: each one's [`Shape`], and its values read
+/// again only where a check needs them (normals, rotations, joints and
+/// weights), one accessor at a time.
+struct Data<'g, 'a> {
+    glb: &'g Glb<'a>,
+    shapes: Vec<Shape>,
+}
+
+impl Data<'_, '_> {
+    fn get(&self, at: usize) -> Option<&Shape> {
+        self.shapes.get(at)
+    }
+
+    fn values(&self, at: usize) -> Result<Vec<f64>, String> {
+        Ok(self.glb.accessor(at)?.0)
+    }
 }
 
 /// Check every skin and the nodes skinned by it: joints that are nodes,
 /// one inverse bind matrix each, and on every primitive of a skinned node's
 /// mesh joints inside the skin and weights that add up to one; the joints
 /// over every skin.
-fn check_skins(
-    root: &Value,
-    meshes: &[Value],
-    data: &[(Vec<f64>, usize)],
-) -> Result<usize, String> {
+fn check_skins(root: &Value, meshes: &[Value], data: &Data<'_, '_>) -> Result<usize, String> {
     let empty = Vec::new();
     let list = |name: &str| root.get(name).and_then(Value::as_array).unwrap_or(&empty);
     let (skins, nodes) = (list("skins"), list("nodes"));
@@ -1062,10 +1099,10 @@ fn check_skins(
             return Err(format!("skin {index} names a joint that is no node"));
         }
         if let Some(matrices) = field(skin, "inverseBindMatrices") {
-            let (values, width) = data
+            let shape = data
                 .get(matrices)
                 .ok_or(format!("skin {index}'s matrices name no accessor"))?;
-            if *width != 16 || values.len() / 16 != named.len() {
+            if shape.width != 16 || shape.count() != named.len() {
                 return Err(format!("skin {index} has not one matrix a joint"));
             }
         }
@@ -1088,17 +1125,20 @@ fn check_skins(
             .unwrap_or(&empty)
         {
             let read = |name: &str| {
-                primitive
+                let at = primitive
                     .pointer(&format!("/attributes/{name}"))
                     .and_then(Value::as_u64)
-                    .and_then(|at| data.get(usize::try_from(at).ok()?))
-                    .ok_or(format!("skinned node {index}'s mesh has no {name}"))
+                    .and_then(|at| usize::try_from(at).ok())
+                    .filter(|&at| data.get(at).is_some())
+                    .ok_or(format!("skinned node {index}'s mesh has no {name}"))?;
+                Ok::<_, String>((at, data.get(at).map_or(0, |shape| shape.width)))
             };
             let ((joint, 4), (weight, 4)) = (read("JOINTS_0")?, read("WEIGHTS_0")?) else {
                 return Err(format!(
                     "skinned node {index}'s joints or weights are not VEC4"
                 ));
             };
+            let (joint, weight) = (data.values(joint)?, data.values(weight)?);
             #[allow(clippy::cast_precision_loss)]
             if joint.iter().any(|&joint| joint >= size as f64) {
                 return Err(format!("skinned node {index} names a joint past its skin"));
@@ -1122,19 +1162,19 @@ fn primitive_triangles(
     index: usize,
     primitive: &Value,
     accessors: &[Value],
-    data: &[(Vec<f64>, usize)],
+    data: &Data<'_, '_>,
 ) -> Result<usize, String> {
-    let attribute = |name: &str| {
+    let at = |name: &str| {
         primitive
             .pointer(&format!("/attributes/{name}"))
             .and_then(Value::as_u64)
             .and_then(|value| usize::try_from(value).ok())
-            .and_then(|at| data.get(at))
     };
-    let (positions, 3) = attribute("POSITION").ok_or(format!("mesh {index} has no positions"))?
-    else {
+    let attribute = |name: &str| at(name).and_then(|at| data.get(at));
+    let positions = attribute("POSITION").ok_or(format!("mesh {index} has no positions"))?;
+    if positions.width != 3 {
         return Err(format!("mesh {index}'s positions are not VEC3"));
-    };
+    }
     if accessors
         .get(
             field(
@@ -1148,16 +1188,15 @@ fn primitive_triangles(
     {
         return Err(format!("mesh {index}'s positions have no bounds"));
     }
-    let vertices = positions.len() / 3;
+    let vertices = positions.count();
     for name in primitive
         .get("attributes")
         .and_then(Value::as_object)
         .map(|attributes| attributes.keys().cloned().collect::<Vec<_>>())
         .unwrap_or_default()
     {
-        let (values, width) =
-            attribute(&name).ok_or(format!("mesh {index}'s {name} is missing"))?;
-        if values.len() / width != vertices {
+        let shape = attribute(&name).ok_or(format!("mesh {index}'s {name} is missing"))?;
+        if shape.count() != vertices {
             return Err(format!("mesh {index}'s {name} has the wrong count"));
         }
         if name == "NORMAL" {
@@ -1167,20 +1206,20 @@ fn primitive_triangles(
                 .and_then(|at| accessors.get(usize::try_from(at).ok()?))
                 .and_then(|accessor| field(accessor, "componentType"))
                 .and_then(|kind| u32::try_from(kind).ok());
-            check_normals(index, kind, values)?;
+            check_normals(index, kind, &data.values(at(&name).unwrap_or(0))?)?;
         }
     }
-    let (indices, _) = field(primitive, "indices")
+    let indices = field(primitive, "indices")
         .and_then(|at| data.get(at))
         .ok_or(format!("mesh {index} has no indices"))?;
-    if indices.len() % 3 != 0 {
+    if indices.values % 3 != 0 {
         return Err(format!("mesh {index}'s index count is not a multiple of 3"));
     }
     #[allow(clippy::cast_precision_loss)]
-    if indices.iter().any(|&at| at >= vertices as f64) {
+    if indices.values > 0 && indices.max >= vertices as f64 {
         return Err(format!("mesh {index} has an index past its vertices"));
     }
-    Ok(indices.len() / 3)
+    Ok(indices.values / 3)
 }
 
 /// Check accessor `index`'s declared bounds, if any, against its `values`.
@@ -1252,25 +1291,27 @@ fn check_normals(index: usize, kind: Option<u32>, values: &[f64]) -> Result<(), 
 fn instance_count(
     index: usize,
     attributes: &Map<String, Value>,
-    data: &[(Vec<f64>, usize)],
+    data: &Data<'_, '_>,
 ) -> Result<usize, String> {
     let mut count = None;
     for (name, width) in [("TRANSLATION", 3), ("ROTATION", 4), ("SCALE", 3)] {
         let Some(at) = attributes.get(name) else {
             continue;
         };
-        let (values, found) = at
+        let at = at
             .as_u64()
-            .and_then(|at| data.get(usize::try_from(at).ok()?))
+            .and_then(|at| usize::try_from(at).ok())
+            .filter(|&at| data.get(at).is_some())
             .ok_or(format!("node {index}'s {name} names no accessor"))?;
-        if *found != width || count.is_some_and(|count| count != values.len() / width) {
+        let shape = data.get(at).ok_or("an accessor went missing")?;
+        if shape.width != width || count.is_some_and(|count| count != shape.count()) {
             return Err(format!(
                 "node {index}'s {name} is not one {width}-vector an instance"
             ));
         }
-        count = Some(values.len() / width);
+        count = Some(shape.count());
         if name == "ROTATION" {
-            for rotation in values.as_chunks::<4>().0 {
+            for rotation in data.values(at)?.as_chunks::<4>().0 {
                 let length = rotation
                     .iter()
                     .map(|value| value * value)
@@ -1356,6 +1397,50 @@ pub fn coloured_glb(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// A one-triangle file with `normal` at every corner, `indices`, and
+    /// two instances turned by `rotations`.
+    fn triangle_file(normal: [f32; 3], indices: &[u32], rotations: &[f32]) -> Vec<u8> {
+        let mut document = Document::new();
+        document.extension("EXT_mesh_gpu_instancing", true);
+        let positions = document.attribute(&[0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0], 3, true);
+        let normals = document.attribute(&normal.repeat(3), 3, false);
+        let indices = document.indices(indices);
+        let mesh = document.mesh(
+            "triangle",
+            vec![json!({
+                "attributes": { "POSITION": positions, "NORMAL": normals },
+                "indices": indices,
+            })],
+        );
+        let rotations = document.instance_attribute(rotations, 4);
+        let node = document.node(json!({
+            "mesh": mesh,
+            "extensions": { "EXT_mesh_gpu_instancing": { "attributes": {
+                "ROTATION": rotations,
+            } } },
+        }));
+        document.glb(json!({ "version": "2.0" }), &[node], json!({}))
+    }
+
+    #[test]
+    fn the_check_refuses_what_the_writer_never_writes() {
+        // Read one accessor at a time, the check still finds an index past
+        // the vertices, a normal not of unit length and a turn that is no
+        // rotation, each in its own accessor.
+        let turns = [0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0];
+        let good = check(&triangle_file([0.0, 0.0, 1.0], &[0, 1, 2], &turns)).unwrap();
+        assert_eq!((good.instances, good.triangles), (2, 2));
+        let past = check(&triangle_file([0.0, 0.0, 1.0], &[0, 1, 3], &turns)).unwrap_err();
+        assert!(past.contains("index past its vertices"), "{past}");
+        let threes = check(&triangle_file([0.0, 0.0, 1.0], &[0, 1, 2, 0], &turns)).unwrap_err();
+        assert!(threes.contains("not a multiple of 3"), "{threes}");
+        let long = check(&triangle_file([0.0, 0.0, 2.0], &[0, 1, 2], &turns)).unwrap_err();
+        assert!(long.contains("normal 2 long"), "{long}");
+        let scaled = [0.0, 0.0, 0.0, 2.0, 0.0, 1.0, 0.0, 0.0];
+        let turn = check(&triangle_file([0.0, 0.0, 1.0], &[0, 1, 2], &scaled)).unwrap_err();
+        assert!(turn.contains("instance rotation"), "{turn}");
+    }
 
     #[test]
     fn a_triangle_is_written_and_read_back() {

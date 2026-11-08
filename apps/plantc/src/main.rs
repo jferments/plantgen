@@ -520,6 +520,7 @@ Usage:
                  [--threads N] [--shade attribute|baked]
                  [--compress none|quantize|meshopt] [--attributes all|wind|none]
                  [--triangles N[,N,N,N]] [--max-mib N] [--levels tiers|package]
+                 [--memory-gib N]
       Make N distinct plants of a species, ready to import: each grown from
       its own seed (from --first-seed, 1 unless given, counting up) and
       written as plantc export writes one (STEM-lod0.glb to STEM-lod3.glb
@@ -528,8 +529,11 @@ Usage:
       a fingerprint of its bytes. Seed n is the same plant however many are
       made; the seeds the spec lists are the plants its package keeps.
       Without --env, the species' typical site; without --age, its oldest
-      keyframe. --threads plants grow at once (every core unless given);
-      the files do not depend on it. Levels are tiers (max, high, mid,
+      keyframe. Up to --threads plants grow at once (every core unless
+      given), and no more than fit in --memory-gib (the memory free unless
+      given): on Linux the first grows alone and the rest as many at once
+      as its measure, with a margin, fits. The files depend on neither.
+      Levels are tiers (max, high, mid,
       low) unless --levels package; the export flags are plantc export's.
   plantc fill <community.json>... --tile X,Y --tile-m N [--seed N]
               [--years N] [--stands stands.json] [--out DIR]
@@ -6517,6 +6521,7 @@ fn export_command(args: &[String]) -> Result<(), Failure> {
     Ok(())
 }
 
+#[allow(clippy::too_many_lines)]
 fn variants_command(args: &[String]) -> Result<(), Failure> {
     let options = Options::parse(
         args,
@@ -6535,6 +6540,7 @@ fn variants_command(args: &[String]) -> Result<(), Failure> {
             "triangles",
             "max-mib",
             "levels",
+            "memory-gib",
         ],
     )?;
     let (shade, compression, attributes, budget) = export_options(&options, true)?;
@@ -6562,6 +6568,14 @@ fn variants_command(args: &[String]) -> Result<(), Failure> {
     if let Some(threads) = options.number::<usize>("threads")? {
         variants.threads = threads.max(1);
     }
+    if let Some(gib) = options.number::<f64>("memory-gib")? {
+        if gib.is_nan() || gib <= 0.0 {
+            return Err("`--memory-gib` is a size above 0".into());
+        }
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let bytes = (gib * 1_073_741_824.0) as u64;
+        variants.memory = Some(bytes);
+    }
     variants.settings = export::Settings {
         shade,
         compression,
@@ -6584,6 +6598,17 @@ fn variants_command(args: &[String]) -> Result<(), Failure> {
         variants.age.unwrap_or_else(|| generator.default_age()),
         out.display()
     );
+    #[allow(clippy::cast_precision_loss)]
+    if let Some(bytes) = variants.memory.or_else(plantgen::memory::free)
+        && variants.threads > 1
+        && count > 1
+    {
+        out!(
+            "  up to {} at once in {:.1} GiB: the first alone, then as many as fit by its measure",
+            variants.threads.min(count),
+            bytes as f64 / 1_073_741_824.0
+        );
+    }
     let finished = std::sync::atomic::AtomicUsize::new(0);
     let set = generator
         .write_variants_reporting(&variants, &out, &|plant| {

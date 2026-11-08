@@ -68,6 +68,7 @@ pub mod lsys;
 pub mod margins;
 pub mod math;
 pub mod mechanics;
+pub mod memory;
 pub mod mesh;
 pub mod meshopt;
 pub mod mosses;

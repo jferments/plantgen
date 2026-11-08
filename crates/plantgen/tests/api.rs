@@ -154,5 +154,15 @@ fn a_set_of_variants_is_distinct_and_each_seed_keeps_its_plant() {
     two.threads = 1;
     let again = generator.write_variants(&two, &out.join("two")).unwrap();
     assert_eq!(again.plants[..], set.plants[2..]);
+
+    // However little or much memory the set may take, the same plants:
+    // with one byte the first grows alone and the rest one at a time.
+    for (name, memory) in [("one-byte", 1), ("plenty", u64::MAX)] {
+        let mut bounded = four;
+        bounded.threads = 4;
+        bounded.memory = Some(memory);
+        let bounded = generator.write_variants(&bounded, &out.join(name)).unwrap();
+        assert_eq!(bounded.plants, set.plants, "{name}");
+    }
     let _ = std::fs::remove_dir_all(&out);
 }
