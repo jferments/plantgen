@@ -69,6 +69,28 @@ fn crown(graph: &PlantGraph, types: &[OrganType]) -> Option<Crown> {
     Crown::of(foliage(graph, types).into_iter())
 }
 
+/// The share of the plant's leaf area in each quarter of its crown's
+/// depth, top first, from its crown's base (where the lowest twentieth
+/// of its leaves stand, [`Crown::of`]) to its top: to set beside
+/// Espinosa Bancalari et al.'s (1987) 22-year Douglas-firs, which held
+/// 2-3% of their leaf in the top quarter, 15-21% in the next, 37-43% and
+/// 35-42% in the lower two.
+#[must_use]
+pub fn crown_quarters(graph: &PlantGraph, types: &[OrganType]) -> Option<[f64; 4]> {
+    let foliage = foliage(graph, types);
+    let crown = Crown::of(foliage.iter().copied())?;
+    let depth = crown.top_m - crown.base_m;
+    let mut quarters = [0.0; 4];
+    let mut total = 0.0;
+    for (point, area) in foliage {
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let quarter = (((crown.top_m - point.y) / depth * 4.0).floor().max(0.0) as usize).min(3);
+        quarters[quarter] += area;
+        total += area;
+    }
+    (total > 0.0).then(|| quarters.map(|area| area / total))
+}
+
 /// The light at each height from `step_m` / 2 to the plant's top, every
 /// `step_m` metres, sampled on a square grid of `step_m` across the
 /// plant's cell ([`half_width`]), with the light tool's voxel `cell` and

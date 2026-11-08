@@ -2694,6 +2694,16 @@ fn grow_command(args: &[String]) -> Result<(), Failure> {
                 layer.own
             );
         }
+        if let Some(quarters) = plantgen::light_profile::crown_quarters(graph, &growth.organ_types)
+        {
+            out!(
+                "  leaf by quarter of the crown's depth, top first: {:.2} {:.2} {:.2} {:.2}",
+                quarters[0],
+                quarters[1],
+                quarters[2],
+                quarters[3]
+            );
+        }
     }
     if digest {
         out!("  digest {}", growth.digest());
