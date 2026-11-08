@@ -90,7 +90,7 @@ pub fn profile(
     let mut envelopes = conditions.envelopes().to_vec();
     let mut far = None;
     let crown = Crown::of(foliage.iter().copied())
-        .map(|crown| crown.with_clumping(foliage.iter().copied(), cell));
+        .map(|crown| crown.with_clumping(foliage.iter().copied(), (cell, extinction)));
     if let (Some(layout), Some(crown)) = (conditions.layout(), crown) {
         envelopes.extend(layout.envelopes(&crown, graph.age));
         far = layout.far(&crown, graph.age);

@@ -1080,10 +1080,10 @@ impl<'a> Grower<'a> {
             };
             // Its neighbours, its own crown, shade as clumped as it is,
             // in the light tool's columns.
-            let cell = step_settings(program, ToolKind::Light, params, clock, &mut self.stack)
-                .and_then(|values| values.first().copied())
-                .unwrap_or(0.0);
-            self.crown = Crown::of(leaves()).map(|crown| crown.with_clumping(leaves(), cell));
+            let light = step_settings(program, ToolKind::Light, params, clock, &mut self.stack)
+                .and_then(|values| Some((*values.first()?, *values.get(1)?)))
+                .unwrap_or((0.0, 0.0));
+            self.crown = Crown::of(leaves()).map(|crown| crown.with_clumping(leaves(), light));
         }
 
         let pipes = match pipe_settings(program, params, clock, &mut self.stack) {
