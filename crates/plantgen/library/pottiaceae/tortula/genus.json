@@ -43,6 +43,10 @@
     },
     "capsule_posture": "erect",
     "capsule_share": 0.07,
+    "spore_diameter_m": {
+      "min": 0.000008,
+      "max": 0.000012
+    },
     "substrates": [
       "rock",
       "built"
@@ -99,6 +103,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Hue measured: imagekit run moss-colour-2026-11-05 on batch moss-pnw-2026-11-05 (iNaturalist research-grade photos from Washington, about 20 a taxon, script moss_colour.py): the median linear r/g and b/g of the moss pixels (T. muralis r/g 1.02, b/g 0.30). Photos are exposed brighter than moss is, so only the hue is taken from them; the brightness is a green reflectance of 0.13, a lit leaf's, just above the 0.05-0.11 moss canopies reflect in the visible (Lovelock and Robinson 2002, Plant Cell Environ. 25: 1239, Antarctic Grimmia; moss biocrust albedo about 0.11 against 0.20 for bare soil, Sci. Total Environ. 2020), the canopy's own shade darkening the shell further."
+    },
+    "traits.spore_diameter_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-27",
+      "note": "FNA vol. 27, Tortula muralis (Zander and Eckel; efloras, read 2026-11-07): spores 8-12 µm, spheric; the genus's spores run 13-30(-50) µm in other species."
     }
   }
 }

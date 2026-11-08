@@ -549,7 +549,7 @@ const REFERENCE_PIXELS: f64 = 1080.0;
 /// enough: its triangles then cover [`TRIANGLE_PIXELS`] each on average
 /// over its height times its breadth. None for a level with none.
 #[allow(clippy::cast_precision_loss)]
-pub(crate) fn level_pixel(height: f64, radius: f64, triangles: usize) -> Option<f64> {
+pub fn level_pixel(height: f64, radius: f64, triangles: usize) -> Option<f64> {
     (triangles > 0).then(|| {
         let area = height.max(0.01) * (2.0 * radius).max(0.01);
         (area / (TRIANGLE_PIXELS * triangles as f64)).sqrt()

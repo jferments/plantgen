@@ -20,8 +20,8 @@
       "why": "A fir, spruce, hemlock or Douglas-fir holds its branches under its leader (apical control): each year a branch grows about half as far as the leader rises, so the crown is a cone about as wide as its depth, and stays pointed as the leader slows."
     },
     "generator.params.bend_set": {
-      "rule": "0.15",
-      "why": "The family's limbs spring back from most of each year's sag: Farjon gives its branches as horizontal or spreading, the lower ones curving down only at their ends. Keeping half of each year's sag, a limb grown 150 years hung flat against the trunk and the old crown stood as a column."
+      "rule": "0.05",
+      "why": "The family's limbs spring back from most of each year's sag: Farjon gives its branches as horizontal or spreading, the lower ones curving down only at their ends. Keeping half of each year's sag, a limb grown 150 years hung flat against the trunk and the old crown stood as a column. Keeping 0.15, an old limb's side shoots, which lengthen a few centimetres a year for centuries and carry their twigs' needles only near their tips, sagged until a quarter of their length hung straight down: a 480-year Douglas-fir's lower crown read as curtains of bare strings. At 0.05 they angle out and down as branchlets, and every species keeps its reference sizes."
     },
     "generator.params.side_order": {
       "rule": "2",
@@ -83,6 +83,14 @@
       "rule": "0.04",
       "why": "An old limb's slow shoots, a centimetre or two a year, are laid down as one shoot every few years with the same needle area, so a fully branched old crown keeps its side shoots within the program's module and segment limits: laid down every year, old Douglas-fir and western hemlock passed them unless their inner side shoots were shed or cut short (side_years), which left their lower limbs bare whips. Young shoots, longer than 4 cm a year, grow as before. Not 8 cm: a held shoot's spray is as large as its years' together and a spray draws its needles a share of its length, so at 8 cm the median drawn needle passed the floras' extremes (Douglas-fir 4.0 cm against 2 to 3, grand fir 6.4 against 3.5 to 5); at 4 cm, with a held shoot's foliage drawn at two places along it (pinidae), Douglas-fir draws 3.4 cm over three plants."
     },
+    "generator.params.seg_side": {
+      "rule": "0.2",
+      "why": "An old tree's side shoots hold their growth until they reach 20 cm and lay it down as one shoot, drawing its foliage at one place for each three years held: an old crown's side shoots grow a centimetre or two a year for a century and more, and four fifths of their 4 cm segments were bare wood older than twenty years (a 320-year Douglas-fir grown in a stand: 344,000 segments, 317,000 of them side shoots), so a 500-year Douglas-fir at a stand's edge passed the program's 2 million segment limit near 400 years. With it (from seg_age) the edge tree has 1.02 million segments at 500 years, and a 480-year Douglas-fir in a stand 258,000 (724,000 before) with 844 m² of foliage (757). 12 cm left the edge tree at 1.5 million. The pines lay down every year's shoot (seg_min 0) and are unchanged."
+    },
+    "generator.params.seg_age": {
+      "rule": "100",
+      "why": "seg_side comes in from 100 years and is in full by 200, so young trees grow as before: a held shoot's needles appear only when it is laid down, and young trees' foliage is mostly on their side shoots, so from the first year 20 cm took two fifths of a 60-year western hemlock's and grand fir's foliage and a quarter of a Douglas-fir's. An old crown is short of light more than of needles: at 480 years the Douglas-fir holds more foliage with it, not less."
+    },
     "generator.params.bud_length": {
       "rule": "0.1",
       "why": "A shoot shorter than 10 cm sets proportionally fewer side buds, so a slow old crown no longer smothers itself in buds (pinidae revision 13); set for the family, as the yews and cypresses it was not fitted on branch as before."
@@ -118,6 +126,28 @@
     "generator.params.top_rise": {
       "rule": "0.05",
       "why": "A top dies only once the tree has nearly stopped rising (its leader's yearly rise under a twentieth of its fastest): Sillett et al.'s (2018) Cascade Douglas-firs under 300 years kept model-conforming crowns."
+    },
+    "generator.params.twig_shade": {
+      "rule": "1",
+      "why": "A side shoot that cannot pay for its foliage is shed with it: once a twig of a limb's side branch, a year old or more, stands under the light at which it starves, it is shed and its needles fall with its wood (the limbs themselves are left to limb_tip and limb_light), as a branch that cannot pay for its own foliage is lost (branch autonomy, Sprugel et al. 1991). Without it, a 30-year Douglas-fir grown in a stand with its neighbours clumped as its own crown holds 98 m2 of foliage; with it, 88 m2 at 20 cm, inside the 86 to 162 m2 that 22-year Douglas-firs in Oregon stands carry (Espinosa Bancalari et al. 1987), though above the 65 m2 their equation gives that trunk. Needles themselves keep their stated life in any light: conifer needles live longer in shade, not shorter."
+    },
+    "generator.params.pipe_organ": {
+      "rule": "0.0075",
+      "why": "A tree's trunk carries the pipes of the foliage above it, so its girth follows its leaf: the family's young stand-grown Douglas-firs hold the leaf Espinosa Bancalari et al.'s (1987) equation gives their dbh (58 m2 at 20 cm, against 19.5 cm by the equation). Douglas-fir's own 0.0095 drew a trunk a quarter too thick for its leaf (25 cm), and the 0.009 to 0.011 nine species set by hand are gone into this one value."
+    },
+    "generator.params.pipe_tip": {
+      "rule": "0.0024",
+      "why": "The twig behind a living apex carries its pipe in the same proportion as the foliage's (pipe_organ): 0.79 of the 3 mm it had, so the trunk's girth follows its leaf (Espinosa Bancalari et al. 1987)."
+    },
+    "generator.params.shade_death": {
+      "map": {
+        "shade_tolerance": {
+          "tolerant": 0.06,
+          "intermediate": 0.1,
+          "intolerant": 0.15
+        }
+      },
+      "why": "An apex starves in the shade its silvics class allows: Silvics of North America classes each of the family's trees as tolerant, intermediate or intolerant of shade, and a tolerant tree's shoot lives on 6% of its best-lit shoot's light, an intermediate one's 10% and an intolerant one's 15%. The values are the medians of the ones the species had set by hand, now gone: 0.05 to 0.08 for the six tolerant ones (western and mountain hemlock, Sitka spruce, grand, subalpine and Pacific silver fir), 0.1 and 0.12 for Douglas-fir and whitebark pine, 0.15 for western larch, shore and ponderosa pine. Western hemlock no longer ignores the family's value with its own. Every stand-grown and open-grown conifer with a reference stays within it (Sitka spruce at 60 years -19%, where its own 0.08 drew it -27%)."
     }
   },
   "evidence": {
@@ -175,6 +205,26 @@
       "evidence": "SourceInferred",
       "source": "sillett-2018",
       "note": "Sillett et al. (2018): Cascade Douglas-firs under 300 years kept model-conforming crowns, with few if any reiterated trunks; a twentieth of the fastest rise is reached at about 215 years by the Douglas-fir's height curve."
+    },
+    "rules.generator.params.twig_shade": {
+      "evidence": "SourceInferred",
+      "source": "espinosa-bancalari-1987",
+      "note": "Espinosa Bancalari, Perry and Marshall (1987): 40 felled 22-year Douglas-firs from three adjacent Oregon Coast Range stands; projected leaf area per tree 86, 116 and 162 m2 (slow, intermediate, fast stands); crowns 8.9 to 9.4 m long, crown ratio 0.46 to 0.53; ln(leaf m2) = -4.397 + 2.768 ln(dbh cm) in the intermediate stand (bias factor 1.25). The rule's form, starved shoots shed with their foliage, is Sprugel, Hinckley and Schaap (1991, sprugel-1991). Fitted against McArdle (1961) stands at 30 and 60 years with the trunk rules below."
+    },
+    "rules.generator.params.pipe_organ": {
+      "evidence": "SourceInferred",
+      "source": "espinosa-bancalari-1987",
+      "note": "0.79 of the 0.0095 Douglas-fir had: the dbh Espinosa Bancalari et al.'s (1987) leaf-to-dbh equation (intermediate stand) gives a 30-year stand-grown Douglas-fir's 58.5 m2, 19.6 cm, over the 24.9 cm the old value drew. Checked: every stand-grown Pinaceae with a yield-table reference within tolerance (Douglas-fir 30 and 60 y +10%, +11%; western hemlock +10%; grand fir -11%; Sitka spruce -30%; subalpine fir +11%; mountain hemlock -6%) and every open-grown one (western larch -4%, western white pine -6%, whitebark -14%, shore pine +9%, ponderosa +13%)."
+    },
+    "rules.generator.params.pipe_tip": {
+      "evidence": "SourceInferred",
+      "source": "espinosa-bancalari-1987",
+      "note": "Scaled with pipe_organ, by the same 0.79."
+    },
+    "rules.generator.params.shade_death": {
+      "evidence": "SourceInferred",
+      "source": "silvics-1990-conifers",
+      "note": "Classes as Silvics of North America vol. 1 gives them for each species (each species' traits.shade_tolerance note quotes it). The class values are fits, the medians of the hand-set values they replace, checked against McArdle (1961) and the other stand references and the open-grown ones (2026-11-08 runs, plantgen-claude stands/trunks/refit)."
     }
   }
 }

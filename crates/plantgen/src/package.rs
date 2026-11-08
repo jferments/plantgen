@@ -176,6 +176,7 @@ use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 
 use crate::body::BodyLook;
+use crate::conditions::Conditions;
 use crate::cores;
 use crate::graph::{
     GraphOrgan, GraphSegment, GraphStructure, OrganType, PlantGraph, StructureType,
@@ -1221,6 +1222,7 @@ fn grow_variant(
     spec: &PlantSpec,
     program: &Program,
     params: &[f64],
+    wall: Option<&Conditions>,
     host: Option<&std::sync::Arc<crate::lsys::tools::Host>>,
     variant: &Variant,
     ages: &[f64],
@@ -1240,11 +1242,37 @@ fn grow_variant(
             dt: spec.growth.step,
             years: spec.growth.years,
             keyframes,
-            conditions: variant.conditions(),
+            conditions: wall.cloned().unwrap_or_else(|| variant.conditions()),
             limits: Limits::default(),
             host: host.cloned(),
         },
     )
+}
+
+/// What every variant of the inputs' spec grows on: at the foot of the
+/// wall it climbs ([`crate::spec::VariantPlan::wall_m`]), the conditions
+/// there and the wall to hold to ([`crate::export::wall_setting`]);
+/// otherwise its own conditions and, for a guest, its host's wood, grown
+/// from the spec and program its key hashes.
+fn grown_on(
+    inputs: &Inputs,
+) -> Result<
+    (
+        Option<Conditions>,
+        Option<std::sync::Arc<crate::lsys::tools::Host>>,
+    ),
+    PackageError,
+> {
+    let spec = &inputs.spec;
+    if let Some(wall_m) = spec.variants.wall_m {
+        let (conditions, wall) = crate::export::wall_setting(wall_m)?;
+        return Ok((Some(conditions), wall));
+    }
+    let host = match &inputs.host {
+        Some((host_spec, host_source)) => Some(spec.host_wood(host_spec, host_source)?),
+        None => None,
+    };
+    Ok((None, host))
 }
 
 /// Grow `variant` of the inputs' spec as a package grows it, over `years`
@@ -1260,10 +1288,7 @@ pub(crate) fn grow_until(
 ) -> Result<Growth, PackageError> {
     let spec = &inputs.spec;
     let (program, params) = spec.program_from(&inputs.program_source)?;
-    let host = match &inputs.host {
-        Some((host_spec, host_source)) => Some(spec.host_wood(host_spec, host_source)?),
-        None => None,
-    };
+    let (wall, host) = grown_on(inputs)?;
     grow(
         &program,
         &spec.seeded_params(&program, &params, variant.seed),
@@ -1272,7 +1297,7 @@ pub(crate) fn grow_until(
             dt: spec.growth.step,
             years,
             keyframes: ages.to_vec(),
-            conditions: variant.conditions(),
+            conditions: wall.unwrap_or_else(|| variant.conditions()),
             limits: Limits::default(),
             host,
         },
@@ -1582,12 +1607,9 @@ pub fn build(
 ) -> Result<Package, PackageError> {
     let spec = &inputs.spec;
     let (program, params) = spec.program_from(&inputs.program_source)?;
-    // A guest's host is grown once, from the spec and program its key
-    // hashes, and every variant grows on it.
-    let host = match &inputs.host {
-        Some((host_spec, host_source)) => Some(spec.host_wood(host_spec, host_source)?),
-        None => None,
-    };
+    // A guest's host (or a climber's wall) is made once, and every
+    // variant grows on it.
+    let (wall, host) = grown_on(inputs)?;
     let progress = Mutex::new(progress);
     let say = |line: &str| {
         (progress
@@ -1603,6 +1625,7 @@ pub fn build(
         inputs,
         program: &program,
         params: &params,
+        wall: wall.as_ref(),
         host: host.as_ref(),
         variants: &variants,
         ages: &ages,
@@ -1734,6 +1757,9 @@ struct Work<'a> {
     inputs: &'a Inputs,
     program: &'a Program,
     params: &'a [f64],
+    /// The conditions at the foot of the wall the spec's variants climb,
+    /// in place of their own ([`grown_on`]).
+    wall: Option<&'a Conditions>,
     host: Option<&'a std::sync::Arc<crate::lsys::tools::Host>>,
     variants: &'a [Variant],
     ages: &'a [f64],
@@ -1760,6 +1786,7 @@ impl Work<'_> {
             spec,
             self.program,
             self.params,
+            self.wall,
             self.host,
             &self.variants[index],
             self.ages,
@@ -3555,8 +3582,16 @@ mod tests {
             .program_from(&inputs.program_source)
             .expect("program");
         let variant = &inputs.spec.variant_list()[0];
-        let growth =
-            grow_variant(&inputs.spec, &program, &params, None, variant, &[12.0]).expect("grows");
+        let growth = grow_variant(
+            &inputs.spec,
+            &program,
+            &params,
+            None,
+            None,
+            variant,
+            &[12.0],
+        )
+        .expect("grows");
         let plants = tier_plants(&growth.keyframes[0], &inputs);
         let object = |sha: &str| &package.objects[sha];
         let bark = inputs
