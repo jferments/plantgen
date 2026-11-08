@@ -2058,6 +2058,10 @@ impl Drawer<'_> {
                 .map(|(p, _)| (p - centre).dot(normal));
             sectors
         ];
+        // The floor the shell is laid on, ring by ring (ring 0 the
+        // centre), so the shoots stand on the drape too, not on the face
+        // below it, hidden under a bare slope of shell.
+        let mut floors: Vec<Option<f64>> = vec![floor[0]; (rings + 1) * sectors];
         for ring in 1..=rings {
             #[allow(clippy::cast_precision_loss)]
             let rho = ring as f64 / rings as f64;
@@ -2075,6 +2079,7 @@ impl Drawer<'_> {
                     floor[sector] = Some((p - centre).dot(normal));
                     (p, n)
                 });
+                floors[ring * sectors + sector] = floor[sector];
                 let point = laid.map(|(p, n)| {
                     let h = mix(mix(seed, ring as u64), sector as u64);
                     let speckle = if fine {
@@ -2255,6 +2260,29 @@ impl Drawer<'_> {
             let fertile = self.options.capsules && unit(mix(h, 11)) < fertile_share;
             let Some((p, n)) = surfaces.lifted(q, normal, reach, bridge) else {
                 continue;
+            };
+            // Over a step the shoot stands on the shell's drape: the
+            // floor there, between the rings about it.
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            let p = {
+                let turn = angle.rem_euclid(std::f64::consts::TAU) / std::f64::consts::TAU;
+                let sector = ((turn * sectors as f64).round() as usize) % sectors;
+                let along = rho * rings as f64;
+                let inner = (along.floor() as usize).min(rings);
+                let outer = (inner + 1).min(rings);
+                let f = along - along.floor();
+                match (
+                    floors[inner * sectors + sector],
+                    floors[outer * sectors + sector],
+                ) {
+                    (Some(a), Some(c)) => {
+                        let laid = a + (c - a) * f;
+                        let below = (p - centre).dot(normal);
+                        let run = radius / rings as f64;
+                        p + normal * (below.clamp(laid - run * 0.5, laid + run * 0.5) - below)
+                    }
+                    _ => p,
+                }
             };
             let rise = height * profile(rho);
             // Cushion shoots radiate from the colony's centre, so those at
