@@ -91,6 +91,23 @@ pub fn crown_quarters(graph: &PlantGraph, types: &[OrganType]) -> Option<[f64; 4
     (total > 0.0).then(|| quarters.map(|area| area / total))
 }
 
+/// The plant's leaf area (m²) in each band `step_m` deep from its foot,
+/// lowest first, to set beside a crown's measured leaf by height.
+#[must_use]
+pub fn leaf_by_height(graph: &PlantGraph, types: &[OrganType], step_m: f64) -> Vec<f64> {
+    let step_m = step_m.max(0.1);
+    let mut bands = Vec::new();
+    for (point, area) in foliage(graph, types) {
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let band = (point.y.max(0.0) / step_m).floor() as usize;
+        if bands.len() <= band {
+            bands.resize(band + 1, 0.0);
+        }
+        bands[band] += area;
+    }
+    bands
+}
+
 /// The light at each height from `step_m` / 2 to the plant's top, every
 /// `step_m` metres, sampled on a square grid of `step_m` across the
 /// plant's cell ([`half_width`]), with the light tool's voxel `cell` and
