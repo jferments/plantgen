@@ -329,7 +329,8 @@ fn builtin_species_stand_above_the_ground() {
 /// from the year before but a grass's thatch, the dead blades of last
 /// year's tillers, each born with its blade. An evergreen's leaves, and a
 /// herb's stems bearing leaves only, live leaf_years, and its thatch comes
-/// that much later.
+/// that much later, unless its tillers keep their older leaves dead
+/// (`dead_leaves`), whose thatch is there from the first year.
 #[test]
 fn grasses_and_herbs_renew_their_shoots_every_year() {
     let mut checked = 0;
@@ -349,6 +350,14 @@ fn grasses_and_herbs_renew_their_shoots_every_year() {
         if years > 1.0 {
             evergreen += 1;
         }
+        // A tiller that keeps its older leaves dead (grass revision 11)
+        // holds thatch from its first year.
+        let dead_leaves = spec
+            .generator
+            .params
+            .get("dead_leaves")
+            .copied()
+            .unwrap_or(0.0);
         let variant = spec.variant_list()[0];
         let ages = vec![1.0, 2.0, 3.0, 4.0];
         let growth = grow_variant(&spec, &variant, 4.0, ages);
@@ -409,10 +418,11 @@ fn grasses_and_herbs_renew_their_shoots_every_year() {
                     .filter(|organ| usize::from(organ.organ) == thatch)
                     .count();
                 // Thatch once the first tillers' blades die: from the second
-                // year on, an evergreen's a year later.
+                // year on, an evergreen's a year later; from the first where
+                // living tillers keep their older leaves dead.
                 assert_eq!(
                     dead > 0,
-                    graph.age >= 1.0 + years,
+                    graph.age >= 1.0 + years || dead_leaves > 0.0,
                     "{id} at {}: {dead} thatch",
                     graph.age
                 );
