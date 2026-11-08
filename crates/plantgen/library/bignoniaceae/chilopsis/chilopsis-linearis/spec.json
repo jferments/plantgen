@@ -65,7 +65,6 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "width": 0.035,
           "widest": 0.5,
           "tip": 0.6,
           "base": 0.6,
@@ -159,11 +158,6 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Leaf area of a leaf card 1 m long, as plantc atlas measures the narrow leaf drawn (width 0.035)."
-    },
-    "appearance.organs.leaf.shape.width": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "The leaf's width over its blade's length: Abrams and Ferris vol. 4 (1960) gives leaves 5 to 15 cm long and 2 to 6 mm wide, narrowly linear; 0.1 drew them 2 cm wide."
     },
     "generator.params.leaf_size": {
       "evidence": "Authored",

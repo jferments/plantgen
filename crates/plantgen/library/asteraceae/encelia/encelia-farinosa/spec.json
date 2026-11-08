@@ -67,7 +67,6 @@
     "organs": {
       "leaf": {
         "shape": {
-          "width": 0.55,
           "widest": 0.4,
           "tip": 0.6,
           "base": 0.7,

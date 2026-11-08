@@ -1604,7 +1604,9 @@ impl Default for Scales {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(default, deny_unknown_fields)]
 pub struct Palmate {
-    /// Main lobes: 3, 5, 7 or 9.
+    /// Main lobes, 3 to 9. An odd count has a middle lobe at the tip; an
+    /// even one has none, its two upper lobes standing either side of a
+    /// notch at the tip (a tulip tree's four lobes).
     pub lobes: u32,
     /// How deep the sinuses between lobes cut toward the centre, 0 to 1.
     pub depth: f64,
@@ -3975,11 +3977,8 @@ impl Shape {
                 check("aspect", s.aspect, 0.2, 2.0)
             }
             Self::Palmate(s) => {
-                if !(3..=9).contains(&s.lobes) || s.lobes % 2 == 0 {
-                    return Err(format!(
-                        "palmate lobes must be 3, 5, 7 or 9, found {}",
-                        s.lobes
-                    ));
+                if !(3..=9).contains(&s.lobes) {
+                    return Err(format!("palmate lobes must be 3 to 9, found {}", s.lobes));
                 }
                 check("depth", s.depth, 0.0, 0.9)?;
                 check("lobe_width", s.lobe_width, 0.1, 1.2)?;
@@ -4400,16 +4399,32 @@ fn outline(
 }
 
 impl Palmate {
+    /// The lobes' numbers, `k` from `-(lobes / 2)` to `lobes / 2`, from
+    /// the left: an odd count has a middle lobe (0) at the tip, an even
+    /// one none, so its numbers skip 0.
+    #[must_use]
+    pub fn lobe_keys(&self) -> Vec<i32> {
+        let half = i32::try_from(self.lobes / 2).unwrap_or(0);
+        let even = self.lobes % 2 == 0;
+        (-half..=half).filter(|&k| !(even && k == 0)).collect()
+    }
+
     /// Angle of lobe `k` from the tip (negative to the left) and its
-    /// length as a fraction of the blade's radius, for `k` from
-    /// `-(lobes - 1) / 2` to `(lobes - 1) / 2`.
+    /// length as a fraction of the blade's radius, for `k` among
+    /// [`Palmate::lobe_keys`]. An even count's lobes stand half a step
+    /// either side of the tip, where an odd count's middle lobe would be.
     fn lobe_unit(&self, k: i32) -> (f64, f64) {
-        let half = f64::from(self.lobes.saturating_sub(1) / 2).max(1.0);
-        let t = f64::from(k.unsigned_abs()) / half;
+        let half = (f64::from(self.lobes.saturating_sub(1)) / 2.0).max(1.0);
+        let place = if self.lobes % 2 == 0 {
+            f64::from(k) - 0.5 * f64::from(k.signum())
+        } else {
+            f64::from(k)
+        };
+        let t = place.abs() / half;
         // The outermost lobes stand at 75° from the tip on a three-lobed
         // leaf and fan further back the more lobes there are.
         let outermost = (0.75 - 0.33 / half) * crate::math::PI;
-        let angle = f64::from(k) / half * self.spread * outermost;
+        let angle = place / half * self.spread * outermost;
         // Lobes shorten toward the base, the basal ones most.
         (angle, 1.0 - 0.38 * t * t)
     }
@@ -4420,11 +4435,10 @@ impl Palmate {
     /// card.
     #[must_use]
     pub fn junction(&self) -> (f64, f64) {
-        let half = i32::try_from(self.lobes / 2).unwrap_or(0);
         // How far below the junction the lowest lobe reaches, per unit
         // radius, with room for its width.
         let mut below: f64 = 0.0;
-        for k in 0..=half {
+        for k in self.lobe_keys().into_iter().filter(|&k| k >= 0) {
             let (angle, length) = self.lobe_unit(k);
             let down = -length * crate::math::cos(angle);
             let side = 0.5 * length * self.lobe_width * crate::math::sin(angle).abs();
@@ -4435,7 +4449,7 @@ impl Palmate {
     }
 
     /// Angle of lobe `k` from the tip (negative to the left) and its
-    /// length, for `k` from `-(lobes - 1) / 2` to `(lobes - 1) / 2`.
+    /// length, for `k` among [`Palmate::lobe_keys`].
     #[must_use]
     pub fn lobe(&self, k: i32) -> (f64, f64) {
         let (angle, length) = self.lobe_unit(k);
@@ -4444,11 +4458,10 @@ impl Palmate {
     }
 
     fn aspect(&self) -> f64 {
-        let half = i32::try_from(self.lobes / 2).unwrap_or(0);
         // The blade between the lobes reaches the sinuses' depth.
         let (_, radius) = self.junction();
         let mut reach: f64 = radius * (1.0 - self.depth);
-        for k in 0..=half {
+        for k in self.lobe_keys().into_iter().filter(|&k| k >= 0) {
             let (angle, length) = self.lobe(k);
             // The lobe's tip and the widest part of its side.
             let side = length * self.lobe_width * 0.5;
@@ -6064,10 +6077,31 @@ mod tests {
             assert!((0.01..=1.6).contains(&aspect), "{shape:?}: {aspect}");
         }
         let bad = Shape::Palmate(Palmate {
-            lobes: 4,
+            lobes: 10,
             ..Palmate::default()
         });
-        assert!(bad.validate().unwrap_err().contains("3, 5, 7 or 9"));
+        assert!(bad.validate().unwrap_err().contains("3 to 9"));
+    }
+
+    /// A palmate leaf of an even count has no lobe at its tip: its two
+    /// upper lobes stand either side of it, mirrored, as a tulip tree's
+    /// four do, and its lobes shorten toward the base as an odd count's.
+    #[test]
+    fn an_even_palmate_leaf_has_a_notch_at_its_tip() {
+        let four = Palmate {
+            lobes: 4,
+            ..Palmate::default()
+        };
+        assert!(Shape::Palmate(four.clone()).validate().is_ok());
+        assert_eq!(four.lobe_keys(), vec![-2, -1, 1, 2]);
+        let (upper, upper_length) = four.lobe(1);
+        let (lateral, lateral_length) = four.lobe(2);
+        assert!(upper > 0.0 && lateral > upper, "{upper} {lateral}");
+        assert!((four.lobe(-1).0 + upper).abs() < 1e-12);
+        assert!(lateral_length < upper_length);
+        let five = Palmate::default();
+        assert_eq!(five.lobe_keys(), vec![-2, -1, 0, 1, 2]);
+        assert!(five.lobe(0).0.abs() < 1e-12);
     }
 
     /// An outline runs from base to tip in order, rises and closes at the

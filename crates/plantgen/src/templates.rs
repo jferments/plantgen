@@ -1679,8 +1679,7 @@ fn palmate_flank(share: f64) -> f64 {
 /// into every tooth, which then leans the way its vein runs.
 fn palmate_leaf(s: &Palmate, fine: f64, seed: u64) -> GrownLeaf {
     let (junction, radius) = s.junction();
-    let half = i32::try_from(s.lobes / 2).unwrap_or(0);
-    let lobes: Vec<(f64, f64)> = (-half..=half).map(|k| s.lobe(k)).collect();
+    let lobes: Vec<(f64, f64)> = s.lobe_keys().into_iter().map(|k| s.lobe(k)).collect();
     let outline = |t: f64| s.lobe_width * 0.5 * lobe_profile(t);
     let mut margins: Vec<Margin> = Vec::with_capacity(lobes.len() * 2);
     for index in 0..lobes.len() * 2 {
@@ -2096,10 +2095,10 @@ fn palmate(
     let floor = radius * (1.0 - s.depth);
     let notch = math::cos(phi).min(0.0);
     let mut inside = r < floor * (1.0 - 0.75 * notch * notch);
-    let half = i32::try_from(s.lobes / 2).unwrap_or(0);
+    let keys = s.lobe_keys();
     let mut vein: f64 = 0.0;
     let mut accent: f64 = 0.0;
-    for k in -half..=half {
+    for (index, &k) in keys.iter().enumerate() {
         let (angle, length) = s.lobe(k);
         let direction = (math::sin(angle), math::cos(angle));
         let (along, across) = local(p, (0.0, 0.0), direction);
@@ -2115,7 +2114,7 @@ fn palmate(
         let mut width = length * s.lobe_width * 0.5 * lobe_profile(t);
         // A few coarse teeth on its outer half, so they never close a
         // sinus, each where its margin grew them (`palmate_leaf`).
-        let side = usize::try_from(k + half).unwrap_or(0) * 2 + usize::from(across <= 0.0);
+        let side = index * 2 + usize::from(across <= 0.0);
         if let Some(margin) = margins.get(side)
             && s.teeth > 0
             && t > LOBE_TEETH.0
@@ -2127,13 +2126,16 @@ fn palmate(
         }
         // Keep clear of the line halfway to the neighbouring lobe on this
         // side, so the sinus between them runs down to the blade's floor.
-        // `across` is positive toward lower lobe numbers; the outermost
+        // `across` is positive toward the lobes on the left; the outermost
         // lobes' neighbour across the petiole is the opposite outermost lobe.
-        let neighbour = if across > 0.0 { k - 1 } else { k + 1 };
-        let gap = if neighbour.abs() > half {
-            2.0 * PI - 2.0 * angle.abs()
+        let neighbour = if across > 0.0 {
+            index.checked_sub(1)
         } else {
-            (s.lobe(neighbour).0 - angle).abs()
+            Some(index + 1).filter(|&n| n < keys.len())
+        };
+        let gap = match neighbour {
+            None => 2.0 * PI - 2.0 * angle.abs(),
+            Some(n) => (s.lobe(keys[n]).0 - angle).abs(),
         };
         let half_gap = (gap * 0.5).min(math::radians(80.0));
         // The sinus opens a little toward the margin.

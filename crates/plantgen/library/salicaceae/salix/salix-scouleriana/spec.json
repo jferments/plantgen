@@ -57,7 +57,6 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "width": 0.4,
           "widest": 0.65,
           "tip": 0.35,
           "base": 0.25,
@@ -98,14 +97,8 @@
       "max": 10.6,
       "high": 20
     },
-    "leaf_length_m": {
-      "min": 0.03,
-      "max": 0.1
-    },
-    "leaf_width_m": {
-      "min": 0.01,
-      "max": 0.035
-    },
+    "leaf_length_m": {"min": 0.029, "max": 0.1},
+    "leaf_width_m": {"min": 0.009, "max": 0.037},
     "leaf_habit": "deciduous",
     "sexual_system": "dioecious",
     "inflorescence": "catkin",
@@ -170,16 +163,8 @@
       "source": "usfs-feis",
       "note": "FEIS's Scouler's willow review (Anderson 2001, read 2026-10-15): \"generally a shrub, reaching 6 to 35 feet (2-10.6 m) in height\"; \"occasionally grows as a tree and may reach 65 feet (20 m)\"."
     },
-    "traits.leaf_length_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high), as no source read gives it."
-    },
-    "traits.leaf_width_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high), as no source read gives it."
-    },
+    "traits.leaf_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 7 (eFloras taxon_id=242445865, read 2026-11-08), Salix scouleriana: largest medial blade usually oblanceolate, 29-100 x 9-37 mm, 1.7-3.9 times as long as wide."},
+    "traits.leaf_width_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 7 (eFloras taxon_id=242445865, read 2026-11-08), Salix scouleriana: largest medial blade usually oblanceolate, 29-100 x 9-37 mm, 1.7-3.9 times as long as wide."},
     "traits.leaf_habit": {
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
