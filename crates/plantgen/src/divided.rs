@@ -199,14 +199,25 @@ impl Form {
     /// The longest lateral leaflet (or pinna) of a pinnate leaf, as a
     /// share of its rachis: as long as their spacing allows ([`longest`]),
     /// or, where the blade's width is set, no longer than reaches its edge
-    /// at `angle` to the rachis.
+    /// at `angle` to the rachis. A dissected blade's primary segments
+    /// (`confluent` above 0) reach its edge whatever their spacing: they
+    /// are the blade, cut, so the flora's width is theirs, and they crowd
+    /// and overlap along a short rachis where separate leaflets could not
+    /// (a yarrow's 30 pairs of segments, held to their spacing, drew its
+    /// strap an eighth as wide as long, where FNA and photos give a fifth
+    /// to a sixth, and read as a wire).
     #[must_use]
     pub fn primary_longest(&self) -> f64 {
         let spaced = longest(self.leaflets, self.petiole);
         match self.blade_width {
             Some(width) if self.pattern == Pattern::Pinnate => {
                 let reach = 0.5 * width * (1.0 - self.petiole);
-                spaced.min((reach / math::sin(math::radians(self.angle)).max(0.2)).max(0.01))
+                let edge = (reach / math::sin(math::radians(self.angle)).max(0.2)).max(0.01);
+                if self.confluent > 0.0 {
+                    edge.min(0.45)
+                } else {
+                    spaced.min(edge)
+                }
             }
             _ => spaced,
         }

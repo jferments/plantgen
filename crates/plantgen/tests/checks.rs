@@ -262,11 +262,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its bipinnate leaf (one pair of pinnae, FNA) measures about 1.1 cm on its compound card against the 2 to 3 cm stated, since main's compound-leaf changes (revisions 156 to 159); the cause is not traced yet",
     ),
     (
-        "pedicularis-bracteosa",
-        "leaf_width_m",
-        "a pinnate card spaces its leaflets along the rachis and draws none longer than their spacing allows, about a fifth of the rachis for its 25, so its pinnules, 3 to 7 cm on a blade 10 to 20 cm (Abrams vol. 3 p. 805), draw the blade 4 to 6 cm wide against the 8 to 15 cm stated",
-    ),
-    (
         "phyllostachys-aurea",
         "leaf_shape",
         "its sprig leaves are drawn lanceolate, 0.15 as broad as long, as a bamboo's are, against the linear blades Poaceae state for its grasses; the species states no shape of its own",

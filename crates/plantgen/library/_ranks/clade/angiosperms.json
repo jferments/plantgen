@@ -346,7 +346,7 @@
     "appearance.organs.*.shape.blade_width": {
       "template": "compound",
       "rule": "clamp(leaf_width_m / leaf_length_m, 0.02, 3)",
-      "why": "A pinnate leaf's laterals reach no farther than the blade's edge, its width over its length as floras measure them: a strap-shaped leaf's pinnae are short for their spacing."
+      "why": "A pinnate leaf's laterals reach no farther than the blade's edge, its width over its length as floras measure them: a strap-shaped leaf's pinnae are short for their spacing. A dissected blade's primary segments reach that edge, crowded as they are: the blade is theirs, cut."
     },
     "appearance.organs.*.shape.lace": {
       "template": "compound",
