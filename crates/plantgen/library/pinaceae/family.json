@@ -127,9 +127,9 @@
       "rule": "0.05",
       "why": "A top dies only once the tree has nearly stopped rising (its leader's yearly rise under a twentieth of its fastest): Sillett et al.'s (2018) Cascade Douglas-firs under 300 years kept model-conforming crowns."
     },
-    "generator.params.needle_shade": {
+    "generator.params.twig_shade": {
       "rule": "1",
-      "why": "Foliage that no longer pays for itself is shed: a shoot's needles fall early once their own light stays under the light at which the shoot starves, as a branch that cannot pay for its foliage loses it (branch autonomy, Sprugel et al. 1991). Kept to the end of their needle years in any light, a 30-year Douglas-fir grown in a stand with its neighbours clumped as its own crown is held 98 m2 of foliage, 14 m2 to each m2 of its ground; 22-year Douglas-firs in Oregon stands carry 86 to 162 m2 a tree in crowns half their height (Espinosa Bancalari et al. 1987), and shedding the starved foliage leaves 58 m2 at 20 cm, the leaf their equation gives that trunk."
+      "why": "A side shoot that cannot pay for its foliage is shed with it: once a side shoot a year old or more stands under the light at which it starves, it is shed and its needles fall with its wood, as a branch that cannot pay for its own foliage is lost (branch autonomy, Sprugel et al. 1991). Without it, a 30-year Douglas-fir grown in a stand with its neighbours clumped as its own crown holds 98 m2 of foliage; with it, 73 m2 at 19 cm, between the 52 m2 Espinosa Bancalari et al.'s (1987) equation gives that trunk and the 86 to 162 m2 their 22-year Oregon stand trees carried. Needles themselves keep their stated life in any light: conifer needles live longer in shade, not shorter."
     },
     "generator.params.pipe_organ": {
       "rule": "0.0075",
@@ -206,10 +206,10 @@
       "source": "sillett-2018",
       "note": "Sillett et al. (2018): Cascade Douglas-firs under 300 years kept model-conforming crowns, with few if any reiterated trunks; a twentieth of the fastest rise is reached at about 215 years by the Douglas-fir's height curve."
     },
-    "rules.generator.params.needle_shade": {
+    "rules.generator.params.twig_shade": {
       "evidence": "SourceInferred",
       "source": "espinosa-bancalari-1987",
-      "note": "Espinosa Bancalari, Perry and Marshall (1987): 40 felled 22-year Douglas-firs from three adjacent Oregon Coast Range stands; projected leaf area per tree 86, 116 and 162 m2 (slow, intermediate, fast stands); crowns 8.9 to 9.4 m long, crown ratio 0.46 to 0.53; ln(leaf m2) = -4.397 + 2.768 ln(dbh cm) in the intermediate stand (bias factor 1.25). The rule's form, foliage shed below its compensation, is Sprugel, Hinckley and Schaap (1991, sprugel-1991). Fitted against McArdle (1961) stands at 30 and 60 years with the trunk rules below."
+      "note": "Espinosa Bancalari, Perry and Marshall (1987): 40 felled 22-year Douglas-firs from three adjacent Oregon Coast Range stands; projected leaf area per tree 86, 116 and 162 m2 (slow, intermediate, fast stands); crowns 8.9 to 9.4 m long, crown ratio 0.46 to 0.53; ln(leaf m2) = -4.397 + 2.768 ln(dbh cm) in the intermediate stand (bias factor 1.25). The rule's form, starved shoots shed with their foliage, is Sprugel, Hinckley and Schaap (1991, sprugel-1991). Fitted against McArdle (1961) stands at 30 and 60 years with the trunk rules below."
     },
     "rules.generator.params.pipe_organ": {
       "evidence": "SourceInferred",

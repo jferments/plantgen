@@ -916,12 +916,40 @@ fn lives(grown: &Grown<'_>, ripening: Option<f64>, tally: &mut Tally) {
         return;
     };
     let segments = &before.segments;
+    // Each segment's lateral children: the shoots that start from it.
+    let mut shoots: BTreeMap<usize, Vec<usize>> = BTreeMap::new();
+    for (index, wood) in segments.iter().enumerate() {
+        if wood.lateral
+            && let Some(parent) = wood.parent
+        {
+            shoots.entry(parent as usize).or_default().push(index);
+        }
+    }
+    let fell_then =
+        |wood: &GraphSegment, shed: f64| wood.shed.is_some_and(|wood| (wood - shed).abs() < 1e-9);
     // Whether something shed at `shed` fell with the segment bearing it.
     let with_wood = |segment: Option<usize>, shed: f64| {
         segment
             .and_then(|index| segments.get(index))
-            .and_then(|wood| wood.shed)
-            .is_some_and(|wood| (wood - shed).abs() < 1e-9)
+            .is_some_and(|wood| fell_then(wood, shed))
+    };
+    // Whether a leaf standing at the foot of a side shoot fell with that
+    // shoot: a program may draw a shoot's first foliage before its first
+    // segment (pinidae's `[ Y spray ] F`), so its record names the segment
+    // the shoot starts from, which stays when the shoot is shed. A leaf
+    // within the shoot's first segment's length of its foot, shed with it,
+    // fell with its wood.
+    let with_shoot = |segment: Option<usize>, at: Vec3, shed: f64| {
+        segment
+            .and_then(|index| shoots.get(&index))
+            .is_some_and(|starts| {
+                starts.iter().any(|&child| {
+                    let wood = &segments[child];
+                    fell_then(wood, shed)
+                        && (wood.start - at).length()
+                            <= (wood.end - wood.start).length() + wood.radius
+                })
+            })
     };
     // Each frond's pieces' last shed (none while one stays) and a piece's
     // segment.
@@ -940,7 +968,9 @@ fn lives(grown: &Grown<'_>, ripening: Option<f64>, tally: &mut Tally) {
                 }
             }
             None if organ.within.is_none() => {
-                let Some(shed) = organ.shed.filter(|&shed| !with_wood(segment, shed)) else {
+                let Some(shed) = organ.shed.filter(|&shed| {
+                    !with_wood(segment, shed) && !with_shoot(segment, organ.position, shed)
+                }) else {
                     continue;
                 };
                 match grown.term(organ) {

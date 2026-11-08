@@ -354,12 +354,12 @@
 # years, so its needles stay near a year's or two's length. With seg_side
 # 0, the default, a plant grows as before.
 #
-# Revision 24 (starved foliage falls): with needle_shade above 0, a
-# shoot's foliage older than a year falls once its own light is under
-# needle_shade times the light at which its shoot would starve, so a
+# Revision 24 (starved twigs die): S, the foot of a living branch, carries
+# its order. With twig_shade above 0, a limb's side shoot a year old or
+# more dies with its needles once the light at its foot is under
+# twig_shade times the light at which its shoot would starve, so a
 # stand-grown crown no longer holds foliage that cannot pay for itself.
-# Y reads the light for it. With needle_shade 0, the default, a plant
-# grows as before.
+# With twig_shade 0, the default, a plant grows as before.
 #
 # One step is one year. Angles are degrees; lengths are metres.
 
@@ -421,7 +421,7 @@ param ground_gap = 0.1;        # a branch is shed where it comes this close to t
 param ground_watch = 1;        # height below which a side shoot's foot watches the ground
 param dead_years = 4;          # years a dead branch stays on the tree
 param needle_years = 7;        # years a shoot keeps its foliage, on average through the crown
-param needle_shade = 0;        # foliage older than a year falls when its own light is under this times the light under which its shoot starves; 0: never
+param twig_shade = 0;          # a side shoot of a limb (order 2 and up) a year old or more dies, with its needles, when the light at its foot is under this times the light under which its shoot starves; 0: never
 param needle_low = 1.56;       # how many times as long at the crown's foot as at its top
 param epi_delay = 5;           # years a branch's dormant bud waits before it may sprout
 param epi_light = 0.3;         # light a dormant bud needs to sprout
@@ -475,7 +475,7 @@ param seg_age = 0;             # the tree's age at which seg_side starts to come
 module A queries light;                 # the leader's apex
 module N;                               # nods a young leader shoot over
 module C(order, vigour, starved, wood, held, years) queries light, position, substrate;  # a branch apex, wood metres from the stem, holding held metres grown over years years not yet laid down (seg_min)
-module S queries light, vigour, substrate, position;  # the base of a living branch
+module S(order) queries light, vigour, substrate, position;  # the base of a living branch of that order (1 a limb on the stem)
 module K;                               # the base of a dead branch
 module W(n, m);                         # whorl branches still to be formed, of m
 module I(n);                            # interwhorl branches still to be formed
@@ -483,7 +483,7 @@ module G(order, length, keep, wood, years);  # this year's shoot, grown over yea
 module L(order, wood, l);               # a possible side shoot on the left, after a shoot l long
 module R(order, wood, l);               # and on the right
 module Z(light);                        # a cone, perhaps, at a branch apex
-module Y(n) queries light;              # holds a shoot's foliage, which falls after n years, or sooner in deep shade (needle_shade)
+module Y(n);                            # holds a shoot's foliage, which falls after n years
 module V(order, wood, n, l);            # side shoots still to spread round a branch apex (revision 10)
 module E(order, wood) queries light, position, substrate;  # a dormant bud where a branch shoot starts, watching the ground
 module H queries substrate;             # where a branch shoot starts, its bud spent, watching the ground
@@ -530,14 +530,14 @@ rule A : top_die <= 0
 
 decompose W(n, m) : n > 0 ->
     [ /(360 * n / m + uniform(-20, 20)) &(branch_angle + uniform(-8, 8))
-      T(0, 1, 0, upturn) S C(1, 1, 0, 0, 0, 0) ]
+      T(0, 1, 0, upturn) S(1) C(1, 1, 0, 0, 0, 0) ]
     W(n - 1, m);
 decompose W(n, m) : stem_epi > 0 && epi_chance > 0 -> D;
 decompose W(n, m) -> ;
 
 decompose I(n) : n > 0 ->
     [ /(uniform(0, 360)) &(branch_angle + uniform(-8, 8))
-      T(0, 1, 0, upturn) S C(1, interwhorl_vigour, 0, 0, 0, 0) ]
+      T(0, 1, 0, upturn) S(1) C(1, interwhorl_vigour, 0, 0, 0, 0) ]
     I(n - 1);
 decompose I(n) -> ;
 
@@ -618,21 +618,13 @@ decompose G(o, l, k, w, n) : seg_side <= 0 || n < 5 || t < seg_age ->
       spray(((spray_base + spray_length * l / n) * sqrt(n)) * 0.75, 90 + spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1)
       spray(((spray_base + spray_length * l / n) * sqrt(n)) * 0.75, -90 - spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1) ]
     E(o, w) F(l) L(o, w + l, l) R(o, w + l, l);
-decompose L(o, w, l) : apex_whorl <= 0 && o <= side_order && rand() < side_chance * (bud_length > 0 ? min(1, l / bud_length) : 1) -> [ +(side_angle) S C(o + 1, 1, 0, w, 0, 0) ];
+decompose L(o, w, l) : apex_whorl <= 0 && o <= side_order && rand() < side_chance * (bud_length > 0 ? min(1, l / bud_length) : 1) -> [ +(side_angle) S(o + 1) C(o + 1, 1, 0, w, 0, 0) ];
 decompose L(o, w, l) : apex_whorl <= 0 -> ;
-decompose R(o, w, l) : apex_whorl <= 0 && o <= side_order && rand() < side_chance * (bud_length > 0 ? min(1, l / bud_length) : 1) -> [ -(side_angle) S C(o + 1, 1, 0, w, 0, 0) ];
+decompose R(o, w, l) : apex_whorl <= 0 && o <= side_order && rand() < side_chance * (bud_length > 0 ? min(1, l / bud_length) : 1) -> [ -(side_angle) S(o + 1) C(o + 1, 1, 0, w, 0, 0) ];
 decompose R(o, w, l) : apex_whorl <= 0 -> ;
 
 # Foliage falls after its shoot's keep years: needle_years on average,
 # needle_low times as long at the crown's foot as at its top (revision 5).
-# With needle_shade it falls sooner once a year old where its own light is
-# under needle_shade times the light at which its shoot would starve
-# (shade_death, shade_floor and shade_cost, priced as the apex's): a
-# shoot's foliage that no longer pays for itself is shed (branch autonomy,
-# Sprugel et al. 1991), so a stand-grown crown holds the leaf its trunk
-# carries (Espinosa Bancalari et al. 1987). Y reads its light as a query
-# that holds organs, which is no living tip (Scene::tips).
-rule Y(n) : needle_shade > 0 && age >= 1 && light < needle_shade * max(shade_floor, shade_death * top) * (shade_cost + (1 - shade_cost) * min(1, shade_own > 0 ? min(top, light) : top)) -> %;
 rule Y(n) : age + dt >= n -> %;
 
 # A well-lit apex of a tree old enough bears a cone, which falls after
@@ -644,10 +636,20 @@ decompose Z(l) -> ;
 rule cone(s) : age + dt >= cone_years -> ;
 
 # A branch with no living apex dies, and falls dead_years later.
-rule S : sd < ground_gap -> %;
-rule S : age > 2 && ntip == 0 -> K;
-rule S : crown_ratio > 0 && age > 2 && py < (1 - crown_ratio) * height -> K;
-rule S : bole > 0 && age > 2 && py < bole * pow(min(1, height / height_max), bole_shape) * height -> K;
+rule S(o) : sd < ground_gap -> %;
+rule S(o) : age > 2 && ntip == 0 -> K;
+rule S(o) : crown_ratio > 0 && age > 2 && py < (1 - crown_ratio) * height -> K;
+rule S(o) : bole > 0 && age > 2 && py < bole * pow(min(1, height / height_max), bole_shape) * height -> K;
+# Revision 24: with twig_shade, a limb's side shoot (order 2 and up) a
+# year old or more is shed, needles and all, once the light at its foot
+# is under twig_shade times the light at which its shoot would starve
+# (shade_death, shade_floor and shade_cost, priced as an apex's): a twig
+# whose foliage no longer pays for itself is lost (branch autonomy,
+# Sprugel et al. 1991), so a stand-grown crown holds the leaf its trunk
+# carries (Espinosa Bancalari et al. 1987). It falls at once, its needles
+# with it, rather than standing dead (K) and dropping them before its
+# wood: a needle keeps its stated life (needle_years) in any light.
+rule S(o) : twig_shade > 0 && o > 1 && age >= 1 && light < twig_shade * max(shade_floor, shade_death * top) * (shade_cost + (1 - shade_cost) * min(1, shade_own > 0 ? min(top, light) : top)) -> %;
 rule K : age >= dead_years -> %;
 
 # Revision 5: a branch that sags to within ground_gap of the ground (or
@@ -670,9 +672,9 @@ rule D : age >= epi_delay && light >= stem_epi_light
          && (richards(t + 1, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))
             / (height_max * height_rate * (height_shape > 1 ? pow(1 - 1 / height_shape, height_shape - 1) : 1)) < stem_epi_rise
          && rand() < stem_epi ->
-    [ /(uniform(0, 360)) &(branch_angle + uniform(-8, 8)) T(0, 1, 0, upturn) S C(1, stem_epi_vigour, 0, 0, 0, 0) ] D;
+    [ /(uniform(0, 360)) &(branch_angle + uniform(-8, 8)) T(0, 1, 0, upturn) S(1) C(1, stem_epi_vigour, 0, 0, 0, 0) ] D;
 rule E(o, w) : w > 0 && age >= epi_delay && light >= epi_light && rand() < epi_chance ->
-    [ /(uniform(0, 360)) &(side_angle) S C(o + 1, 1, 0, w, 0, 0) ] H;
+    [ /(uniform(0, 360)) &(side_angle) S(o + 1) C(o + 1, 1, 0, w, 0, 0) ] H;
 
 # Revision 10: with apex_whorl, a branch apex spreads its side shoots
 # round itself, as the trunk spreads a whorl, each turning up toward the
@@ -683,7 +685,7 @@ decompose L(o, w, l) -> ;
 decompose R(o, w, l) -> ;
 decompose V(o, w, n, l) : n > 0 && rand() < side_chance * (bud_length > 0 ? min(1, l / bud_length) : 1) ->
     [ /(360 * n / max(apex_whorl, 1) + uniform(-30, 30)) &(side_angle + uniform(-8, 8))
-      T(0, 1, 0, upturn) S C(o + 1, 1, 0, w, 0, 0) ]
+      T(0, 1, 0, upturn) S(o + 1) C(o + 1, 1, 0, w, 0, 0) ]
     V(o, w, n - 1, l);
 decompose V(o, w, n, l) : n > 0 -> V(o, w, n - 1, l);
 decompose V(o, w, n, l) -> ;
@@ -710,8 +712,8 @@ decompose B(n) -> ;
 # scales with shade_death, so a shade-tolerant
 # crown keeps its dim limbs longer. This rule goes last so the draws above
 # keep their sites.
-rule S : limb_light > 0 && age > limb_age && qsum < limb_light * max(shade_floor, shade_death * top) * (shade_cost + (1 - shade_cost) * min(1, shade_own > 0 ? min(top, qsum / max(1, ntip)) : top)) / 0.1 * nseg -> K;
-rule S : limb_tip > 0 && age > limb_age && qsum < limb_tip * max(shade_floor, shade_death * top) * (shade_cost + (1 - shade_cost) * min(1, shade_own > 0 ? min(top, qsum / max(1, ntip)) : top)) * ntip -> K;
+rule S(o) : limb_light > 0 && age > limb_age && qsum < limb_light * max(shade_floor, shade_death * top) * (shade_cost + (1 - shade_cost) * min(1, shade_own > 0 ? min(top, qsum / max(1, ntip)) : top)) / 0.1 * nseg -> K;
+rule S(o) : limb_tip > 0 && age > limb_age && qsum < limb_tip * max(shade_floor, shade_death * top) * (shade_cost + (1 - shade_cost) * min(1, shade_own > 0 ? min(top, qsum / max(1, ntip)) : top)) * ntip -> K;
 
 # Revision 20: a dead top's new leaders, spread round the old axis (one
 # alone stands nearly straight), each rising with a shoot that shrinks by
