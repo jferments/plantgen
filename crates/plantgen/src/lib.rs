@@ -1788,4 +1788,13 @@ pub mod venation;
 /// at 20 cm (23 cm before), inside the 86 to 162 m² Espinosa Bancalari et
 /// al. found; every interior and open yield-table reference stays within
 /// tolerance.
-pub const GENERATOR_REVISION: u32 = 217;
+///
+/// 219 (provisional; the merge desk renumbers): a pine-family limb opens
+/// with its depth below the treetop (`pinidae` revision 25, `limb_open`,
+/// `open_depth`): from about 11 degrees off the leader in the top whorl to
+/// 83 (near level) some 15 m down, the exponential fitted to Weiskittel,
+/// Maguire and Monserud's (2007) Douglas-fir branch angle equation, set
+/// for the family; eight species' hand-set `branch_angle` and `upturn`
+/// are gone (Douglas-fir's 45 kept its lower limbs at 45 degrees above
+/// level for life). Pines keep their angles until theirs are measured.
+pub const GENERATOR_REVISION: u32 = 219;

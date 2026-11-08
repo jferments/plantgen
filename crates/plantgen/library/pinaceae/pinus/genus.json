@@ -67,6 +67,10 @@
     "generator.params.seg_min": {
       "rule": "0",
       "why": "Pines lay down every year's shoot, as the Pinidae program does, until their old crowns are fitted."
+    },
+    "generator.params.limb_open": {
+      "rule": "0",
+      "why": "Pines (Rauh's model) keep their limbs' first angle, as before, until the genus's own branch angles by crown depth are in hand: the family's curve is Douglas-fir's."
     }
   },
   "appearance": {
@@ -103,6 +107,7 @@
     }
   },
   "evidence": {
+    "rules.generator.params.limb_open": {"evidence": "Authored", "source": "plantgen-authors", "note": "Scope of the limb angle rules of 2026-11-08 (pinidae revision 25): the family's rule is fitted to Douglas-fir; pines keep their earlier angles until theirs are measured."},
     "traits.anchorage_per_stem_kg": {"evidence": "SourceInferred", "source": "fgr-forestgales", "note": "fgr 2020 (ForestGALES), species parameters for lodgepole, Scots, Corsican, jack, maritime and radiata pine: C_reg 138 N m per kg of green stem, the mean over its four soil groups and three rooting depths and over those species, from tree-pulling tests (Nicoll et al. 2006 and others, listed in the Critical Resistive Moments vignette). A species with its own pulling tests states its own."},
     "traits.crown_drag_at_rest": {"evidence": "SourceInferred", "source": "fgr-forestgales", "note": "fgr 2020 (ForestGALES), species parameters for lodgepole, Scots, Corsican, jack, maritime and radiata pine: crown drag coefficient on the silhouette Cd = C u^-N with C 2.67, N 0.65, fitted between 10 and 24 m/s (means over those species), after Mayhead's (1973) wind-tunnel drag of whole trees and later studies (Streamlining and Drag vignette)."},
     "traits.crown_drag_streamlining": {"evidence": "SourceInferred", "source": "fgr-forestgales", "note": "fgr 2020 (ForestGALES), species parameters for lodgepole, Scots, Corsican, jack, maritime and radiata pine: crown drag coefficient on the silhouette Cd = C u^-N with C 2.67, N 0.65, fitted between 10 and 24 m/s (means over those species), after Mayhead's (1973) wind-tunnel drag of whole trees and later studies (Streamlining and Drag vignette)."},
