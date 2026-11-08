@@ -558,7 +558,7 @@ Measured on a 4-core, 15 GiB cloud machine (2026-11-08), peak resident
 memory before and after plantgen#PR: one 60-year Douglas-fir 2.85 to
 2.47 GiB (heap 2.61 to 1.63 GiB); ten 250-year bigleaf maples on 4
 threads 7.4 to 4.1 GiB; ten 60-year Douglas-firs on 4 threads 10.3 GiB
-to FIR10 GiB. Each plant's own peak fell because `gltf::check` reads one
+to 6.2 GiB. Each plant's own peak fell because `gltf::check` reads one
 accessor at a time and borrows the document instead of copying it, and
 the budget search keeps only the drawings a level is drawn with.
 
