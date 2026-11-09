@@ -64,6 +64,13 @@ pub const STANDARD: Quality = Quality {
 
 pub const PROFILES: [Quality; 2] = [DRAFT, STANDARD];
 
+impl Quality {
+    /// [`DRAFT`], for a caller that reaches it through [`crate::api`].
+    pub const DRAFT: Self = DRAFT;
+    /// [`STANDARD`], for a caller that reaches it through [`crate::api`].
+    pub const STANDARD: Self = STANDARD;
+}
+
 #[must_use]
 pub fn profile(name: &str) -> Option<Quality> {
     PROFILES.into_iter().find(|quality| quality.name == name)

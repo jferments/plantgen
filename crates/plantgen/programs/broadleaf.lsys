@@ -324,9 +324,13 @@
 # from the rule at their rank. Without rooting
 # limits in the conditions rs is 1 and a plant grows as before.
 #
+# Revision 33 (forest-grown stems): the stem divides at its fork height
+# only where its tip has fork_light of the open sky's light. 0 divides it
+# whatever its light, as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem broadleaf 32;
+lsystem broadleaf 33;
 
 # Crown envelope at maturity; it approaches this size at crown_rate per year.
 param crown_height;
@@ -368,6 +372,7 @@ param wiggle;                 # spread of the random turn at each internode
 param fork_height;            # height at which the stem divides; 0: never
 param fork_stems;             # stems it divides into
 param fork_angle;             # angle between the stem and each new stem
+param fork_light = 0;         # light the stem's tip needs to divide; 0: any
 param thorns;                 # 1: a thorn beside each bud
 param thorn_length;
 param thorn_angle;            # angle of a thorn to its shoot
@@ -569,7 +574,7 @@ rule A(split) : suckers > 0 && split > 0 -> R(suckers) A(0);
 # where it divided atop the first year's shoot. A mat's near-level stems
 # (fork_angle past 60) keep that first shoot's rise, as nothing holds them
 # above the ground.
-rule A(split) : split > 0 && (py >= split || (py <= 0 && split < internode / unit_nodes && fork_angle <= 60)) && vigour >= 1 -> Fk(fork_stems);
+rule A(split) : split > 0 && (py >= split || (py <= 0 && split < internode / unit_nodes && fork_angle <= 60)) && vigour >= 1 && light >= fork_light -> Fk(fork_stems);
 
 # A long shoot in the light, old enough to flower, grows its year's nodes,
 # ends them in a flower cluster and forks into twin shoots from the buds

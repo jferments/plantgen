@@ -154,7 +154,12 @@ impl DownWood {
     /// [`AGE_SHARES`] of the lifespan and straight between, the young
     /// stands' before them with fresher wood towards the disturbance
     /// ([`FRESH_DECAY`]), and old growth's after. A planted stand holds
-    /// none ([`Self::NONE`]).
+    /// none ([`Self::NONE`]). A stand on cleared ground ([`Origin::Cleared`])
+    /// holds none of the young stands' logs carried over from the stand
+    /// before: its own trees' logs build up from none at its clearing to
+    /// the mature stands' at their age, freshly fallen at first, and follow
+    /// the plots after. A fill lays a cleared stand's logs only as its
+    /// trees grow thick enough to make them ([`Self::times`]).
     #[must_use]
     pub fn at(age: f64, lifespan: f64, canopy_m: f64, origin: Origin) -> Self {
         if origin == Origin::Planted || !(age.is_finite() && lifespan > 0.0) {
@@ -167,7 +172,14 @@ impl DownWood {
             |a: [f64; 3], b: [f64; 3], t: f64| std::array::from_fn(|i| math::lerp(a[i], b[i], t));
         let blend5 =
             |a: [f64; 5], b: [f64; 5], t: f64| std::array::from_fn(|i| math::lerp(a[i], b[i], t));
-        let (per_ha, cover, decay) = if share <= AGE_SHARES[0] {
+        let (per_ha, cover, decay) = if origin == Origin::Cleared && share < AGE_SHARES[1] {
+            let t = share / AGE_SHARES[1];
+            (
+                MATURE_LOGS.map(|logs| logs * t),
+                LOG_COVER[1] * t,
+                blend5(FRESH_DECAY, MATURE_DECAY, t),
+            )
+        } else if share <= AGE_SHARES[0] {
             (
                 YOUNG_LOGS,
                 LOG_COVER[0],
@@ -194,6 +206,17 @@ impl DownWood {
             cover: cover * scale * scale,
             decay,
             scale,
+        }
+    }
+
+    /// These logs, `share` as many (0 to 1), covering as much less.
+    #[must_use]
+    pub fn times(self, share: f64) -> Self {
+        let share = share.clamp(0.0, 1.0);
+        Self {
+            per_ha: self.per_ha.map(|logs| logs * share),
+            cover: self.cover * share,
+            ..self
         }
     }
 
@@ -803,6 +826,33 @@ mod tests {
         let alders = DownWood::at(30.0, 100.0, 15.0, Origin::Natural);
         assert!((alders.scale - 0.25).abs() < 1e-9);
         assert!(alders.cover < 0.01);
+    }
+
+    #[test]
+    fn cleared_ground_holds_only_the_logs_its_own_trees_drop() {
+        // A lot has no forest's logs on it: none when it is cleared, its
+        // own trees' building up to the mature stands', the plots' after.
+        assert_eq!(
+            DownWood::at(0.0, 500.0, 60.0, Origin::Cleared).per_ha_total(),
+            0.0
+        );
+        let lot = DownWood::at(10.0, 500.0, 60.0, Origin::Cleared);
+        let forest = DownWood::at(10.0, 500.0, 60.0, Origin::Natural);
+        assert!(lot.per_ha_total() < 0.1 * forest.per_ha_total(), "{lot:?}");
+        assert!(lot.cover < 0.1 * forest.cover);
+        let young = DownWood::at(60.0, 500.0, 60.0, Origin::Cleared);
+        assert!(young.per_ha_total() > lot.per_ha_total());
+        assert!(
+            young.per_ha_total() < DownWood::at(60.0, 500.0, 60.0, Origin::Natural).per_ha_total()
+        );
+        // Its own trees' wood, fresh at first.
+        assert!(lot.decay[0] + lot.decay[1] > forest.decay[0] + forest.decay[1]);
+        for age in [160.0, 300.0, 450.0] {
+            assert_eq!(
+                DownWood::at(age, 500.0, 60.0, Origin::Cleared),
+                DownWood::at(age, 500.0, 60.0, Origin::Natural)
+            );
+        }
     }
 
     #[test]

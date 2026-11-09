@@ -304,6 +304,55 @@ fn herbs_left_to_the_ground_cover_are_not_placed_and_a_tile_needs_its_sizes() {
 }
 
 #[test]
+fn every_example_community_loads_and_makes_a_fill() {
+    // docs/examples/communities: each file is a community of the
+    // library's species, and together they make one fill, as a city's
+    // stand map uses them.
+    let dir =
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../docs/examples/communities");
+    let mut paths: Vec<_> = std::fs::read_dir(&dir)
+        .expect("examples")
+        .map(|entry| entry.expect("entry").path())
+        .filter(|path| path.extension().is_some_and(|e| e == "json"))
+        .collect();
+    paths.sort();
+    assert!(paths.len() >= 8, "{paths:?}");
+    let communities: Vec<Community> = paths
+        .iter()
+        .map(|path| {
+            let text = std::fs::read_to_string(path).expect("read");
+            let community = Community::from_json(&text)
+                .unwrap_or_else(|error| panic!("{}: {error}", path.display()));
+            let stem = path.file_stem().and_then(|s| s.to_str()).expect("stem");
+            if stem != "wind-river" {
+                assert_eq!(community.id, stem, "{}", path.display());
+            }
+            community
+        })
+        .collect();
+    let planted: Vec<&str> = communities
+        .iter()
+        .filter(|c| c.origin == plantgen::development::Origin::Planted)
+        .map(|c| c.id.as_str())
+        .collect();
+    assert_eq!(
+        planted,
+        ["olympia-garden-bed", "olympia-lawn", "olympia-yard-trees"]
+    );
+    let cleared: Vec<&str> = communities
+        .iter()
+        .filter(|c| c.origin == plantgen::development::Origin::Cleared)
+        .map(|c| c.id.as_str())
+        .collect();
+    assert_eq!(cleared, ["olympia-lot", "olympia-verge"]);
+    let mut settings = FillSettings::default();
+    settings.stand_ages = vec![10.0, 80.0];
+    settings.seeds = 1;
+    let fill = Fill::new(&communities, &settings).expect("fill");
+    assert!(!fill.prototypes().is_empty());
+}
+
+#[test]
 fn a_tile_writes_its_header_and_packed_instances() {
     let fill = fill();
     let site = Site::flat(TileId { x: -1, y: 4 }, 40.0).expect("site");
@@ -399,6 +448,44 @@ fn a_forest_floor_holds_logs_moss_and_litter_and_the_tile_says_so() {
     assert!(meadow.logs.is_empty());
     assert!(meadow.stats.floor[1] < 1e-9 && meadow.stats.floor[2] < 1e-9);
     assert!(meadow.floor_mosses.is_empty());
+}
+
+#[test]
+fn cleared_ground_holds_no_logs_from_a_forest_before_it() {
+    // The same firs, once after a fire and once on a cleared lot: the lot
+    // has no fallen forest on it, only what its own trees drop once they
+    // are as thick as a log.
+    let mut cleared = forest();
+    cleared.id = "test-fir-lot".into();
+    cleared.origin = plantgen::development::Origin::Cleared;
+    let fill = Fill::new(&[forest(), cleared], &settings()).expect("fill");
+    fill.measure(&[], 8, None).expect("measured");
+    let site = Site::flat(TileId { x: 2, y: 3 }, 40.0).expect("site");
+    for age in [10.0, 40.0] {
+        let tile = |community| {
+            fill.tile(&site, &StandMap::uniform(40.0, community, age), 9)
+                .expect("tile")
+        };
+        let (burnt, lot) = (tile(0), tile(1));
+        assert!(
+            burnt.stats.logs_per_ha > 300.0,
+            "{age} y: {}",
+            burnt.stats.logs_per_ha
+        );
+        assert!(
+            lot.stats.logs_per_ha < 0.3 * burnt.stats.logs_per_ha,
+            "{age} y: {} against {}",
+            lot.stats.logs_per_ha,
+            burnt.stats.logs_per_ha
+        );
+        assert!(lot.stats.floor[2] < 0.3 * burnt.stats.floor[2]);
+        // The stands themselves develop alike.
+        let ratio = lot.stats.trees_per_ha / burnt.stats.trees_per_ha.max(1.0);
+        assert!(
+            (0.8..1.25).contains(&ratio) || burnt.stats.trees_per_ha < 1.0,
+            "{ratio}"
+        );
+    }
 }
 
 #[test]
@@ -1057,9 +1144,15 @@ mod on_a_site_field {
             z: 9.0,
             age: 5.0,
         };
-        let site = tile_of(&mesh)
-            .with_colonists(&sites, &[yarrow], &[parent], &settings, 8)
-            .unwrap();
+        let site = plantgen::fill::with_colonists(
+            tile_of(&mesh),
+            &sites,
+            &[yarrow],
+            &[parent],
+            &settings,
+            8,
+        )
+        .unwrap();
         assert!(!site.colonists.is_empty(), "nothing came up in 8 years");
         // The slab leaves no room for the stand; only the crack's plants.
         let mut stands = StandMap::uniform(40.0, 1, 40.0);
@@ -1176,6 +1269,55 @@ mod on_a_site_field {
             v[1] + w * t[1] + (z * t[0] - x * t[2]),
             v[2] + w * t[2] + (x * t[1] - y * t[0]),
         ]
+    }
+
+    #[test]
+    fn a_wall_climbers_package_grows_it_at_the_wall_as_the_fill_measured_it() {
+        // The yard's ivy: a host that draws packages builds one per seed,
+        // grown at the foot of the fill's wall, and its keyframe is the
+        // prototype as the fill measured it.
+        let fill = &*YARD_FILL;
+        let ivy: Vec<u32> = (0..fill.prototypes().len())
+            .filter(|&i| fill.prototypes()[i].key.on_wall)
+            .map(|i| u32::try_from(i).unwrap())
+            .collect();
+        assert!(!ivy.is_empty(), "{:?}", fill.prototypes());
+        let packages = fill.packages(&ivy).unwrap();
+        let held: usize = packages.iter().map(|p| p.prototypes.len()).sum();
+        assert_eq!(held, ivy.len());
+        for package in &packages {
+            assert_eq!(package.spec.variants.wall_m, Some(plantgen::export::WALL_M));
+            assert!(package.spec.host.is_none());
+            let inputs =
+                plantgen::package::Inputs::new(&package.spec, &plantgen::quality::DRAFT).unwrap();
+            let built = plantgen::package::build(&inputs, 4, &mut |_| {}).unwrap();
+            let keyframes = &built.manifest.variants[0].keyframes;
+            for &(index, keyframe) in &package.prototypes {
+                let prototype = &fill.prototypes()[index as usize];
+                assert!((keyframes[keyframe].age - prototype.age_years).abs() < 1e-9);
+                let (kept, measured) = (
+                    &keyframes[keyframe].size,
+                    fill.size(index as usize).unwrap(),
+                );
+                let near = |a: f64, b: f64| (a - b).abs() <= 1e-9 * a.abs().max(1.0);
+                assert!(
+                    kept.segments == measured.segments
+                        && kept.organs == measured.organs
+                        && near(kept.height, measured.height)
+                        && near(kept.crown_radius, measured.crown_radius)
+                        && near(kept.leaf_area, measured.leaf_area),
+                    "{}: {kept:?} in its package, {measured:?} measured",
+                    prototype.key.stem()
+                );
+                // It climbed the wall: taller than it would stand alone.
+                assert!(kept.height > 2.0, "{} m", kept.height);
+            }
+            // Its own package, not the species' on the ground.
+            let mut ground = package.spec.clone();
+            ground.variants.wall_m = None;
+            let plain = plantgen::package::Inputs::new(&ground, &plantgen::quality::DRAFT).unwrap();
+            assert_ne!(plain.key, inputs.key);
+        }
     }
 
     #[test]
@@ -1355,4 +1497,121 @@ fn a_tile_shows_its_day_bare_maples_and_vanilla_leaf_down_in_winter() {
     assert!(january.stats.floor[3] < july.stats.floor[3]);
     assert!((january.stats.floor[1] - july.stats.floor[1]).abs() < 1e-9);
     std::fs::remove_dir_all(&*MAPLE_SIZES).ok();
+}
+
+#[test]
+fn a_meadow_given_by_plot_cover_splits_its_herb_cover_as_the_plots_do() {
+    // Yarrow at 40% of the plots' ground and Roemer's fescue at 10%: the
+    // fescue's tussock fills a wider disc than a yarrow, so by count it
+    // stands less often than a quarter as often, and by area it holds
+    // about a fifth of the herbs' cover.
+    let meadow = Community::from_json(
+        r#"{"id": "test-plot-meadow", "members": [
+            {"species": "achillea-millefolium", "layer": "herb", "environments": ["open"], "cover": 40},
+            {"species": "festuca-roemeri", "layer": "herb", "environments": ["open"], "cover": 10}
+        ]}"#,
+    )
+    .expect("community");
+    let mut settings = FillSettings::default();
+    settings.stand_ages = vec![10.0];
+    settings.seeds = 1;
+    let fill = Fill::new(&[meadow], &settings).expect("fill");
+    fill.measure(&[], 8, None).expect("measured");
+    let site = Site::flat(TileId { x: 0, y: 0 }, 40.0).expect("site");
+    let plan = fill
+        .tile(&site, &StandMap::uniform(40.0, 0, 10.0), 1)
+        .expect("tile");
+    let (mut areas, mut counts) = ([0.0_f64; 2], [0_usize; 2]);
+    for instance in &plan.instances {
+        let key = &fill.prototypes()[instance.prototype as usize].key;
+        let slot = usize::from(key.species == "festuca-roemeri");
+        let size = fill.size(instance.prototype as usize).expect("size");
+        let radius = size.foliage_radius * f64::from(instance.scale);
+        areas[slot] += std::f64::consts::PI * radius * radius;
+        counts[slot] += 1;
+    }
+    let fescue = areas[1] / (areas[0] + areas[1]);
+    assert!(
+        (0.12..0.3).contains(&fescue),
+        "fescue's share {fescue}, {counts:?}"
+    );
+    assert!(counts[1] * 4 < counts[0], "{counts:?}");
+    // A member's cover goes with a layer, and a layer's members weigh
+    // alike.
+    for bad in [
+        r#"{"id": "x", "members": [{"species": "festuca-roemeri", "cover": 10}]}"#,
+        r#"{"id": "x", "members": [
+            {"species": "festuca-roemeri", "layer": "herb", "cover": 10},
+            {"species": "achillea-millefolium", "layer": "herb", "abundance": 1}
+        ]}"#,
+        r#"{"id": "x", "members": [{"species": "festuca-roemeri", "layer": "herb", "cover": 10, "abundance": 1}]}"#,
+    ] {
+        assert!(Community::from_json(bad).is_err(), "{bad}");
+    }
+}
+
+/// A tile's far stand-in (`Fill::canopy`): a closed stand is one surface
+/// above its ground, opaque where its crowns are, a valid glTF file, the
+/// same bytes every time, and two neighbours baked with each other agree
+/// along the side they share.
+#[test]
+fn a_tiles_far_stand_in_covers_its_stand_and_meets_its_neighbour() {
+    use plantgen::api::FarSettings;
+    let fill = fill();
+    let tile_m = 40.0;
+    let settings = FarSettings {
+        texel_m: 1.0,
+        grid_m: 4.0,
+        ..FarSettings::default()
+    };
+    let stands = StandMap::uniform(tile_m, 0, 40.0);
+    let west_site = Site::flat(TileId { x: 0, y: 0 }, tile_m).expect("site");
+    let east_site = Site::flat(TileId { x: 1, y: 0 }, tile_m).expect("site");
+    let west = fill.tile(&west_site, &stands, 3).expect("tile");
+    let east = fill.tile(&east_site, &stands, 3).expect("tile");
+    let far = fill.canopy(&west, &west_site, &settings).expect("far");
+    assert_eq!(far.texels, 40);
+    assert_eq!(far.grid, 11);
+    assert!(far.stats.plants > 0 && far.stats.plants <= west.instances.len());
+    assert!(
+        far.stats.cover > 0.8,
+        "a closed stand covers its tile: {:?}",
+        far.stats
+    );
+    assert!(far.stats.height_m > 5.0, "{:?}", far.stats);
+    let high = far
+        .heights_m
+        .iter()
+        .zip(&far.ground_m)
+        .filter(|(h, g)| **h > **g + 2.0)
+        .count();
+    assert!(
+        high * 10 > far.heights_m.len() * 8,
+        "most vertices stand on crowns"
+    );
+    let glb = far.glb().expect("glb");
+    let summary = plantgen::gltf::check(&glb).expect("a valid file");
+    assert_eq!(summary.materials, 2, "canopy and sides");
+    assert_eq!(summary.triangles, far.stats.triangles);
+    assert!(
+        far.from_m() > 900.0 && far.from_m() < 950.0,
+        "{}",
+        far.from_m()
+    );
+    // The same bytes again, from a fill that has drawn its prototypes.
+    let again = fill.canopy(&west, &west_site, &settings).expect("far");
+    assert_eq!(again.glb().expect("glb"), glb);
+    // Neighbours baked with each other: the west tile's east side is the
+    // east tile's west side.
+    let a = fill
+        .canopy_among(&west, &west_site, &[&east], &settings)
+        .expect("far");
+    let b = fill
+        .canopy_among(&east, &east_site, &[&west], &settings)
+        .expect("far");
+    let n = a.grid;
+    for j in 0..n {
+        let (ha, hb) = (a.heights_m[j * n + n - 1], b.heights_m[j * n]);
+        assert!((ha - hb).abs() < 0.05, "row {j}: {ha} against {hb}");
+    }
 }

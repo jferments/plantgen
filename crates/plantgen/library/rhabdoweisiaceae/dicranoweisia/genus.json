@@ -44,7 +44,16 @@
       42
     ],
     "capsule_posture": "erect",
+    "capsule_ripe_months": [
+      2,
+      3,
+      4
+    ],
     "capsule_share": 0.15,
+    "spore_diameter_m": {
+      "min": 0.000015,
+      "max": 0.00002
+    },
     "substrates": [
       "bark",
       "wood",
@@ -65,9 +74,15 @@
     "desiccation_tolerance": "high",
     "colony_spread_m_per_year": 0.002,
     "capsule_shape": "ovoid",
-    "operculum_form": "rostrate"
+    "operculum_form": "rostrate",
+    "cushion_breadth": 4.0
   },
   "evidence": {
+    "traits.capsule_ripe_months": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Fitted to photos (no flora gives months for this region): Washington iNaturalist photos of D. cirrata (imagekit batch moss-pnw-2026-11-05), tallied by the month each was taken, show ripe brown capsules in months 2, 3, 4, young green ones in the months before and spent setae after."
+    },
     "traits": {
       "evidence": "SourceInferred",
       "source": "fna-27",
@@ -137,6 +152,16 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Hue measured: imagekit run moss-colour-2026-11-05 on batch moss-pnw-2026-11-05 (iNaturalist research-grade photos from Washington, about 20 a taxon, script moss_colour.py): the median linear r/g and b/g of the moss pixels (D. cirrata r/g 0.88, b/g 0.18, masked median only). Photos are exposed brighter than moss is, so only the hue is taken from them; the brightness is a green reflectance of 0.13, a lit leaf's, just above the 0.05-0.11 moss canopies reflect in the visible (Lovelock and Robinson 2002, Plant Cell Environ. 25: 1239, Antarctic Grimmia; moss biocrust albedo about 0.11 against 0.20 for bare soil, Sci. Total Environ. 2020), the canopy's own shade darkening the shell further."
+    },
+    "traits.spore_diameter_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-27",
+      "note": "FNA vol. 27, Dicranoweisia (Schofield; efloras, read 2026-11-05): spores spherical, 15-20 µm."
+    },
+    "traits.cushion_breadth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Fitted to photos by eye (Jay chose it 2026-11-08, no flora gives a breadth): Washington iNaturalist photos of D. cirrata (imagekit batch moss-pnw-2026-11-05) show low domes about four times as wide as high, meeting and merging on logs and stumps; FNA vol. 27 says only densely tufted, stems 0.5-3 cm."
     }
   }
 }
