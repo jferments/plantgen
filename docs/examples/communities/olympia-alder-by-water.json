@@ -1,0 +1,19 @@
+{"id": "olympia-alder-by-water", "members": [
+  {"species": "alnus-rubra", "layer": "canopy"},
+  {"species": "acer-macrophyllum", "layer": "canopy", "abundance": 0.3},
+  {"species": "thuja-plicata", "layer": "canopy", "abundance": 0.3},
+  {"species": "fraxinus-latifolia", "layer": "canopy", "abundance": 0.2},
+  {"species": "salix-lasiandra", "layer": "subcanopy", "abundance": 0.4},
+  {"species": "salix-scouleriana", "layer": "subcanopy", "abundance": 0.3},
+  {"species": "rubus-spectabilis", "layer": "shrub"},
+  {"species": "cornus-sericea", "layer": "shrub", "abundance": 0.6},
+  {"species": "physocarpus-capitatus", "layer": "shrub", "abundance": 0.5},
+  {"species": "lonicera-involucrata", "layer": "shrub", "abundance": 0.4},
+  {"species": "oemleria-cerasiformis", "layer": "shrub", "abundance": 0.3},
+  {"species": "rubus-armeniacus", "layer": "shrub", "abundance": 0.5, "environments": ["edge", "open"]},
+  {"species": "athyrium-filix-femina", "layer": "herb", "abundance": 0.6},
+  {"species": "lysichiton-americanus", "layer": "herb", "abundance": 0.3},
+  {"species": "equisetum-telmateia", "layer": "herb", "abundance": 0.3},
+  {"species": "phalaris-arundinacea", "layer": "herb", "abundance": 0.4},
+  {"species": "polystichum-munitum", "layer": "herb", "abundance": 0.4}
+]}

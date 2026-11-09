@@ -1331,7 +1331,52 @@ pub fn srgb(linear: f32) -> f32 {
     }
 }
 
+/// The grey a camera's meter sets a frame's average to: about 18% of
+/// white (reflected-light meters are calibrated to it, ISO 2720:1974, the
+/// calibration constant K = 12.5 putting the average between 12% and 18%
+/// grey). Photos of a subject in shade are exposed for that shade.
+pub const METERED_GREY: f32 = 0.18;
+
 impl Image {
+    /// Exposes the image as a camera's centre-weighted meter would:
+    /// scales its colour so the luminance of the pixels drawn, averaged
+    /// with most weight at the middle of the frame (a Gaussian a seventh
+    /// of the short side wide, about the central circle such a meter
+    /// favours), comes to `grey`, and returns the factor (1 when nothing
+    /// is drawn). A close render of moss in shade, centred on a colony,
+    /// is then as bright as a photo of it, which a camera exposes for the
+    /// moss, not for the sun; metering the whole frame instead lets a
+    /// dark wall around a small cushion overexpose it.
+    pub fn meter(&mut self, grey: f32) -> f32 {
+        #[allow(clippy::cast_precision_loss)]
+        let (width, height) = (self.width as f64, self.height as f64);
+        let sigma = 0.15 * width.min(height);
+        let (mut sum, mut weight) = (0.0f64, 0.0f64);
+        for (index, colour) in self.color.iter().enumerate() {
+            #[allow(clippy::cast_precision_loss)]
+            let (across, down) = (
+                (index % self.width) as f64 + 0.5 - width * 0.5,
+                (index / self.width) as f64 + 0.5 - height * 0.5,
+            );
+            let share = math::exp(-(across * across + down * down) / (2.0 * sigma * sigma))
+                * f64::from(colour[3]);
+            let luminance = 0.2126 * colour[0] + 0.7152 * colour[1] + 0.0722 * colour[2];
+            sum += f64::from(luminance) * share;
+            weight += share;
+        }
+        if weight <= 0.0 || sum <= 0.0 {
+            return 1.0;
+        }
+        #[allow(clippy::cast_possible_truncation)]
+        let factor = (f64::from(grey) * weight / sum) as f32;
+        for c in &mut self.color {
+            c[0] *= factor;
+            c[1] *= factor;
+            c[2] *= factor;
+        }
+        factor
+    }
+
     /// sRGB RGBA8 pixels, composited over `background` (linear RGB) if
     /// given, otherwise with coverage in alpha.
     #[must_use]
@@ -1385,6 +1430,37 @@ pub fn encode_png(width: usize, height: usize, rgba: &[u8]) -> Result<Vec<u8>, p
 mod tests {
     use super::*;
     use crate::mesh::Vertex;
+
+    #[test]
+    fn a_meter_exposes_for_the_middle_of_the_frame() {
+        // A dark frame with a mid-grey square in its middle: the meter
+        // brings the square, not the dark around it, to about 18% grey.
+        let (width, height) = (60, 40);
+        let mut color = vec![[0.01, 0.01, 0.01, 1.0]; width * height];
+        for y in 12..28 {
+            for x in 22..38 {
+                color[y * width + x] = [0.05, 0.05, 0.05, 1.0];
+            }
+        }
+        let mut image = Image {
+            width,
+            height,
+            color,
+            normal: vec![[0.0; 3]; width * height],
+            depth: vec![f32::INFINITY; width * height],
+            card_fragments: 0.0,
+        };
+        let factor = image.meter(METERED_GREY);
+        let middle = image.color[20 * width + 30][1];
+        assert!(factor > 3.0 && factor < 6.0, "factor {factor}");
+        assert!(middle > 0.16 && middle < 0.25, "middle {middle}");
+        // Nothing drawn: left as it is.
+        let mut empty = Image {
+            color: vec![[0.0; 4]; width * height],
+            ..image
+        };
+        assert_eq!(empty.meter(METERED_GREY), 1.0);
+    }
 
     fn quad(material_y: f32) -> Mesh {
         let mut mesh = Mesh::default();

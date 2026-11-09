@@ -46,9 +46,15 @@
     "thallus": {
       "part_of": "plant",
       "category": "axis",
-      "when": {"body_plan": ["thalloid"]},
+      "when": {"body_plan": ["thalloid", "lichen"]},
       "po": {"id": "PO:0030027", "name": "thallus"},
-      "why": "a body not divided into stem and leaves: the forking ribbon of a thalloid liverwort or hornwort, or the blades, branches, threads or crusts of an alga"
+      "why": "a body not divided into stem and leaves: the forking ribbon of a thalloid liverwort or hornwort, the blades, branches, threads or crusts of an alga, or a lichen's crust, leafy lobes, scales or shrubby branches"
+    },
+    "podetium": {
+      "part_of": "thallus",
+      "category": "axis",
+      "when": {"thallus_form": ["dimorphic"]},
+      "why": "the hollow upright stalk a Cladonia lichen grows from its ground-hugging scales (its secondary thallus): a pointed stalk, a cup (scyphus) or a much-branched shrublet, growing at its tips and dying at its base, bearing the fruiting bodies at its tips"
     },
     "bark": {
       "part_of": "stem",
@@ -308,8 +314,85 @@
       "group": "form",
       "organ": "plant",
       "type": "enum",
-      "values": ["vascular", "leafy", "thalloid", "unicellular"],
-      "why": "what the plant's body is built of: stems and leaves with veins (ferns, horsetails, clubmosses and seed plants), a small leafy shoot without veins (mosses and leafy liverworts), a thallus not divided into stem and leaves (thalloid liverworts, hornworts and most seaweeds), or single cells, alone or in colonies"
+      "values": ["vascular", "leafy", "thalloid", "unicellular", "lichen"],
+      "why": "what the plant's body is built of: stems and leaves with veins (ferns, horsetails, clubmosses and seed plants), a small leafy shoot without veins (mosses and leafy liverworts), a thallus not divided into stem and leaves (thalloid liverworts, hornworts and most seaweeds), single cells, alone or in colonies, or a lichen: a fungus's thallus with green algae or cyanobacteria living within it, which the library holds beside the plants (Jay, 2026-11-08)"
+    },
+    "photobiont": {
+      "group": "form",
+      "organ": "thallus",
+      "type": "enum",
+      "values": ["green_alga", "cyanobacterium"],
+      "optional": true,
+      "when": {"body_plan": ["lichen"]},
+      "why": "the partner a lichen's fungus houses and lives on: a green alga (Trebouxia, Asterochloris and kin) or a cyanobacterium (Nostoc), which fixes nitrogen too"
+    },
+    "podetium_height_m": {
+      "group": "size",
+      "organ": "podetium",
+      "type": "number",
+      "unit": "m",
+      "range": [0.001, 0.3],
+      "optional": true,
+      "why": "how tall a grown podetium stands, and so how deep a mat of them grows"
+    },
+    "podetium_width_m": {
+      "group": "size",
+      "organ": "podetium",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0001, 0.02],
+      "optional": true,
+      "why": "how thick a podetium's main branches are"
+    },
+    "podetium_branching": {
+      "group": "architecture",
+      "organ": "podetium",
+      "type": "enum",
+      "values": ["unbranched", "sparse", "rich"],
+      "optional": true,
+      "why": "how a podetium branches: not at all (a single stalk or cup), a few times, or richly, into a shrublet whose tips fork again each year (the reindeer lichens)"
+    },
+    "podetium_forks": {
+      "group": "architecture",
+      "organ": "podetium",
+      "type": "count",
+      "range": [2, 6],
+      "optional": true,
+      "when": {"podetium_branching": ["sparse", "rich"]},
+      "why": "how many branches a podetium divides into where it forks: two (dichotomy), three (trichotomy) or four (tetrachotomy)"
+    },
+    "podetium_fork_angle_deg": {
+      "group": "architecture",
+      "organ": "podetium",
+      "type": "number",
+      "unit": "deg",
+      "range": [5, 90],
+      "optional": true,
+      "when": {"podetium_branching": ["sparse", "rich"]},
+      "why": "the angle between a branch and the axis it forks from"
+    },
+    "podetium_growth_m_per_year": {
+      "group": "size",
+      "organ": "podetium",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0001, 0.02],
+      "optional": true,
+      "why": "how much a podetium's tips grow in a year where it grows well; the reindeer lichens fork once a year, so this is also the length between forks"
+    },
+    "podetium_cups": {
+      "group": "form",
+      "organ": "podetium",
+      "type": "bool",
+      "optional": true,
+      "why": "whether its podetia widen at the top into cups (scyphi)"
+    },
+    "podetium_colour": {
+      "group": "form",
+      "organ": "podetium",
+      "type": "colour",
+      "optional": true,
+      "why": "a grown podetium's colour, dry, as it is seen most days: grey, white or yellowish green from the acids in its cortex"
     },
     "anchorage": {
       "group": "form",
@@ -576,8 +659,8 @@
       "group": "form",
       "organ": "thallus",
       "type": "enum",
-      "values": ["ribbon", "blade", "branched", "filaments", "crust"],
-      "why": "the shape a thallus grows in: a flat ribbon forking as it grows (thalloid liverworts, hornworts), a thin blade or sheet (sea lettuce, nori), a bush of branches (stoneworts, most red seaweeds), threads (filamentous algae), or a crust on rock or shell (coralline algae)"
+      "values": ["ribbon", "blade", "branched", "filaments", "crust", "foliose", "squamulose", "fruticose", "dimorphic"],
+      "why": "the shape a thallus grows in: a flat ribbon forking as it grows (thalloid liverworts, hornworts), a thin blade or sheet (sea lettuce, nori), a bush of branches (stoneworts, most red seaweeds), threads (filamentous algae), or a crust on rock or shell (coralline algae, crustose lichens); and a lichen's: flat leafy lobes lifted at their edges (foliose), small scales (squamulose), upright or hanging shrubby branches (fruticose), or scales on the ground bearing upright hollow stalks, the podetia (dimorphic, as in Cladonia)"
     },
     "thallus_length_m": {
       "group": "size",
@@ -3808,6 +3891,13 @@
       "optional": true,
       "why": "a ripe capsule's colour, before it sheds its spores; young capsules are green"
     },
+    "capsule_ripe_months": {
+      "group": "seasons",
+      "organ": "capsule",
+      "type": "months",
+      "optional": true,
+      "why": "the months a moss's capsules stand ripe and brown, lid on or just shed; young green capsules show in the months before and spent ones after"
+    },
     "capsule_posture": {
       "group": "fruit_and_cones",
       "organ": "capsule",
@@ -3840,6 +3930,26 @@
       "range": [0, 1],
       "optional": true,
       "why": "the share of a moss colony's shoots that bear a capsule in its season: high where a flora calls capsules abundant or usually present, low where they are rare or the species dioicous and seldom fruits"
+    },
+    "cushion_breadth": {
+      "group": "form",
+      "organ": "plant",
+      "type": "number",
+      "unit": "ratio",
+      "range": [1.5, 8],
+      "optional": true,
+      "when": {"colony_form": ["cushion"]},
+      "why": "how many times wider than high a moss's cushions grow at most: about 2.6 for the hemispherical cushions of Grimmia pulvinata (the default), more for the low domes of mosses whose cushions spread and merge"
+    },
+    "spore_diameter_m": {
+      "group": "fruit_and_cones",
+      "organ": "capsule",
+      "type": "number",
+      "unit": "m",
+      "range": [0.000005, 0.00031],
+      "optional": true,
+      "when": {"body_plan": ["leafy"]},
+      "why": "a moss's spore diameter as the flora gives it: small spores (under about 20 µm) fly far and join the regional spore rain, large ones mostly fall in or near the colony that shed them (20 µm when left out); moss spores run 5 µm (Dawsonia) to 310 µm (Archidium)"
     },
     "leaf_out_months": {
       "group": "seasons",

@@ -27,10 +27,13 @@ class Downloader:
         self.kept = 0
         self.pending = {r["key"]: r for r in jsonl(self.log)}
 
-    def held(self, source: str, taxon: str) -> int:
-        """Images of this taxon from this source already in the store or waiting to be ingested."""
-        waiting = sum(1 for r in self.pending.values() if r["source"] == source and r.get("taxon") == taxon)
-        return self.store.held(source, taxon) + waiting
+    def held(self, source: str, taxon: str, organ: str | None = None) -> int:
+        """Images of this taxon from this source already in the store or waiting to be ingested;
+        with `organ`, only those fetched as that organ (so `--organ leaf` tops up leaves, whatever
+        habit photos of the taxon are held)."""
+        waiting = sum(1 for r in self.pending.values() if r["source"] == source and r.get("taxon") == taxon
+                      and (not organ or r.get("organ") == organ))
+        return self.store.held(source, taxon, organ) + waiting
 
     def known(self, source: str, ident) -> bool:
         key = f"{source}:{ident}"

@@ -218,7 +218,7 @@ fn lay_out_stand(
     cover_default: Option<[f64; 4]>,
     members: &[(usize, f64, Layer, f64, f64)],
     names: &[String],
-    sizes_at: &BTreeMap<(usize, u64), [f64; 5]>,
+    sizes_at: &BTreeMap<(usize, u64), [f64; 6]>,
     instances: &mut Vec<Instance>,
 ) -> Result<(), Failure> {
     let defaults = stand_tile::Rules::default();
@@ -255,10 +255,10 @@ fn lay_out_stand(
         .iter()
         .enumerate()
         .map(|(id, &(variant, age, layer, share, light))| {
-            let [height, base, radius, ..] = sizes_at
+            let [height, base, radius, _, _, foliage] = sizes_at
                 .get(&key(variant, age))
                 .copied()
-                .unwrap_or([0.0; 5]);
+                .unwrap_or([0.0; 6]);
             stand_tile::Member {
                 id: u32::try_from(id).unwrap_or(u32::MAX),
                 layer,
@@ -266,6 +266,7 @@ fn lay_out_stand(
                 height_m: height,
                 crown_base_m: base,
                 crown_radius_m: radius,
+                foliage_radius_m: foliage,
                 light_needed: light,
                 leafing: None,
                 light_day: None,
@@ -284,10 +285,10 @@ fn lay_out_stand(
     let mut by_species: BTreeMap<&str, (usize, f64, f64, f64, usize)> = BTreeMap::new();
     for plant in &placed {
         let (variant, age, layer, ..) = members[plant.member];
-        let [height, _, _, dbh, leaf_area] = sizes_at
+        let [height, _, _, dbh, leaf_area, _] = sizes_at
             .get(&key(variant, age))
             .copied()
-            .unwrap_or([0.0; 5]);
+            .unwrap_or([0.0; 6]);
         let area = std::f64::consts::PI * (0.5 * dbh * plant.scale).powi(2);
         basal += area;
         leaf += leaf_area * plant.scale * plant.scale;
@@ -354,7 +355,7 @@ fn lay_out_stand(
                 let [height, base, ..] = sizes_at
                     .get(&key(variant, age))
                     .copied()
-                    .unwrap_or([0.0; 5]);
+                    .unwrap_or([0.0; 6]);
                 let middle = 0.5 * (base + height) * plant.scale;
                 let shift = plant.crown_offset(rules.tile_m);
                 let lean = if middle > 0.5 {
@@ -509,6 +510,9 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
                 lifespan: spec.growth.lifespan.unwrap_or(spec.growth.years),
                 ages,
                 suitability,
+                hardwood: plantgen::library::Library::builtin()
+                    .traits_of(id)
+                    .is_ok_and(|traits| Candidate::hardwood_in(&traits)),
             });
             out!("  {id}: suits the site {suitability:.2}");
             let seeds: Vec<u64> = match item["seeds"].as_array() {
@@ -617,8 +621,8 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
         u8,
     )> = Vec::new();
     // Each variant's size at each age: height, crown base, crown radius,
-    // breast-height diameter and leaf area.
-    let mut sizes_at: BTreeMap<(usize, u64), [f64; 5]> = BTreeMap::new();
+    // breast-height diameter, leaf area and foliage radius.
+    let mut sizes_at: BTreeMap<(usize, u64), [f64; 6]> = BTreeMap::new();
     for (index, ((spec, environment, seed, ages), growth)) in
         variants.iter().zip(&growths).enumerate()
     {
@@ -645,6 +649,7 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
                     graph.crown_radius(),
                     graph.diameter_at_breast_height().unwrap_or(0.0),
                     graph.leaf_area(&growth.organ_types),
+                    graph.foliage_radius(&growth.organ_types),
                 ],
             );
         }

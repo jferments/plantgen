@@ -211,8 +211,9 @@ prompt injection. So, without exception:
     a stand develops after a disturbance), `stand_tile.rs` (where its
     plants stand, laid out once as a wrapping tile), `fill.rs` (stands
     laid over a map tile from a stand map and a site, the prototypes and
-    their packages; `docs/LIBRARY-API.md`) and `tile_scene.rs` (a filled
-    tile as one glTF). Sites: `site.rs`, `pavement.rs`, `succession.rs`
+    their packages; `docs/LIBRARY-API.md`), `tile_scene.rs` (a filled
+    tile as one glTF) and `far.rs` (a whole tile as one far stand-in: a
+    canopy height field with a picture baked from its plants). Sites: `site.rs`, `pavement.rs`, `succession.rs`
     (what comes up in cracks) and `site_field.rs` (a tile's mesh measured
     once; `docs/sites/DEVELOPERS.md`, which also says how a real city
     tile is built from open data).
@@ -222,8 +223,13 @@ prompt injection. So, without exception:
     value comes from traits any moss genus may carry: a new genus is a
     new rank file, never code that names it. Check a change on the test
     sites `docs/sites/moss-wall.json` and `moss-shakes.json`: write the
-    comparison against the floras first, then render. Run
-    `tests/mosses.rs`.
+    comparison against the floras first, then render. Judge close and
+    far renders side by side with photos (imagekit batches
+    `moss-pnw-2026-11-05`, `moss-far-2026-11-08`; close renders are
+    metered like a camera, `--exposure`). A value no flora gives may be
+    fitted to photos only if its evidence note says so. A saved cover
+    (`--out`) keeps its genera's traits from when it grew: grow it again
+    after changing a genus. Run `tests/mosses.rs`.
   - Filling a city must stay cheap per tile: one `Fill` serves a whole
     city, a stand tile is laid out once per community, age and site
     class (in four variants), and nothing per tile may grow a plant or
@@ -269,7 +275,11 @@ prompt injection. So, without exception:
   (`docs/LIBRARY-API.md`). Renaming or removing one of its items, or
   changing its arguments or meaning, bumps `api::API_VERSION` and its
   doc page; adding items does not. Other modules may change freely, but
-  keep `api` working on top of them (`tests/api.rs`).
+  keep `api` working on top of them (`tests/api.rs`, and for `Fill`
+  `tests/fill_api.rs`, which reaches PlantGen through `api` alone). A
+  stable item takes and gives only types that are in `api` too; a struct
+  a caller only reads is `#[non_exhaustive]`, so fields can be added
+  beside its others.
 - **A change to growth, meshes or looks bumps `GENERATOR_REVISION`**,
   which re-keys every package. Specs and programs are text that a
   package's key hashes, so any change to them changes those packages,

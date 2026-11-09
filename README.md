@@ -115,7 +115,10 @@ with every flower, fruit and spine drawn as its own mesh (`--parts on`).*
   roads or walls. Each prototype is grown once and each stand laid out
   once for a whole city: a 512 m tile of Olympia, Washington, with its
   buildings and roads and seven communities, fills in about 14 s the
-  first time and in a tenth of a second after that. `plantc fill` does
+  first time and in a tenth of a second after that. Past the distance
+  its plants' cards are enough, a whole tile draws as one far stand-in:
+  its crowns' height field with a picture of them baked from its own
+  plants. `plantc fill` does
   it from the command line and `plantgen::api::Fill` from code
   ([docs/LIBRARY-API.md](docs/LIBRARY-API.md),
   [docs/sites/DEVELOPERS.md](docs/sites/DEVELOPERS.md)).
@@ -145,7 +148,9 @@ with every flower, fruit and spine drawn as its own mesh (`--parts on`).*
   and roofs where light, wetness and the surface suit them, spread year
   by year, and are drawn as cushions, turfs and mats: shoots close up,
   shells and patches farther, and a tint with no triangles for a host to
-  bake into its own textures. `plantc moss` runs it on a site; see
+  bake into its own textures. Capsules follow the season (`--day`),
+  moss thins up a trunk, and close renders are exposed like a photo.
+  `plantc moss` runs it on a site; see
   [docs/sites/MOSS.md](docs/sites/MOSS.md).
 - **Deterministic and offline.** The generator depends only on `libm`,
   `png`, `serde`, `serde_json` and `sha2`. Nothing it runs uses the

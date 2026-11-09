@@ -45,6 +45,7 @@ pub mod divided;
 pub mod drawing;
 pub mod evidence;
 pub mod export;
+pub mod far;
 pub mod felling;
 pub mod fill;
 pub mod flowers;
@@ -62,6 +63,8 @@ pub mod json;
 pub mod lace;
 pub mod leaves;
 pub mod library;
+pub mod lichens;
+pub mod light_profile;
 pub mod litter;
 pub mod looks;
 pub mod lsys;
@@ -97,7 +100,7 @@ pub mod substrate;
 pub mod succession;
 pub mod templates;
 pub mod texture;
-mod tile_scene;
+pub mod tile_scene;
 pub mod traits;
 pub mod venation;
 
@@ -1711,4 +1714,104 @@ pub mod venation;
 /// Vegetation Simulator's crown-width equation; it holds 757 m² of
 /// foliage at 480 years (Sillett et al. 2018: 630 to 1,480). Every
 /// conifer stays within its reference sizes.
-pub const GENERATOR_REVISION: u32 = 210;
+///
+/// 211: a tree grown in a stand stands among its crown class
+/// ([`spec::class_spacing`]). Its like stood as far apart as all of a
+/// fully stocked stand's stems, so a young Douglas-fir's crown reached 0.6
+/// of the width the Forest Vegetation Simulator's equation gives a
+/// stand-grown tree its size, and its overtopped trees grew as poles; now
+/// a canopy tree's peers are the half of the stems that are dominant or
+/// codominant ([`spec::DOMINANT_SHARE`]), sqrt(2) farther apart, and an
+/// overtopped tree stands among the crowns over it. Laid out to the plots'
+/// layer covers, a 35-year Douglas-fir stand holds 1,737 trees a hectare
+/// over 5 cm and 39 m² of basal area where it held 3,934 and 62, against
+/// 1,790 and 36 in McArdle et al. (1961); its crowns reach 0.73 of the
+/// equation's width, and 1.06 at 85 years where they reached 0.82. Past
+/// the yield tables' ages the thinning stand's own spacing takes over once
+/// it is wider (from about 250 years for a canopy tree), but a tree that
+/// grew as a dominant keeps the wider crown and thicker stem it grew: at
+/// 480 years a Douglas-fir in a stand reaches 8.5 m from its trunk where
+/// it reached 7.7, on a 148 cm stem where 134, 1.18 of the equation's
+/// width for its size as before. A tree come up beneath an older canopy,
+/// and every plant outside a stand, grows as before.
+///
+/// 212: the pine family's wood keeps a twentieth of each year's sag
+/// (Pinaceae `bend_set` 0.05, from 0.15), so an old limb's side shoots,
+/// which lengthen for centuries with needles only near their tips, angle
+/// out and down instead of hanging straight down in curtains of bare
+/// strings under a 480-year Douglas-fir's lower crown. Every conifer stays
+/// within its reference sizes; the 480-year Douglas-fir holds 744 m² of
+/// foliage (757 before) and western hemlock 821 m² (835).
+///
+/// 213: an old conifer's side shoots lay down a segment every 20 cm
+/// (`pinidae` revision 23, Pinaceae `seg_side` 0.2, coming in from 100
+/// years and in full by 200), drawing their foliage at one place for each
+/// three years they hold. A 500-year Douglas-fir at a stand's edge, which
+/// passed the 2 million segment limit near 400 years, has 1.02 million; a
+/// 480-year Douglas-fir in a stand has 258,000 (724,000 before) and 844 m²
+/// of foliage (757). Young trees grow as before.
+///
+/// 214: thin limbs a far level drops stay whole. Wood at least 0.35 of
+/// the level's thinnest (`mesh::LIMB_SHARE`), borne by wood the level draws, is drawn as
+/// at most three sticks end to end along its own axis, not gathered
+/// with the twigs into sticks at each cell's mean place: a shade-grown
+/// bigleaf maple's braided leaders, as thin as its farthest level's
+/// thinnest wood, were drawn there as pieces floating over gaps.
+///
+/// 215: broadleaf trees grown in a stand of their like take the form of
+/// forest-grown trees. A stem divides at its fork height only where its
+/// tip has 0.7 of the open sky's light (`fork_light`, broadleaf program
+/// revision 33, a rule at the decurrent trees), so a stand-grown bigleaf
+/// maple keeps one trunk to 8-12 m where it divided at 3.7 m into two
+/// leaders that braided round each other; in the open it divides as
+/// before. And its neighbours' crowns take only the room on their side of
+/// the line halfway between the stems, above their tops too
+/// ([`conditions::Envelope::claims`]), so its crown stays within its
+/// share of the stand (radius 2.3 m at 3.1 m spacing, where it spread
+/// 5.5 m into a flat cap over its neighbours).
+///
+/// 216: a card tier draws every cut leaf (a yarrow's, a poison
+/// hemlock's) on a card of its own before it gives the longest richer
+/// ones: each a flat card first, then crossed bent cards, then bent
+/// ones, from the same triangles. The minimal tier drew 18 of a yarrow's
+/// 54 leaves as crossed cards and baked the rest into dots; it now draws
+/// all 54 in the same 144 triangles, wearing the same pictures.
+///
+/// 217: stand-grown pines, spruces, firs and hemlocks carry the trunk
+/// their leaf calls for. A stand's neighbours shade with the plant's own
+/// crown's clumping and its program's light extinction; a module holding
+/// foliage is no longer counted as a living tip; the pine family's pipe
+/// rules follow Espinosa Bancalari et al.'s (1987) leaf to dbh (`pipe_organ`
+/// 0.0075, `pipe_tip` 0.0024, nine hand-set values gone); shoots starve at
+/// the light their silvics shade-tolerance class allows (`shade_death`
+/// 0.06 / 0.1 / 0.15); and a twig of a limb's side branch that stays under
+/// its starving light is shed with its needles (`pinidae` revision 24,
+/// `twig_shade`). A 30-year Douglas-fir in a stand holds 88 m² of foliage
+/// at 20 cm (23 cm before), inside the 86 to 162 m² Espinosa Bancalari et
+/// al. found; every interior and open yield-table reference stays within
+/// tolerance.
+///
+/// 218: a package's sizes give the disc its foliage fills seen from
+/// above (`Measurements::foliage_radius`, [`graph::PlantGraph::foliage_radius`]),
+/// and a stand lays its herbs out by it, on a raster fine enough to hold
+/// them ([`stand_tile::FINE_CELL_M`]), where it spaced them by their
+/// widest reach on 0.5 m cells. A south Puget Sound prairie's grasses,
+/// spaced by a few culms leaning out with their panicles, covered 11% of
+/// a patch seen from above at 90% herb cover; they now cover 37%, and a
+/// hectare of the prairie two years after a fire holds 102,000 plants
+/// where it held 17,000. A community may give its members by plot cover
+/// (`Member::cover` in [`fill`]), the prairie's from Chappell's plots. A
+/// prairie kept by fire is closed by trees (30% cover) at LANDFIRE's 28
+/// fire-free years, not at 16 ([`development::encroached_age`]), and its
+/// moss and lichen carpet is Calabria 2016's 54% (40% moss) where it was
+/// 14%. No plant grows differently.
+///
+/// 219: a palmately lobed blade takes its stated base, where every one was
+/// drawn with a heart round its petiole: its body reaches round from its
+/// tip half the angle its basal margins meet at (Simpson's classes:
+/// cuneate a wedge into the petiole, truncate cut square, rounded a little
+/// past), and a blade whose base is unstated keeps its heart. A Pacific
+/// ninebark's base is rounded to truncate (FNA). A baobab's leaf is
+/// palmately compound with five to seven leaflets (Baum 1995), drawn from
+/// those facts, where a hand-set palmately lobed blade stood in for it.
+pub const GENERATOR_REVISION: u32 = 219;
