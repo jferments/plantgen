@@ -117,11 +117,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
     ),
     (
-        "cirsium-vulgare",
-        "leaf_shape",
-        "its pinnatifid blades are drawn on lobed cards whose outline, lobes and all, reads elliptic or obovate as well as oblanceolate, against the lanceolate to oblong blades Abrams and Ferris give",
-    ),
-    (
         "cladium-mariscus-subsp-jamaicense",
         "culm_length_m",
         "its panicles stand on lateral branches, and the measure stops at the first lateral axis below an inflorescence, so it reads a branch, not the culm",

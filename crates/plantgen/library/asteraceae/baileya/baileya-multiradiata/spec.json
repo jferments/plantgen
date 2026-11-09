@@ -56,7 +56,6 @@
       "leaf": {
         "shape": {
           "template": "lobed",
-          "width": 0.5,
           "lobes": 3,
           "depth": 0.6,
           "round": 0.5,

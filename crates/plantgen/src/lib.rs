@@ -1814,4 +1814,15 @@ pub mod venation;
 /// ninebark's base is rounded to truncate (FNA). A baobab's leaf is
 /// palmately compound with five to seven leaflets (Baum 1995), drawn from
 /// those facts, where a hand-set palmately lobed blade stood in for it.
-pub const GENERATOR_REVISION: u32 = 219;
+///
+/// 220: leaf data the leaf-outline judge flagged. Thirteen blades whose
+/// width was set by hand are drawn as their floras measure them (the
+/// width over length rule): Indian plum and Pacific madrone from FNA,
+/// whose widths replace model estimates, and serviceberry, big
+/// sagebrush, bull thistle, Scouler's willow, evergreen huckleberry,
+/// desert marigold, desert willow, brittlebush and two fawn lilies.
+/// Red baneberry's leaf is ternate, its divisions pinnate (Abrams
+/// 1944), not a seven-part fan. The palmate card draws an even count of
+/// lobes, its upper two either side of a notch at the tip, so the tulip
+/// tree's leaf has its four lobes.
+pub const GENERATOR_REVISION: u32 = 220;
