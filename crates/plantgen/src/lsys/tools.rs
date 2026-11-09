@@ -2593,12 +2593,20 @@ fn colonize(
     let large = span((x0, x1)) * span((x0, x1)) * span((y0, y1)) > 100_000;
     let lease = Lease::take(if large { cores::per_task() } else { 1 });
     let threads = lease.threads();
-    let mut plant_points: Vec<Vec3> = scene
-        .segments
-        .iter()
-        .flat_map(|segment| [segment.start, segment.end])
-        .chain(scene.queries.iter().map(|query| query.position))
-        .collect();
+    // Where space renews, only the living crown holds it: its foliage.
+    // Bare wood and the dormant buds along it, which an old crown is full
+    // of, give their space back, so a dormant bud there can sprout where
+    // light reaches.
+    let mut plant_points: Vec<Vec3> = if renew {
+        scene.organs.iter().map(|organ| organ.position).collect()
+    } else {
+        scene
+            .segments
+            .iter()
+            .flat_map(|segment| [segment.start, segment.end])
+            .chain(scene.queries.iter().map(|query| query.position))
+            .collect()
+    };
     // A segment mostly starts where the one before it ends: one copy of
     // the point does for the kill test.
     plant_points.dedup();

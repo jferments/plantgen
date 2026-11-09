@@ -328,9 +328,17 @@
 # only where its tip has fork_light of the open sky's light. 0 divides it
 # whatever its light, as before.
 #
+# Revision 34 (old trunks): the stem's cambium lays a ring every year on
+# the trunk it has, pipe_cambium m² of ring for each m² of leaf above it
+# times the light it catches (the pipe tool's cambium, as pinidae's
+# revision 15), so a trunk keeps thickening once its crown stops growing.
+# Without it a broadleaf trunk was its living leaf's pipes alone and all
+# but stopped once an old crown stopped spreading. With pipe_cambium 0, the
+# default, a plant grows as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem broadleaf 33;
+lsystem broadleaf 34;
 
 # Crown envelope at maturity; it approaches this size at crown_rate per year.
 param crown_height;
@@ -392,6 +400,7 @@ param snag_fall;              # chance a year that a dead branch falls
 param pipe_tip;               # radius of the twig behind one living bud
 param pipe_organ;             # pipe radius per metre of leaf card
 param pipe_rings;             # ring area laid down per m² of leaf a year
+param pipe_cambium = 0;       # ring area the stem's cambium lays each year on the girth it has, per m² of leaf above times its light (revision 34); 0: off
 # Light extinction per unit of leaf area density. 0.5 suits leaves spread at
 # random through each light voxel; leaves bunched on short shoots shade one
 # another and let more light past, which a lower value stands for.
@@ -545,7 +554,7 @@ tool bend@1 {
 };
 # Each living bud's twig adds to the pipes below it, a growth unit's
 # nodes sharing one bud's.
-tool pipe@1 { exponent = pipe_exponent, tip = pipe_tip / pow(unit_nodes, 1 / pipe_exponent), organ = pipe_organ, rings = pipe_rings, heartwood = heartwood };
+tool pipe@1 { exponent = pipe_exponent, tip = pipe_tip / pow(unit_nodes, 1 / pipe_exponent), organ = pipe_organ, rings = pipe_rings, heartwood = heartwood, cambium = pipe_cambium };
 
 # The stem leans a little in a random direction; each tree forks at its own
 # height. The droop bends each segment, so a growth unit's nodes share it.
