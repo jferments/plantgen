@@ -1801,4 +1801,19 @@ pub mod venation;
 /// holds 5.5 m² a m² where it lost every leaf, Oregon ash 4.1 (2.5);
 /// red alder keeps its 3.0. Open-grown crowns stay within the Urban Tree
 /// Database's leaf per crown area.
-pub const GENERATOR_REVISION: u32 = 218;
+///
+/// 219: broadleaf trunks keep thickening once their crowns stop spreading,
+/// and old broadleaf crowns keep leafing. The stem's cambium lays a ring
+/// each year fed by the leaves above it and their light (`pipe_cambium`
+/// 3e-5, a rule at the decurrent trees, as the pine family's; broadleaf
+/// revision 34), and a deciduous tree's new leaves take the light their
+/// shoot's leaves had the year before, where the ring had read none and
+/// fed nothing. Where space renews, only foliage and buds hold it, so
+/// bare wood gives its space back. Bigleaf maple is moderately shade
+/// tolerant (FEIS) and sheds its own shaded limbs (Silvics), and takes
+/// the seed plants' spacing in place of hand-set values: its open-grown
+/// trunk is 60 cm at 30 years (50 cm reference; 66 before) and 115 cm at
+/// 120 (137; 117 before, its crown 1,448 m² of leaf), and grown in a
+/// stand its crown reaches half way down its stem instead of a cap 3 m
+/// deep. Oregon ash is 56 cm at 50 years (65; 44 before).
+pub const GENERATOR_REVISION: u32 = 219;
