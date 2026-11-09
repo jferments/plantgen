@@ -45,6 +45,7 @@ pub mod divided;
 pub mod drawing;
 pub mod evidence;
 pub mod export;
+pub mod far;
 pub mod felling;
 pub mod fill;
 pub mod flowers;
@@ -62,6 +63,7 @@ pub mod json;
 pub mod lace;
 pub mod leaves;
 pub mod library;
+pub mod lichens;
 pub mod light_profile;
 pub mod litter;
 pub mod looks;
@@ -1789,7 +1791,31 @@ pub mod venation;
 /// al. found; every interior and open yield-table reference stays within
 /// tolerance.
 ///
-/// 218: a broadleaf tree's buds die in the shade its shade-tolerance
+/// 218: a package's sizes give the disc its foliage fills seen from
+/// above (`Measurements::foliage_radius`, [`graph::PlantGraph::foliage_radius`]),
+/// and a stand lays its herbs out by it, on a raster fine enough to hold
+/// them ([`stand_tile::FINE_CELL_M`]), where it spaced them by their
+/// widest reach on 0.5 m cells. A south Puget Sound prairie's grasses,
+/// spaced by a few culms leaning out with their panicles, covered 11% of
+/// a patch seen from above at 90% herb cover; they now cover 37%, and a
+/// hectare of the prairie two years after a fire holds 102,000 plants
+/// where it held 17,000. A community may give its members by plot cover
+/// (`Member::cover` in [`fill`]), the prairie's from Chappell's plots. A
+/// prairie kept by fire is closed by trees (30% cover) at LANDFIRE's 28
+/// fire-free years, not at 16 ([`development::encroached_age`]), and its
+/// moss and lichen carpet is Calabria 2016's 54% (40% moss) where it was
+/// 14%. No plant grows differently.
+///
+/// 219: a palmately lobed blade takes its stated base, where every one was
+/// drawn with a heart round its petiole: its body reaches round from its
+/// tip half the angle its basal margins meet at (Simpson's classes:
+/// cuneate a wedge into the petiole, truncate cut square, rounded a little
+/// past), and a blade whose base is unstated keeps its heart. A Pacific
+/// ninebark's base is rounded to truncate (FNA). A baobab's leaf is
+/// palmately compound with five to seven leaflets (Baum 1995), drawn from
+/// those facts, where a hand-set palmately lobed blade stood in for it.
+///
+/// 220: a broadleaf tree's buds die in the shade its shade-tolerance
 /// class allows (`shade_death`, a rule at the decurrent trees): 0.03 of
 /// the open sky's light for a tolerant one, 0.06 for an intermediate one,
 /// 0.12, as every one had, for an intolerant one or one whose class is
@@ -1802,7 +1828,7 @@ pub mod venation;
 /// red alder keeps its 3.0. Open-grown crowns stay within the Urban Tree
 /// Database's leaf per crown area.
 ///
-/// 219: broadleaf trunks keep thickening once their crowns stop spreading,
+/// 221: broadleaf trunks keep thickening once their crowns stop spreading,
 /// and old broadleaf crowns keep leafing. The stem's cambium lays a ring
 /// each year fed by the leaves above it and their light (`pipe_cambium`
 /// 3e-5, a rule at the decurrent trees, as the pine family's; broadleaf
@@ -1812,8 +1838,8 @@ pub mod venation;
 /// bare wood gives its space back. Bigleaf maple is moderately shade
 /// tolerant (FEIS) and sheds its own shaded limbs (Silvics), and takes
 /// the seed plants' spacing in place of hand-set values: its open-grown
-/// trunk is 60 cm at 30 years (50 cm reference; 66 before) and 115 cm at
-/// 120 (137; 117 before, its crown 1,448 m² of leaf), and grown in a
+/// trunk is 56 cm at 30 years (50 cm reference; 66 before) and 105 cm at
+/// 120 (137; 117 before, its crown 1,036 m² of leaf), and grown in a
 /// stand its crown reaches half way down its stem instead of a cap 3 m
 /// deep. Oregon ash is 56 cm at 50 years (65; 44 before).
-pub const GENERATOR_REVISION: u32 = 219;
+pub const GENERATOR_REVISION: u32 = 221;

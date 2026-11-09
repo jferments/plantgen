@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "rank": "class",
+  "name": "Lecanoromycetes",
+  "parent": "phylum/ascomycota",
+  "traits": {
+    "body_plan": "lichen"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "openstax-biology-2e",
+      "note": "The class holds most lichen-forming fungi; a lichen is a fungus living together with a green alga or a cyanobacterium, which feeds it by photosynthesis while the fungus gives it shelter and water (Biology 2e, 24.4)."
+    }
+  }
+}

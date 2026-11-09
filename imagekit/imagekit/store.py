@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sqlite3
 import time
 from pathlib import Path
@@ -31,7 +32,8 @@ create index if not exists images_b0 on images(b0);
 create index if not exists images_b1 on images(b1);
 create index if not exists images_b2 on images(b2);
 create index if not exists images_b3 on images(b3);
-create table if not exists refs (key text primary key, sha256 text, source text, taxon text, batch text);
+create table if not exists refs (key text primary key, sha256 text, source text, taxon text, batch text,
+    organ text);
 create index if not exists refs_taxon on refs(source, taxon);
 create table if not exists analyses (sha256 text, region int, analyzer text, run text, task text, status text,
     primary key (sha256, region, analyzer));
@@ -41,6 +43,18 @@ create table if not exists taxa (name text primary key, record text);
 
 def now() -> str:
     return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+
+
+ORGAN_WHY = re.compile(r"Pl@ntNet (\w+) photo")
+
+
+def organ_of_source(src: dict) -> str | None:
+    """The organ a photo was fetched as (`fetch gbif --organ`): its own field, or, in rows from before
+    imagekit kept it, the "why" that fetch wrote ("gbif search, Pl@ntNet leaf photo")."""
+    if src.get("organ"):
+        return src["organ"]
+    m = ORGAN_WHY.search(src.get("why") or "")
+    return m.group(1) if m else None
 
 
 def bands(phash: str) -> list[int]:
@@ -94,6 +108,14 @@ class Store:
             for r in self.runs():
                 for row in jsonl(self.run_dir(r) / "analyses.jsonl"):
                     self.index_analysis(row, r)
+            self.db.commit()
+        cols = {r[1] for r in self.db.execute("pragma table_info(refs)")}
+        if cols and "organ" not in cols:  # an index from before refs kept the organ a photo was fetched as
+            self.db.execute("drop table refs")
+            self.db.executescript(SCHEMA)
+            for b in self.batches():
+                for row in jsonl(self.batch_dir(b) / "images.jsonl"):
+                    self.index_ref(row)
             self.db.commit()
         self.db.executescript(SCHEMA)
 
@@ -152,7 +174,11 @@ class Store:
     def has_ref(self, key: str) -> bool:
         return self.db.execute("select 1 from refs where key=?", (key,)).fetchone() is not None
 
-    def held(self, source: str, taxon: str) -> int:
+    def held(self, source: str, taxon: str, organ: str | None = None) -> int:
+        """Images of this taxon from this source; with `organ`, only those fetched as that organ."""
+        if organ:
+            return self.db.execute("select count(*) from refs where source=? and taxon=? and organ=?",
+                                   (source, taxon, organ)).fetchone()[0]
         return self.db.execute("select count(*) from refs where source=? and taxon=?", (source, taxon)).fetchone()[0]
 
     def has_image(self, sha: str) -> bool:
@@ -190,9 +216,13 @@ class Store:
             self.db.execute("insert or ignore into images values (?,?,?,?,?,?,?,?,?,?)",
                             (row["sha256"], row["phash"], *bands(row["phash"]), row["width"], row["height"],
                              row["bytes"], row["batch"]))
+        self.index_ref(row)
+
+    def index_ref(self, row: dict) -> None:
         src = row["source"]
-        self.db.execute("insert or ignore into refs values (?,?,?,?,?)",
-                        (src["key"], row["sha256"], src["source"], row["taxon"].get("name_as_given"), row["batch"]))
+        self.db.execute("insert or ignore into refs values (?,?,?,?,?,?)",
+                        (src["key"], row["sha256"], src["source"], row["taxon"].get("name_as_given"), row["batch"],
+                         organ_of_source(src)))
 
     def index_analysis(self, row: dict, run: str) -> None:
         self.db.execute("insert or replace into analyses values (?,?,?,?,?,?)",
