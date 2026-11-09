@@ -45,6 +45,7 @@ pub mod divided;
 pub mod drawing;
 pub mod evidence;
 pub mod export;
+pub mod far;
 pub mod felling;
 pub mod fill;
 pub mod flowers;
@@ -62,6 +63,7 @@ pub mod json;
 pub mod lace;
 pub mod leaves;
 pub mod library;
+pub mod lichens;
 pub mod light_profile;
 pub mod litter;
 pub mod looks;
@@ -1789,9 +1791,33 @@ pub mod venation;
 /// al. found; every interior and open yield-table reference stays within
 /// tolerance.
 ///
-/// 218: a grass tiller keeps its older leaves, dead, while it lives
+/// 218: a package's sizes give the disc its foliage fills seen from
+/// above (`Measurements::foliage_radius`, [`graph::PlantGraph::foliage_radius`]),
+/// and a stand lays its herbs out by it, on a raster fine enough to hold
+/// them ([`stand_tile::FINE_CELL_M`]), where it spaced them by their
+/// widest reach on 0.5 m cells. A south Puget Sound prairie's grasses,
+/// spaced by a few culms leaning out with their panicles, covered 11% of
+/// a patch seen from above at 90% herb cover; they now cover 37%, and a
+/// hectare of the prairie two years after a fire holds 102,000 plants
+/// where it held 17,000. A community may give its members by plot cover
+/// (`Member::cover` in [`fill`]), the prairie's from Chappell's plots. A
+/// prairie kept by fire is closed by trees (30% cover) at LANDFIRE's 28
+/// fire-free years, not at 16 ([`development::encroached_age`]), and its
+/// moss and lichen carpet is Calabria 2016's 54% (40% moss) where it was
+/// 14%. No plant grows differently.
+///
+/// 219: a palmately lobed blade takes its stated base, where every one was
+/// drawn with a heart round its petiole: its body reaches round from its
+/// tip half the angle its basal margins meet at (Simpson's classes:
+/// cuneate a wedge into the petiole, truncate cut square, rounded a little
+/// past), and a blade whose base is unstated keeps its heart. A Pacific
+/// ninebark's base is rounded to truncate (FNA). A baobab's leaf is
+/// palmately compound with five to seven leaflets (Baum 1995), drawn from
+/// those facts, where a hand-set palmately lobed blade stood in for it.
+///
+/// 220: a grass tiller keeps its older leaves, dead, while it lives
 /// (grass program revision 11, `dead_leaves`, a rule at the grasses
 /// from a genus's `leaf_life_years`). Fescues, whose leaves live about
 /// five months on tillers of two years (Monteiro 2012), carry a skirt
 /// of straw round their green blades; other grasses grow as before.
-pub const GENERATOR_REVISION: u32 = 218;
+pub const GENERATOR_REVISION: u32 = 220;

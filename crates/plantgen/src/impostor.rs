@@ -182,7 +182,7 @@ pub fn bake(
 /// texels are kept in order of their own coverage, so the thinnest go
 /// first, as alpha-tested coverage preservation does for mips (Castaño,
 /// "Computing alpha mipmaps", 2010).
-fn preserve_coverage(rgba: &mut [u8]) {
+pub(crate) fn preserve_coverage(rgba: &mut [u8]) {
     let alphas: Vec<u8> = rgba
         .as_chunks::<4>()
         .0
@@ -239,7 +239,7 @@ pub const KEPT_ALPHA: u8 = 128;
 /// For every texel of a `size × size` view, the index of a nearest covered
 /// texel, found breadth-first over the four neighbours so that ties always
 /// go the same way; `None` when nothing in the view is covered.
-fn nearest_covered(covered: &[bool], size: usize) -> Option<Vec<usize>> {
+pub(crate) fn nearest_covered(covered: &[bool], size: usize) -> Option<Vec<usize>> {
     let mut source = vec![usize::MAX; covered.len()];
     let mut queue = VecDeque::new();
     for (index, _) in covered.iter().enumerate().filter(|(_, covered)| **covered) {

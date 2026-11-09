@@ -42,6 +42,10 @@
       "max": 0.0027
     },
     "capsule_posture": "erect",
+    "capsule_ripe_months": [
+      4,
+      5
+    ],
     "capsule_share": 0.07,
     "spore_diameter_m": {
       "min": 0.000008,
@@ -61,9 +65,15 @@
       "dry"
     ],
     "colony_spread_m_per_year": 0.002,
-    "operculum_form": "long_conic"
+    "operculum_form": "long_conic",
+    "cushion_breadth": 3.0
   },
   "evidence": {
+    "traits.capsule_ripe_months": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Fitted to photos (no flora gives months for this region): Washington iNaturalist photos of T. muralis (imagekit batch moss-pnw-2026-11-05), tallied by the month each was taken, show ripe brown capsules in months 4, 5, young green ones in the months before and spent setae after."
+    },
     "traits": {
       "evidence": "SourceInferred",
       "source": "fna-27",
@@ -108,6 +118,11 @@
       "evidence": "SourceInferred",
       "source": "fna-27",
       "note": "FNA vol. 27, Tortula muralis (Zander and Eckel; efloras, read 2026-11-07): spores 8-12 µm, spheric; the genus's spores run 13-30(-50) µm in other species."
+    },
+    "traits.cushion_breadth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Fitted to photos by eye (Jay chose it 2026-11-08, no flora gives a breadth): Washington iNaturalist photos of T. muralis (imagekit batch moss-pnw-2026-11-05) show cushions on walls and concrete about three times as wide as high; FNA vol. 27 says forming cushions, Wikipedia no more than 1 cm tall."
     }
   }
 }

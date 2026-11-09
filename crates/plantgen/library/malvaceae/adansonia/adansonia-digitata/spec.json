@@ -33,7 +33,7 @@
       "light_cell": 0.6,
       "space_reach": 3.5,
       "space_kill": 0.6,
-      "leaf_area": 0.27,
+      "leaf_area": 0.354,
       "path_half": 30.9,
       "bole_clear": 1
     }
@@ -60,12 +60,6 @@
     "organs": {
       "leaf": {
         "shape": {
-          "template": "palmate",
-          "lobes": 5,
-          "depth": 0.88,
-          "lobe_width": 0.35,
-          "teeth": 0,
-          "spread": 0.9,
           "petiole": 0.3
         }
       }
@@ -105,9 +99,16 @@
     "leaf_habit": "deciduous",
     "rosette": "none",
     "leaf_length_m": {"min": 0.1, "max": 0.2},
+    "leaf_division": "compound",
+    "division_pattern": "palmate",
+    "leaflets": {"min": 5, "max": 7, "high": 9},
     "fruit_size_m": {"min": 0.15, "max": 0.25}
   },
   "evidence": {
+    "traits.leaf_division": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Adansonia digitata (read 2026-11-06, citing Baum 1995): \"The leaves are palmately compound with five to seven (sometimes up to nine) leaflets in mature trees\"."},
+    "traits.division_pattern": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Adansonia digitata (read 2026-11-06, citing Baum 1995): \"The leaves are palmately compound with five to seven (sometimes up to nine) leaflets in mature trees\"."},
+    "traits.leaflets": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Adansonia digitata (read 2026-11-06, citing Baum 1995): \"The leaves are palmately compound with five to seven (sometimes up to nine) leaflets in mature trees\"."},
+    "appearance.organs.leaf.shape": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf drawn from its stated characters as a palmately compound leaf (since 2026-11-06), where a hand-set palmately lobed blade (5 lobes cut 0.88 deep) stood in for its separate leaflets. By hand only the stalk's share of the card, 0.3."},
     "traits.leader": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "iNaturalist research-grade photographs (observations 18299511, 185799293, 37979372, 142536045): a few thick limbs spread from the top of the swollen trunk."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.55, 0.5, 0.45], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.leaf_out_months": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Adansonia digitata (read 2026-10-18): \"All baobabs are deciduous, losing their leaves in the dry season, and remaining leafless for about eight months of the year.\" Its leaves come with the southern African summer rains; December is ours."},
