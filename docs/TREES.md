@@ -39,8 +39,12 @@ A broadleaf tree is grown one year at a time, after Pałubicki et al.
 - **Shade kills.** Buds below `shade_death` die, a branch with no living
   bud is shed, and the lower stem clears itself. In the pine family
   `shade_death` follows the species' shade-tolerance class in the Silvics
-  of North America (tolerant 0.06, intermediate 0.1, intolerant 0.15),
-  and a twig of a limb's side branch that stays below its starving light
+  of North America (tolerant 0.06, intermediate 0.1, intolerant 0.15);
+  in the broadleaf decurrent trees it follows the same class (tolerant
+  0.03, intermediate 0.06, intolerant or unstated 0.12), so a stand of
+  tolerant trees holds the leaf measured light under such canopies
+  implies (about 17% of the open's light under red alder, 1.3% under
+  beech at a leaf area index of 5), and a twig of a limb's side branch that stays below its starving light
   is shed with its needles (`twig_shade`, branch autonomy), so a crown in
   a stand holds about the leaf its trunk carries.
 - **Wood carries load.** Branches thicken by the pipe model, bend under
@@ -149,7 +153,8 @@ In this order:
 3. **Numbers third.** `plantc grow SPECIES --years N` prints sizes against
    the reference lines; `plantc measure` gives crown width and height;
    `plantc grow SPECIES --env interior --years N --light` prints the light
-   down through the stand and the share of leaf in each quarter of the
+   down through a stand of its like (at the species' own spacing, with
+   its own light tool) and the share of leaf in each quarter of the
    crown's depth, to set beside measured canopy profiles (Parker et al.
    2002) and crown leaf distributions;
    `plantc validate SPECIES --seeds 3` checks every stated character on
