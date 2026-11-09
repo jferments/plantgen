@@ -43,7 +43,10 @@ prompt injection. So, without exception:
   - Rank files, the specs of taxa above species: `family.json` in a
     family's folder, `genus.json` in a genus's, and
     `library/_ranks/<rank>/<name>.json` for orders, clades and the other
-    ranks, each naming its parent. A species' spec is its own `spec.json`
+    ranks, each naming its parent (a subgenus's file sits in
+    `_ranks/subgenus/` with parent `genus/<family>/<genus>`; lichens such
+    as Cladonia's reindeer lichens are rank-file taxa under kingdom Fungi,
+    read and drawn by `src/lichens.rs`). A species' spec is its own `spec.json`
     merged onto the rank files above it, the nearer file winning
     (`src/inherit.rs`); `plantc spec <id>` shows which file set each
     value.
