@@ -145,7 +145,9 @@ with every flower, fruit and spine drawn as its own mesh (`--parts on`).*
   and roofs where light, wetness and the surface suit them, spread year
   by year, and are drawn as cushions, turfs and mats: shoots close up,
   shells and patches farther, and a tint with no triangles for a host to
-  bake into its own textures. `plantc moss` runs it on a site; see
+  bake into its own textures. Capsules follow the season (`--day`),
+  moss thins up a trunk, and close renders are exposed like a photo.
+  `plantc moss` runs it on a site; see
   [docs/sites/MOSS.md](docs/sites/MOSS.md).
 - **Deterministic and offline.** The generator depends only on `libm`,
   `png`, `serde`, `serde_json` and `sha2`. Nothing it runs uses the

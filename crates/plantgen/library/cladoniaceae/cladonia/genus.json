@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Cladonia",
+  "traits": {
+    "thallus_form": "dimorphic",
+    "photobiont": "green_alga",
+    "anchorage": "none",
+    "substrates": ["soil", "rock", "wood", "bark"],
+    "light": ["part", "sun"],
+    "moisture": ["mesic", "dry", "xeric"],
+    "desiccation_tolerance": "high",
+    "podetium_cups": {"true": "often", "false": "often"},
+    "podetium_growth_m_per_year": {"min": 0.001, "max": 0.015, "typical": 0.005}
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Cladonia (Wikipedia, Cladonia and Podetium, read 2026-11-08): a primary thallus of scales (squamules) on the ground bearing hollow upright podetia, pointed, club-like, cupped (scyphi) or branched; two morphological groups, the Cladonia morpho-type (squamulose, cup-bearing, most species) and the Cladina morpho-type (the mat-forming reindeer lichens); podetia grow 1 to 15 mm a year. The photobiont of C. rangiferina is Trebouxia irregularis or Asterochloris (Wikipedia, Cladonia rangiferina)."
+    },
+    "traits.anchorage": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Reindeer lichens need a little soil to stay put but rarely grow on it directly, taking water and nutrients from the air (Wikipedia, Cladonia arbuscula, read 2026-11-08); lichens hold by fungal threads, neither roots nor rhizoids."
+    },
+    "traits.substrates": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "Munger 2008, FEIS Cladonia (Cladina) spp.: on soil, humus, rock and rotting wood; south Puget Sound prairies on gravelly outwash soil (Calabria et al. 2016). Bark for the cup lichens (Wikipedia, Cladonia arbuscula: also on trees)."
+    },
+    "traits.light": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Reindeer lichens are shade intolerant and rarely grow under 70% canopy cover or more (Wikipedia, Cladonia arbuscula, read 2026-11-08); open, well-drained ground (Wikipedia, Cladonia rangiferina)."
+    },
+    "traits.moisture": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Cool, dry sites; they avoid standing water and keep to the driest spots of wet ground (Wikipedia, Cladonia arbuscula, read 2026-11-08); excessively drained outwash prairies (Calabria et al. 2016)."
+    },
+    "traits.podetium_cups": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "The Cladonia morpho-type, most species, bears cups; the reindeer lichens do not (Wikipedia, Cladonia, read 2026-11-08)."
+    }
+  }
+}

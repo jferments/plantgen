@@ -62,6 +62,8 @@ pub mod json;
 pub mod lace;
 pub mod leaves;
 pub mod library;
+pub mod lichens;
+pub mod light_profile;
 pub mod litter;
 pub mod looks;
 pub mod lsys;
@@ -1774,7 +1776,36 @@ pub mod venation;
 /// 54 leaves as crossed cards and baked the rest into dots; it now draws
 /// all 54 in the same 144 triangles, wearing the same pictures.
 ///
-/// 217: a palmately lobed blade takes its stated base, where every one was
+/// 217: stand-grown pines, spruces, firs and hemlocks carry the trunk
+/// their leaf calls for. A stand's neighbours shade with the plant's own
+/// crown's clumping and its program's light extinction; a module holding
+/// foliage is no longer counted as a living tip; the pine family's pipe
+/// rules follow Espinosa Bancalari et al.'s (1987) leaf to dbh (`pipe_organ`
+/// 0.0075, `pipe_tip` 0.0024, nine hand-set values gone); shoots starve at
+/// the light their silvics shade-tolerance class allows (`shade_death`
+/// 0.06 / 0.1 / 0.15); and a twig of a limb's side branch that stays under
+/// its starving light is shed with its needles (`pinidae` revision 24,
+/// `twig_shade`). A 30-year Douglas-fir in a stand holds 88 m² of foliage
+/// at 20 cm (23 cm before), inside the 86 to 162 m² Espinosa Bancalari et
+/// al. found; every interior and open yield-table reference stays within
+/// tolerance.
+///
+/// 218: a package's sizes give the disc its foliage fills seen from
+/// above (`Measurements::foliage_radius`, [`graph::PlantGraph::foliage_radius`]),
+/// and a stand lays its herbs out by it, on a raster fine enough to hold
+/// them ([`stand_tile::FINE_CELL_M`]), where it spaced them by their
+/// widest reach on 0.5 m cells. A south Puget Sound prairie's grasses,
+/// spaced by a few culms leaning out with their panicles, covered 11% of
+/// a patch seen from above at 90% herb cover; they now cover 37%, and a
+/// hectare of the prairie two years after a fire holds 102,000 plants
+/// where it held 17,000. A community may give its members by plot cover
+/// (`Member::cover` in [`fill`]), the prairie's from Chappell's plots. A
+/// prairie kept by fire is closed by trees (30% cover) at LANDFIRE's 28
+/// fire-free years, not at 16 ([`development::encroached_age`]), and its
+/// moss and lichen carpet is Calabria 2016's 54% (40% moss) where it was
+/// 14%. No plant grows differently.
+///
+/// 219: a palmately lobed blade takes its stated base, where every one was
 /// drawn with a heart round its petiole: its body reaches round from its
 /// tip half the angle its basal margins meet at (Simpson's classes:
 /// cuneate a wedge into the petiole, truncate cut square, rounded a little
@@ -1782,4 +1813,4 @@ pub mod venation;
 /// ninebark's base is rounded to truncate (FNA). A baobab's leaf is
 /// palmately compound with five to seven leaflets (Baum 1995), drawn from
 /// those facts, where a hand-set palmately lobed blade stood in for it.
-pub const GENERATOR_REVISION: u32 = 217;
+pub const GENERATOR_REVISION: u32 = 219;

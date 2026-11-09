@@ -121,7 +121,7 @@ pub const RANKS: &str = "_ranks";
 pub const CLADE: &str = "clade";
 
 /// The ranks a rank file stands at, highest first; and [`CLADE`].
-pub const LEVELS: [&str; 13] = [
+pub const LEVELS: [&str; 14] = [
     "kingdom",
     "phylum",
     "subphylum",
@@ -135,6 +135,9 @@ pub const LEVELS: [&str; 13] = [
     "tribe",
     "subtribe",
     "genus",
+    // A genus's own groups, as Cladina is Cladonia's reindeer lichens;
+    // kept in `_ranks/subgenus/`, each naming its genus as its parent.
+    "subgenus",
 ];
 
 const FAMILY: usize = 8;
@@ -1524,6 +1527,15 @@ fn is_name(name: &str) -> bool {
 
 /// The path of the rank file a `parent` of `<rank>/<name>` names.
 fn parent_file(parent: &str) -> Result<String, String> {
+    // A subgenus stands on its genus, named with the family it is in:
+    // `genus/cladoniaceae/cladonia`.
+    if let Some((family, genus)) = parent
+        .strip_prefix("genus/")
+        .and_then(|rest| rest.split_once('/'))
+        .filter(|(family, genus)| is_name(family) && is_name(genus))
+    {
+        return Ok(format!("{family}/{genus}/genus.json"));
+    }
     let (rank, name) = parent
         .split_once('/')
         .filter(|(rank, name)| {

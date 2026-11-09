@@ -44,6 +44,11 @@
       42
     ],
     "capsule_posture": "erect",
+    "capsule_ripe_months": [
+      2,
+      3,
+      4
+    ],
     "capsule_share": 0.15,
     "spore_diameter_m": {
       "min": 0.000015,
@@ -69,9 +74,15 @@
     "desiccation_tolerance": "high",
     "colony_spread_m_per_year": 0.002,
     "capsule_shape": "ovoid",
-    "operculum_form": "rostrate"
+    "operculum_form": "rostrate",
+    "cushion_breadth": 4.0
   },
   "evidence": {
+    "traits.capsule_ripe_months": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Fitted to photos (no flora gives months for this region): Washington iNaturalist photos of D. cirrata (imagekit batch moss-pnw-2026-11-05), tallied by the month each was taken, show ripe brown capsules in months 2, 3, 4, young green ones in the months before and spent setae after."
+    },
     "traits": {
       "evidence": "SourceInferred",
       "source": "fna-27",
@@ -146,6 +157,11 @@
       "evidence": "SourceInferred",
       "source": "fna-27",
       "note": "FNA vol. 27, Dicranoweisia (Schofield; efloras, read 2026-11-05): spores spherical, 15-20 µm."
+    },
+    "traits.cushion_breadth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Fitted to photos by eye (Jay chose it 2026-11-08, no flora gives a breadth): Washington iNaturalist photos of D. cirrata (imagekit batch moss-pnw-2026-11-05) show low domes about four times as wide as high, meeting and merging on logs and stumps; FNA vol. 27 says only densely tufted, stems 0.5-3 cm."
     }
   }
 }
