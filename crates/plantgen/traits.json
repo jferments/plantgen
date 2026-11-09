@@ -380,6 +380,7 @@
       "optional": true,
       "why": "how much a podetium's tips grow in a year where it grows well; the reindeer lichens fork once a year, so this is also the length between forks"
     },
+    "podetium_tips": {"group": "form", "organ": "podetium", "type": "enum", "values": ["erect", "recurved", "recurved_one_way"], "optional": true, "when": {"podetium_branching": ["sparse", "rich"]}, "why": "how its last branches stand: upright, curved over every which way, or curved over all the same way (the key between the reindeer lichens: C. portentosa against C. rangiferina and C. arbuscula)"},
     "podetium_cups": {
       "group": "form",
       "organ": "podetium",

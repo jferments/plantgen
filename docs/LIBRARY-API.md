@@ -420,7 +420,10 @@ it, calling it as you would, through `plantgen::api` alone.
   and shrubs; left out of the JSON where there is none. The lichens
   themselves are library taxa (`lichens::kinds`: the reindeer lichens,
   Cladonia subgenus Cladina, first): a host tints the ground with
-  `LichenKind::far_colour` from afar and draws `lichens::draw_mat` near.
+  `LichenKind::far_colour` from afar and draws `lichens::draw_mat` near
+  (podetia curving between yearly forks, their tips bent over as the
+  kind's `podetium_tips` says and ending in short spinules; about 5 M
+  triangles for a 12 cm patch, so only close by).
 - **Logs** lie on a natural stand's floor (`TilePlan::logs`, the JSON's
   `logs`; none in a planted or kept stand, and on cleared ground only
   those its own trees drop): each with the species it
