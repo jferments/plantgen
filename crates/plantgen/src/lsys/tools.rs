@@ -2598,7 +2598,12 @@ fn colonize(
     // of, give their space back, so a dormant bud there can sprout where
     // light reaches.
     let mut plant_points: Vec<Vec3> = if renew {
-        scene.organs.iter().map(|organ| organ.position).collect()
+        scene
+            .organs
+            .iter()
+            .map(|organ| organ.position)
+            .chain(scene.queries.iter().map(|query| query.position))
+            .collect()
     } else {
         scene
             .segments
