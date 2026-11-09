@@ -286,6 +286,35 @@ impl PlantGraph {
         }
     }
 
+    /// Radius of the disc its foliage fills, seen from above: the disc of
+    /// evenly spread leaves whose leaf area lies as far from the stem on
+    /// the whole as the plant's does ($`\sqrt 2`$ times the leaf-area
+    /// weighted root mean square of its organs' distances from the stem
+    /// axis, as $`R^2/2`$ is a uniform disc's). A tussock's few culms that
+    /// lean out with their panicles, or a herb's one far leaf, set its
+    /// widest reach ([`Self::crown_radius`]) but hold little of its
+    /// foliage: a fescue of six years reaches 0.26 m and fills a disc of
+    /// 0.15 m. Zero without organs or leaf area.
+    #[must_use]
+    pub fn foliage_radius(&self, types: &[OrganType]) -> f64 {
+        let (mut area, mut moment) = (0.0, 0.0);
+        for organ in &self.organs {
+            let own = types
+                .get(usize::from(organ.organ))
+                .map_or(0.0, |kind| kind.area)
+                * organ.size
+                * organ.size;
+            let (x, z) = (organ.position.x, organ.position.z);
+            area += own;
+            moment += own * (x * x + z * z);
+        }
+        if area > 0.0 {
+            (2.0 * moment / area).sqrt()
+        } else {
+            0.0
+        }
+    }
+
     /// The crown's mean diameter as a tree's is measured on the ground:
     /// the mean of its organs' spans along two square horizontal axes, as
     /// the USDA Urban Tree Database averages two dripline diameters. A
@@ -314,6 +343,50 @@ impl PlantGraph {
 mod tests {
     use super::*;
 
+    /// A leaf of `area` m² at `x` metres east of the stem.
+    fn leaf_at(id: u64, x: f64, size: f64) -> GraphOrgan {
+        GraphOrgan {
+            id,
+            organ: 0,
+            segment: None,
+            position: Vec3::new(x, 0.1, 0.0),
+            heading: Vec3::X,
+            left: Vec3::Z,
+            size,
+            born: 1.0,
+            shed: None,
+            light: 1.0,
+            within: None,
+            adult: None,
+        }
+    }
+
+    #[test]
+    fn foliage_fills_a_disc_narrower_than_its_widest_reach() {
+        let types = [OrganType {
+            name: "blade".into(),
+            kind: OrganKind::Leaf,
+            area: 0.01,
+            term: None,
+        }];
+        // Leaves spread evenly over a disc of 0.15 m (by equal areas of
+        // rings), and one small one out at 0.26 m.
+        let mut organs: Vec<GraphOrgan> = (0..400)
+            .map(|i| leaf_at(i, 0.15 * ((f64::from(i as u32) + 0.5) / 400.0).sqrt(), 1.0))
+            .collect();
+        organs.push(leaf_at(400, 0.26, 0.2));
+        let graph = PlantGraph {
+            age: 6.0,
+            height: 0.7,
+            segments: Vec::new(),
+            organs,
+            structures: Vec::new(),
+        };
+        assert!((graph.crown_radius() - 0.26).abs() < 1e-12);
+        let disc = graph.foliage_radius(&types);
+        assert!((disc - 0.15).abs() < 0.002, "{disc}");
+    }
+
     #[test]
     fn a_plant_that_shed_everything_measures_positive_zero() {
         let graph = PlantGraph {
@@ -326,6 +399,7 @@ mod tests {
         assert_eq!(graph.leaf_area(&[]).to_bits(), 0.0_f64.to_bits());
         assert_eq!(graph.crown_radius().to_bits(), 0.0_f64.to_bits());
         assert_eq!(graph.crown_diameter().to_bits(), 0.0_f64.to_bits());
+        assert_eq!(graph.foliage_radius(&[]).to_bits(), 0.0_f64.to_bits());
         assert_eq!(graph.crown_base(), None);
         assert_eq!(graph.organ_light(), None);
         assert_eq!(graph.diameter_at_breast_height(), None);

@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "rank": "phylum",
+  "name": "Ascomycota",
+  "parent": "kingdom/fungi",
+  "traits": {
+    "reproduction": "spores"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "openstax-biology-2e",
+      "note": "Sac fungi bear their sexual spores in sacs (asci), and most lichens' fungi are sac fungi (Biology 2e, 24.2 and 24.4)."
+    }
+  }
+}

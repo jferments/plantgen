@@ -126,6 +126,7 @@ fn run() -> Result<(), Failure> {
         "field" => field_command(&args),
         "moss" => moss_command(&args),
         "logs" => logs_command(&args),
+        "lichen" => lichen_command(&args),
         "render" => render_command(&args),
         "sheet" => sheet_command(&args),
         "tiers" => tiers_command(&args),
@@ -290,6 +291,13 @@ Usage:
       barked, sagging; traces of bark on faded wood; bare, brown and
       oval, under moss; red-brown, flattened, sunk and half buried.
       Douglas-fir, 6 m and 0.6 m wide unless given, at level 0.
+  plantc lichen --render FILE.png [--kind NAME] [--side M] [--view VIEW]
+                [--size PIXELS] [--seed N]
+      Draw a square patch of a lichen's mat on bare ground
+      (plantgen::lichens): its podetia, as many to a square metre as a
+      mat holds, each forking once a year to its height, the dying base
+      darkened. Lists the library's lichens. The reindeer lichens
+      (Cladonia subg. Cladina) and a 0.2 m patch unless given.
   plantc moss <site.json> [--years N] [--seed N] [--latitude DEG]
               [--box X0,Y0,Z0,X1,Y1,Z1] [--out COVER.json] [--cover COVER.json]
               [--render FILE.png [--view VIEW] [--size PIXELS] [--from south|north]]
@@ -309,7 +317,8 @@ Usage:
       leaves and capsules (near: only within --span of --focus); --wet 1
       just rained on, 0 dry (0.4 when left out; with --day, as often wet
       as Portland's share of rain days then, 0.6 in January, 0.12 in
-      July); --from north looks from
+      July; capsules young, ripe, spent or gone by their genus's
+      capsule_ripe_months); --from north looks from
       the north side. A close render (--focus or --genus) is exposed
       as a camera exposes a photo, metered centre-weighted to 18% grey
       (raster::METERED_GREY), so shaded moss is as bright as in photos;
@@ -544,7 +553,7 @@ Usage:
               [--compress none|quantize|meshopt]
               [--attributes all|wind|none] [--triangles N[,N,N,N]]
               [--max-mib N] [--levels tiers|package] [--glb LEVEL]
-              [--glb-cells LEVEL,... [--cell-m N]]
+              [--glb-cells LEVEL,... [--cell-m N]] [--far TEXEL_M [--far-grid M]]
               [--packages DIR [--profile static|motion] [--cards yes|no]]
               [--field SITE.json [--corner X,Z] [--cracks YEARS]
                [--moss YEARS]
@@ -618,6 +627,12 @@ Usage:
       DIR/tiles/X_Y/c<col>_<row>-lod<N>.glb, with DIR/tiles/X_Y/cells.json
       saying from how far each level of each cell is enough, so a host
       that reads only glTF draws near cells fine and far ones coarse.
+      --far TEXEL_M also writes DIR/tiles/X_Y-far.glb and X_Y-far.json:
+      the whole tile as one far stand-in (docs/LIBRARY-API.md, A whole
+      tile from afar), a height field of its crowns every --far-grid
+      metres (2 unless given) with a picture of them from above, TEXEL_M
+      metres a texel, and skirts showing its sides, for drawing it past
+      the distance its cards are enough.
       --packages DIR also builds the
       packages that hold the prototypes the tile places (every one with
       --prototypes all), one per species, setting and seed with a
@@ -3346,13 +3361,7 @@ fn logs_command(args: &[String]) -> Result<(), Failure> {
             seed: seed.wrapping_mul(31).wrapping_add(u64::from(decay)),
         };
         let drawn = plantgen::deadwood::draw(&shape, Some(&spec.appearance), level);
-        let placed = api::Log {
-            species: species.to_string(),
-            position: [0.0, 0.0, 0.0],
-            yaw: 0.0,
-            pitch: 0.0,
-            shape,
-        };
+        let placed = api::Log::new(species, [0.0, 0.0, 0.0], 0.0, 0.0, shape);
         let offset = Vec3::new(0.0, 0.0, (f64::from(decay) - 3.0) * gap);
         scene = on_host(scene, placed_log(drawn, &placed, [0.0, 0.0], offset), 0);
     }
@@ -3397,6 +3406,90 @@ fn logs_command(args: &[String]) -> Result<(), Failure> {
     out!(
         "wrote {png}: five {species} logs, decay classes I-V, {} triangles at level {level}",
         scene.triangle_count()
+    );
+    Ok(())
+}
+
+fn lichen_command(args: &[String]) -> Result<(), Failure> {
+    let options = Options::parse(args, &["render", "kind", "side", "view", "size", "seed"])?;
+    let kinds = plantgen::lichens::kinds(library())?;
+    for kind in &kinds {
+        out!(
+            "{}: {} podetia {:.0} mm tall, {:.1} mm thick, {} branching into {}, {:.1} mm a year ({:.0} years to its height)",
+            kind.name,
+            kind.thallus_form,
+            1000.0 * kind.height_m,
+            1000.0 * kind.width_m,
+            kind.branching,
+            kind.forks,
+            1000.0 * kind.growth_m_per_year,
+            kind.years()
+        );
+    }
+    let Some(png) = options.flags.get("render") else {
+        return Ok(());
+    };
+    let name = options
+        .flags
+        .get("kind")
+        .map_or("Cladonia subg. Cladina", String::as_str);
+    let kind = kinds
+        .iter()
+        .find(|kind| kind.name == name)
+        .ok_or_else(|| format!("no lichen `{name}` in the library"))?;
+    let side: f64 = options.number("side")?.unwrap_or(0.2);
+    let seed: u64 = options.number("seed")?.unwrap_or(1);
+    let pixels: usize = options.number("size")?.unwrap_or(1600);
+    let mat = plantgen::lichens::draw_mat(
+        kind,
+        &plantgen::lichens::MatOptions {
+            side_m: side,
+            seed,
+            ..plantgen::lichens::MatOptions::default()
+        },
+    );
+    let half = 0.5 * side + 0.02;
+    let mut ground = mesh::Mesh::default();
+    #[allow(clippy::cast_possible_truncation)]
+    let soil = [122_u8, 104, 82].map(|byte| plantgen::texture::srgb_to_linear(byte) as f32);
+    for (x, z) in [(-half, -half), (half, -half), (half, half), (-half, half)] {
+        ground.push(mesh::Vertex::plain(Vec3::new(x, 0.0, z), Vec3::Y, soil));
+    }
+    ground.indices.extend([0, 2, 1, 0, 3, 2]);
+    let view = match options.flags.get("view") {
+        Some(name) => View::from_name(name).ok_or_else(|| format!("unknown view `{name}`"))?,
+        None => View::ThreeQuarter,
+    };
+    let image = preview::render_on_site(
+        &PlantMesh::default(),
+        &[
+            (&ground, raster::Material::Opaque),
+            (&mat, raster::Material::Opaque),
+        ],
+        &Templates::for_plant(&[], &[]),
+        &PreviewOptions {
+            width: pixels,
+            height: pixels * 3 / 4,
+            view,
+            supersample: 2,
+            figure: false,
+            frame_height: None,
+            frame_reach: None,
+            focus: Some((Vec3::new(0.0, 0.3 * kind.height_m, 0.0), 2.0 * half)),
+            fit_plant: false,
+        },
+    );
+    let bytes = raster::encode_png(
+        image.width,
+        image.height,
+        &image.to_srgb8(Some(preview::SKY)),
+    )
+    .map_err(|error| format!("cannot encode PNG: {error}"))?;
+    fs::write(png, bytes).map_err(|error| format!("cannot write {png}: {error}"))?;
+    out!(
+        "wrote {png}: a {side} m patch of {}, {} triangles",
+        kind.name,
+        mat.triangle_count()
     );
     Ok(())
 }
@@ -3554,6 +3647,11 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
         detail,
         near: focus.map(|at| (at, span)),
         capsules: options.flags.get("capsules").is_none_or(|v| v != "no"),
+        day: if options.flags.contains_key("day") {
+            Some(options.day()?)
+        } else {
+            None
+        },
     };
     let mut moss = if tinted {
         plantgen::mesh::Mesh::default()
@@ -6709,6 +6807,8 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
             "cut",
             "glb",
             "glb-cells",
+            "far",
+            "far-grid",
             "cell-m",
             "packages",
             "profile",
@@ -6863,6 +6963,32 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
         decay.map(|n| n.to_string()).join("/"),
         100.0 * herbs
     );
+    #[allow(clippy::cast_precision_loss)]
+    let thatch = plan
+        .cover
+        .iter()
+        .map(|cover| f64::from(cover.floor.thatch))
+        .sum::<f64>()
+        / plan.cover.len().max(1) as f64;
+    if thatch > 0.0 {
+        out!(
+            "  thatch between the grasses {:.0}% of the ground",
+            100.0 * thatch
+        );
+    }
+    #[allow(clippy::cast_precision_loss)]
+    let lichen = plan
+        .cover
+        .iter()
+        .map(|cover| f64::from(cover.floor.lichen))
+        .sum::<f64>()
+        / plan.cover.len().max(1) as f64;
+    if lichen > 0.0 {
+        out!(
+            "  Cladonia lichen between the grasses {:.0}% of the ground",
+            100.0 * lichen
+        );
+    }
     // The floor's moss genera, each its share of all the tile's moss.
     let mut genera = vec![0.0_f64; plan.floor_mosses.len()];
     for cover in &plan.cover {
@@ -6942,7 +7068,8 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
                 .as_ref()
                 .ok_or("`--moss` grows moss over a site: give `--field SITE.json`")?;
             // The tile's trees shade the walls and roofs they stand over.
-            let canopy = plan.crowns(&fill, field.corner, MOSS_SHADE_LEAST_M);
+            let canopy =
+                plantgen::fill::tile_crowns(&plan, &fill, field.corner, MOSS_SHADE_LEAST_M);
             let cover = tile_moss(
                 field,
                 tile_m,
@@ -6977,6 +7104,50 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
         if all || !held.is_empty() {
             write_fill_packages(&fill, &held, &options, Path::new(dir))?;
         }
+    }
+    if let Some(texel) = options.number::<f64>("far")? {
+        let started = Instant::now();
+        let settings = api::FarSettings {
+            texel_m: texel,
+            grid_m: options
+                .number::<f64>("far-grid")?
+                .unwrap_or(api::FarSettings::default().grid_m),
+            ..api::FarSettings::default()
+        };
+        let far = fill
+            .canopy(&plan, &site, &settings)
+            .map_err(|error| error.to_string())?;
+        let tiles = out.join("tiles");
+        let stem = format!("{}_{}-far", tile.x, tile.y);
+        let glb = far.glb().map_err(|error| error.to_string())?;
+        let path = tiles.join(format!("{stem}.glb"));
+        fs::write(&path, &glb).map_err(|error| format!("{}: {error}", path.display()))?;
+        let json =
+            serde_json::to_string_pretty(&far.extras()).map_err(|error| error.to_string())?;
+        fs::write(tiles.join(format!("{stem}.json")), json)
+            .map_err(|error| format!("{}: {error}", tiles.display()))?;
+        let stats = &far.stats;
+        #[allow(clippy::cast_precision_loss)]
+        let kib = glb.len() as f64 / 1024.0;
+        out!(
+            "wrote the tile's far stand-in, {} plants on {} texels of {:.2} m and {} triangles, {kib:.0} KiB, enough from {:.0} m: {}",
+            stats.plants,
+            far.texels * far.texels,
+            far.texel_m(),
+            stats.triangles,
+            far.from_m(),
+            path.display()
+        );
+        out!(
+            "  cover {:.0}%, mean height {:.1} m, sky view {:.2}, colour {:.3},{:.3},{:.3} (linear), in {:.1} s",
+            100.0 * stats.cover,
+            stats.height_m,
+            stats.sky_view,
+            stats.colour[0],
+            stats.colour[1],
+            stats.colour[2],
+            started.elapsed().as_secs_f64()
+        );
     }
     let which = match options.flags.get("prototypes").map(String::as_str) {
         Some("none") => return Ok(()),
@@ -7232,8 +7403,7 @@ fn field_site(
             traffic: 0.0,
             maintenance: 0.0,
         };
-        site = site
-            .with_colonists(&places, &colonists, &[], &settings, years)
+        site = plantgen::fill::with_colonists(site, &places, &colonists, &[], &settings, years)
             .map_err(|error| error.to_string())?;
         out!(
             "{} plants came up in the pavements in {years} years ({} species of the pool, {} microsites) in {:.1} s",
@@ -7322,6 +7492,15 @@ fn floor_mesh(plan: &api::TilePlan, field: &FieldSite, offset: Vec3) -> mesh::Me
         srgb(plantgen::deadwood::LITTER_SRGB),
         srgb([122, 104, 82]),
     );
+    // Dead grass between a fire-kept prairie's grasses, as its ground
+    // look draws it from afar.
+    let thatch = plantgen::ground::plant_recipe("thatch").map_or(litter, |recipe| recipe.mean);
+    // Cladonia mats between a prairie's grasses, as they look from afar.
+    let lichen = plantgen::lichens::kinds(Library::builtin())
+        .unwrap_or_default()
+        .iter()
+        .find(|kind| kind.genus == "Cladonia" && kind.branching == "rich")
+        .map_or([0.55, 0.58, 0.6], plantgen::lichens::LichenKind::far_colour);
     // Each floor moss genus's colour from afar, as its colonies draw.
     let kinds = plantgen::mosses::kinds(Library::builtin()).unwrap_or_default();
     let genus_colour: Vec<[f32; 3]> = plan
@@ -7379,12 +7558,17 @@ fn floor_mesh(plan: &api::TilePlan, field: &FieldSite, offset: Vec3) -> mesh::Me
                 .get(cell)
                 .map(|cover| cover.floor)
                 .unwrap_or_default();
-            let (m, l) = (f64::from(floor.moss), f64::from(floor.litter));
+            let (m, l) = (
+                f64::from(floor.moss) + f64::from(floor.lichen),
+                f64::from(floor.litter),
+            );
             let surface = (1.0 - f64::from(floor.wood)).max(1e-6);
             // Moss where the patch noise falls under its share of the
             // floor logs leave, litter over the rest as far as it reaches.
             let n = noise(east, north, 0x0f10);
-            let colour = if n < m / surface {
+            let colour = if n < f64::from(floor.lichen) / surface {
+                lichen
+            } else if n < m / surface {
                 // Which genus: patches of each by its share.
                 let mut pick = noise(east, north, 0x0f20);
                 let mut colour = moss;
@@ -7401,6 +7585,8 @@ fn floor_mesh(plan: &api::TilePlan, field: &FieldSite, offset: Vec3) -> mesh::Me
                 colour
             } else if n < (m + l) / surface {
                 litter
+            } else if n < (m + l + f64::from(floor.thatch)) / surface {
+                thatch
             } else {
                 soil
             };
@@ -7424,86 +7610,6 @@ fn floor_mesh(plan: &api::TilePlan, field: &FieldSite, offset: Vec3) -> mesh::Me
             }
         }
     }
-    out
-}
-
-fn placed_instance(
-    plant: &PlantMesh,
-    instance: &api::Instance,
-    climber: bool,
-    corner: [f64; 2],
-    offset: Vec3,
-) -> PlantMesh {
-    let [qx, qy, qz, qw] = instance.rotation;
-    // Growth's frame to the instance's and back.
-    let turn = |v: [f32; 3]| {
-        let u = [v[0], -v[2], v[1]];
-        let t = [
-            2.0 * (qy * u[2] - qz * u[1]),
-            2.0 * (qz * u[0] - qx * u[2]),
-            2.0 * (qx * u[1] - qy * u[0]),
-        ];
-        let r = [
-            u[0] + qw * t[0] + (qy * t[2] - qz * t[1]),
-            u[1] + qw * t[1] + (qz * t[0] - qx * t[2]),
-            u[2] + qw * t[2] + (qx * t[1] - qy * t[0]),
-        ];
-        [r[0], r[2], -r[1]]
-    };
-    #[allow(clippy::cast_possible_truncation)]
-    let foot = [
-        (corner[0] + f64::from(instance.position[0]) + offset.x) as f32,
-        (f64::from(instance.position[2]) + offset.y) as f32,
-        (corner[1] - f64::from(instance.position[1]) + offset.z) as f32,
-    ];
-    let scale = instance.scale;
-    let point = |v: [f32; 3]| {
-        let t = turn(v);
-        [
-            t[0] * scale + foot[0],
-            t[1] * scale + foot[1],
-            t[2] * scale + foot[2],
-        ]
-    };
-    let clip = if climber {
-        api::WallClip::from_extra(instance.extra)
-    } else {
-        None
-    };
-    let mut out = plant.clone();
-    if let Some(clip) = clip {
-        let positions = &plant.wood.positions;
-        let mut kept = Vec::with_capacity(out.wood.indices.len());
-        for triangle in plant.wood.indices.as_chunks::<3>().0 {
-            if triangle
-                .iter()
-                .all(|index| clip.keeps(positions[*index as usize]))
-            {
-                kept.extend_from_slice(triangle);
-            }
-        }
-        out.wood.indices = kept;
-        out.cards.retain(|card| clip.keeps(card.base));
-        out.tufts.retain(|tuft| clip.keeps(tuft.position));
-    }
-    out.wood.positions.iter_mut().for_each(|p| *p = point(*p));
-    out.wood.normals.iter_mut().for_each(|n| *n = turn(*n));
-    for colour in &mut out.wood.colors {
-        if colour[3] < 0.0 {
-            colour[3] *= scale;
-        }
-    }
-    for card in &mut out.cards {
-        card.base = point(card.base);
-        card.heading = turn(card.heading);
-        card.left = turn(card.left);
-        card.length *= scale;
-        card.width *= scale;
-    }
-    for tuft in &mut out.tufts {
-        tuft.position = point(tuft.position);
-    }
-    out.hair_tubes.clear();
     out
 }
 
@@ -7640,7 +7746,7 @@ fn render_fill(
             );
         }
         let (generator, plant) = &grown[&index];
-        // Its foot in the drawn frame, as `placed_instance` sets it.
+        // Its foot in the drawn frame, as `plantgen::far::placed` sets it.
         let at = Vec3::new(
             field.corner[0] + f64::from(instance.position[0]),
             f64::from(instance.position[2]),
@@ -7688,7 +7794,12 @@ fn render_fill(
             card.template = card.template.saturating_add(shift);
         }
         let climber = fill.prototypes()[index as usize].key.on_wall;
-        let placed = placed_instance(&mesh, instance, climber, field.corner, offset);
+        let origin = Vec3::new(
+            field.corner[0] + offset.x,
+            offset.y,
+            field.corner[1] + offset.z,
+        );
+        let placed = plantgen::far::placed(&mesh, instance, climber, origin);
         scene = on_host(scene, placed, 0);
     }
     if all_looks.len() > 255 {
@@ -7744,6 +7855,7 @@ fn render_fill(
                     detail: Detail::Near,
                     near: Some((at - offset, span * 0.05)),
                     capsules: true,
+                    day: None,
                 },
             );
             #[allow(clippy::cast_possible_truncation)]
