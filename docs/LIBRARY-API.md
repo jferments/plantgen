@@ -682,11 +682,40 @@ The first writes 50 yarrows into `variants/achillea-millefolium/`: for
 each, `STEM-lod0.glb` to `STEM-lod3.glb` and `STEM.json`, where STEM is
 `<species>-<environment>-<seed>-<age>y`, and `variants.json` listing them.
 `plantc help` lists every flag: `--first-seed`, `--env`, `--age`, `--day`,
-`--quality`, `--threads`, and `plantc export`'s compression, attribute,
+`--quality`, `--threads`, `--memory-gib`, and `plantc export`'s compression, attribute,
 budget and `--levels` flags (variants draw tiers unless `--levels package`).
 
 Measured on a 4-core cloud machine (2026-11-01): 6 yarrows at 6 years in
 7 s; 4 Douglas-firs at 60 years in 82 s.
+
+### Memory
+
+A large old tree takes a gibibyte or more while it is drawn, so a set
+grows no more plants at once than fit in memory as well as no more than
+`--threads`. On Linux the first plant grows alone; its rise in the
+process's peak memory, with a margin of half again for larger seeds
+(`plantgen::memory::MARGIN`), sets how many grow at once after it within
+`--memory-gib` (`Variants::memory`), or unless given within the memory
+free when the set began: the system's available memory or, under a
+cgroup limit (a CI runner's slice, a container), what that limit leaves.
+Elsewhere as many grow at once as `--threads`. The files do not depend
+on how many grew at once.
+
+Measured on a 4-core, 15 GiB cloud machine (2026-11-08), peak resident
+memory before and after plantgen#395: one 60-year Douglas-fir 2.85 to
+2.47 GiB (heap 2.61 to 1.63 GiB); ten 250-year bigleaf maples on 4
+threads 7.4 to 4.1 GiB; ten 60-year Douglas-firs on 4 threads 10.3 GiB
+to 6.2 GiB. Each plant's own peak fell because `gltf::check` reads one
+accessor at a time and borrows the document instead of copying it, and
+the budget search keeps only the drawings a level is drawn with.
+
+Since revision 223 an export drawn to a budget (tiers, `--triangles`,
+`--max-mib`) searches its levels' detail with leaf clusters' cover
+counted on a coarse grid and draws the levels it picks on the full one:
+one 60-year Douglas-fir took 112 s where it took 138 s (4-core cloud
+machine, 2026-11-09), its high tier 1.3% and mid tier 4% fewer
+triangles. A bigleaf maple gains little (104 s from 111 s): most of its
+time is growth.
 
 The files are glTF 2.0 that need no PlantGen code. Uncompressed and
 quantized files open in Blender, Godot, Unity (glTFast) and three.js;
