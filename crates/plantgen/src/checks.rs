@@ -114,7 +114,9 @@
 //! end lived from its birth to then (`leaf_life_years`, each leaf judged
 //! as an organ's size is; a leaf drawn in pieces, a fern's frond, as its
 //! structure); one that fell with its limb, or still stands at the end,
-//! is not counted. A plant is evergreen (`leaf_habit`) where a leaf stands
+//! is not counted. A leaf drawn at the foot of a side shoot, recorded on
+//! the segment the shoot starts from, fell with its limb when that shoot
+//! was shed at the same moment (2026-11-08). A plant is evergreen (`leaf_habit`) where a leaf stands
 //! on it into its second year, else deciduous; a grass blade turned to
 //! thatch is a dead leaf, not one kept. A cone takes to ripen
 //! (`cone_maturation_years`) the seasons the youngest cone drawn ripe has
@@ -916,12 +918,40 @@ fn lives(grown: &Grown<'_>, ripening: Option<f64>, tally: &mut Tally) {
         return;
     };
     let segments = &before.segments;
+    // Each segment's lateral children: the shoots that start from it.
+    let mut shoots: BTreeMap<usize, Vec<usize>> = BTreeMap::new();
+    for (index, wood) in segments.iter().enumerate() {
+        if wood.lateral
+            && let Some(parent) = wood.parent
+        {
+            shoots.entry(parent as usize).or_default().push(index);
+        }
+    }
+    let fell_then =
+        |wood: &GraphSegment, shed: f64| wood.shed.is_some_and(|wood| (wood - shed).abs() < 1e-9);
     // Whether something shed at `shed` fell with the segment bearing it.
     let with_wood = |segment: Option<usize>, shed: f64| {
         segment
             .and_then(|index| segments.get(index))
-            .and_then(|wood| wood.shed)
-            .is_some_and(|wood| (wood - shed).abs() < 1e-9)
+            .is_some_and(|wood| fell_then(wood, shed))
+    };
+    // Whether a leaf standing at the foot of a side shoot fell with that
+    // shoot: a program may draw a shoot's first foliage before its first
+    // segment (pinidae's `[ Y spray ] F`), so its record names the segment
+    // the shoot starts from, which stays when the shoot is shed. A leaf
+    // within the shoot's first segment's length of its foot, shed with it,
+    // fell with its wood.
+    let with_shoot = |segment: Option<usize>, at: Vec3, shed: f64| {
+        segment
+            .and_then(|index| shoots.get(&index))
+            .is_some_and(|starts| {
+                starts.iter().any(|&child| {
+                    let wood = &segments[child];
+                    fell_then(wood, shed)
+                        && (wood.start - at).length()
+                            <= (wood.end - wood.start).length() + wood.radius
+                })
+            })
     };
     // Each frond's pieces' last shed (none while one stays) and a piece's
     // segment.
@@ -940,7 +970,9 @@ fn lives(grown: &Grown<'_>, ripening: Option<f64>, tally: &mut Tally) {
                 }
             }
             None if organ.within.is_none() => {
-                let Some(shed) = organ.shed.filter(|&shed| !with_wood(segment, shed)) else {
+                let Some(shed) = organ.shed.filter(|&shed| {
+                    !with_wood(segment, shed) && !with_shoot(segment, organ.position, shed)
+                }) else {
                     continue;
                 };
                 match grown.term(organ) {
