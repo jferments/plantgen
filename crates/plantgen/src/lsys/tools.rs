@@ -3452,7 +3452,8 @@ pub struct Pipes {
 /// r^n = Σ r_child^n + (tips above it) · tip^n + Σ (organ · size)^n
 /// ```
 ///
-/// with the exponent `n` usually between 2 and 3. The pipe radius describes
+/// with the exponent `n` usually between 2 and 3; a segment that carries
+/// nothing takes `tip`, but no more than the segment it grows from. The pipe radius describes
 /// the living plant at one moment; the growth loop also adds a yearly ring
 /// of area `rings · leaf area above` to every segment (Pressler's law: ring
 /// area is proportional to the foliage above), so stems keep thickening
@@ -3524,15 +3525,34 @@ pub fn pipe(scene: &Scene, organ_area: &[f64], values: &[f64]) -> Result<Pipes, 
         flow[index] += from_children;
         leaf_area[index] += area_above;
     }
-    Ok(Pipes {
-        radii: in_order(&scene.segments, threads, &|segment: &Segment| {
-            let value = flow[segment.node as usize];
-            if value > 0.0 {
-                math::pow(value, 1.0 / exponent)
+    // A segment that carries nothing (a bare stub whose tip and foliage
+    // are gone) takes a tip's radius, but no more than the nearest segment
+    // it grows from, so it is never thicker than the wood that bears it.
+    let mut node_radius = vec![tip; count];
+    let mut segment_at: Vec<Option<usize>> = vec![None; count];
+    for (index, segment) in scene.segments.iter().enumerate() {
+        segment_at[segment.node as usize] = Some(index);
+    }
+    for index in 0..count {
+        let below = scene.nodes[index]
+            .parent
+            .map_or(tip, |parent| node_radius[parent as usize]);
+        node_radius[index] = if segment_at[index].is_some() {
+            if flow[index] > 0.0 {
+                math::pow(flow[index], 1.0 / exponent)
             } else {
-                tip
+                tip.min(below)
             }
-        }),
+        } else {
+            below
+        };
+    }
+    Ok(Pipes {
+        radii: scene
+            .segments
+            .iter()
+            .map(|segment| node_radius[segment.node as usize])
+            .collect(),
         leaf_area: scene
             .segments
             .iter()

@@ -148,6 +148,18 @@
         }
       },
       "why": "An apex starves in the shade its silvics class allows: Silvics of North America classes each of the family's trees as tolerant, intermediate or intolerant of shade, and a tolerant tree's shoot lives on 6% of its best-lit shoot's light, an intermediate one's 10% and an intolerant one's 15%. The values are the medians of the ones the species had set by hand, now gone: 0.05 to 0.08 for the six tolerant ones (western and mountain hemlock, Sitka spruce, grand, subalpine and Pacific silver fir), 0.1 and 0.12 for Douglas-fir and whitebark pine, 0.15 for western larch, shore and ponderosa pine. Western hemlock no longer ignores the family's value with its own. Every stand-grown and open-grown conifer with a reference stays within it (Sitka spruce at 60 years -19%, where its own 0.08 drew it -27%)."
+    },
+    "generator.params.branch_angle": {
+      "rule": "11",
+      "why": "A limb leaves the stem steeply: the newest whorls under a Douglas-fir's leader stand about 11 degrees from it, and a limb opens downward as the leader rises above it (limb_open, open_depth). Fitted to Weiskittel, Maguire and Monserud's (2007) branch angle equation for coastal Douglas-fir (218 trees with Roeh and Maguire's 1997 data set among four earlier ones; R2 0.30, residual 17 degrees), evaluated over their trees' sizes: about 15 degrees from upright 0.3 m below the tip."
+    },
+    "generator.params.limb_open": {
+      "rule": "83",
+      "why": "Below the top few metres the family's limbs stand near level: Weiskittel et al.'s (2007) Douglas-fir branch angles rise from about 15 degrees from upright at the tip to 50 at 4 m down, 73 at 10 m and 79 to 84 below 15 m, as Farjon gives the family's branches horizontal or spreading and the Flora of North America gives hemlock's horizontal and arched downward and Douglas-fir's often pendulous. Each species set a fixed angle by hand (Douglas-fir 45, the steepest), kept for a limb's whole life, so the bare lower limbs of stand-grown trees ran up at 45 degrees."
+    },
+    "generator.params.open_depth": {
+      "rule": "5.2",
+      "why": "A limb opens most of the way from its first angle to limb_open over its first 5 m or so below the treetop: the least-squares fit of the exponential approach to Weiskittel et al.'s (2007) equation over 8 to 46 m trees (rms 4.8 degrees, a quarter of the equation's own residual)."
     }
   },
   "evidence": {
@@ -225,6 +237,21 @@
       "evidence": "SourceInferred",
       "source": "silvics-1990-conifers",
       "note": "Classes as Silvics of North America vol. 1 gives them for each species (each species' traits.shade_tolerance note quotes it). The class values are fits, the medians of the hand-set values they replace, checked against McArdle (1961) and the other stand references and the open-grown ones (2026-11-08 runs, plantgen-claude stands/trunks/refit)."
+    },
+    "rules.generator.params.branch_angle": {
+      "evidence": "SourceInferred",
+      "source": "weiskittel-2007",
+      "note": "Weiskittel, Maguire and Monserud (2007), Table 5, eq. 3: branch angle from vertical BA = (92.2171 - 7.2944 HT/DBH)(1 - exp(-0.1114 DINC + 2.4781 BHTrel - 0.0683 SI))^exp(0.0146 BD), DINC depth into the crown, m (the table prints BHT; the text defines the term as DINC, after Roeh and Maguire 1997). Evaluated for trees 8 to 46 m tall at their mean height to diameter 0.746 m/cm, Bruce's site index 38 m and branch diameter 4 mm + 2 mm per metre of depth (to 40), and fitted as branch_angle + (limb_open - branch_angle)(1 - exp(-DINC / open_depth)): 10.6, 83.2, 5.19 m. Fit: project-files/stands/limb-angles/fit2.py in the PlantGen workspace."
+    },
+    "rules.generator.params.limb_open": {
+      "evidence": "SourceInferred",
+      "source": "weiskittel-2007",
+      "note": "The same fit (rules.generator.params.branch_angle). Flora words: Farjon (2017), Pinaceae branches horizontal or spreading, the lower curving down at the ends; Flora of North America vol. 2: Tsuga 'Branches horizontal, often tending to be arranged in flattened sprays and arched downward', Pseudotsuga 'Branches often pendulous, irregularly whorled'. Douglas-fir is the only genus of the family with a measured curve; the others take it until theirs are found."
+    },
+    "rules.generator.params.open_depth": {
+      "evidence": "SourceInferred",
+      "source": "weiskittel-2007",
+      "note": "The same fit (rules.generator.params.branch_angle)."
     }
   }
 }
