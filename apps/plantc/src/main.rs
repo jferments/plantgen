@@ -2722,7 +2722,7 @@ fn grow_command(args: &[String]) -> Result<(), Failure> {
         );
         let half = plantgen::light_profile::half_width(graph, &growth.organ_types, &conditions);
         out!(
-            "  light at {} years across its cell, {:.1} m to each side (mean, 10th, median, 90th percentile; mean under its own crown alone):",
+            "  light at {} years across its cell, {:.1} m to each side (mean, 10th, median, 90th percentile; mean under its own crown alone; leaf in the 2 m band):",
             graph.age,
             half
         );
@@ -2734,15 +2734,20 @@ fn grow_command(args: &[String]) -> Result<(), Failure> {
             light_tool,
         )
         .map_err(Failure::from)?;
+        // Leaf area in the 2 m band each printed layer stands in.
+        let leaf = plantgen::light_profile::leaf_by_height(graph, &growth.organ_types, 2.0);
         for layer in layers.iter().rev().step_by(2) {
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            let band = (layer.height_m.max(0.0) / 2.0).floor() as usize;
             out!(
-                "    {:>5.1} m  {:.3}  {:.3}  {:.3}  {:.3}  {:.3}",
+                "    {:>5.1} m  {:.3}  {:.3}  {:.3}  {:.3}  {:.3}  leaf {:.1} m²",
                 layer.height_m,
                 layer.mean,
                 layer.p10,
                 layer.median,
                 layer.p90,
-                layer.own
+                layer.own,
+                leaf.get(band).copied().unwrap_or(0.0)
             );
         }
         if let Some(quarters) = plantgen::light_profile::crown_quarters(graph, &growth.organ_types)

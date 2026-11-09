@@ -1862,4 +1862,12 @@ pub mod venation;
 /// tier 477,946 triangles where it was 484,454 and its mid tier 46,446
 /// (48,486); a 250-year bigleaf maple, whose time is mostly growth, in
 /// 104 s (111 s).
-pub const GENERATOR_REVISION: u32 = 223;
+///
+/// 224: the pine family sheds a starved twig only under a quarter of its
+/// starving light (`twig_shade` 0.25). Shed at the starving light itself,
+/// the twigs inside the lower limbs went too: a 60-year western hemlock in
+/// a stand held 0.21 of its leaf in the lowest quarter of its crown's
+/// depth, where Espinosa Bancalari et al.'s (1987) Douglas-firs hold 0.35
+/// to 0.42; it now holds 0.30. `plantc grow --light` also prints the leaf
+/// in each 2 m band (`light_profile::leaf_by_height`).
+pub const GENERATOR_REVISION: u32 = 224;
