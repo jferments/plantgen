@@ -602,6 +602,9 @@ pub struct Cohort {
     /// ([`crate::spec::Environment::Suppressed`]) and stand under the
     /// canopy, in the subcanopy or lower.
     pub overtopped: bool,
+    /// Old trees a fire-kept stand's surface fires have passed
+    /// ([`develop_kept`]): they grew up in the open and stand in it.
+    pub veteran: bool,
 }
 
 /// A stand of one age: its stage, its cohorts and its layers' cover.
@@ -684,12 +687,10 @@ pub enum Origin {
     Cleared,
 }
 
-/// [`develop`] for a stand of `origin`.
+/// The pioneers' lifespan among `candidates`, years: the longest-lived
+/// tree's that is intolerant of shade, else any tree's, at least 1.
 #[must_use]
-pub fn develop_as(candidates: &[Candidate], age: f64, origin: Origin) -> Development {
-    let planted = origin == Origin::Planted;
-    // The pioneers' lifespan: the longest-lived intolerant tree's, else
-    // any tree's.
+pub fn pioneer_lifespan(candidates: &[Candidate]) -> f64 {
     let longest = |pick: &dyn Fn(&Candidate) -> bool| {
         candidates
             .iter()
@@ -701,7 +702,14 @@ pub fn develop_as(candidates: &[Candidate], age: f64, origin: Origin) -> Develop
     if lifespan <= 0.0 {
         lifespan = longest(&Candidate::tree);
     }
-    let lifespan = lifespan.max(1.0);
+    lifespan.max(1.0)
+}
+
+/// [`develop`] for a stand of `origin`.
+#[must_use]
+pub fn develop_as(candidates: &[Candidate], age: f64, origin: Origin) -> Development {
+    let planted = origin == Origin::Planted;
+    let lifespan = pioneer_lifespan(candidates);
     let stage = Stage::at(age, lifespan);
     let mut cohorts = Vec::new();
     for (index, candidate) in candidates.iter().enumerate() {
@@ -728,6 +736,7 @@ pub fn develop_as(candidates: &[Candidate], age: f64, origin: Origin) -> Develop
                     pioneer: true,
                     released: false,
                     overtopped: false,
+                    veteran: false,
                 });
             }
             // Its overtopped share, once the crowns close: intermediate
@@ -749,6 +758,7 @@ pub fn develop_as(candidates: &[Candidate], age: f64, origin: Origin) -> Develop
                         pioneer: true,
                         released: false,
                         overtopped: true,
+                        veteran: false,
                     });
                 }
             }
@@ -772,6 +782,7 @@ pub fn develop_as(candidates: &[Candidate], age: f64, origin: Origin) -> Develop
                     pioneer: false,
                     released: false,
                     overtopped: false,
+                    veteran: false,
                 });
             }
         }
@@ -799,6 +810,219 @@ pub fn develop_as(candidates: &[Candidate], age: f64, origin: Origin) -> Develop
         cover,
         open_grown: age < 0.5 * CLOSURE * lifespan,
     }
+}
+
+/// The share of the ground a fire-kept stand's old trees cover, seen from
+/// above, however recent its last fire: in the Willamette Valley and Puget
+/// Trough's prairies and savannas, fires every 3 to 10 years kept the
+/// trees few, and "savanna conditions are created when an occasional tree
+/// survives the frequent fires". The open classes, grassland with isolated
+/// trees under 20% canopy cover and savanna of large oaks under 20%, held
+/// 88% of the landscape in LANDFIRE's model of it (Biophysical Setting
+/// 11200, Willamette Valley Upland Prairie and Savanna, 2020: classes C
+/// and D, 20% and 68%). The value, half that bound, is this model's
+/// choice.
+pub const VETERAN_COVER: f64 = 0.1;
+
+/// The share of its lifespan a fire-kept stand's old tree is drawn at (or
+/// the oldest it can be drawn at): the savanna's "occasional giant Oregon
+/// white oak" (BpS 11200, its class D in the largest size class, over 33
+/// inches, 84 cm, at breast height). An oak of 500-year life (FEIS, Gucker
+/// 2007) is drawn at 100 years, when an open-grown one is about 18 m tall
+/// and 90-99 cm through in this model's growth (88 cm at 80 years, 99 at
+/// 120). The share is this model's choice.
+pub const VETERAN_AGE: f64 = 0.2;
+
+/// The fire-free years after which a fire-kept grassland has become
+/// woodland: LANDFIRE's model moves its grassland (class A, bunchgrass and
+/// forbs with no shrub named) into the closed class (B, oak over common
+/// snowberry and poison oak, "grasslands that are actively becoming
+/// invaded by trees") 28 years after the last fire (BpS 11200, 2020), and
+/// Douglas-fir took Fort Lewis's grasslands to forest in under 30 years
+/// (Foster and Shaff 2003). A fire-kept stand's shrubs reach the cover
+/// [`develop_as`] gives them only then, in step with the years since the
+/// fire before ([`develop_kept`]), this model's reading of the classes.
+pub const FIRE_FREE_CLOSURE: f64 = 28.0;
+
+/// Trees' cover from above at which a stand is closed: LANDFIRE's mapping
+/// rules put trees 5 m tall and more over more than 30% of the ground in
+/// the closed classes (B and E), over less in the open ones (C and D;
+/// BpS 11200, 2020).
+pub const LANDFIRE_CLOSED: f64 = 0.3;
+
+/// The age `since` years after its last fire a fire-kept stand's trees
+/// stand at, as [`develop_as`] grows a stand from its disturbance. Trees
+/// come into a grassland's sod more slowly than onto a clearing: western
+/// Oregon's young conifer stands cover 30% of the ground at about 11
+/// years ([`Stage::cover`]: [`LANDFIRE_CLOSED`] of the closed stand's
+/// [`CLOSED_LAYERS`] trees, [`CLOSURE`] of the pioneers' `lifespan`), where
+/// the grassland closes only after [`FIRE_FREE_CLOSURE`] years. So until
+/// then its trees' years run that much slower, and after it they keep
+/// their lag: a prairie unburnt for 80 years holds a forest of 63.
+#[must_use]
+pub fn encroached_age(since: f64, lifespan: f64) -> f64 {
+    let since = since.max(0.0);
+    let closed =
+        LANDFIRE_CLOSED / (CLOSED_LAYERS[0] + CLOSED_LAYERS[1]) * CLOSURE * lifespan.max(1.0);
+    if closed >= FIRE_FREE_CLOSURE {
+        since
+    } else if since <= FIRE_FREE_CLOSURE {
+        since * closed / FIRE_FREE_CLOSURE
+    } else {
+        since - (FIRE_FREE_CLOSURE - closed)
+    }
+}
+
+/// The share of a fire-kept prairie's ground under moss, long after its
+/// last fire. The south Puget Sound's native prairies are "dominated by
+/// Idaho fescue (Festuca idahoensis var. roemeri) and mosses (especially
+/// Rhacomitrium canescens)" (Chappell, Washington Natural Heritage
+/// Program, Native Vegetation of the South Puget Sound Prairie Landscape:
+/// Idaho fescue "generally occupying 30-70 percent cover"). On five of
+/// them (Glacial Heritage, Joint Base Lewis-McChord, Mima Mounds, Scatter
+/// Creek, West Rocky), plots unburnt for at least 20 years had 54 ± 23% of
+/// their ground under mosses and lichens, the lichens 26% of that
+/// (Calabria et al. 2016, Northwest Science 90(4): 470-483, table 3), so
+/// mosses 40%, the value here; Racomitrium (now Niphotrichum) is the
+/// commonest of them (7.4% of the ground on Glacial Heritage and Mima
+/// Mounds; Calabria et al. 2020, Plant and Soil 456: 307-321).
+pub const PRAIRIE_MOSS: f64 = 0.40;
+
+/// The share of its moss cover a prairie keeps just after a fire: the
+/// same prairies' plots burnt one to three times in ten years, last 8 to
+/// 20 months before they were read, had 33% of their ground under mosses,
+/// with only traces of lichen (Calabria et al. 2016, table 3), against
+/// the unburnt plots' 40% ([`PRAIRIE_MOSS`]).
+pub const MOSS_AFTER_FIRE: f64 = 0.83;
+
+/// The years a prairie's moss takes to grow back after a fire: Calabria et
+/// al. (2020) took plots over 10 years unburnt as undisturbed. The moss
+/// returns over them as `1 - exp(-3 since / years)`, this model's curve.
+pub const PRAIRIE_MOSS_YEARS: f64 = 10.0;
+
+/// The share of a fire-kept prairie's ground under moss `since` years
+/// after its last fire: [`MOSS_AFTER_FIRE`] of [`PRAIRIE_MOSS`] just
+/// after, all of it by [`PRAIRIE_MOSS_YEARS`].
+#[must_use]
+pub fn prairie_moss(since: f64) -> f64 {
+    let back = 1.0 - (-3.0 * since.max(0.0) / PRAIRIE_MOSS_YEARS).exp();
+    PRAIRIE_MOSS * (MOSS_AFTER_FIRE + (1.0 - MOSS_AFTER_FIRE) * back)
+}
+
+/// The years after a fire a grassland's litter takes to build back: in
+/// central Saskatchewan's Fescue Prairie, burnt in early spring and
+/// followed for 11 years, the standing crop rose until about the eighth
+/// year and the litter's mass levelled off about the eleventh (Pylypec and
+/// Romo 2003, Journal of Range Management 56), while the grasses
+/// themselves were back within 3 to 4.
+pub const THATCH_YEARS: f64 = 11.0;
+
+/// The share of its full thatch a fire-kept grassland's floor holds
+/// `since` years after its last fire: none just after, 95% by
+/// [`THATCH_YEARS`], rising as `1 - exp(-3 since / THATCH_YEARS)`, this
+/// model's curve through the plateau.
+#[must_use]
+pub fn thatch_built(since: f64) -> f64 {
+    1.0 - (-3.0 * since.max(0.0) / THATCH_YEARS).exp()
+}
+
+/// [`develop_as`] for a stand that surface fires keep open, `since` years
+/// after its last fire ([`crate::fill::Community::fire_years`]): a prairie
+/// or an oak savanna. What came up since the fire develops as a stand
+/// does from its disturbance, its trees at [`encroached_age`] (they come
+/// into the sod more slowly than onto a clearing), its shrubs, which
+/// resprout, at `since`: where fire stays away they close into woodland
+/// and then forest, as LANDFIRE's model has the grassland close after 28
+/// fire-free years, and as Douglas-fir converted Fort Lewis's grasslands
+/// to forest within 30 years (Foster and Shaff 2003, Northwest Science
+/// 77(4)). Beside it:
+///
+/// 1. Old trees the fires passed ([`Cohort::veteran`]): each tree
+///    intolerant of shade, as the thick-barked oaks, pines and
+///    Douglas-firs of the savannas are, in proportion to its abundance in
+///    the canopy and subcanopy, drawn at [`VETERAN_AGE`] of its lifespan,
+///    covering [`VETERAN_COVER`] of the ground at least. Where firs come
+///    up and overtop them, they stand under the firs, as the valley's
+///    large oaks now die under closed conifer canopies (BpS 11200).
+/// 2. The grass sod: surface fires leave it (prescribed fire had no effect
+///    on Idaho fescue's frequency on Fort Lewis's prairies, which it kept
+///    dominating; Tveten and Fonda 1999, Northwest Science 73: 145-158),
+///    so herbs hold a meadow's cover ([`OPEN_HERB`]) on the ground the
+///    trees leave open, however recent the fire, each herb grown to the
+///    oldest age it can be drawn at up to [`FIRE_FREE_CLOSURE`]. Shrubs, top-killed, resprout and
+///    stand at the years since the fire, their cover building with the
+///    trees' to [`FIRE_FREE_CLOSURE`].
+#[must_use]
+pub fn develop_kept(candidates: &[Candidate], since: f64, origin: Origin) -> Development {
+    let mut stand = develop_as(
+        candidates,
+        encroached_age(since, pioneer_lifespan(candidates)),
+        origin,
+    );
+    // The sod's plants outlive the fires: each herb stands at the oldest
+    // age it can be drawn at up to the grassland's fire-free span
+    // ([`FIRE_FREE_CLOSURE`]), not at the years since the fire (a clonal
+    // fern's oldest drawn age is centuries).
+    // A shrub, top-killed, resprouts from the fire: it stands at the
+    // years since it.
+    let sod = since.max(FIRE_FREE_CLOSURE);
+    for cohort in &mut stand.cohorts {
+        let candidate = &candidates[cohort.candidate];
+        if candidate.tree() {
+            continue;
+        }
+        let up_to = if candidate.layers[2] <= 0.0 && candidate.layers[3] > 0.0 {
+            sod
+        } else {
+            since
+        };
+        cohort.age = candidate
+            .ages
+            .iter()
+            .copied()
+            .filter(|a| *a <= up_to)
+            .fold(cohort.age, f64::max);
+    }
+    let mut any = false;
+    for (index, candidate) in candidates.iter().enumerate() {
+        if !candidate.tree()
+            || candidate.shade_tolerance >= TOLERANT
+            || candidate.ages.is_empty()
+            || candidate.suitability <= 0.0
+        {
+            continue;
+        }
+        let weight = candidate.suitability
+            * (candidate.layers[0] + candidate.layers[1])
+            * (1.0 - candidate.shade_tolerance);
+        if weight <= 0.0 {
+            continue;
+        }
+        let age = oldest_at(&candidate.ages, VETERAN_AGE * candidate.lifespan.max(1.0));
+        if age <= since {
+            continue;
+        }
+        any = true;
+        stand.cohorts.push(Cohort {
+            candidate: index,
+            age,
+            weight,
+            pioneer: true,
+            released: false,
+            overtopped: false,
+            veteran: true,
+        });
+    }
+    if any {
+        stand.cover[0] = stand.cover[0].max(VETERAN_COVER);
+    }
+    // Shrubs come in with the trees: the model's grassland after a fire
+    // names no shrub, and snowberry and poison oak first stand in the
+    // grassland that trees are invading.
+    stand.cover[2] *= (since / FIRE_FREE_CLOSURE).clamp(0.0, 1.0);
+    let trees = (stand.cover[0] + stand.cover[1]).min(1.0);
+    stand.cover[3] = stand.cover[3].max(OPEN_HERB * (1.0 - trees));
+    stand
 }
 
 /// A shade-tolerant tree's cohorts under the canopy (rule 2 of
@@ -850,6 +1074,7 @@ fn ingrowth(
                 pioneer: false,
                 released: false,
                 overtopped: false,
+                veteran: false,
             });
             if share > 0.0 {
                 // On average it has stood in its gap half the years since
@@ -863,6 +1088,7 @@ fn ingrowth(
                     pioneer: false,
                     released: true,
                     overtopped: false,
+                    veteran: false,
                 });
             }
         }
@@ -1382,5 +1608,63 @@ mod tests {
             .cloned()
             .collect();
         assert_eq!(hardwood_share(&both, &overtopped), 0.0);
+    }
+
+    #[test]
+    fn fires_keep_a_prairie_open_under_old_trees() {
+        let oak = Candidate {
+            shade_tolerance: 0.2,
+            layers: [0.8, 0.6, 0.4, 0.0],
+            lifespan: 500.0,
+            ages: vec![8.0, 25.0, 50.0, 80.0, 120.0],
+            suitability: 1.0,
+            hardwood: true,
+        };
+        let pool = [oak, fir(), hemlock(), fern()];
+        // Three years after a fire: old oaks and firs over the sod, and
+        // no hemlock among them, which fire kills.
+        let kept = develop_kept(&pool, 3.0, Origin::Natural);
+        let veterans: Vec<&Cohort> = kept.cohorts.iter().filter(|c| c.veteran).collect();
+        assert_eq!(veterans.len(), 2);
+        assert!(veterans.iter().all(|c| c.candidate < 2 && c.age >= 80.0));
+        assert!(kept.cover[0] >= VETERAN_COVER);
+        let trees = kept.cover[0] + kept.cover[1];
+        assert!(kept.cover[3] >= OPEN_HERB * (1.0 - trees) - 1e-9 && trees < 0.2);
+        let burnt = develop_as(&pool, 3.0, Origin::Natural);
+        assert!(
+            kept.cover[3] > 1.5 * burnt.cover[3],
+            "{:?} {:?}",
+            kept.cover,
+            burnt.cover
+        );
+        // Trees come into the sod more slowly than onto a clearing: still
+        // open at 20 fire-free years, closed at 28 (LANDFIRE), where a
+        // clearing's young conifers close at about 11.
+        let trees_at = |since: f64| {
+            let stand = develop_kept(&pool, since, Origin::Natural);
+            stand.cover[0] + stand.cover[1]
+        };
+        let young = |since: f64| {
+            let stand = develop_as(&pool, since, Origin::Natural);
+            stand.cover[0] + stand.cover[1]
+        };
+        assert!(young(12.0) >= LANDFIRE_CLOSED, "{}", young(12.0));
+        assert!(trees_at(20.0) < LANDFIRE_CLOSED, "{}", trees_at(20.0));
+        assert!(trees_at(FIRE_FREE_CLOSURE) >= LANDFIRE_CLOSED - 1e-9);
+        // Unburnt for 80 years it has closed as a stand 17 years younger
+        // does, the old trees still in it.
+        let closed = develop_kept(&pool, 80.0, Origin::Natural);
+        let lag = 80.0 - encroached_age(80.0, pioneer_lifespan(&pool));
+        assert!((lag - 17.2).abs() < 0.1, "{lag}");
+        let forest = develop_as(&pool, 80.0 - lag, Origin::Natural);
+        assert_eq!(closed.cover[0], forest.cover[0]);
+        assert!(closed.cohorts.iter().any(|c| c.veteran));
+        // Thatch builds back over about 11 years.
+        assert_eq!(thatch_built(0.0), 0.0);
+        assert!(thatch_built(3.0) > 0.5 && thatch_built(3.0) < 0.6);
+        assert!(thatch_built(THATCH_YEARS) > 0.95);
+        // Moss: 83% of a prairie's just after a fire, all of it ten years on.
+        assert!((prairie_moss(0.0) - MOSS_AFTER_FIRE * PRAIRIE_MOSS).abs() < 1e-12);
+        assert!(prairie_moss(PRAIRIE_MOSS_YEARS) > 0.95 * PRAIRIE_MOSS);
     }
 }

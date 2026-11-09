@@ -6858,6 +6858,19 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
         decay.map(|n| n.to_string()).join("/"),
         100.0 * herbs
     );
+    #[allow(clippy::cast_precision_loss)]
+    let thatch = plan
+        .cover
+        .iter()
+        .map(|cover| f64::from(cover.floor.thatch))
+        .sum::<f64>()
+        / plan.cover.len().max(1) as f64;
+    if thatch > 0.0 {
+        out!(
+            "  thatch between the grasses {:.0}% of the ground",
+            100.0 * thatch
+        );
+    }
     // The floor's moss genera, each its share of all the tile's moss.
     let mut genera = vec![0.0_f64; plan.floor_mosses.len()];
     for cover in &plan.cover {
@@ -7317,6 +7330,9 @@ fn floor_mesh(plan: &api::TilePlan, field: &FieldSite, offset: Vec3) -> mesh::Me
         srgb(plantgen::deadwood::LITTER_SRGB),
         srgb([122, 104, 82]),
     );
+    // Dead grass between a fire-kept prairie's grasses, as its ground
+    // look draws it from afar.
+    let thatch = plantgen::ground::plant_recipe("thatch").map_or(litter, |recipe| recipe.mean);
     // Each floor moss genus's colour from afar, as its colonies draw.
     let kinds = plantgen::mosses::kinds(Library::builtin()).unwrap_or_default();
     let genus_colour: Vec<[f32; 3]> = plan
@@ -7396,6 +7412,8 @@ fn floor_mesh(plan: &api::TilePlan, field: &FieldSite, offset: Vec3) -> mesh::Me
                 colour
             } else if n < (m + l) / surface {
                 litter
+            } else if n < (m + l + f64::from(floor.thatch)) / surface {
+                thatch
             } else {
                 soil
             };
