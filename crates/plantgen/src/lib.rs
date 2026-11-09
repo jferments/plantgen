@@ -1870,4 +1870,10 @@ pub mod venation;
 /// depth, where Espinosa Bancalari et al.'s (1987) Douglas-firs hold 0.35
 /// to 0.42; it now holds 0.30. `plantc grow --light` also prints the leaf
 /// in each 2 m band (`light_profile::leaf_by_height`).
-pub const GENERATOR_REVISION: u32 = 224;
+///
+/// 225: a grass tiller keeps its older leaves, dead, while it lives
+/// (grass program revision 11, `dead_leaves`, a rule at the grasses
+/// from a genus's `leaf_life_years`). Fescues, whose leaves live about
+/// five months on tillers of two years (Monteiro 2012), carry a skirt
+/// of straw round their green blades; other grasses grow as before.
+pub const GENERATOR_REVISION: u32 = 225;

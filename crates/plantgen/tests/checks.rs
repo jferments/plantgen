@@ -293,6 +293,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
     ),
     (
         "program:grass",
+        "leaf_life_years",
+        "a grass draws each tiller's green blades for as long as the tiller lives (leaf_years: two years in a fescue), and its leaves' turnover as the dead older leaves the tiller holds (dead_leaves, grass program revision 11), so a fescue's green blades read two years against the five months Festuca orthophylla's leaves live (Monteiro 2012)",
+    ),
+    (
+        "program:grass",
         "shoot_leaves",
         "a culm's own leaves are its 1 to 3 culm leaves and a tiller's blades stand at the ground on no stem, against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
     ),

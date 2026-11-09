@@ -71,9 +71,19 @@
 # rooting limits in the conditions rs is 1 and tg is t, and a grass grows
 # as before.
 #
+# Revision 11 (prairie sod): a living tiller keeps its own dead leaves.
+# A grass leaf lives a few months while its tiller lives a year or more
+# and makes new ones, so a tiller carries, besides its green blades, the
+# older ones it has lost (Festuca orthophylla's leaves live 141-169 days
+# on tillers that last longer: Monteiro 2012). Each tiller draws
+# dead_leaves of them as thatch, below and outside its green blades and
+# whole but for their tips, bending as thatch does; they go when the
+# tiller does. With dead_leaves 0, as every program gives it unless a
+# rule says otherwise, a grass grows as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem grass 10;
+lsystem grass 11;
 
 param tillers;                # living tillers in a mature tussock
 param tiller_rate;            # cohort size: tillers * (1 - exp(-tiller_rate * age))
@@ -105,6 +115,7 @@ param thatch_years;           # years dead blades stay on
 param thatch_droop;           # extra degrees a dead blade bends at each joint
 param light_cell;             # light voxel edge: about a blade's spacing
 param root_depth = 1.14;      # deepest the roots reach, metres (soil@1)
+param dead_leaves = 0;        # dead blades a living tiller still holds, its older leaves
 # Leaf area of each organ 1 m long, m². Match each to the area its look
 # draws (`plantc atlas`).
 param blade_area;
@@ -116,6 +127,10 @@ module Y;                     # the crown: sends up a cohort each year
 module Ts(k, m, n);           # tillers k to k + m - 1 of a cohort of n
 module Tl;                    # the base of a tiller
 module Lv(j);                 # j blades still to place on a tiller
+module Dv(j);                 # j dead blades still to place on a tiller
+module Db(len, a);            # a dead blade len long bending a at each joint
+module Dp(k, s, a);           # piece k of a dead blade, s long
+module Dj(a);                 # the joint between two pieces of a dead blade
 module Bl(len, a);            # a blade len long bending a at each joint
 module Pc(k, s, a);           # piece k of a blade, s long
 module Bd(a);                 # the joint between two pieces
@@ -151,7 +166,7 @@ decompose Ts(k, m, n) : m == 1 ->
     [ Tl /(k * 137.508 + uniform(-12, 12)) &(90)
       f(tussock_radius * sqrt(n / tillers) * sqrt((k + uniform(0.2, 0.8)) / n)) ^(90)
       &(tiller_lean * sqrt((k + 0.5) / n) + uniform(0, 4))
-      Lv(floor(uniform(leaves - 0.5, leaves + 1.5))) Fl ];
+      Lv(floor(uniform(leaves - 0.5, leaves + 1.5))) Fl Dv(dead_leaves) ];
 decompose Ts(k, m, n) -> ;
 
 decompose Lv(j) : j > 0 ->
@@ -204,3 +219,23 @@ decompose Cn(s, j) ->
 decompose Cb(s, j) : culm_branches > 0 && j > 1 && rand() < culm_branches ->
     [ /(j * divergence + 180 + uniform(-40, 40)) &(uniform(25, 45)) !(culm_radius * 0.7) Cu(s * 0.8, j - 1) ];
 decompose Cb(s, j) -> ;
+
+# A living tiller's older leaves, dead but still on it (revision 11):
+# a grass leaf grows up from inside the sheaths of the ones before it, so
+# the older a leaf, the further out and lower on the tiller it stands,
+# and a dead one, without the turgor that held it up, leans out from the
+# tuft. The j-th of dead_leaves leans j / (dead_leaves + 1) of the way
+# from the green blades' angle to the ground, the oldest nearly flat
+# (the model's choice), and bends as thatch does. Their draws come after every other draw of the
+# tiller, so a grass with dead_leaves 0 draws as before.
+decompose Dv(j) : j > 0 ->
+    [ /(j * divergence + 90 + uniform(-roll_spread, roll_spread))
+      &(leaf_angle + (90 - leaf_angle) * j / (dead_leaves + 1) * uniform(0.6, 1)) $
+      Db(leaf_length * (1 - exp(-tg / maturity)) * sqrt(rs) * uniform(1 - leaf_spread, 1 + leaf_spread),
+         arch * uniform(0.5, 1.5)) ]
+    Dv(j - 1);
+decompose Dv(j) -> ;
+decompose Db(len, a) -> leaf Dp(0, len * 0.12 / (1 - pow(0.88, pieces)), a);
+decompose Dp(k, s, a) : k < pieces - 1 -> thatch(s) f(s) Dj(a) Dp(k + 1, s * 0.88, a);
+decompose Dp(k, s, a) -> ;
+interpret Dj(a) -> /(gauss() * twist) &(a + thatch_droop);
