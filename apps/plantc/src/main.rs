@@ -2696,10 +2696,26 @@ fn grow_command(args: &[String]) -> Result<(), Failure> {
         out!("  reference at {} years: {}", record.age, record.describe());
     }
     if light && let Some(graph) = growth.keyframes.last() {
-        let preset = Conditions::preset(environment);
+        // The stand it grew in: its environment's, spaced as its own
+        // yield tables space it (`variants.stand_spacing`).
+        let preset = Conditions::in_neighbourhood(environment, neighbourhood(&spec, environment));
         let conditions = place
             .as_ref()
             .map_or(preset.clone(), |(place, _)| place.over(&preset));
+        // Its own light tool's voxel and extinction where its program
+        // names them as parameters (broadleaf's), else pinidae's.
+        let light_tool = (
+            spec.generator
+                .params
+                .get("light_cell")
+                .copied()
+                .unwrap_or(0.4),
+            spec.generator
+                .params
+                .get("extinction")
+                .copied()
+                .unwrap_or(0.35),
+        );
         let half = plantgen::light_profile::half_width(graph, &growth.organ_types, &conditions);
         out!(
             "  light at {} years across its cell, {:.1} m to each side (mean, 10th, median, 90th percentile; mean under its own crown alone):",
@@ -2711,7 +2727,7 @@ fn grow_command(args: &[String]) -> Result<(), Failure> {
             &growth.organ_types,
             &conditions,
             1.0,
-            (0.4, 0.35),
+            light_tool,
         )
         .map_err(Failure::from)?;
         for layer in layers.iter().rev().step_by(2) {
