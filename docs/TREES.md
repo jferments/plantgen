@@ -44,9 +44,11 @@ A broadleaf tree is grown one year at a time, after Pałubicki et al.
   0.03, intermediate 0.06, intolerant or unstated 0.12), so a stand of
   tolerant trees holds the leaf measured light under such canopies
   implies (about 17% of the open's light under red alder, 1.3% under
-  beech at a leaf area index of 5), and a twig of a limb's side branch that stays below its starving light
-  is shed with its needles (`twig_shade`, branch autonomy), so a crown in
-  a stand holds about the leaf its trunk carries.
+  beech at a leaf area index of 5), and a twig of a limb's side branch
+  that stays below a quarter of its starving light is shed with its
+  needles (`twig_shade` 0.25, branch autonomy), so a crown in a stand
+  holds about the leaf its trunk carries and its lower limbs keep their
+  inner twigs.
 - **Wood carries load.** Branches thicken by the pipe model, bend under
   their own weight and their leaves', and hold a set angle from upright by
   reaction wood. The trunk's girth follows the foliage it carries: the
@@ -154,8 +156,9 @@ In this order:
    the reference lines; `plantc measure` gives crown width and height;
    `plantc grow SPECIES --env interior --years N --light` prints the light
    down through a stand of its like (at the species' own spacing, with
-   its own light tool) and the share of leaf in each quarter of the
-   crown's depth, to set beside measured canopy profiles (Parker et al.
+   its own light tool), the leaf in each 2 m band and the share of leaf
+   in each quarter of the crown's depth, to set beside measured canopy
+   profiles (Parker et al.
    2002) and crown leaf distributions;
    `plantc validate SPECIES --seeds 3` checks every stated character on
    grown plants, as `tests/checks.rs` does. Grow every species of the
