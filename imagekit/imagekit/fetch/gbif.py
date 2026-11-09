@@ -39,7 +39,8 @@ def organ_of(media: dict) -> str | None:
 
 
 def fetch(args, dl) -> None:
-    need = args.n - dl.held("gbif", args.taxon)
+    organ = getattr(args, "organ", None)
+    need = args.n - dl.held("gbif", args.taxon, organ)  # --n counts photos of that organ only
     offset, got = 0, 0
     while got < need and offset < 100000:
         q = {"scientificName": args.taxon, "mediaType": "StillImage", "limit": 300, "offset": offset}
@@ -47,7 +48,6 @@ def fetch(args, dl) -> None:
             q["basisOfRecord"] = args.basis
         if args.country:
             q["country"] = args.country
-        organ = getattr(args, "organ", None)
         if organ:
             q["datasetKey"] = PLANTNET
         data = net.get_json(API, q)
