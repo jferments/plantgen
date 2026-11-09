@@ -209,7 +209,11 @@ prompt injection. So, without exception:
     canopy height field with a picture baked from its plants). Sites: `site.rs`, `pavement.rs`, `succession.rs`
     (what comes up in cracks) and `site_field.rs` (a tile's mesh measured
     once; `docs/sites/DEVELOPERS.md`, which also says how a real city
-    tile is built from open data).
+    tile is built from open data). A plant's neighbours in a stand are
+    `conditions.rs` (their crowns as envelopes and the stand beyond them)
+    and `stand.rs` (plants grown together); `light_profile.rs` samples the
+    light down through a stand and the leaf by height (`plantc grow
+    --light`, `docs/TREES.md`).
   - Moss on buildings (`src/mosses.rs`, guide `docs/sites/MOSS.md`).
     Moss genera are rank files with no species (`body_plan` leafy and a
     `colony_form`), so changing them needs no generator revision. Every

@@ -48,7 +48,13 @@ A broadleaf tree is grown one year at a time, after Pałubicki et al.
   reaction wood. The trunk's girth follows the foliage it carries: the
   pine family's pipe values (`pipe_organ`, `pipe_tip`) give a stand-grown
   Douglas-fir the dbh Espinosa Bancalari et al. (1987) measured for its
-  leaf area.
+  leaf area. Pine-family limbs keep a twentieth of each year's sag
+  (`bend_set` 0.05) and spring back from the rest, as Farjon gives their
+  branches horizontal or spreading: keeping more, an old Douglas-fir's
+  side shoots hung in curtains of bare strings. An old conifer's side
+  shoot that grows a few centimetres a year holds its growth and lays it
+  down as one segment every 20 cm (`seg_side`, from `seg_age`), so a
+  500-year tree stays within the segment limit.
 
 The parameters come from rules (§3), not from values set by hand for a
 species. A few species still carry older hand-set values (Oregon white
