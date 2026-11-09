@@ -3350,13 +3350,7 @@ fn logs_command(args: &[String]) -> Result<(), Failure> {
             seed: seed.wrapping_mul(31).wrapping_add(u64::from(decay)),
         };
         let drawn = plantgen::deadwood::draw(&shape, Some(&spec.appearance), level);
-        let placed = api::Log {
-            species: species.to_string(),
-            position: [0.0, 0.0, 0.0],
-            yaw: 0.0,
-            pitch: 0.0,
-            shape,
-        };
+        let placed = api::Log::new(species, [0.0, 0.0, 0.0], 0.0, 0.0, shape);
         let offset = Vec3::new(0.0, 0.0, (f64::from(decay) - 3.0) * gap);
         scene = on_host(scene, placed_log(drawn, &placed, [0.0, 0.0], offset), 0);
     }
@@ -7061,7 +7055,8 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
                 .as_ref()
                 .ok_or("`--moss` grows moss over a site: give `--field SITE.json`")?;
             // The tile's trees shade the walls and roofs they stand over.
-            let canopy = plan.crowns(&fill, field.corner, MOSS_SHADE_LEAST_M);
+            let canopy =
+                plantgen::fill::tile_crowns(&plan, &fill, field.corner, MOSS_SHADE_LEAST_M);
             let cover = tile_moss(
                 field,
                 tile_m,
@@ -7351,8 +7346,7 @@ fn field_site(
             traffic: 0.0,
             maintenance: 0.0,
         };
-        site = site
-            .with_colonists(&places, &colonists, &[], &settings, years)
+        site = plantgen::fill::with_colonists(site, &places, &colonists, &[], &settings, years)
             .map_err(|error| error.to_string())?;
         out!(
             "{} plants came up in the pavements in {years} years ({} species of the pool, {} microsites) in {:.1} s",

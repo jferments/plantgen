@@ -1144,9 +1144,15 @@ mod on_a_site_field {
             z: 9.0,
             age: 5.0,
         };
-        let site = tile_of(&mesh)
-            .with_colonists(&sites, &[yarrow], &[parent], &settings, 8)
-            .unwrap();
+        let site = plantgen::fill::with_colonists(
+            tile_of(&mesh),
+            &sites,
+            &[yarrow],
+            &[parent],
+            &settings,
+            8,
+        )
+        .unwrap();
         assert!(!site.colonists.is_empty(), "nothing came up in 8 years");
         // The slab leaves no room for the stand; only the crack's plants.
         let mut stands = StandMap::uniform(40.0, 1, 40.0);
