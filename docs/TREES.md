@@ -52,7 +52,13 @@ A broadleaf tree is grown one year at a time, after Pałubicki et al.
   reaction wood. The trunk's girth follows the foliage it carries: the
   pine family's pipe values (`pipe_organ`, `pipe_tip`) give a stand-grown
   Douglas-fir the dbh Espinosa Bancalari et al. (1987) measured for its
-  leaf area.
+  leaf area. Once a crown stops spreading the stem's cambium keeps laying a
+  ring each year, fed by the leaf above it and its light (`pipe_cambium`,
+  conifers and broadleaf trees alike), so old trunks keep thickening.
+- **Old crowns renew.** Where a species sheds its own shaded limbs
+  (`self_pruning`, or a shade-intolerant class), free space returns
+  wherever only bare wood stands, so dormant buds sprout where light comes
+  back and an old crown keeps leafing.
 
 The parameters come from rules (§3), not from values set by hand for a
 species. A few species still carry older hand-set values (Oregon white

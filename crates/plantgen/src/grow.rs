@@ -433,6 +433,34 @@ struct Girth {
     /// `cambium`: the stem's rings are fed by the foliage above, its area
     /// times its light.
     lit: IdMap<f64>,
+    /// The mean light of the organs on each segment at the last step, for
+    /// an organ new since then on a segment that stood: a deciduous
+    /// tree's leaves are new every year, and its short shoots' light last
+    /// year stands for theirs.
+    lit_segment: IdMap<f64>,
+}
+
+/// The segment carrying each organ: the nearest segment at or below its
+/// node.
+fn organ_segments(scene: &Scene) -> Vec<Option<u64>> {
+    let mut at_node: Vec<Option<u64>> = vec![None; scene.nodes.len()];
+    for segment in &scene.segments {
+        at_node[segment.node as usize] = Some(segment.id);
+    }
+    scene
+        .organs
+        .iter()
+        .map(|organ| {
+            let mut node = organ.node;
+            while let Some(current) = node {
+                if let Some(id) = at_node[current as usize] {
+                    return Some(id);
+                }
+                node = scene.nodes[current as usize].parent;
+            }
+            None
+        })
+        .collect()
 }
 
 impl Girth {
@@ -500,6 +528,7 @@ impl Girth {
     /// (only where the pipe tool lays them with `cambium`).
     fn remember_light(&mut self, scene: &Scene, pipes: Option<&tools::Pipes>, organ_light: &[f64]) {
         self.lit.clear();
+        self.lit_segment.clear();
         if pipes.is_some_and(|pipes| pipes.cambium > 0.0) {
             self.lit.extend(
                 scene
@@ -508,15 +537,30 @@ impl Girth {
                     .zip(organ_light)
                     .map(|(organ, &light)| (organ.id, light)),
             );
+            let mut sums: IdMap<(f64, f64)> = IdMap::default();
+            for (segment, &light) in organ_segments(scene).into_iter().zip(organ_light) {
+                if let Some(segment) = segment {
+                    let entry = sums.entry(segment).or_insert((0.0, 0.0));
+                    entry.0 += light;
+                    entry.1 += 1.0;
+                }
+            }
+            self.lit_segment
+                .extend(sums.into_iter().map(|(id, (sum, count))| (id, sum / count)));
         }
     }
 
     /// The leaf area above each segment, each organ's area times its light
-    /// at the last step (none for an organ new since then), in m².
+    /// at the last step; an organ new since then takes the mean light its
+    /// segment's organs had (none on a new segment), in m².
     fn lit_above(&self, scene: &Scene, organ_area: &[f64]) -> Vec<f64> {
         let mut lit = vec![0.0; scene.nodes.len()];
-        for organ in &scene.organs {
-            if let (Some(node), Some(&light)) = (organ.node, self.lit.get(&organ.id)) {
+        let carriers = organ_segments(scene);
+        for (organ, carrier) in scene.organs.iter().zip(carriers) {
+            let light = self.lit.get(&organ.id).copied().or_else(|| {
+                carrier.and_then(|segment| self.lit_segment.get(&segment).copied())
+            });
+            if let (Some(node), Some(light)) = (organ.node, light) {
                 lit[node as usize] +=
                     organ_area[usize::from(organ.symbol)] * organ.size * organ.size * light;
             }
