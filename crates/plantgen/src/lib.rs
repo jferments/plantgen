@@ -1805,4 +1805,13 @@ pub mod venation;
 /// fire-free years, not at 16 ([`development::encroached_age`]), and its
 /// moss and lichen carpet is Calabria 2016's 54% (40% moss) where it was
 /// 14%. No plant grows differently.
-pub const GENERATOR_REVISION: u32 = 218;
+///
+/// 219: a palmately lobed blade takes its stated base, where every one was
+/// drawn with a heart round its petiole: its body reaches round from its
+/// tip half the angle its basal margins meet at (Simpson's classes:
+/// cuneate a wedge into the petiole, truncate cut square, rounded a little
+/// past), and a blade whose base is unstated keeps its heart. A Pacific
+/// ninebark's base is rounded to truncate (FNA). A baobab's leaf is
+/// palmately compound with five to seven leaflets (Baum 1995), drawn from
+/// those facts, where a hand-set palmately lobed blade stood in for it.
+pub const GENERATOR_REVISION: u32 = 219;
