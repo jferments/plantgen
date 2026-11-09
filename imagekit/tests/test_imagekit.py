@@ -193,6 +193,35 @@ class GbifOrgan(Base):
         self.assertTrue(all("habit" in r["source"]["why"] for r in rows))
         self.assertEqual({r["source"]["licence"] for r in rows}, {"cc-by-sa"}, "the licence in brackets is read")
 
+    def test_organ_tops_up_per_organ(self):
+        """Held habit photos do not count against `--organ leaf`: --n is photos of that organ."""
+        self.run_cli("fetch", "gbif", "--taxon", "Daucus carota", "--n", "3", "--organ", "habit", "--batch", "b")
+        self.assertEqual(len(self.rows("b")), 3)
+        self.assertTrue(all(r["source"]["organ"] == "habit" for r in self.rows("b")))
+        self.run_cli("fetch", "gbif", "--taxon", "Daucus carota", "--n", "3", "--organ", "leaf", "--batch", "b2")
+        self.assertEqual([r["source"]["organ"] for r in self.rows("b2")], ["leaf"], "one leaf photo of six")
+        with Store(self.store_dir) as st:
+            self.assertEqual(st.held("gbif", "Daucus carota", "habit"), 3)
+            self.assertEqual(st.held("gbif", "Daucus carota", "leaf"), 1)
+            self.assertEqual(st.held("gbif", "Daucus carota"), 4)
+
+    def test_old_index_learns_organs_from_why(self):
+        """An index made before refs kept the organ is rebuilt, reading the organ from "why"."""
+        import sqlite3
+        self.run_cli("fetch", "gbif", "--taxon", "Daucus carota", "--n", "3", "--organ", "habit", "--batch", "b")
+        for path in (Path(self.store_dir) / "sources" / "images" / "b").glob("images.jsonl"):
+            rows = [json.loads(l) for l in path.read_text().splitlines() if l.strip()]
+            for r in rows:
+                r["source"].pop("organ")
+            path.write_text("".join(json.dumps(r) + "\n" for r in rows))
+        db = sqlite3.connect(Path(self.store_dir) / "index.sqlite")
+        db.executescript("drop table refs; create table refs (key text primary key, sha256 text, source text,"
+                         " taxon text, batch text);")
+        db.commit()
+        db.close()
+        with Store(self.store_dir) as st:
+            self.assertEqual(st.held("gbif", "Daucus carota", "habit"), 3)
+
     def test_organ_from_title(self):
         from imagekit.fetch import gbif
         self.assertEqual(gbif.organ_of({"title": "Heracleum maximum W.Bartram: leaf"}), "leaf")

@@ -65,8 +65,8 @@ fn main() -> Result<(), plantgen::api::Error> {
 | `generator.package(out)` | The species' content-addressed package, as After loads it |
 | `generator.write_variants(&variants, out)` | Many plants, each written as soon as it is drawn, and `variants.json` |
 
-`Options` chooses the quality (`STANDARD`, as packages are built, or
-`DRAFT`) and the day of the year seasoned organs show. `Settings` chooses
+`Options` chooses the quality (`Quality::STANDARD`, as packages are
+built, or `Quality::DRAFT`) and the day of the year seasoned organs show. `Settings` chooses
 compression (`None`, `Quantize`, `Meshopt`), which attributes to keep and
 a budget (`Budget::new(triangles, bytes)` or `Budget::tiers()`), as
 `plantc export`'s flags do. Start from `Options::default()`,
@@ -121,7 +121,7 @@ A set lists each plant's seed, size (height, crown, stem diameter, leaf
 area), files, bytes and triangles per level, and a fingerprint of its
 bytes; `duplicates` names any seed drawn exactly as an earlier one.
 
-## Stands over a whole map: `Fill` (draft)
+## Stands over a whole map: `Fill`
 
 For city- or region-sized scenes, never grow a plant per place. A `Fill`
 develops each community's stand once at a few stand ages (which cohorts
@@ -151,9 +151,75 @@ let site = Site::flat(TileId { x: 12, y: 40 }, 240.0)?;
 let stands = StandMap::uniform(240.0, 0, 120.0); // community 0, 120 years since disturbance
 let plan = fill.tile(&site, &stands, 7)?;
 plan.write("tiles".as_ref())?; // tiles/12_40.json and tiles/12_40.bin
+// Later, in any process: the same plan from its files.
+let again = plantgen::api::TilePlan::read("tiles/12_40.json".as_ref())?;
+assert_eq!(again.instance_bytes(), plan.instance_bytes());
 Ok(())
 }
 ```
+
+### What a caller may rely on (`API_VERSION` 7)
+
+`Fill` is part of the stable API from `API_VERSION` 7. Everything below
+holds until the version goes up; `tests/fill_api.rs` holds the fill to
+it, calling it as you would, through `plantgen::api` alone.
+
+- **Names.** Every item a fill takes or gives is in `plantgen::api`:
+  `Community`, `Member`, `Layer`, `Origin`, `Fill`, `FillSettings`,
+  `Site`, `SiteFactors`, `FieldTile`, `CrackPlant`, `TileId`,
+  `StandMap`, `StandCell`, `TilePlan`, `Instance`, `WallClip`, `Cover`,
+  `CoverKind`, `Floor`, `FloorMoss`, `Log`, `LogShape`, `CanopyCell`,
+  `TileStats`, `LayerCover`, `Prototype`, `PrototypeKey`,
+  `PrototypeFiles`, `PrototypePackage`, `read_prototypes` and the
+  constants `INSTANCE_SCHEMA`, `INSTANCE_BYTES`, `PROTOTYPES_FILE`,
+  `STAND_AGES`, `STAND_CELL_M`, `STAND_SCALE`, `TRIANGLE_PIXELS` and
+  `CLIMBER_SPACING_M`. The rest of `plantgen::fill`
+  (`with_colonists`, `tile_crowns`, `cells_per_layout` and the like) is
+  not, and changes with the generator.
+- **What you build and what you read.** The inputs you make yourself
+  (`TileId`, `StandMap`, `StandCell`, `Member`, `Community`,
+  `CrackPlant`, `Instance`) keep their fields; a field added to one
+  raises `API_VERSION`. What a fill makes (`TilePlan`, `Prototype`,
+  `PrototypeFiles`, `PrototypePackage`, `Cover`, `Floor`, `FloorMoss`,
+  `Log`, `CanopyCell`, `TileStats`, `LayerCover`) is non-exhaustive: read
+  its fields, and make one only through its constructor (`Cover::of`,
+  `Log::new`), so fields can be added beside them. `FillSettings` and
+  `Site` start from `FillSettings::default()` and `Site::flat`,
+  `Site::from_heightfield` or `Site::from_field`.
+- **What changes with `GENERATOR_REVISION`, not the version.** Which
+  plants a tile holds, where, how big, and every byte of every file: the
+  fill models stands better with each revision. The same communities (in
+  the same order), settings, site, stand map, seed and revision give the
+  same bytes in every file, on every machine and thread count.
+- **Prototypes are known by their key.** `PrototypeKey` (and its file
+  stem, `<species>-<setting>-<seed>-<age>y`) is the same plant, the same
+  bytes, in any fill at the same revision and options; cache prototype
+  files by stem and revision. `Instance::prototype` is an index into
+  `fill.prototypes()`, which holds for the fill that wrote it: the same
+  communities in the same order and the same settings. A fill with
+  another community or stand age numbers its prototypes otherwise.
+- **The files** (written by `TilePlan::write`, `Fill::write_prototypes`,
+  `TilePlan::glb` and `TilePlan::glb_cells`, or by `plantc fill`):
+
+  | File | Form | Read it with |
+  | --- | --- | --- |
+  | `tiles/X_Y.json` | JSON, `schema` = `INSTANCE_SCHEMA` (4): `generator_revision`, `tile` (`x`, `y`), `day`, `tile_m`, `cell_m`, `cols`, `instance_bytes` (32), `instances` (how many), `instances_file`, and per stand cell row by row from the south-west `cover` and `canopy`; `stats`, `logs`, `floor_mosses` | `TilePlan::read(path)` (with the `.bin`) |
+  | `tiles/X_Y.bin` | the packed instances back to back, 32 bytes each (below) | `Instance::from_bytes`, or any language by the layout |
+  | `prototypes/prototypes.json` | JSON, `schema` = `INSTANCE_SCHEMA`, `generator_revision`, `prototypes`: each `index`, `key`, `age_years`, `layer`, `plant` (`seed`, `stem`, `size`, `levels`: `level`, `file`, `bytes`, `triangles`; `fingerprint`, SHA-256 of the levels' bytes) and `parts` (`region`, `levels`). It lists every prototype the fill wrote into the folder, not only the last call's | `read_prototypes(dir)` |
+  | `prototypes/<stem>-lodN.glb`, `<stem>-<part>-lodN.glb` | glTF 2.0 binary, a plant at a level (0 nearest), as `Generator::export` writes it; +Y up, the plant's foot at the origin | any glTF reader |
+  | `tiles/X_Y.glb` | glTF 2.0 binary, every plant of the tile at one level with `EXT_mesh_gpu_instancing`, root at the tile's south-west corner (+X east, +Y up, -Z north) | any glTF reader (meshopt files: see below) |
+  | `tiles/X_Y/cells.json`, `tiles/X_Y/c<col>_<row>-lod<N>.glb` | the index (`format` `plantgen-tile-cells`, `schema` 1) and each cell's file, as the whole tile's | JSON, any glTF reader |
+
+  A tile's GLB files place each plant exactly where its packed instance
+  does, so a tile read back from its files (`TilePlan::read`,
+  `read_prototypes`) draws the same bytes as the plan the fill made. A
+  reader refuses a file of a schema it does not know rather than
+  misreading it; the schema goes up whenever a file's form changes.
+  The `<stem>.size.json` and `<stem>.prototype.json` beside the
+  prototypes are the fill's own caches, not part of the contract.
+- **Not built yet.** A far stand-in for a whole tile (one card or
+  height field per tile, for kilometres off) is not in the API; the
+  per-cell `canopy` raster is what a host draws far forest from today.
 
 - **Stands that develop.** A stand cell is drawn at the stand age
   (`FillSettings::stand_ages`, 10 to 640 years unless chosen) nearest its
@@ -345,6 +411,15 @@ Ok(())
   spreading leading after a disturbance and the deepest wefts later, as
   Hylocomium does in old growth. A host can tint its ground with each
   genus's `mosses::MossKind::far_colour`.
+  Where fires keep a stand open (a community's `fire_years`),
+  `floor.lichen` is the share under Cladonia lichen mats between the
+  grasses, beside the moss: none until 5 years after a fire, 13% of the
+  ground from 20 years (`development::prairie_lichen`, from Calabria et
+  al. 2016's five south Puget Sound prairies), less under closing crowns
+  and shrubs; left out of the JSON where there is none. The lichens
+  themselves are library taxa (`lichens::kinds`: the reindeer lichens,
+  Cladonia subgenus Cladina, first): a host tints the ground with
+  `LichenKind::far_colour` from afar and draws `lichens::draw_mat` near.
 - **Logs** lie on a natural stand's floor (`TilePlan::logs`, the JSON's
   `logs`; none in a planted or kept stand, and on cleared ground only
   those its own trees drop): each with the species it
@@ -436,6 +511,45 @@ tile this way with stock three.js: a 120 m tile seen from the ground drew
 `MSFT_lod`, is read by Babylon.js and UnityGLTF but by Blender and
 three.js only through add-ons, so the cells do not rely on it.
 
+**A whole tile from afar.** Past the distance at which a tile's cards
+are enough, a tile still holds thousands of plants; games draw forest that
+far as a surface (Bruneton and Neyret 2012 draw it as a z-field, the
+canopy's height over the terrain, with its shading in maps; Serious Sam 4
+splats its farthest forest into the terrain). `Fill::canopy(&plan, &site,
+&FarSettings::default())` (or `plantc fill ... --far 0.5`, written as
+`tiles/X_Y-far.glb` and `tiles/X_Y-far.json`) makes one such stand-in from
+the tile's own plants, drawn at the farthest level as the cells draw them:
+
+- a picture of the tile from straight above (`FarSettings::texel_m`, half
+  a metre unless chosen), its colour under even light with the cover in
+  alpha, and a sky-view map (glTF's occlusion map) that darkens the
+  spaces between crowns;
+- a height field of the crowns' tops, a vertex every `grid_m` (2 m). Plants
+  1.4 m or taller make it (`shell_least_m`); the herbs and shrubs beneath
+  are in the picture only. A space between crowns narrower than the stand
+  is tall (or than `gap_m`, 5 m) is bridged: the surface runs over it no
+  steeper than 60 degrees and the picture shows what lies down there, as
+  dark as the sky it sees lets it be. Wider openings drop to the ground,
+  so a clearing or a road shows the host's ground;
+- skirts down to the ground along the tile's sides, showing each side as
+  seen level from outside (trunks under crowns), so a stand's edge at the
+  side of a tile reads from afar and no crack opens between neighbours.
+
+Its root sits at the tile's south-west corner (+X east, +Y up, -Z north)
+like the tile's other files. The scene's extras (and the JSON) give its
+`from_m`: the distance from which a texel is no wider than a pixel for a
+camera 1080 pixels high and 60 degrees across (468 m at half-metre texels),
+so a host draws the cells nearer and this farther. A 120 m tile of an
+80-year Douglas-fir stand is 7,680 triangles and 0.57 MiB, where its level-3
+cells are 214 MiB uncompressed; at a kilometre the cells' cards are thinner
+than a pixel and read as speckles, while the stand-in stays a closed
+forest. `Fill::canopy_among(&plan, &site, &[&neighbour, ...], &settings)`
+also draws the neighbours' crowns that reach across its sides, so two
+neighbours baked with each other agree along the side they share. Growing
+the prototypes takes the time (two to four minutes for that tile on four threads);
+a `Fill` keeps what it drew, so the next tile of the same fill grows none
+again.
+
 **Checked in Blender** (2026-11-06, Blender 4.5.9 LTS and 5.2.3, File >
 Import > glTF 2.0 with its defaults): a 40 m tile of Douglas-fir, bigleaf
 maple and yarrow written with `--compress none` and `--compress
@@ -446,7 +560,8 @@ well; Blender 4.5 refuses them ("Extension EXT_meshopt_compression is
 not available on this addon version"), and after `plantc unpack` imports
 them whole.
 
-Dead wood is not placed yet. A climber member (layer `climber`) has one
+Standing dead trees (snags) are not placed yet; fallen logs are
+(`TilePlan::logs`, above). A climber member (layer `climber`) has one
 prototype per seed grown at the foot of a 6 m brick wall
 (`Generator::grow_ages_on_wall`, the stem's setting `wall`), to the first
 age its spec measures it that tall. On a tile over a site field
@@ -508,8 +623,10 @@ kinds.retain(|k| ["Dicranoweisia", "Rosulabryum", "Niphotrichum"].contains(&k.ge
 let cover = mosses::grow(&site, &kinds, &MossSettings { years: 30, ..Default::default() });
 let json = cover.to_json()?; // and MossCover::from_json to read it back
 
-// Triangles: patches far off, shells, or shoots close up.
-let mesh = cover.draw(&site, &DrawOptions { detail: Detail::Shell, ..Default::default() });
+// Triangles: patches far off, shells, or shoots close up. `day` (1-365)
+// draws each genus's capsules young, ripe, spent or gone for the season;
+// None draws them all ripe.
+let mesh = cover.draw(&site, &DrawOptions { detail: Detail::Shell, day: Some(120.0), ..Default::default() });
 
 // No triangles: colour and coverage (0-1) to bake into the host's texture.
 let tint = cover.tint(0.4); // hydration, 0 dry to 1 wet

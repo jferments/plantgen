@@ -46,6 +46,7 @@
         "annotations": {"type": "object"},
         "original_sha256": {"type": "string", "description": "SHA-256 of the bytes as downloaded"},
         "fetched": {"type": "string"},
+        "organ": {"type": "string", "enum": ["bark", "flower", "fruit", "habit", "leaf", "other"], "description": "the organ the photo was fetched as (`fetch gbif --organ`): its observer's Pl@ntNet tag"},
         "render": {"type": "object", "description": "a PlantGen render (`imagekit render`): what made it, as photo-rules' render-set.json records it: commit, generator_revision, species, seed, age, day, env, view, focus or focus_on, span, size, quality, command"}
       }
     },

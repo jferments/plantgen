@@ -42,7 +42,7 @@ imagekit --help
 
 Extras: `[parquet]` writes each batch as Parquet too, `[claude]` adds
 the Claude API's SDK, and `[local]` adds torch and the image models for
-`embed` and `search` (`uv tool install './imagekit[local,claude]'`).
+`embed` and `search`, with numpy and scipy for `leaf-outline` (`uv tool install './imagekit[local,claude]'`).
 
 ## Fetch
 
@@ -78,7 +78,10 @@ imagekit fetch folder ~/Pictures/plants --licence cc-by --creator "Your Name" --
   other). Silhouette measures need whole plants, and in iNaturalist only
   about one photo in twenty shows one; Pl@ntNet holds tens to hundreds for
   a common European species, few for North American ones. The images come
-  from `bs.plantnet.org`.
+  from `bs.plantnet.org`. With `--organ`, `--n` counts photos of that
+  organ only: a taxon with 60 habit photos held still tops up to `--n`
+  leaf photos with `--organ leaf`. Each row keeps the organ in
+  `source.organ`; an index from before that reads it from `source.why`.
 
 **Fetch by view.** A species needs photos of each view to a target (whole
 plant, leafless, shoot, leaf face-on and underside, flower face and side,
@@ -299,6 +302,34 @@ fit, see-through, width to height, where the crown is widest, solidity
 and large gaps. What covers the sky inside the outline is read from the
 image (`--cover sky`: bright bluish or colourless pixels are sky). The
 analyzer is plantc's commit, so a change to the measures measures again.
+
+`leaf-outline` is the leaf-outline judge: a species' drawn leaf against
+photographs of its leaves. `leaf-outline photos` measures each leaf mask
+(`segment --organ leaf`) once: solidity, elongation (short axis over long),
+notches deeper than 6% of the length, and fill (area over the disc on its
+longest chord), with a thin stalk cut off first. A mask is kept only when it
+is one piece, clear of the frame and at least 2% of the image; the others
+are stored with why. `leaf-outline judge ID... --plantc P` draws each
+species' leaf and basal cards with `plantc atlas`, also with a compound
+leaf's leaflets drawn apart and a sprig's leaves two to a twig, and scores
+each card against the kept outlines of its taxon: z per measure against the
+photos' pooled within-species spread, RMS over the four. `--out judge.csv`
+writes one row per card and part, worst first.
+
+```sh
+imagekit fetch gbif --taxon "Physocarpus capitatus" --n 30 --organ leaf
+imagekit detect --organs leaf --taxon "Physocarpus capitatus"
+imagekit segment --organ leaf --triage none --taxon "Physocarpus capitatus"
+imagekit leaf-outline photos --taxon "Physocarpus capitatus"
+imagekit leaf-outline judge physocarpus-capitatus --plantc ~/code/plantgen/target/release/plantc --out judge.csv
+```
+
+Known artefacts (from the 247-species run of 2026-11-06): whorls, mats and
+rosettes (Mollugo, Sagina, purslane, trillium) are outlined as one leaf,
+and flowers (yarrow, poppy) are taken for leaves, so read the worst rows
+beside their photos before calling a drawing wrong. Photos also run
+broader than the floras' widths (leaves seen at an angle, clusters
+merged). It needs numpy and scipy (`[local]`).
 
 `count` crops each kept region of one organ with a small margin and has a
 pointing model put one point on every part `--what` names (bracts, rays,

@@ -34,6 +34,15 @@
 //! on the nearest face of the site under it, and dropped where there is
 //! none within reach (past a wall's corner, over a coping's edge), so no
 //! moss floats.
+//!
+//! Through time: a colony's vigour falls with height on a trunk
+//! ([`trunk_growth`], Pitkin 1975), a cushion grows at most
+//! `cushion_breadth` times wider than high, and with a day of the year
+//! ([`DrawOptions::day`]) capsules are young, ripe, spent or gone by
+//! their genus's `capsule_ripe_months` ([`capsule_stage`]). Close renders
+//! are metered like a camera (`raster::Image::meter`) so shaded moss is
+//! judged at photo brightness. Every value is from a source or marked in
+//! its genus's evidence as fitted to photos (docs/sites/MOSS.md).
 
 use serde::{Deserialize, Serialize};
 use serde_json::{Map, Value};
@@ -181,6 +190,16 @@ pub struct MossKind {
     /// During 1979 in Glime vol. 1 p. 522).
     #[serde(default = "default_spore")]
     pub spore_m: f64,
+    /// How many times wider than high a cushion grows at most (trait
+    /// `cushion_breadth`; 2.6, a hemisphere a little wider than high,
+    /// FNA vol. 27 Grimmia pulvinata, when left out).
+    #[serde(default = "default_breadth")]
+    pub breadth: f64,
+    /// The months its capsules are ripe, 1 to 12 (trait
+    /// `capsule_ripe_months`); empty when unknown, and then capsules are
+    /// drawn the year round as they ripen.
+    #[serde(default)]
+    pub capsule_months: Vec<u8>,
     /// Metres a colony's edge moves out in a good year.
     pub spread_m: f64,
     /// Light classes it grows in: shade, part, sun.
@@ -200,6 +219,10 @@ pub struct MossKind {
 /// near (Glime, *Bryophyte Ecology* vol. 1, PDF p. 522).
 fn default_spore() -> f64 {
     20.0e-6
+}
+
+fn default_breadth() -> f64 {
+    2.6
 }
 
 /// A capsule lid unstated in the traits: a tall cone, between the short
@@ -438,6 +461,18 @@ impl MossKind {
             },
             capsule_share: num("capsule_share").unwrap_or(0.2),
             spore_m: num("spore_diameter_m").unwrap_or_else(default_spore),
+            breadth: num("cushion_breadth").unwrap_or_else(default_breadth),
+            capsule_months: get("capsule_ripe_months")
+                .and_then(Value::as_array)
+                .map(|months| {
+                    months
+                        .iter()
+                        .filter_map(Value::as_u64)
+                        .filter_map(|m| u8::try_from(m).ok())
+                        .filter(|m| (1..=12).contains(m))
+                        .collect()
+                })
+                .unwrap_or_default(),
             spread_m: num("colony_spread_m_per_year").unwrap_or(match form {
                 ColonyForm::Cushion => 0.0015,
                 ColonyForm::Turf => 0.003,
@@ -585,7 +620,7 @@ impl MossKind {
     /// (*Bryophyte Biology* pp. 193, 272-273).
     #[must_use]
     pub fn vigour(&self, habitat: &Habitat) -> f64 {
-        self.fit(habitat) * growing_time(habitat.wetness)
+        self.fit(habitat) * growing_time(habitat.wetness) * habitat.climb
     }
 }
 
@@ -804,6 +839,27 @@ pub struct Habitat {
     /// How well spores and water stay on it: 1 on a face turned up, less
     /// on an upright one.
     pub hold: f64,
+    /// How fast moss grows here for its height up a trunk, against the
+    /// lowest metre: 1 there, half at 1.5-2 m (see [`trunk_growth`]); 1
+    /// off bark.
+    #[serde(default = "full")]
+    pub climb: f64,
+}
+
+fn full() -> f64 {
+    1.0
+}
+
+/// How fast moss grows on a trunk at `height` metres above the ground,
+/// against how it grows 30-100 cm up: *Hypnum cupressiforme* grew half as
+/// much 150-200 cm up a trunk as 30-100 cm up it, 23 May to 6 October
+/// (Pitkin 1975, in Glime, *Bryophyte Ecology* vol. 1 ch. 12-1, p. 1990 of the mirror's copy),
+/// the air drier away from the ground. Straight between the middles of
+/// the two bands (0.65 m and 1.75 m) and held beyond them: the study gives
+/// no other heights, so above 2 m it stays half, an estimate.
+#[must_use]
+pub fn trunk_growth(height: f64) -> f64 {
+    1.0 - 0.5 * math::smoothstep(0.65, 1.75, height).min(1.0)
 }
 
 /// How a region of a site is grown over.
@@ -1031,6 +1087,12 @@ fn habitat_at(
             0.0
         } else {
             0.15 + 0.85 * n.y.max(0.0)
+        },
+        // Up a trunk's side moss grows slower the higher it is.
+        climb: if material == BARK && n.y.abs() < 0.7 {
+            trunk_growth(p.y - ground)
+        } else {
+            1.0
         },
     }
 }
@@ -1398,11 +1460,14 @@ pub fn grow_under(
                 let colony = colonies[i];
                 let kind = &kinds[usize::from(colony.kind)];
                 let mut radius = colony.radius_m + kind.spread_m * (0.3 + 0.7 * colony.vigour);
-                // A cushion grows to a hemisphere at most, a little wider
-                // than high (FNA vol. 27, Grimmia pulvinata: hemispherical
-                // cushions); older ones meet and merge with neighbours.
+                // A cushion grows as wide as its genus's cushions do, a
+                // hemisphere at most for Grimmia (FNA vol. 27, Grimmia
+                // pulvinata: hemispherical cushions), low domes several
+                // times wider than high for Dicranoweisia and Tortula
+                // (`cushion_breadth`); older ones meet and merge with
+                // neighbours.
                 let most = match kind.form {
-                    ColonyForm::Cushion => (kind.height_m * 1.3).max(0.01),
+                    ColonyForm::Cushion => (kind.height_m * kind.breadth * 0.5).max(0.01),
                     ColonyForm::Turf => 0.25,
                     ColonyForm::Mat | ColonyForm::Weft => 0.6,
                 };
@@ -1577,6 +1642,9 @@ pub struct DrawOptions {
     pub near: Option<(Vec3, f64)>,
     /// Draw capsules on their setae.
     pub capsules: bool,
+    /// The day of the year (1 to 365) drawn, for the capsules' season
+    /// ([`capsule_stage`]); `None` draws every genus's capsules ripe.
+    pub day: Option<f64>,
 }
 
 impl Default for DrawOptions {
@@ -1586,7 +1654,64 @@ impl Default for DrawOptions {
             detail: Detail::Shell,
             near: None,
             capsules: true,
+            day: None,
         }
+    }
+}
+
+/// Months before its capsules ripen that a moss's setae and young green
+/// capsules show, and months after that the old, emptied capsules stay.
+/// Washington photos of Tortula, Grimmia, Ceratodon and Dicranoweisia
+/// (imagekit batch `moss-pnw-2026-11-05`, by the date each was taken) show
+/// young green capsules two to four months before the brown ripe ones and
+/// spent setae for some months after; three both ways is fitted to them.
+pub const CAPSULE_LEAD_MONTHS: f64 = 3.0;
+
+/// How a genus's capsules look on `day` (1 to 365) when they ripen in
+/// `months` (1 to 12): the share of its fertile shoots that show a
+/// sporophyte, and how ripe they are, -1 (just risen, green) through 0
+/// (ripe) to 1 (old and emptied). With no months known, or no day, every
+/// one shows, ripe.
+#[must_use]
+pub fn capsule_stage(months: &[u8], day: Option<f64>) -> (f64, f64) {
+    let Some(day) = day else {
+        return (1.0, 0.0);
+    };
+    if months.is_empty() {
+        return (1.0, 0.0);
+    }
+    // Months from the start of the year, and how far it lies from the
+    // ripe months: before the nearest ripe stretch (negative), in it (0)
+    // or after it (positive), round the year.
+    let now = ((day - 1.0).rem_euclid(365.0) / 365.0) * 12.0;
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+    let ripe = |m: f64| months.contains(&(((m.floor() as i64).rem_euclid(12) + 1) as u8));
+    if ripe(now) {
+        return (1.0, 0.0);
+    }
+    let step = 0.25;
+    let mut ahead = None;
+    let mut behind = None;
+    let mut k = step;
+    while k <= 12.0 {
+        if ahead.is_none() && ripe(now + k) {
+            ahead = Some(k);
+        }
+        if behind.is_none() && ripe(now - k) {
+            behind = Some(k);
+        }
+        k += step;
+    }
+    let (ahead, behind) = (ahead.unwrap_or(12.0), behind.unwrap_or(12.0));
+    if behind <= CAPSULE_LEAD_MONTHS && behind <= ahead {
+        // Old: emptied, fewer as setae break.
+        let t = behind / CAPSULE_LEAD_MONTHS;
+        (1.0 - 0.7 * t, t)
+    } else if ahead <= CAPSULE_LEAD_MONTHS {
+        // Young: setae risen, capsules green and swelling.
+        (1.0, -ahead / CAPSULE_LEAD_MONTHS)
+    } else {
+        (0.0, 0.0)
     }
 }
 
@@ -2058,6 +2183,10 @@ impl Drawer<'_> {
                 .map(|(p, _)| (p - centre).dot(normal));
             sectors
         ];
+        // The floor the shell is laid on, ring by ring (ring 0 the
+        // centre), so the shoots stand on the drape too, not on the face
+        // below it, hidden under a bare slope of shell.
+        let mut floors: Vec<Option<f64>> = vec![floor[0]; (rings + 1) * sectors];
         for ring in 1..=rings {
             #[allow(clippy::cast_precision_loss)]
             let rho = ring as f64 / rings as f64;
@@ -2075,6 +2204,7 @@ impl Drawer<'_> {
                     floor[sector] = Some((p - centre).dot(normal));
                     (p, n)
                 });
+                floors[ring * sectors + sector] = floor[sector];
                 let point = laid.map(|(p, n)| {
                     let h = mix(mix(seed, ring as u64), sector as u64);
                     let speckle = if fine {
@@ -2207,9 +2337,11 @@ impl Drawer<'_> {
         // 0.7 leaf length, so as many capsules stand on a square
         // centimetre however closely the shoots are drawn.
         let capsule_spacing = (kind.leaf_length_m * 0.7).min(width).max(0.0005);
+        let (showing, _) = capsule_stage(&kind.capsule_months, self.options.day);
         let fertile_share = (kind.capsule_share * (spacing / capsule_spacing).powi(2)).min(1.0)
             * mature
-            * colony.vigour.clamp(0.3, 1.0);
+            * colony.vigour.clamp(0.3, 1.0)
+            * showing;
         if matches!(kind.form, ColonyForm::Mat | ColonyForm::Weft) {
             if shoots {
                 self.mat(
@@ -2255,6 +2387,29 @@ impl Drawer<'_> {
             let fertile = self.options.capsules && unit(mix(h, 11)) < fertile_share;
             let Some((p, n)) = surfaces.lifted(q, normal, reach, bridge) else {
                 continue;
+            };
+            // Over a step the shoot stands on the shell's drape: the
+            // floor there, between the rings about it.
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            let p = {
+                let turn = angle.rem_euclid(std::f64::consts::TAU) / std::f64::consts::TAU;
+                let sector = ((turn * sectors as f64).round() as usize) % sectors;
+                let along = rho * rings as f64;
+                let inner = (along.floor() as usize).min(rings);
+                let outer = (inner + 1).min(rings);
+                let f = along - along.floor();
+                match (
+                    floors[inner * sectors + sector],
+                    floors[outer * sectors + sector],
+                ) {
+                    (Some(a), Some(c)) => {
+                        let laid = a + (c - a) * f;
+                        let below = (p - centre).dot(normal);
+                        let run = radius / rings as f64;
+                        p + normal * (below.clamp(laid - run * 0.5, laid + run * 0.5) - below)
+                    }
+                    _ => p,
+                }
             };
             let rise = height * profile(rho);
             // Cushion shoots radiate from the colony's centre, so those at
@@ -2734,7 +2889,15 @@ impl Drawer<'_> {
             CapsulePosture::Erect | CapsulePosture::Inclined if !kind.seta_arcuate => 0.2,
             _ => 0.3,
         };
-        let length = kind.capsule_m;
+        // Young capsules are green and still swelling, old ones emptied
+        // and darkened, their lids shed.
+        let (_, ripeness) = capsule_stage(&kind.capsule_months, self.options.day);
+        let capsule_colour = if ripeness < 0.0 {
+            blend(kind.capsule_colour, kind.colour, -ripeness * 0.8)
+        } else {
+            scaled(kind.capsule_colour, 1.0 - 0.4 * ripeness)
+        };
+        let length = kind.capsule_m * (1.0 + 0.25 * ripeness.min(0.0));
         let radius = length * slender;
         let rings = 6;
         let sides: usize = 8;
@@ -2768,7 +2931,7 @@ impl Drawer<'_> {
                 for k in 0..sides {
                     let k1 = (k + 1) % sides;
                     let shade = 0.85 + 0.3 * s;
-                    let col = scaled(kind.capsule_colour, shade);
+                    let col = scaled(capsule_colour, shade);
                     self.tri(
                         [prev[k], ring_points[k], ring_points[k1]],
                         [col, col, col],
@@ -2779,10 +2942,10 @@ impl Drawer<'_> {
             }
             previous = Some(ring_points);
         }
-        // The lid, a short cone.
-        if let Some(prev) = previous {
+        // The lid, a short cone, until the spores are shed.
+        if let Some(prev) = previous.filter(|_| ripeness < 0.5) {
             let lid_tip = last_centre + cap_dir * (length * kind.lid_share);
-            let lid = blend(kind.capsule_colour, [0.35, 0.12, 0.05], 0.4);
+            let lid = blend(capsule_colour, [0.35, 0.12, 0.05], 0.4);
             for k in 0..sides {
                 let k1 = (k + 1) % sides;
                 self.tri([prev[k], lid_tip, prev[k1]], [lid, lid, lid], false);
