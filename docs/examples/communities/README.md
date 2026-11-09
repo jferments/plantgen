@@ -98,6 +98,14 @@ Paper 36).
   and 38.7 m² against the table's 1,790 and 36.4. At 40 years Douglas-fir
   stands 7-10 m below the table's dominant height, and basal area at 150
   years is about two thirds of the table's.
+- Snags in the lowland forest (a hectare at `--site 0.6,1,30,0`): at 60
+  years 178 a hectare, 27 of them 50 cm or more, mean dbh 35 cm, against
+  the young Douglas-fir plots' 171, 27 and 33 cm (Spies et al. 1988); at
+  160 years 125, 17 and 33 cm against the mature plots' 121, 16 and 32 cm.
+  A tile repeats its stand layouts, so its shares by height and decay
+  class wander a few points from the plots' (140 a hectare over 5 m tall
+  at 60 years against 108); over 4 ha of one layout they hold within 3
+  points.
 - Alder by water on wet ground: red alder leads, but its stems are about
   half as thick as the table's at 40 years. Its layers follow western
   Oregon's wet hardwood plots (McIntosh et al. 2009), not the conifers':
