@@ -36,6 +36,10 @@
     },
     "seta_form": "arcuate",
     "capsule_length_m": 0.0012,
+    "capsule_ripe_months": [
+      4,
+      5
+    ],
     "capsule_colour": [
       120,
       92,
@@ -53,6 +57,11 @@
     "operculum_form": "rostrate"
   },
   "evidence": {
+    "traits.capsule_ripe_months": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Fitted to photos (no flora gives months for this region): Washington iNaturalist photos of G. pulvinata (imagekit batch moss-pnw-2026-11-05), tallied by the month each was taken, show ripe brown capsules in months 4, 5, young green ones in the months before and spent setae after."
+    },
     "traits": {
       "evidence": "SourceInferred",
       "source": "fna-27",

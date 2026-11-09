@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "rank": "subgenus",
+  "name": "Cladina",
+  "parent": "genus/cladoniaceae/cladonia",
+  "traits": {
+    "podetium_cups": false,
+    "podetium_branching": "rich",
+    "podetium_forks": {"min": 2, "max": 4, "typical": 3},
+    "podetium_fork_angle_deg": {"min": 25, "max": 50, "typical": 35},
+    "podetium_height_m": {"min": 0.04, "max": 0.12, "typical": 0.06},
+    "podetium_width_m": {"min": 0.0006, "max": 0.0018, "typical": 0.0012},
+    "podetium_growth_m_per_year": {"min": 0.0039, "max": 0.0059, "typical": 0.005},
+    "podetium_colour": [190, 195, 186],
+    "colony_spread_m_per_year": 0.005
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "Munger 2008, FEIS Cladonia (Cladina) spp. (read 2026-11-08): dense mats of richly branched podetia 4-12 cm tall and 0.6-1.8 mm wide; growth 5.0, 5.3 and 5.4 mm a year (C. stellaris, rangiferina, arbuscula, Seward Peninsula) and 3.9-5.9 in northern Russia; no cups. Typical height 6 cm: C. portentosa, the Puget prairies' reindeer lichen (Calabria et al. 2016), forms mats up to 6 cm tall, and drier sites grow podetia 4-6 cm (Wikipedia, Cladonia portentosa and C. rangiferina)."
+    },
+    "traits.podetium_forks": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "C. portentosa: each branch usually divides into three, the penultimate sometimes into two; C. rangiferina into three or four, sometimes two; Cladina ramify once a year, as an anisotomic trichotomy or isotomic tetrachotomy (Wikipedia, Cladonia portentosa, Cladonia rangiferina, Podetium, read 2026-11-08)."
+    },
+    "traits.podetium_fork_angle_deg": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "No source measures it; C. portentosa branches at a wider angle than C. rangiferina (Wikipedia). Estimate from photographs; to measure."
+    },
+    "traits.podetium_width_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Thicker branches typically 1-1.5 mm (C. rangiferina, Wikipedia, read 2026-11-08); 0.6-1.8 mm over the group (FEIS)."
+    },
+    "traits.podetium_colour": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Greyish, whitish or brownish grey (Wikipedia, C. rangiferina); the prairie form C. portentosa subsp. pacifica f. decolorans lacks usnic acid (Calabria et al. 2016) and is grey-white. Colour measured: the median, over 12 research-grade iNaturalist photographs of C. portentosa (imagekit batch inat-2026-11-08), of each photo's pale, unsaturated pixels (saturation under 0.2, value over 0.45, the lichen; 25-72% of each photo) at their 80th percentile by brightness: the lit faces of the branches, since a render adds the shade between them itself (their medians, shade included, 166-168-158). An overcast photograph of the Mima Mounds mat (Chris Light 2023, Wikimedia Commons) gives a bluer 195-200-202. Photographs' exposure, not a reflectance: to check against Kuusinen et al. 2020 (Remote Sensing of Environment 247: 111955), where C. stellaris and C. arbuscula reflect most of the boreal ground lichens in the visible."
+    },
+    "traits.colony_spread_m_per_year": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A mat's edge moves out by its fragments, most within 20 cm, at most 35-68 cm by wind (FEIS); taken as one year's growth of its tips, about 5 mm."
+    }
+  }
+}

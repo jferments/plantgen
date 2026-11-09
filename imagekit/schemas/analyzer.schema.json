@@ -8,7 +8,7 @@
   "additionalProperties": false,
   "properties": {
     "id": {"type": "string", "pattern": "^[0-9a-f]{16}$"},
-    "task": {"enum": ["triage", "observe", "check", "describe", "detect", "count", "measure", "embed"]},
+    "task": {"enum": ["triage", "observe", "check", "describe", "branching", "detect", "segment", "count", "measure", "leaf-outline", "embed"]},
     "model": {"type": "string", "description": "e.g. Qwen/Qwen3-VL-8B-Instruct, claude-haiku-5-5, google/siglip2-so400m-patch14-384"},
     "model_revision": {"type": "string", "description": "a Hugging Face commit, a weights file's hash, or an API model's id and date"},
     "rules_version": {"type": "string", "description": "a hash of the photo-rules/ files the task's prompt is built from (imagekit.prompts LEGACY_VERSIONS keeps the rules v2 answers' all-file hash)"},

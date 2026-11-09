@@ -29,7 +29,7 @@ carry soil green; wetness and heat load from above.
 | Host API | `crates/plantgen/src/api.rs` | `SiteInput`, `site_mesh`, `site_field`, `site_material`: the same from plain arrays, no files. |
 | CLI | `apps/plantc/src/main.rs` | `plantc site` (grow and draw plants on a site), `plantc cracks` (colonisation), `plantc field` (measure a field), `plantc moss` (grow and draw moss). |
 | Tests | `crates/plantgen/tests/sites.rs` | Sites, pavements, colonisation, and the `field` module. Unit tests of the tracer are in `site_field.rs`. |
-| Moss tests | `crates/plantgen/tests/mosses.rs` | Genera, placement, determinism, levels, tint. |
+| Moss tests | `crates/plantgen/tests/mosses.rs` | Genera, placement, determinism, levels, tint, shade and spore size, height on trunks, capsule seasons, camera metering (in `raster.rs`). |
 | Test sites | `docs/sites/` | `garden`, `house`, `road` and `block` (each kind of host in one 40 x 36 m area), and the scripts that make them; `moss-wall` and `moss-shakes` (a garden wall and a shed) for moss, made by `make_moss_wall.py`. |
 
 ## How the data flows
