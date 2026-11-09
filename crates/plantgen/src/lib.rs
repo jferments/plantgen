@@ -71,6 +71,7 @@ pub mod lsys;
 pub mod margins;
 pub mod math;
 pub mod mechanics;
+pub mod memory;
 pub mod mesh;
 pub mod meshopt;
 pub mod mosses;
@@ -1850,4 +1851,15 @@ pub mod venation;
 /// A bare stub that carries nothing takes a tip's radius but no more than
 /// the shoot it grows from (the pipe tool), so no stub stands thicker than
 /// its parent.
-pub const GENERATOR_REVISION: u32 = 222;
+///
+/// 223: an export drawn to a budget (tiers, `--triangles`, `--max-mib`)
+/// searches its levels' detail with clusters' cover counted on a grid 8
+/// cells a side ([`mesh`]'s `SEARCH_COVER_GRID`) where it counted on 24,
+/// about a ninth of the cost of each try, and draws the levels it picks
+/// on the full grid, each a little coarser where that is over its most.
+/// The nearest tier is counted on the full grid. A 60-year Douglas-fir
+/// grows and exports its tiers in 112 s where it took 138 s, its high
+/// tier 477,946 triangles where it was 484,454 and its mid tier 46,446
+/// (48,486); a 250-year bigleaf maple, whose time is mostly growth, in
+/// 104 s (111 s).
+pub const GENERATOR_REVISION: u32 = 223;

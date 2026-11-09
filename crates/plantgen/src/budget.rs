@@ -34,6 +34,14 @@
 //! level's sticks can stand in for more wood than the thin twigs they
 //! replace. A search ([`most_detail`]) takes the finest dial it finds that
 //! fits.
+//!
+//! Most of a large tree's search went into counting each try's leaf
+//! clusters' cover, which sets how many cards each gets (a 60-year
+//! Douglas-fir's cluster cover was 63% of its export's work). The export
+//! (`crate::export`) searches with that cover counted on a coarser grid
+//! (`crate::mesh`'s `SEARCH_COVER_GRID`), then draws the dials it took on
+//! the full grid, each a step coarser while it is over its level's most
+//! (revision 223).
 
 use crate::mesh::LodSpec;
 use crate::quality::Quality;
@@ -306,7 +314,7 @@ pub const FULL: f64 = 0.95;
 const AIM: f64 = 0.97;
 
 /// The narrowest step the search narrows to, and the most narrowings.
-const STEP: f64 = 1.0 / 64.0;
+pub(crate) const STEP: f64 = 1.0 / 64.0;
 const NARROWINGS: usize = 12;
 
 #[cfg(test)]
