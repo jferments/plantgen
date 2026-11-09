@@ -22,14 +22,24 @@
 //! and Pacala 2007, PLoS ONE 2:e870); a little overlap stands for the
 //! crowns' irregular edges, which interlock. A plant below another's crown
 //! base takes no room from it, but stands only where enough light passes
-//! the crowns above for its shade tolerance. Every draw comes from hashes
-//! of the seed, so a tile is the same on every machine.
+//! the crowns above for its shade tolerance. A herb takes room by the
+//! disc its foliage fills, not its widest reach ([`Member::room_radius_m`]),
+//! and a layer of crowns narrower than a cell, a meadow's tussocks, is laid
+//! out on a finer raster of its own ([`FINE_CELL_M`]). Every draw comes
+//! from hashes of the seed, so a tile is the same on every machine.
 
 use crate::niche::Layer;
 use crate::rng::{hash_words, unit};
 
 /// Edge of a cell of the cover raster, metres.
 pub const CELL_M: f64 = 0.5;
+
+/// Finest cell of a raster of its own that a layer of crowns narrower
+/// than [`CELL_M`] is laid out on, metres. Such a layer's cells are half
+/// its mean crown's radius across, so a tussock's crown spans a few of
+/// them, but no finer than this, which bounds a 40 m tile's raster to
+/// 640,000 cells. Both are the raster's resolution, not the plants'.
+pub const FINE_CELL_M: f64 = 0.05;
 
 /// Places tried for each plant before the least crowded is kept.
 pub const TRIES: u32 = 16;
@@ -59,6 +69,10 @@ pub struct Member {
     pub crown_base_m: f64,
     /// Its crown's widest reach from the stem, metres.
     pub crown_radius_m: f64,
+    /// Radius of the disc its foliage fills seen from above
+    /// ([`crate::graph::PlantGraph::foliage_radius`]), metres; 0 when not
+    /// known. A herb takes room by it ([`Member::room_radius_m`]).
+    pub foliage_radius_m: f64,
     /// Share of full light, 0 to 1, it needs to stand: under a crown
     /// that lets less through, it does not.
     pub light_needed: f64,
@@ -74,13 +88,41 @@ pub struct Member {
     pub light_day: Option<f64>,
 }
 
+impl Member {
+    /// The radius it takes room by on the tile, metres. A herb's is the
+    /// disc its foliage fills, where known: a herb layer's cover in a
+    /// plot is the ground under its leaves (Chappell's south Puget Sound
+    /// prairie plots give Roemer's fescue 30 to 70%), and a tussock's
+    /// widest reach is a few culms leaning out with their panicles. The
+    /// prairie's fescue, spaced by its 0.26 m reach on the old 0.5 m
+    /// raster, covered 11% of a patch seen from above where its layer's
+    /// cover was 90% (plantgen-claude `project-files/stands/prairie-sod/`).
+    /// A tree's or a shrub's is its widest reach: a crown is measured to
+    /// its dripline, and the stands' tree densities were fitted so.
+    #[must_use]
+    pub fn room_radius_m(&self) -> f64 {
+        if self.layer == Layer::Herb && self.foliage_radius_m > 0.0 {
+            // Never past its widest reach.
+            if self.crown_radius_m > 0.0 {
+                self.foliage_radius_m.min(self.crown_radius_m)
+            } else {
+                self.foliage_radius_m
+            }
+        } else {
+            self.crown_radius_m
+        }
+    }
+}
+
 /// How full a stand tile is.
 #[derive(Debug, Clone, PartialEq)]
 pub struct Rules {
     /// Edge of the square tile, metres; it wraps at its edges.
     pub tile_m: f64,
     /// Share of the ground each layer's crowns cover seen from above, by
-    /// [`Layer::ALL`]'s order: canopy, subcanopy, shrub, herb.
+    /// [`Layer::ALL`]'s order: canopy, subcanopy, shrub, herb. A crown
+    /// covers the disc it takes room by ([`Member::room_radius_m`]): a
+    /// tree's or a shrub's widest reach, a herb's foliage.
     pub cover: [f64; 4],
     /// Most of a crown's area that may overlap crowns in its height band.
     pub overlap: f64,
@@ -138,8 +180,11 @@ impl Placed {
     }
 }
 
-/// The crowns standing so far, on a raster of [`CELL_M`] cells that wraps.
+/// The crowns standing so far, on a raster of square cells that wraps.
 struct Raster {
+    /// Edge of a cell, metres: [`CELL_M`], or finer for a layer of small
+    /// crowns ([`FINE_CELL_M`]).
+    cell_m: f64,
     side: usize,
     /// For each cell, the crowns over it: (crown base, top) in metres,
     /// the layer's index in [`Layer::ALL`] and the member's.
@@ -152,10 +197,11 @@ struct Raster {
 }
 
 impl Raster {
-    fn new(tile_m: f64) -> Self {
+    fn new(tile_m: f64, cell_m: f64) -> Self {
         #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-        let side = (tile_m / CELL_M).round().max(1.0) as usize;
+        let side = (tile_m / cell_m).round().max(1.0) as usize;
         Self {
+            cell_m,
             side,
             crowns: vec![Vec::new(); side * side],
             layers: vec![0; side * side],
@@ -168,8 +214,9 @@ impl Raster {
     fn cells(&self, at: [f64; 2], radius: f64) -> Vec<usize> {
         #[allow(clippy::cast_precision_loss)]
         let side = self.side as f64;
-        let reach = (radius / CELL_M).ceil();
-        let (cx, cy) = (at[0] / CELL_M, at[1] / CELL_M);
+        let cell_m = self.cell_m;
+        let reach = (radius / cell_m).ceil();
+        let (cx, cy) = (at[0] / cell_m, at[1] / cell_m);
         let mut out = Vec::new();
         #[allow(clippy::cast_possible_truncation)]
         let (low_x, high_x, low_y, high_y) = (
@@ -178,7 +225,7 @@ impl Raster {
             (cy - reach).floor() as i64,
             (cy + reach).ceil() as i64,
         );
-        let r2 = (radius / CELL_M) * (radius / CELL_M);
+        let r2 = (radius / cell_m) * (radius / cell_m);
         for y in low_y..high_y {
             for x in low_x..high_x {
                 #[allow(clippy::cast_precision_loss)]
@@ -287,7 +334,7 @@ impl Raster {
 #[must_use]
 #[allow(clippy::too_many_lines)]
 pub fn lay_out(members: &[Member], rules: &Rules, seed: u64) -> Vec<Placed> {
-    let mut raster = Raster::new(rules.tile_m);
+    let mut raster = Raster::new(rules.tile_m, CELL_M);
     let mut placed = Vec::new();
     let mut draw = 0_u64;
     let mut next = |purpose: u64| {
@@ -303,15 +350,36 @@ pub fn lay_out(members: &[Member], rules: &Rules, seed: u64) -> Vec<Placed> {
             continue;
         }
         let total: f64 = pool.iter().map(|&i| members[i].share).sum();
+        // A layer whose crowns are narrower than a cell (a meadow's
+        // tussocks) takes room among its own on a finer raster, and the
+        // light and the room the layers above leave it on the tile's.
+        let mean_radius = pool
+            .iter()
+            .map(|&i| members[i].share * members[i].room_radius_m())
+            .sum::<f64>()
+            / total;
+        let mut fine = (mean_radius < CELL_M)
+            .then(|| Raster::new(rules.tile_m, (0.5 * mean_radius).max(FINE_CELL_M)));
+        let cell_m = fine.as_ref().map_or(CELL_M, |fine| fine.cell_m);
         // The mean crown of a draw, seen from above, square metres.
         let mean_crown = pool
             .iter()
             .map(|&i| {
-                let radius = members[i].crown_radius_m.max(CELL_M * 0.5);
+                let radius = members[i].room_radius_m().max(cell_m * 0.5);
                 members[i].share * std::f64::consts::PI * radius * radius
             })
             .sum::<f64>()
             / total;
+        let first = placed.len();
+        // Herbs standing so far, by member: a herb stands only while its
+        // layer holds no more of it than its share, one plant over. A
+        // herb layer's shares are its whole make-up (a community's plot
+        // covers, `fill::Member::cover`), so once the tussocks fill the
+        // ground the smallest forbs do not take every gap they leave;
+        // trees released into a canopy's gaps still fill them.
+        let mut standing = vec![0_usize; members.len()];
+        let mut layer_count = 0_usize;
+        let herbs = *layer == Layer::Herb;
         let mut misses = 0;
         // Taller members first within a layer: draw a batch, then place it
         // tallest first, so short plants fill what the tall leave. A batch
@@ -319,7 +387,8 @@ pub fn lay_out(members: &[Member], rules: &Rules, seed: u64) -> Vec<Placed> {
         // draw's mean crown, so its tallest don't take the whole layer
         // and the layer holds its members by their shares.
         while misses < GIVE_UP {
-            let room = (target - raster.cover(Some(layer_index))) * rules.tile_m * rules.tile_m;
+            let own = fine.as_ref().unwrap_or(&raster);
+            let room = (target - own.cover(Some(layer_index))) * rules.tile_m * rules.tile_m;
             #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
             let draws = (room / mean_crown).ceil().clamp(1.0, 32.0) as usize;
             let mut batch: Vec<(usize, f64)> = (0..draws)
@@ -341,11 +410,18 @@ pub fn lay_out(members: &[Member], rules: &Rules, seed: u64) -> Vec<Placed> {
                 (members[b.0].height_m * b.1).total_cmp(&(members[a.0].height_m * a.1))
             });
             for (index, scale) in batch {
-                if raster.cover(Some(layer_index)) >= target {
+                let own = fine.as_ref().unwrap_or(&raster);
+                if own.cover(Some(layer_index)) >= target {
                     misses = GIVE_UP;
                     break;
                 }
                 let member = &members[index];
+                #[allow(clippy::cast_precision_loss)]
+                if herbs && standing[index] as f64 > member.share / total * layer_count as f64 + 1.0
+                {
+                    misses += 1;
+                    continue;
+                }
                 // The light each crown above lets through on the day this
                 // plant's light is judged on.
                 let day = member.light_day.unwrap_or(crate::development::PLOT_DAY);
@@ -361,10 +437,24 @@ pub fn lay_out(members: &[Member], rules: &Rules, seed: u64) -> Vec<Placed> {
                     )
                 };
                 let (radius, base, top) = (
-                    member.crown_radius_m * scale,
+                    member.room_radius_m() * scale,
                     member.crown_base_m * scale,
                     member.height_m * scale,
                 );
+                // A layer whose whole cover is less than one crown (a
+                // savanna's few wide oaks on a tile) stands that crown by
+                // chance, as often as its cover over the crown's area, so
+                // over the tiles laid out it covers its share on average
+                // instead of a crown on every tile.
+                let area = std::f64::consts::PI * radius * radius;
+                let share_m2 = target * rules.tile_m * rules.tile_m;
+                if own.counts[layer_index] == 0
+                    && area > share_m2
+                    && unit(hash_words(&[seed, 6, layer_index as u64])) * area > share_m2
+                {
+                    misses = GIVE_UP;
+                    break;
+                }
                 // A tree's crown may stand off its stem toward room.
                 let reach = if layer_index < 2 {
                     rules.plasticity.max(0.0) * radius
@@ -380,9 +470,19 @@ pub fn lay_out(members: &[Member], rules: &Rules, seed: u64) -> Vec<Placed> {
                             (at[0] + offset[0]).rem_euclid(rules.tile_m),
                             (at[1] + offset[1]).rem_euclid(rules.tile_m),
                         ];
-                        let cells = raster.cells(crown, radius.max(CELL_M * 0.5));
-                        let (crowded, light) =
-                            raster.crowding(&cells, base, top, &through_crown, layer_index);
+                        let wide = raster.cells(crown, radius.max(CELL_M * 0.5));
+                        let (mut crowded, mut light) =
+                            raster.crowding(&wide, base, top, &through_crown, layer_index);
+                        let cells = if let Some(fine) = fine.as_ref() {
+                            let cells = fine.cells(crown, radius.max(cell_m * 0.5));
+                            let (among, under) =
+                                fine.crowding(&cells, base, top, &through_crown, layer_index);
+                            crowded = crowded.max(among);
+                            light *= under;
+                            cells
+                        } else {
+                            wide
+                        };
                         if light < member.light_needed {
                             continue;
                         }
@@ -395,7 +495,13 @@ pub fn lay_out(members: &[Member], rules: &Rules, seed: u64) -> Vec<Placed> {
                 }
                 match best {
                     Some((at, crown, cells, score)) if score <= rules.overlap + 0.01 => {
-                        raster.stamp(&cells, base, top, layer_index, index);
+                        fine.as_mut().unwrap_or(&mut raster).stamp(
+                            &cells,
+                            base,
+                            top,
+                            layer_index,
+                            index,
+                        );
                         placed.push(Placed {
                             member: index,
                             at_m: at,
@@ -403,10 +509,25 @@ pub fn lay_out(members: &[Member], rules: &Rules, seed: u64) -> Vec<Placed> {
                             scale,
                             crown_m: crown,
                         });
+                        standing[index] += 1;
+                        layer_count += 1;
                         misses = 0;
                     }
                     _ => misses += 1,
                 }
+            }
+        }
+        // The layers below see a fine layer's crowns on the tile's raster.
+        if fine.is_some() {
+            for plant in &placed[first..] {
+                let member = &members[plant.member];
+                let (radius, base, top) = (
+                    member.room_radius_m() * plant.scale,
+                    member.crown_base_m * plant.scale,
+                    member.height_m * plant.scale,
+                );
+                let cells = raster.cells(plant.crown_m, radius.max(CELL_M * 0.5));
+                raster.stamp(&cells, base, top, layer_index, plant.member);
             }
         }
     }
@@ -436,13 +557,30 @@ fn crown_offsets(reach: f64) -> Vec<([f64; 2], f64)> {
 }
 
 /// Share of the tile's ground covered by any crown of `placed`, seen
-/// straight down, on the layout's raster.
+/// straight down, each by the radius it took room by
+/// ([`Member::room_radius_m`]), on a raster as fine as [`lay_out`] lays
+/// such crowns out on: [`CELL_M`], or for crowns narrower than that on
+/// the whole, half their mean radius down to [`FINE_CELL_M`].
 #[must_use]
 pub fn cover(members: &[Member], placed: &[Placed], tile_m: f64) -> f64 {
-    let mut raster = Raster::new(tile_m);
+    if placed.is_empty() {
+        return 0.0;
+    }
+    #[allow(clippy::cast_precision_loss)]
+    let mean_radius = placed
+        .iter()
+        .map(|plant| members[plant.member].room_radius_m() * plant.scale)
+        .sum::<f64>()
+        / placed.len().max(1) as f64;
+    let cell_m = if mean_radius < CELL_M {
+        (0.5 * mean_radius).max(FINE_CELL_M)
+    } else {
+        CELL_M
+    };
+    let mut raster = Raster::new(tile_m, cell_m);
     for plant in placed {
         let member = &members[plant.member];
-        let cells = raster.cells(plant.crown_m, member.crown_radius_m * plant.scale);
+        let cells = raster.cells(plant.crown_m, member.room_radius_m() * plant.scale);
         raster.stamp(&cells, 0.0, 1.0, 0, plant.member);
     }
     raster.cover(None)
@@ -460,10 +598,57 @@ mod tests {
             height_m: height,
             crown_base_m: height * 0.5,
             crown_radius_m: radius,
+            foliage_radius_m: 0.0,
             light_needed: 0.0,
             leafing: None,
             light_day: None,
         }
+    }
+
+    #[test]
+    fn herbs_take_room_by_the_disc_their_foliage_fills() {
+        let rules = Rules {
+            tile_m: 8.0,
+            cover: [0.0, 0.0, 0.0, 0.9],
+            ..Rules::default()
+        };
+        // A fescue's tussock: panicles reach 0.26 m, its leaves fill a
+        // disc of 0.15 m.
+        let tussock = Member {
+            foliage_radius_m: 0.15,
+            ..tree(0, Layer::Herb, 0.75, 0.26)
+        };
+        let by_reach = Member {
+            foliage_radius_m: 0.0,
+            ..tussock.clone()
+        };
+        let fine = lay_out(std::slice::from_ref(&tussock), &rules, 3);
+        let wide = lay_out(std::slice::from_ref(&by_reach), &rules, 3);
+        let covered = cover(std::slice::from_ref(&tussock), &fine, rules.tile_m);
+        assert!((0.8..0.95).contains(&covered), "covered {covered}");
+        // Their discs cover the layer's share: as many as fit by area,
+        // and about (0.26 / 0.15)^2 = 3 times as many as by their reach.
+        let mean_disc = std::f64::consts::PI * 0.15 * 0.15;
+        #[allow(clippy::cast_precision_loss)]
+        let expected = covered * rules.tile_m * rules.tile_m / mean_disc;
+        #[allow(clippy::cast_precision_loss)]
+        let count = fine.len() as f64;
+        assert!(
+            count > 0.9 * expected && count < 1.6 * expected,
+            "{count} against {expected}"
+        );
+        assert!(
+            fine.len() > 2 * wide.len(),
+            "{} against {}",
+            fine.len(),
+            wide.len()
+        );
+        // A tree keeps its widest reach whatever its foliage fills.
+        let oak = Member {
+            foliage_radius_m: 2.0,
+            ..tree(0, Layer::Canopy, 15.0, 5.0)
+        };
+        assert!((oak.room_radius_m() - 5.0).abs() < 1e-12);
     }
 
     #[test]
@@ -485,8 +670,9 @@ mod tests {
 
     #[test]
     fn a_layer_of_plants_narrower_than_a_cell_fills_and_stops() {
-        // Under a closed canopy, herbs that need light find no room; each
-        // still takes its cell, so the layout ends.
+        // Under a closed canopy, herbs that need light find room only in
+        // its gaps; each still takes its cell of the herbs' raster, so the
+        // layout ends short of the herbs' cover.
         let mut herb = tree(1, Layer::Herb, 0.4, 0.05);
         herb.light_needed = 0.5;
         let members = [tree(0, Layer::Canopy, 40.0, 4.0), herb];
@@ -495,9 +681,17 @@ mod tests {
             ..Rules::default()
         };
         let placed = lay_out(&members, &rules, 1);
-        let herbs = placed.iter().filter(|p| p.member == 1).count();
-        // A 40 m tile has 6400 cells of 0.5 m: half of them at most.
-        assert!(herbs > 0 && herbs <= 3_200, "{herbs} herbs");
+        let herbs: Vec<Placed> = placed.iter().filter(|p| p.member == 1).copied().collect();
+        let trees: Vec<Placed> = placed.iter().filter(|p| p.member == 0).copied().collect();
+        let (covered, open) = (
+            cover(&members, &herbs, rules.tile_m),
+            1.0 - cover(&members, &trees, rules.tile_m),
+        );
+        assert!(
+            !herbs.is_empty() && covered < open + 0.05 && covered < 0.4,
+            "{} herbs cover {covered} of {open} open",
+            herbs.len()
+        );
     }
 
     #[test]

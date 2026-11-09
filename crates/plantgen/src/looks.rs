@@ -1621,6 +1621,13 @@ pub struct Palmate {
     /// Length of the petiole, from the card's base to where the main veins
     /// meet.
     pub petiole: f64,
+    /// How far the blade's body reaches round from its tip either side of
+    /// where the main veins meet, degrees: 90 a square-cut (truncate) base,
+    /// less a wedge into the petiole (cuneate, about 40), more a rounded
+    /// base reaching a little below. Unset, the body wraps round the
+    /// petiole in a heart-shaped (cordate) base.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub base: Option<f64>,
 }
 
 impl Default for Palmate {
@@ -1632,6 +1639,7 @@ impl Default for Palmate {
             teeth: 2,
             spread: 1.0,
             petiole: 0.4,
+            base: None,
         }
     }
 }
@@ -3984,6 +3992,9 @@ impl Shape {
                 check("lobe_width", s.lobe_width, 0.1, 1.2)?;
                 count("teeth", s.teeth, 0, 8)?;
                 check("spread", s.spread, 0.4, 1.2)?;
+                if let Some(base) = s.base {
+                    check("base", base, 15.0, 120.0)?;
+                }
                 check("petiole", s.petiole, 0.0, 0.7)
             }
             Self::Simple(s) => {

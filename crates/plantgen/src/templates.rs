@@ -2094,7 +2094,11 @@ fn palmate(
     let phi = math::atan2(p.0, p.1);
     let floor = radius * (1.0 - s.depth);
     let notch = math::cos(phi).min(0.0);
-    let mut inside = r < floor * (1.0 - 0.75 * notch * notch);
+    // The body wraps round the petiole in a heart unless its base is
+    // stated, when it reaches only that far round from the tip: straight
+    // into the petiole for a wedge, square across for a truncate base.
+    let mut inside = r < floor * (1.0 - 0.75 * notch * notch)
+        && s.base.is_none_or(|base| phi.abs() < math::radians(base));
     let keys = s.lobe_keys();
     let mut vein: f64 = 0.0;
     let mut accent: f64 = 0.0;
@@ -4993,6 +4997,40 @@ mod tests {
             .filter(|heading| heading.is_some())
             .count();
         assert!(fed >= 18, "{fed} of 20");
+    }
+
+    /// A palmate blade with no stated base wraps round its petiole in a
+    /// heart; a truncate one stops square across where its veins meet, and
+    /// a wedge-based one draws less of its body still.
+    #[test]
+    fn palmate_base_follows_its_stated_angle() {
+        let with = |base: Option<f64>| Palmate {
+            base,
+            ..Palmate::default()
+        };
+        let cover = |s: &Palmate, x: f64, y: f64| palmate(s, x, y, 0.01, None, &[]).cover;
+        let area = |s: &Palmate| {
+            let mut sum = 0.0;
+            for i in 0..200 {
+                for j in 0..200 {
+                    let (x, y) = (f64::from(i) / 100.0 - 1.0, f64::from(j) / 200.0);
+                    sum += cover(s, x, y);
+                }
+            }
+            sum
+        };
+        let (junction, radius) = Palmate::default().junction();
+        // Beside the petiole, just below where the veins meet, clear of
+        // the basal lobes.
+        let (x, y) = (0.05 * radius, junction - 0.087 * radius);
+        assert!(cover(&with(None), x, y) > 0.0);
+        assert!(cover(&with(Some(90.0)), x, y) <= 0.0);
+        let (heart, square, wedge) = (
+            area(&with(None)),
+            area(&with(Some(90.0))),
+            area(&with(Some(34.0))),
+        );
+        assert!(heart > square && square > wedge, "{heart} {square} {wedge}");
     }
 
     /// A blade with an outline is as wide as its points say, its widest

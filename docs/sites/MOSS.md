@@ -95,7 +95,14 @@ its genus's `colony_spread_m_per_year`, more when vigorous, until:
   creeping shoots run a little over its neighbour's edge);
 - it runs out of surface: half its rim must lie on faces turned as its
   own, a step down a tile's or a brick's edge at most;
-- it reaches its form's size (a cushion a hemisphere, a little wider than high).
+- it reaches its form's size: a cushion as many times wider than high as the genus's `cushion_breadth` says (2.6, a hemisphere a little wider than high, as FNA describes Grimmia pulvinata, when left out; Dicranoweisia 4 and Tortula 3, fitted by eye to Washington photos since no flora gives a breadth).
+
+On bark, a colony's vigour falls with height above the ground
+(`mosses::trunk_growth`): full to 0.65 m, half from 1.75 m up, as
+Pitkin (1975) measured on ash trunks, epiphytes growing 50-110% a year
+low on the trunk and about half that above 1.75 m (Glime, *Bryophyte
+Ecology* vol. 1 ch. 12-1). Walls, roofs and wood keep full vigour at any
+height.
 
 A colony in a poor place may die (4% a year at no vigour). A colony takes
 the way its surface mostly faces within 3 cm, so a spore lodged on the
@@ -144,6 +151,17 @@ shoots' older lower parts:
   `capsule_posture` gives, on the share of shoots `capsule_share` gives,
   their lids a short cone, a tall cone or a beak as `operculum_form`
   says.
+- Capsules by season (`--day`): a genus's `capsule_ripe_months` are the
+  months its capsules stand ripe and brown. In the three months before
+  (`CAPSULE_LEAD_MONTHS`) they are young, green and smaller, their lids
+  on; in the three after, spent, browner, lidless and fewer as setae
+  break; the rest of the year a colony carries none
+  (`mosses::capsule_stage`). Grimmia and Tortula ripen in April and May,
+  Ceratodon April to June, Dicranoweisia February to April, tallied from
+  dated Washington iNaturalist photos (batch `moss-pnw-2026-11-05`), not
+  from a flora. A genus with no months, and a render with no `--day`,
+  draws every capsule ripe. A cover saved before a genus gained its
+  months keeps the old kinds; grow it again.
 
 Every point is laid on a face of the site within reach: of the faces
 straight above or below it, the outermost (a tile, not the deck under
@@ -325,7 +343,7 @@ finding a colony of that genus, a drawn cover writing as a glTF file
 with no required extensions, a tree's crown over a wooden deck letting
 moss grow there, a surface stating its own reaction, and shade
 shortening hair-points and lengthening shoots while sun yellows leaves,
-and small spores flying farther than large ones. A unit test in
+small spores flying farther than large ones, a trunk carrying more moss low than two metres up, and capsules young before their ripe months, spent after and absent the rest of the year. A unit test in
 `mosses.rs` checks that neighbouring classes fit fully where they meet.
 
 ## Changing it
@@ -349,6 +367,17 @@ and small spores flying farther than large ones. A unit test in
   lattice.
 
 ## Still open
+
+- From a distance (whole roof or wall, `--detail tint|patch|shell`) moss
+  lies as a uniform mottle on shakes and as round blobs on tiles, where
+  photos of mossy roofs (Commons, batch `moss-far-2026-11-08`) show it
+  in strips along each course's lower edge and in streaks down the
+  slope where water runs. A whole-site view is still exposed for the
+  sun: its moss stands at HSV value about 0.16 against 0.38-0.44 in the
+  photos (0.35 with `--exposure camera`). Hue and saturation agree.
+- How fast moss grows through the year (Glime: epiphytes most from
+  November to January, Pitkin 1975) is not modelled; growth is a yearly
+  rate. Nor is how long a colony stays wet after rain (Proctor 2004).
 
 - Dry *Ceratodon* turf opens gaps between its coiled shoots; FNA calls
   its leaves only "somewhat crisped", so it may want a weaker coil than
