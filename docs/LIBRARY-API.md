@@ -168,24 +168,25 @@ it, calling it as you would, through `plantgen::api` alone.
   `Community`, `Member`, `Layer`, `Origin`, `Fill`, `FillSettings`,
   `Site`, `SiteFactors`, `FieldTile`, `CrackPlant`, `TileId`,
   `StandMap`, `StandCell`, `TilePlan`, `Instance`, `WallClip`, `Cover`,
-  `CoverKind`, `Floor`, `FloorMoss`, `Log`, `LogShape`, `CanopyCell`,
-  `TileStats`, `LayerCover`, `Prototype`, `PrototypeKey`,
-  `PrototypeFiles`, `PrototypePackage`, `read_prototypes` and the
-  constants `INSTANCE_SCHEMA`, `INSTANCE_BYTES`, `PROTOTYPES_FILE`,
-  `STAND_AGES`, `STAND_CELL_M`, `STAND_SCALE`, `TRIANGLE_PIXELS` and
-  `CLIMBER_SPACING_M`. The rest of `plantgen::fill`
-  (`with_colonists`, `tile_crowns`, `cells_per_layout` and the like) is
-  not, and changes with the generator.
+  `CoverKind`, `Floor`, `FloorMoss`, `Log`, `LogShape`, `Snag`,
+  `SnagShape`, `CanopyCell`, `TileStats`, `LayerCover`, `Prototype`,
+  `PrototypeKey`, `PrototypeFiles`, `PrototypePackage`,
+  `read_prototypes` and the constants `INSTANCE_SCHEMA`,
+  `INSTANCE_BYTES`, `PROTOTYPES_FILE`, `STAND_AGES`, `STAND_CELL_M`,
+  `STAND_SCALE`, `TRIANGLE_PIXELS` and `CLIMBER_SPACING_M`. The rest of
+  `plantgen::fill` (`with_colonists`, `tile_crowns`, `cells_per_layout`
+  and the like) is not, and changes with the generator.
 - **What you build and what you read.** The inputs you make yourself
   (`TileId`, `StandMap`, `StandCell`, `Member`, `Community`,
   `CrackPlant`, `Instance`) keep their fields; a field added to one
   raises `API_VERSION`. What a fill makes (`TilePlan`, `Prototype`,
   `PrototypeFiles`, `PrototypePackage`, `Cover`, `Floor`, `FloorMoss`,
-  `Log`, `CanopyCell`, `TileStats`, `LayerCover`) is non-exhaustive: read
-  its fields, and make one only through its constructor (`Cover::of`,
-  `Log::new`), so fields can be added beside them. `FillSettings` and
-  `Site` start from `FillSettings::default()` and `Site::flat`,
-  `Site::from_heightfield` or `Site::from_field`.
+  `Log`, `Snag`, `CanopyCell`, `TileStats`, `LayerCover`) is
+  non-exhaustive: read its fields, and make one only through its
+  constructor (`Cover::of`, `Log::new`, `Snag::new`), so fields can be
+  added beside them. `FillSettings` and `Site` start from
+  `FillSettings::default()` and `Site::flat`, `Site::from_heightfield`
+  or `Site::from_field`.
 - **What changes with `GENERATOR_REVISION`, not the version.** Which
   plants a tile holds, where, how big, and every byte of every file: the
   fill models stands better with each revision. The same communities (in
@@ -438,6 +439,27 @@ it, calling it as you would, through `plantgen::api` alone.
   `plantc logs --render logs.png` draws the five classes side by side.
   `plantc fill ... --render` draws the logs and the floor; `--cut 2.5`
   leaves out everything above 2.5 m to show it.
+- **Snags**, the standing dead trees, stand among a natural stand's
+  trees (`TilePlan::snags`, the JSON's `snags`, left out when there are
+  none; none in a planted or kept stand, and on cleared ground only
+  those of its own trees): each with the species it was, its foot on
+  the floor (as an instance's position) and its shape (`snags::Shape`:
+  height, breast-height width, the width where its top broke off or 0
+  for a top it keeps, decay class 1-5 as the US forest inventory grades
+  them, seed). How many, how thick, how tall and how rotted follow the
+  age of the stand, as the same Douglas-fir plots counted them (Spies,
+  Franklin and Thomas 1988: about 170 a hectare in young stands, mostly
+  thin, and 60 in old growth, half of them 50 cm or more), with the
+  bark and limbs each class keeps from Domke, Woodall and Smith 2011.
+  `stats.snags_per_ha` counts them. Draw each with your own meshes, or
+  with `snags::draw(&snag.shape, appearance, level)`, a mesh in the
+  snag's own frame (up +y, its foot at y = 0): bark sloughing from the
+  top down, all its limbs in class 1 and fewer, shorter stubs after,
+  weathered grey wood, then red-brown rotten wood with moss climbing
+  from the floor, a broken top splintered while the wood is hard and
+  crumbled once it is soft. `plantc snags --render snags.png` draws the
+  five classes side by side, and `plantc fill ... --render` draws them
+  in the tile.
 
 From the command line, `plantc fill` does the same (`--ages` chooses the
 stand ages, `--herbs no` leaves herbs to the ground cover, `--edges no`

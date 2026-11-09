@@ -62,12 +62,13 @@ pub use crate::fill::{
     CLIMBER_SPACING_M, CanopyCell, Community, Cover, CoverKind, CrackPlant, FieldTile, Fill,
     FillSettings, Floor, FloorMoss, INSTANCE_BYTES, INSTANCE_SCHEMA, Instance, Layer, LayerCover,
     Log, Member, PROTOTYPES_FILE, Prototype, PrototypeFiles, PrototypeKey, PrototypePackage,
-    STAND_AGES, STAND_CELL_M, STAND_SCALE, Site, StandCell, StandMap, TRIANGLE_PIXELS, TileId,
-    TilePlan, TileStats, WallClip, moisture_from_wetness, read_prototypes,
+    STAND_AGES, STAND_CELL_M, STAND_SCALE, Site, Snag, StandCell, StandMap, TRIANGLE_PIXELS,
+    TileId, TilePlan, TileStats, WallClip, moisture_from_wetness, read_prototypes,
 };
 pub use crate::niche::SiteFactors;
 pub use crate::package::Measurements;
 pub use crate::quality::Quality;
+pub use crate::snags::Shape as SnagShape;
 pub use crate::spec::{Environment, PlantSpec};
 
 /// The version of this module's items. It goes up when one of them is
