@@ -45,6 +45,7 @@ pub mod divided;
 pub mod drawing;
 pub mod evidence;
 pub mod export;
+pub mod far;
 pub mod felling;
 pub mod fill;
 pub mod flowers;
@@ -1806,7 +1807,16 @@ pub mod venation;
 /// moss and lichen carpet is Calabria 2016's 54% (40% moss) where it was
 /// 14%. No plant grows differently.
 ///
-/// 219: an export drawn to a budget (tiers, `--triangles`, `--max-mib`)
+/// 219: a palmately lobed blade takes its stated base, where every one was
+/// drawn with a heart round its petiole: its body reaches round from its
+/// tip half the angle its basal margins meet at (Simpson's classes:
+/// cuneate a wedge into the petiole, truncate cut square, rounded a little
+/// past), and a blade whose base is unstated keeps its heart. A Pacific
+/// ninebark's base is rounded to truncate (FNA). A baobab's leaf is
+/// palmately compound with five to seven leaflets (Baum 1995), drawn from
+/// those facts, where a hand-set palmately lobed blade stood in for it.
+///
+/// 220: an export drawn to a budget (tiers, `--triangles`, `--max-mib`)
 /// searches its levels' detail with clusters' cover counted on a grid 8
 /// cells a side ([`mesh`]'s `SEARCH_COVER_GRID`) where it counted on 24,
 /// about a ninth of the cost of each try, and draws the levels it picks
@@ -1816,4 +1826,4 @@ pub mod venation;
 /// tier 477,946 triangles where it was 484,454 and its mid tier 46,446
 /// (48,486); a 250-year bigleaf maple, whose time is mostly growth, in
 /// 104 s (111 s).
-pub const GENERATOR_REVISION: u32 = 219;
+pub const GENERATOR_REVISION: u32 = 220;

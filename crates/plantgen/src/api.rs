@@ -52,17 +52,21 @@ use crate::memory;
 use crate::package::{self, Inputs};
 use crate::quality;
 
+pub use crate::deadwood::Shape as LogShape;
+pub use crate::development::Origin;
 pub use crate::export::{
     Attributes, Budget, Compression, Export, Level, LevelPart, Plant, Region, Settings, Shade,
     crown_regions,
 };
+pub use crate::far::{FarCanopy, FarSettings, FarStats};
 pub use crate::fill::{
     CLIMBER_SPACING_M, CanopyCell, Community, Cover, CoverKind, CrackPlant, FieldTile, Fill,
     FillSettings, Floor, FloorMoss, INSTANCE_BYTES, INSTANCE_SCHEMA, Instance, Layer, LayerCover,
     Log, Member, PROTOTYPES_FILE, Prototype, PrototypeFiles, PrototypeKey, PrototypePackage,
-    RoofSoil, Roofs, STAND_AGES, STAND_CELL_M, STAND_SCALE, Site, StandCell, StandMap,
-    TRIANGLE_PIXELS, TileId, TilePlan, TileStats, WallClip, moisture_from_wetness,
+    STAND_AGES, STAND_CELL_M, STAND_SCALE, Site, StandCell, StandMap, TRIANGLE_PIXELS, TileId,
+    TilePlan, TileStats, WallClip, moisture_from_wetness, read_prototypes,
 };
+pub use crate::niche::SiteFactors;
 pub use crate::package::Measurements;
 pub use crate::quality::Quality;
 pub use crate::spec::{Environment, PlantSpec};
@@ -85,8 +89,19 @@ pub use crate::spec::{Environment, PlantSpec};
 /// `floor_mosses`, the genera [`FloorMoss`] names, and `day`, the day of
 /// the year it shows; [`TileStats`] gained `crowns_in_leaf`, and a
 /// [`CanopyCell`]'s cover and colour follow the deciduous crowns' leaves
-/// on that day.
-pub const API_VERSION: u32 = 6;
+/// on that day. 7: [`Fill`] is stable (see "Stands over a whole map"
+/// below): the items it reads and returns are all here ([`Origin`],
+/// [`SiteFactors`], [`LogShape`]); [`Prototype`], [`PrototypeFiles`],
+/// [`PrototypePackage`], [`TilePlan`], [`CanopyCell`], [`Floor`],
+/// [`FloorMoss`], [`Log`] (made with [`Log::new`]) and [`LayerCover`],
+/// which a fill makes and a caller reads, are non-exhaustive; the files it
+/// writes are read back by [`TilePlan::read`] and [`read_prototypes`];
+/// [`Fill::write_prototypes`] lists every prototype it wrote into a
+/// folder, not only its last call's; and `Site::with_colonists`,
+/// `TilePlan::crowns`, `Roofs` and `RoofSoil`, which took or gave types
+/// outside this module, left it (`plantgen::fill::with_colonists` and
+/// `plantgen::fill::tile_crowns`).
+pub const API_VERSION: u32 = 7;
 
 /// The name of the file listing a set of variants ([`VariantSet`]).
 pub const VARIANTS_FILE: &str = "variants.json";

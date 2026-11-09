@@ -41,7 +41,7 @@
 //! (`crate::export`) searches with that cover counted on a coarser grid
 //! (`crate::mesh`'s `SEARCH_COVER_GRID`), then draws the dials it took on
 //! the full grid, each a step coarser while it is over its level's most
-//! (revision 219).
+//! (revision 220).
 
 use crate::mesh::LodSpec;
 use crate::quality::Quality;
