@@ -160,10 +160,18 @@ fn a_stand_map_finer_than_a_stand_tile_reads_windows_of_one() {
     // trees beside it face it as edges, standing where they stood.
     let road = fill.tile(&site, &fine(Some(4)), 7).expect("tile");
     let spot = |at: &(u32, i64, i64)| (at.1, at.2);
-    let mut kept: Vec<(i64, i64)> = places(&cells)
+    // Read the strip on the stems' own positions, not the millimetres
+    // they round to: a stem 0.4 mm inside its edge rounds onto it.
+    let mut kept: Vec<(i64, i64)> = cells
+        .instances
         .iter()
-        .filter(|at| !(16_000..20_000).contains(&at.1))
-        .map(spot)
+        .filter(|i| !(16.0..20.0).contains(&f64::from(i.position[0])))
+        .map(|i| {
+            (
+                (f64::from(i.position[0]) * 1000.0).round() as i64,
+                (f64::from(i.position[1]) * 1000.0).round() as i64,
+            )
+        })
         .collect();
     let mut beside: Vec<(i64, i64)> = places(&road).iter().map(spot).collect();
     kept.sort_unstable();

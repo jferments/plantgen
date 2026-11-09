@@ -1839,4 +1839,15 @@ pub mod venation;
 /// holds 5.5 m² a m² where it lost every leaf, Oregon ash 4.1 (2.5);
 /// red alder keeps its 3.0. Open-grown crowns stay within the Urban Tree
 /// Database's leaf per crown area.
-pub const GENERATOR_REVISION: u32 = 221;
+///
+/// 222: a pine-family limb opens with its depth below the treetop (`pinidae` revision 25, `limb_open`,
+/// `open_depth`): from about 11 degrees off the leader in the top whorl to
+/// 83 (near level) some 15 m down, the exponential fitted to Weiskittel,
+/// Maguire and Monserud's (2007) Douglas-fir branch angle equation, set
+/// for the family; eight species' hand-set `branch_angle` and `upturn`
+/// are gone (Douglas-fir's 45 kept its lower limbs at 45 degrees above
+/// level for life). Pines keep their angles until theirs are measured.
+/// A bare stub that carries nothing takes a tip's radius but no more than
+/// the shoot it grows from (the pipe tool), so no stub stands thicker than
+/// its parent.
+pub const GENERATOR_REVISION: u32 = 222;
