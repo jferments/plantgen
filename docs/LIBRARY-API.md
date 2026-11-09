@@ -580,7 +580,12 @@ prototype file) imports with every triangle the file holds and every
 card texture. Blender 5.2 imports `--compress meshopt` files whole as
 well; Blender 4.5 refuses them ("Extension EXT_meshopt_compression is
 not available on this addon version"), and after `plantc unpack` imports
-them whole.
+them whole. Since 2026-11-08 CI checks this on every change to the code
+that writes these files, and on `main`: the `blender` job imports a fixed
+set of every kind of export (tiers, variants, a tile's file, cells and
+prototypes, unpacked meshopt, moss) in Blender 4.5 LTS and fails on any
+lost triangle, image or vertex colour (`tools/blender/README.md`, which
+also says how to run it yourself).
 
 Standing dead trees (snags) are not placed yet; fallen logs are
 (`TilePlan::logs`, above). A climber member (layer `climber`) has one
