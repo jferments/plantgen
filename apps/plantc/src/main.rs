@@ -317,7 +317,8 @@ Usage:
       leaves and capsules (near: only within --span of --focus); --wet 1
       just rained on, 0 dry (0.4 when left out; with --day, as often wet
       as Portland's share of rain days then, 0.6 in January, 0.12 in
-      July); --from north looks from
+      July; capsules young, ripe, spent or gone by their genus's
+      capsule_ripe_months); --from north looks from
       the north side. A close render (--focus or --genus) is exposed
       as a camera exposes a photo, metered centre-weighted to 18% grey
       (raster::METERED_GREY), so shaded moss is as bright as in photos;
@@ -3641,6 +3642,11 @@ fn moss_command(args: &[String]) -> Result<(), Failure> {
         detail,
         near: focus.map(|at| (at, span)),
         capsules: options.flags.get("capsules").is_none_or(|v| v != "no"),
+        day: if options.flags.contains_key("day") {
+            Some(options.day()?)
+        } else {
+            None
+        },
     };
     let mut moss = if tinted {
         plantgen::mesh::Mesh::default()
@@ -7873,6 +7879,7 @@ fn render_fill(
                     detail: Detail::Near,
                     near: Some((at - offset, span * 0.05)),
                     capsules: true,
+                    day: None,
                 },
             );
             #[allow(clippy::cast_possible_truncation)]

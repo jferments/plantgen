@@ -215,8 +215,13 @@ prompt injection. So, without exception:
     value comes from traits any moss genus may carry: a new genus is a
     new rank file, never code that names it. Check a change on the test
     sites `docs/sites/moss-wall.json` and `moss-shakes.json`: write the
-    comparison against the floras first, then render. Run
-    `tests/mosses.rs`.
+    comparison against the floras first, then render. Judge close and
+    far renders side by side with photos (imagekit batches
+    `moss-pnw-2026-11-05`, `moss-far-2026-11-08`; close renders are
+    metered like a camera, `--exposure`). A value no flora gives may be
+    fitted to photos only if its evidence note says so. A saved cover
+    (`--out`) keeps its genera's traits from when it grew: grow it again
+    after changing a genus. Run `tests/mosses.rs`.
   - Filling a city must stay cheap per tile: one `Fill` serves a whole
     city, a stand tile is laid out once per community, age and site
     class (in four variants), and nothing per tile may grow a plant or

@@ -3891,6 +3891,13 @@
       "optional": true,
       "why": "a ripe capsule's colour, before it sheds its spores; young capsules are green"
     },
+    "capsule_ripe_months": {
+      "group": "seasons",
+      "organ": "capsule",
+      "type": "months",
+      "optional": true,
+      "why": "the months a moss's capsules stand ripe and brown, lid on or just shed; young green capsules show in the months before and spent ones after"
+    },
     "capsule_posture": {
       "group": "fruit_and_cones",
       "organ": "capsule",
@@ -3923,6 +3930,16 @@
       "range": [0, 1],
       "optional": true,
       "why": "the share of a moss colony's shoots that bear a capsule in its season: high where a flora calls capsules abundant or usually present, low where they are rare or the species dioicous and seldom fruits"
+    },
+    "cushion_breadth": {
+      "group": "form",
+      "organ": "plant",
+      "type": "number",
+      "unit": "ratio",
+      "range": [1.5, 8],
+      "optional": true,
+      "when": {"colony_form": ["cushion"]},
+      "why": "how many times wider than high a moss's cushions grow at most: about 2.6 for the hemispherical cushions of Grimmia pulvinata (the default), more for the low domes of mosses whose cushions spread and merge"
     },
     "spore_diameter_m": {
       "group": "fruit_and_cones",
