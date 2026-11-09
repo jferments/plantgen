@@ -681,8 +681,10 @@ pub const STEEPEST: f64 = 1.732_050_807_568_877_2;
 /// falls more steeply than `rise` per texel (along the axes; diagonals
 /// √2 of it) toward a finite neighbour: each finite texel at least its
 /// neighbours less the rise to them, so a pit between tall crowns fills
-/// as a cone. Empty texels stay empty.
-fn limit_slope(field: &[f64], wide: usize, rise: f64) -> Vec<f64> {
+/// as a cone. Texels `kept` (a crown's own top) are never raised, so an
+/// emergent stands over the canopy beside it instead of draping a tent
+/// over it. Empty texels stay empty.
+fn limit_slope(field: &[f64], kept: &[bool], wide: usize, rise: f64) -> Vec<f64> {
     let mut out = field.to_vec();
     let diagonal = rise * std::f64::consts::SQRT_2;
     let neighbours: [(i64, i64, f64); 8] = [
@@ -702,7 +704,7 @@ fn limit_slope(field: &[f64], wide: usize, rise: f64) -> Vec<f64> {
         for pass in 0..2 {
             for n in 0..wide * wide {
                 let k = if pass == 0 { n } else { wide * wide - 1 - n };
-                if !out[k].is_finite() {
+                if !out[k].is_finite() || kept[k] {
                     continue;
                 }
                 let (x, y) = (
@@ -1142,7 +1144,8 @@ impl Fill {
                 }
             })
             .collect();
-        let canopy = limit_slope(&start, wide, texel_m * STEEPEST);
+        let kept: Vec<bool> = tops.iter().map(|top| top.is_finite()).collect();
+        let canopy = limit_slope(&start, &kept, wide, texel_m * STEEPEST);
         let surface: Vec<f64> = canopy
             .iter()
             .zip(&ground)
@@ -1453,5 +1456,24 @@ mod tests {
         let sky = sky_view(&pit, wide, 1.0);
         assert!(sky[10 * wide + 10] < 0.1, "{}", sky[10 * wide + 10]);
         assert!((sky[0] - 1.0).abs() < 1e-12);
+    }
+
+    #[test]
+    fn an_emergent_stands_over_the_crowns_beside_it_and_a_pit_fills() {
+        // A row: a 60 m emergent, low crowns at 10 m, a bridged pit at
+        // the ground, low crowns again.
+        let wide = 9;
+        let mut field = vec![10.0; wide * wide];
+        let mut kept = vec![true; wide * wide];
+        for y in 0..wide {
+            field[y * wide] = 60.0;
+            field[y * wide + 6] = 0.0;
+            kept[y * wide + 6] = false;
+        }
+        let out = limit_slope(&field, &kept, wide, 2.0);
+        // The crowns keep their own tops beside the emergent.
+        assert!((out[4 * wide + 1] - 10.0).abs() < 1e-12);
+        // The pit rises to its neighbours less the rise to them.
+        assert!((out[4 * wide + 6] - 8.0).abs() < 1e-12);
     }
 }
