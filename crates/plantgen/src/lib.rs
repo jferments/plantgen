@@ -1806,12 +1806,23 @@ pub mod venation;
 /// moss and lichen carpet is Calabria 2016's 54% (40% moss) where it was
 /// 14%. No plant grows differently.
 ///
-/// 219 (provisional; the merge desk renumbers): a pine-family limb opens
-/// with its depth below the treetop (`pinidae` revision 25, `limb_open`,
+/// 219: a palmately lobed blade takes its stated base, where every one was
+/// drawn with a heart round its petiole: its body reaches round from its
+/// tip half the angle its basal margins meet at (Simpson's classes:
+/// cuneate a wedge into the petiole, truncate cut square, rounded a little
+/// past), and a blade whose base is unstated keeps its heart. A Pacific
+/// ninebark's base is rounded to truncate (FNA). A baobab's leaf is
+/// palmately compound with five to seven leaflets (Baum 1995), drawn from
+/// those facts, where a hand-set palmately lobed blade stood in for it.
+///
+/// 220: a pine-family limb opens with its depth below the treetop (`pinidae` revision 25, `limb_open`,
 /// `open_depth`): from about 11 degrees off the leader in the top whorl to
 /// 83 (near level) some 15 m down, the exponential fitted to Weiskittel,
 /// Maguire and Monserud's (2007) Douglas-fir branch angle equation, set
 /// for the family; eight species' hand-set `branch_angle` and `upturn`
 /// are gone (Douglas-fir's 45 kept its lower limbs at 45 degrees above
 /// level for life). Pines keep their angles until theirs are measured.
-pub const GENERATOR_REVISION: u32 = 219;
+/// A bare stub that carries nothing takes a tip's radius but no more than
+/// the shoot it grows from (the pipe tool), so no stub stands thicker than
+/// its parent.
+pub const GENERATOR_REVISION: u32 = 220;
