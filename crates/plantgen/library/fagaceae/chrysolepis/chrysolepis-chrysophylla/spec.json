@@ -27,7 +27,6 @@
       "wiggle": 5,
       "droop": 0.02,
       "blooms": 1,
-      "bloom_size": 0.03,
       "bloom_angle": 60,
       "path_half": 11,
       "spur_light": 0.14,

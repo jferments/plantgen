@@ -44,7 +44,6 @@
       "space_kill": 0.105,
       "blooms": 3,
       "adult_age": 2,
-      "bloom_size": 0.06,
       "bloom_angle": 5,
       "path_half": 0.757
     }
@@ -91,22 +90,7 @@
       "bloom": {
         "shape": {
           "template": "head"
-        },
-        "inflorescence": {
-          "flowers": 12,
-          "size": 0.35,
-          "spread": 45
-        },
-        "colour": [
-          0.95,
-          0.8,
-          0.1
-        ],
-        "accent": [
-          0.85,
-          0.7,
-          0.1
-        ]
+        }
       }
     }
   },
@@ -140,6 +124,8 @@
       "max": 0.07
     },
     "capitulum_kind": "discoid",
+    "disc_florets": {"min": 5, "max": 5},
+    "disc_colour": [245, 200, 30],
     "inflorescence": "corymb",
     "flowering_months": [
       8,
@@ -213,10 +199,20 @@
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high), as no source read gives it."
     },
+    "traits.disc_florets": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960), Chrysothamnus nauseosus (read 2026-11-05): \"heads in terminal, rounded, cymose clusters; involucre 6-13 mm. high; phyllaries usually 3-4-seriate ... florets usually 5, yellow, the corolla 7-12 mm. long\"."
+    },
+    "traits.disc_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960), Chrysothamnus nauseosus (read 2026-11-05): \"heads in terminal, rounded, cymose clusters; involucre 6-13 mm. high; phyllaries usually 3-4-seriate ... florets usually 5, yellow, the corolla 7-12 mm. long\"."
+    },
     "traits.capitulum_kind": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high), as the FEIS review read does not describe the heads; rabbitbrush heads have disc florets only."
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960), Chrysothamnus (read 2026-11-05): \"Heads numerous, strictly discoid, narrow, mostly 5-flowered and yellow\"."
     },
     "traits.inflorescence": {
       "evidence": "Authored",

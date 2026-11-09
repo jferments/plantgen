@@ -1814,4 +1814,18 @@ pub mod venation;
 /// ninebark's base is rounded to truncate (FNA). A baobab's leaf is
 /// palmately compound with five to seven leaflets (Baum 1995), drawn from
 /// those facts, where a hand-set palmately lobed blade stood in for it.
-pub const GENERATOR_REVISION: u32 = 219;
+///
+/// 220: a Scotch broom flowers from short shoots in the axils all along
+/// its twigs (`short_shoots`), as Abrams gives its flowers "solitary or 2
+/// or 3 together in the axils of the leaves", where only a few spur tips
+/// flowered; and a rubber rabbitbrush's heads are drawn from its flora's
+/// five yellow disc florets (`disc_florets`, `disc_colour`), in place of a
+/// hand-set cluster of twelve. The open plant-identification judge names
+/// both better.
+/// Forty-three species lose hand-set bloom colours and bloom sizes where a
+/// rule gives them from their flora's flower colour and size: the rule's
+/// values replace what was set by eye, and the judge names them a little
+/// better (16 views better, 8 worse). Families where the judge preferred
+/// the hand values, and six plants whose fruit the rule drew outside its
+/// stated size, keep them.
+pub const GENERATOR_REVISION: u32 = 220;
