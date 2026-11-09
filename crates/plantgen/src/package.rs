@@ -388,6 +388,11 @@ pub struct Measurements {
     pub dbh: Option<f64>,
     pub crown_base: Option<f64>,
     pub crown_radius: f64,
+    /// Radius of the disc its foliage fills seen from above
+    /// ([`PlantGraph::foliage_radius`]), metres; 0 in a package from
+    /// before revision 218.
+    #[serde(default)]
+    pub foliage_radius: f64,
     /// One-sided leaf area, m².
     pub leaf_area: f64,
     pub segments: usize,
@@ -401,6 +406,7 @@ impl Measurements {
             dbh: graph.diameter_at_breast_height(),
             crown_base: graph.crown_base(),
             crown_radius: graph.crown_radius(),
+            foliage_radius: graph.foliage_radius(organ_types),
             leaf_area: graph.leaf_area(organ_types),
             segments: graph.segments.len(),
             organs: graph.organs.len(),
