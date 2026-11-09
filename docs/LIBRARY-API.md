@@ -571,6 +571,14 @@ to 6.2 GiB. Each plant's own peak fell because `gltf::check` reads one
 accessor at a time and borrows the document instead of copying it, and
 the budget search keeps only the drawings a level is drawn with.
 
+Since revision 219 an export drawn to a budget (tiers, `--triangles`,
+`--max-mib`) searches its levels' detail with leaf clusters' cover
+counted on a coarse grid and draws the levels it picks on the full one:
+one 60-year Douglas-fir took 112 s where it took 138 s (4-core cloud
+machine, 2026-11-09), its high tier 1.3% and mid tier 4% fewer
+triangles. A bigleaf maple gains little (104 s from 111 s): most of its
+time is growth.
+
 The files are glTF 2.0 that need no PlantGen code. Uncompressed and
 quantized files open in Blender, Godot, Unity (glTFast) and three.js;
 `--compress meshopt` files need a viewer with meshopt decoding, such as

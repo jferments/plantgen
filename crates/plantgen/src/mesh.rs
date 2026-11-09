@@ -3255,6 +3255,38 @@ const CLUSTER_OVERLAP_MAX: f64 = 2.0;
 /// widths as 48 did (revision 15) at about a quarter of the cost.
 const COVER_GRID: usize = 24;
 
+/// Cells a side of the cover grid while an export searches its budget's
+/// detail ([`crate::export`]): about a ninth of [`COVER_GRID`]'s cost a
+/// count, and a 60-year Douglas-fir's levels land within 1.5% of the
+/// triangles the full grid counts (2026-11-08). The levels it picks are
+/// drawn on the full grid.
+pub(crate) const SEARCH_COVER_GRID: usize = 8;
+
+thread_local! {
+    /// Cells a side of [`painted`]'s grid on this thread: [`COVER_GRID`]
+    /// unless [`with_cover_grid`] runs.
+    static COVER_CELLS: std::cell::Cell<usize> = const { std::cell::Cell::new(COVER_GRID) };
+}
+
+/// Run `work` with clusters' and twigs' cover counted on a grid `cells`
+/// a side (1 to [`COVER_GRID`]) on this thread and the threads its
+/// clusters spread to.
+pub(crate) fn with_cover_grid<R>(cells: usize, work: impl FnOnce() -> R) -> R {
+    struct Restore(usize);
+    impl Drop for Restore {
+        fn drop(&mut self) {
+            COVER_CELLS.set(self.0);
+        }
+    }
+    let _restore = Restore(COVER_CELLS.replace(cells.clamp(1, COVER_GRID)));
+    work()
+}
+
+/// Cells a side of the cover grid on this thread.
+fn cover_cells() -> usize {
+    COVER_CELLS.get()
+}
+
 fn to_f64(n: usize) -> f64 {
     f64::from(u32::try_from(n).unwrap_or(u32::MAX))
 }
@@ -3283,9 +3315,10 @@ fn painted(quads: &[[Vec3; 4]], low: Vec3, high: Vec3, axis: Vec3, fill: f64) ->
             }
         }
     }
+    let cells = cover_cells();
     let cell = [
-        (hi[0] - lo[0]).max(1e-9) / to_f64(COVER_GRID),
-        (hi[1] - lo[1]).max(1e-9) / to_f64(COVER_GRID),
+        (hi[0] - lo[0]).max(1e-9) / to_f64(cells),
+        (hi[1] - lo[1]).max(1e-9) / to_f64(cells),
     ];
     let cell_area = cell[0] * cell[1];
     let inverse = [1.0 / cell[0], 1.0 / cell[1]];
@@ -3303,7 +3336,7 @@ fn painted(quads: &[[Vec3; 4]], low: Vec3, high: Vec3, axis: Vec3, fill: f64) ->
             let steps = |e: [f64; 2]| {
                 let span = (e[0] / cell[0]).abs().max((e[1] / cell[1]).abs());
                 #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-                let n = (2.0 * span).ceil().clamp(1.0, 4.0 * to_f64(COVER_GRID)) as u32;
+                let n = (2.0 * span).ceil().clamp(1.0, 4.0 * to_f64(cells)) as u32;
                 n
             };
             let (n1, n2) = (steps(e1), steps(e2));
@@ -3321,8 +3354,8 @@ fn painted(quads: &[[Vec3; 4]], low: Vec3, high: Vec3, axis: Vec3, fill: f64) ->
                 for j in 0..grid.offsets.len() {
                     let offset = grid.offsets[j];
                     grid.sample(
-                        cell_index(start[1] + offset[1], cell[1], inverse[1]) * COVER_GRID
-                            + cell_index(start[0] + offset[0], cell[0], inverse[0]),
+                        cell_index(start[1] + offset[1], cell[1], inverse[1], cells) * cells
+                            + cell_index(start[0] + offset[0], cell[0], inverse[0], cells),
                     );
                 }
             }
@@ -3433,10 +3466,10 @@ const CELL_EDGE: f64 = 1e-6;
 /// without its call into libm. `x * inverse` differs from `x / cell` by a
 /// few units in the last place, so away from a cell's edge it gives the
 /// same cell, and near an edge the division decides.
-fn cell_index(x: f64, cell: f64, inverse: f64) -> usize {
+fn cell_index(x: f64, cell: f64, inverse: f64, cells: usize) -> usize {
     let scaled = x * inverse;
     // Inside the grid (which also turns NaN away).
-    if scaled >= 0.0 && scaled < to_f64(COVER_GRID) {
+    if scaled >= 0.0 && scaled < to_f64(cells) {
         #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
         let near = scaled as u32;
         let within = scaled - f64::from(near);
@@ -3446,7 +3479,7 @@ fn cell_index(x: f64, cell: f64, inverse: f64) -> usize {
     }
     #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
     let index = (x / cell) as usize;
-    index.min(COVER_GRID - 1)
+    index.min(cells - 1)
 }
 
 impl Cluster {
@@ -3716,15 +3749,19 @@ fn cluster_cards(
     });
     let threads = lease.threads();
     let size = clusters.len().div_ceil(threads).max(1);
+    // The caller's cover grid on every thread the clusters spread to.
+    let cells = cover_cells();
     cores::map(clusters.chunks(size).collect(), threads, &|run: &[(
         ClusterKey,
         Cluster,
     )]| {
-        run.iter()
-            .flat_map(|((template, ..), cluster)| {
-                cluster_cards_of(graph, looks, variation, *template, cluster)
-            })
-            .collect::<Vec<Card>>()
+        with_cover_grid(cells, || {
+            run.iter()
+                .flat_map(|((template, ..), cluster)| {
+                    cluster_cards_of(graph, looks, variation, *template, cluster)
+                })
+                .collect::<Vec<Card>>()
+        })
     })
     .into_iter()
     .flatten()
@@ -3977,6 +4014,23 @@ mod tests {
             vector(card.heading),
             vector(card.left),
         )
+    }
+
+    /// The search's coarse cover grid holds only while its work runs, on
+    /// the thread that asked for it, and never past the full grid.
+    #[test]
+    fn a_coarse_cover_grid_is_scoped() {
+        assert_eq!(cover_cells(), COVER_GRID);
+        let inside = with_cover_grid(SEARCH_COVER_GRID, || {
+            let elsewhere = std::thread::spawn(cover_cells).join().unwrap();
+            (cover_cells(), elsewhere)
+        });
+        assert_eq!(inside, (SEARCH_COVER_GRID, COVER_GRID));
+        assert_eq!(cover_cells(), COVER_GRID);
+        assert_eq!(with_cover_grid(1_000, cover_cells), COVER_GRID);
+        let unwound = std::panic::catch_unwind(|| with_cover_grid(3, || panic!("unwound")));
+        assert!(unwound.is_err());
+        assert_eq!(cover_cells(), COVER_GRID);
     }
 
     /// A leaf drooping into the soil turns up about its base just enough to

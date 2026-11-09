@@ -1805,4 +1805,15 @@ pub mod venation;
 /// fire-free years, not at 16 ([`development::encroached_age`]), and its
 /// moss and lichen carpet is Calabria 2016's 54% (40% moss) where it was
 /// 14%. No plant grows differently.
-pub const GENERATOR_REVISION: u32 = 218;
+///
+/// 219: an export drawn to a budget (tiers, `--triangles`, `--max-mib`)
+/// searches its levels' detail with clusters' cover counted on a grid 8
+/// cells a side ([`mesh`]'s `SEARCH_COVER_GRID`) where it counted on 24,
+/// about a ninth of the cost of each try, and draws the levels it picks
+/// on the full grid, each a little coarser where that is over its most.
+/// The nearest tier is counted on the full grid. A 60-year Douglas-fir
+/// grows and exports its tiers in 112 s where it took 138 s, its high
+/// tier 477,946 triangles where it was 484,454 and its mid tier 46,446
+/// (48,486); a 250-year bigleaf maple, whose time is mostly growth, in
+/// 104 s (111 s).
+pub const GENERATOR_REVISION: u32 = 219;
