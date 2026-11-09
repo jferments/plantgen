@@ -188,6 +188,10 @@ birch closer to their photos. These are still off:
   leader and limb tips drooping. Their leaf sits too high: a 155-year
   Douglas-fir's mid-crown gets about a third of the light Parker et al.
   (2002) measured, and its lowest quarter holds too little leaf.
+  Pine-family limbs now open from steep at the top to near level 15 m
+  down, by Weiskittel et al.'s (2007) Douglas-fir branch angles
+  (`pinidae` revision 25, `limb_open`); pines keep their old angles
+  until theirs are measured, and no limb yet droops at its end.
 - **Seedlings**: a young envelope narrower than the spacing of its
   free-space points can leave a seedling waiting years for a shoot.
 
