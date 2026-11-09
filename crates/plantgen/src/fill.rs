@@ -1372,6 +1372,34 @@ impl Log {
     }
 }
 
+/// One standing dead tree on a tile ([`crate::snags`]), for a host to
+/// draw with its own meshes or [`crate::snags::draw`]'s.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
+pub struct Snag {
+    /// The species it was, whose bark it keeps while it has bark.
+    pub species: String,
+    /// The ground at its foot: east, north and up, metres from the tile's
+    /// south-west corner at height 0, as an [`Instance`]'s position.
+    pub position: [f32; 3],
+    /// Its shape in its own frame: height, breast-height diameter, the
+    /// width where its top broke, decay class and seed
+    /// ([`crate::snags::Shape`]).
+    pub shape: crate::snags::Shape,
+}
+
+impl Snag {
+    /// A snag of `species` standing at `position`, of `shape`.
+    #[must_use]
+    pub fn new(species: &str, position: [f32; 3], shape: crate::snags::Shape) -> Self {
+        Self {
+            species: species.to_string(),
+            position,
+            shape,
+        }
+    }
+}
+
 /// One stand cell of the far canopy.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
 #[non_exhaustive]
@@ -1417,6 +1445,9 @@ pub struct TileStats {
     /// Logs on the forest floor ([`TilePlan::logs`]), per hectare.
     #[serde(default)]
     pub logs_per_ha: f64,
+    /// Standing dead trees ([`TilePlan::snags`]), per hectare.
+    #[serde(default)]
+    pub snags_per_ha: f64,
     /// The share of the tile's ground under litter, moss, logs and herbs
     /// ([`Floor`]).
     #[serde(default)]
@@ -1497,6 +1528,8 @@ pub struct TilePlan {
     pub stats: TileStats,
     /// The logs on its forest floors.
     pub logs: Vec<Log>,
+    /// Its standing dead trees.
+    pub snags: Vec<Snag>,
     /// The moss genera its forest floors name ([`FloorMoss::genus`]).
     pub floor_mosses: Vec<String>,
 }
@@ -1517,6 +1550,8 @@ struct TileHeader<'a> {
     canopy: &'a [CanopyCell],
     stats: TileStats,
     logs: &'a [Log],
+    #[serde(skip_serializing_if = "<[Snag]>::is_empty")]
+    snags: &'a [Snag],
     #[serde(skip_serializing_if = "<[String]>::is_empty")]
     floor_mosses: &'a [String],
 }
@@ -1538,6 +1573,8 @@ struct TileFile {
     stats: TileStats,
     #[serde(default)]
     logs: Vec<Log>,
+    #[serde(default)]
+    snags: Vec<Snag>,
     #[serde(default)]
     floor_mosses: Vec<String>,
 }
@@ -1593,6 +1630,7 @@ impl TilePlan {
             canopy: file.canopy,
             stats: file.stats,
             logs: file.logs,
+            snags: file.snags,
             floor_mosses: file.floor_mosses,
         })
     }
@@ -1637,6 +1675,7 @@ impl TilePlan {
             canopy: &self.canopy,
             stats: self.stats,
             logs: &self.logs,
+            snags: &self.snags,
             floor_mosses: &self.floor_mosses,
         };
         let fail = |error: std::io::Error| Error(format!("{}: {error}", dir.display()));
@@ -2169,6 +2208,8 @@ struct Layout {
     /// Its logs ([`crate::deadwood::lay`]), each with the species it fell
     /// from.
     logs: Vec<(usize, crate::deadwood::Laid)>,
+    /// Its snags ([`crate::snags::stand`]), each with the species it was.
+    snags: Vec<(usize, crate::snags::Stood)>,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -3178,6 +3219,7 @@ impl Fill {
         let mut cover = Vec::with_capacity(stands.cells.len());
         let mut canopy = Vec::with_capacity(stands.cells.len());
         let mut logs = Vec::new();
+        let mut snags = Vec::new();
         let mut floor_mosses: Vec<String> = Vec::new();
         let mut floor_m2 = [0.0_f64; 4];
         let (mut trees, mut basal, mut leaf_m2, mut crowns) = (0_usize, 0.0, 0.0, 0.0);
@@ -3413,6 +3455,37 @@ impl Fill {
                     shape: log.shape,
                 });
             }
+            // The snags whose feet lie in this cell's window, on open
+            // ground.
+            for (n, (species, snag)) in layout.snags.iter().enumerate() {
+                let at = turned(
+                    [
+                        wrap(snag.at[0] + shift[0], layout_m),
+                        wrap(snag.at[1] + shift[1], layout_m),
+                    ],
+                    turn,
+                    layout_m,
+                );
+                let at = [at[0] - window[0], at[1] - window[1]];
+                if !(0.0..cell_m).contains(&at[0]) || !(0.0..cell_m).contains(&at[1]) {
+                    continue;
+                }
+                let (east, north) = (corner[0] + at[0], corner[1] + at[1]);
+                let pick = rng::unit(rng::hash_words(&[keep, n as u64, 0x5a6]));
+                if pick >= site.plantable_at(east, north) {
+                    continue;
+                }
+                #[allow(clippy::cast_possible_truncation)]
+                snags.push(Snag {
+                    species: self.species[*species].id.clone(),
+                    position: [
+                        east as f32,
+                        north as f32,
+                        site.height_at(east, north) as f32,
+                    ],
+                    shape: snag.shape,
+                });
+            }
             let kept_share = |kept: f64, all: f64| if all > 0.0 { kept / all } else { 1.0 };
             let canopy_cover = layout.canopy_cover * kept_share(kept_tree_crowns, tree_crowns);
             #[allow(clippy::cast_precision_loss)]
@@ -3596,6 +3669,7 @@ impl Fill {
             leaf_area_index: leaf_m2 / area_m2,
             edge_trees_per_ha: edge_trees as f64 / area_ha,
             logs_per_ha: logs.len() as f64 / area_ha,
+            snags_per_ha: snags.len() as f64 / area_ha,
             floor: floor_m2.map(|sum| sum / area_m2),
             crowns_in_leaf: if crowns > 0.0 {
                 crowns_in_leaf / crowns
@@ -3614,6 +3688,7 @@ impl Fill {
             cover,
             canopy,
             logs,
+            snags,
             floor_mosses,
         })
     }
@@ -3984,9 +4059,10 @@ impl Fill {
         let is_tree = |member: &stand_tile::Member| {
             matches!(member.layer, niche::Layer::Canopy | niche::Layer::Subcanopy)
         };
-        // Logs on the floor, clear of the trees' stems, each of a tree
-        // species of the stand as wide as it, by their basal area; a
-        // shrub or a herb whose foot one lies over stands beside it.
+        // Snags among the trees and logs on the floor, clear of the
+        // trees' stems, each of a tree species of the stand as wide as it,
+        // by their basal area; a shrub or a herb whose foot one lies over
+        // stands beside it.
         let stand_age = self.settings.stand_ages[key.age];
         let trees: Vec<(usize, f64, [f64; 2])> = placed
             .iter()
@@ -4003,20 +4079,22 @@ impl Fill {
         } else {
             self.communities[key.community].origin
         };
-        let mut wood = if members.iter().any(is_tree) {
-            crate::deadwood::DownWood::at(
-                stand_age,
-                stand.lifespan,
-                self.canopy_m(key.community).map_or(0.0, f64::from),
-                origin,
-            )
+        let any_tree = members.iter().any(is_tree);
+        let canopy_m = self.canopy_m(key.community).map_or(0.0, f64::from);
+        let mut wood = if any_tree {
+            crate::deadwood::DownWood::at(stand_age, stand.lifespan, canopy_m, origin)
         } else {
             crate::deadwood::DownWood::NONE
         };
+        let mut dead = if any_tree {
+            crate::snags::Snags::at(stand_age, stand.lifespan, canopy_m, origin)
+        } else {
+            crate::snags::Snags::NONE
+        };
         if origin == development::Origin::Cleared {
-            // On cleared ground the logs are its own trees': none fall
-            // until they are as thick as a log, and then as many as its
-            // trees that are.
+            // On cleared ground the logs and snags are its own trees':
+            // none until they are as thick as a log, and then as many as
+            // its trees that are.
             #[allow(clippy::cast_precision_loss)]
             let thick = trees
                 .iter()
@@ -4024,49 +4102,77 @@ impl Fill {
                 .count() as f64
                 / trees.len().max(1) as f64;
             wood = wood.times(thick);
+            dead = dead.times(thick);
         }
-        let stems: Vec<crate::deadwood::Stem> = trees
+        let mut stems: Vec<crate::deadwood::Stem> = trees
             .iter()
             .map(|(_, dbh, at)| crate::deadwood::Stem {
                 at: *at,
                 radius_m: 0.5 * dbh.max(0.02),
             })
             .collect();
-        let log_seed = rng::hash_words(&[
-            key.seed,
-            key.layout,
-            key.community as u64,
-            key.age as u64,
-            0x106,
-        ]);
+        // A tree species of the stand as wide as `width`, by basal area,
+        // or the widest's.
+        let as_wide = |width: f64, seed: u64, n: usize| -> Option<usize> {
+            let wide = |least: f64| {
+                trees
+                    .iter()
+                    .filter(move |(_, dbh, _)| *dbh >= least)
+                    .map(|(species, dbh, _)| (*species, dbh * dbh))
+            };
+            let mut pool: Vec<(usize, f64)> = wide(0.5 * width).collect();
+            if pool.is_empty() {
+                let widest = trees.iter().map(|tree| tree.1).fold(0.0_f64, f64::max);
+                pool = wide(widest).collect();
+            }
+            let total: f64 = pool.iter().map(|(_, weight)| weight).sum();
+            let mut pick = rng::unit(rng::hash_words(&[seed, n as u64, 1])) * total;
+            Some(
+                pool.iter()
+                    .find(|(_, weight)| {
+                        pick -= weight;
+                        pick < 0.0
+                    })
+                    .or(pool.last())?
+                    .0,
+            )
+        };
+        let seed_for = |salt: u64| {
+            rng::hash_words(&[
+                key.seed,
+                key.layout,
+                key.community as u64,
+                key.age as u64,
+                salt,
+            ])
+        };
+        // The snags stand among the living trees, as tall as those as
+        // thick as they are or broken lower.
+        let live: Vec<(f64, f64)> = placed
+            .iter()
+            .filter(|plant| is_tree(&members[plant.member]))
+            .map(|plant| {
+                let (_, _, dbh) = traits[plant.member];
+                (
+                    dbh * plant.scale,
+                    members[plant.member].height_m * plant.scale,
+                )
+            })
+            .collect();
+        let snag_seed = seed_for(0x5a6);
+        let snags: Vec<(usize, crate::snags::Stood)> =
+            crate::snags::stand(&dead, &stems, &live, tile_m, snag_seed)
+                .into_iter()
+                .enumerate()
+                .filter_map(|(n, snag)| Some((as_wide(snag.shape.dbh_m, snag_seed, n)?, snag)))
+                .collect();
+        stems.extend(snags.iter().map(|(_, snag)| snag.stem()));
+        let log_seed = seed_for(0x106);
         let logs: Vec<(usize, crate::deadwood::Laid)> =
             crate::deadwood::lay(&wood, &stems, tile_m, log_seed)
                 .into_iter()
                 .enumerate()
-                .filter_map(|(n, log)| {
-                    let wide = |least: f64| {
-                        trees
-                            .iter()
-                            .filter(move |(_, dbh, _)| *dbh >= least)
-                            .map(|(species, dbh, _)| (*species, dbh * dbh))
-                    };
-                    let mut pool: Vec<(usize, f64)> = wide(0.5 * log.shape.butt_m).collect();
-                    if pool.is_empty() {
-                        let widest = trees.iter().map(|tree| tree.1).fold(0.0_f64, f64::max);
-                        pool = wide(widest).collect();
-                    }
-                    let total: f64 = pool.iter().map(|(_, weight)| weight).sum();
-                    let mut pick = rng::unit(rng::hash_words(&[log_seed, n as u64, 1])) * total;
-                    let species = pool
-                        .iter()
-                        .find(|(_, weight)| {
-                            pick -= weight;
-                            pick < 0.0
-                        })
-                        .or(pool.last())?
-                        .0;
-                    Some((species, log))
-                })
+                .filter_map(|(n, log)| Some((as_wide(log.shape.butt_m, log_seed, n)?, log)))
                 .collect();
         for plant in &mut placed {
             if is_tree(&members[plant.member]) {
@@ -4076,6 +4182,11 @@ impl Fill {
                 let Some(moved) = logs
                     .iter()
                     .find_map(|(_, log)| log.moved_off(plant.at_m, tile_m))
+                    .or_else(|| {
+                        snags
+                            .iter()
+                            .find_map(|(_, snag)| snag.moved_off(plant.at_m, tile_m))
+                    })
                 else {
                     break;
                 };
@@ -4200,6 +4311,7 @@ impl Fill {
             shrub_cover,
             leaf_litter: if crowns > 0.0 { leafy / crowns } else { 0.0 },
             logs,
+            snags,
         })
     }
 }

@@ -37,7 +37,7 @@
       "buds_above": 0.8,
       "nod": 0,
       "bud_size": 0.025,
-      "leaf_area": 0.258,
+      "leaf_area": 0.206,
       "basal_area": 0.215,
       "basal_piece_area": 0.235,
       "flower_area": 0.573,
@@ -61,12 +61,11 @@
     "variation": 0.2,
     "organs": {
       "leaf": {
-        "shape": { "template": "lobed", "width": 0.5, "lobes": 6, "depth": 0.6, "round": 0.0, "petiole": 0 }
+        "shape": { "template": "lobed", "lobes": 6, "depth": 0.6, "round": 0.0, "petiole": 0 }
       },
       "basal": {
         "shape": {
           "template": "lobed",
-          "width": 0.45,
           "lobes": 7,
           "depth": 0.55,
           "round": 0.0,
@@ -121,7 +120,8 @@
     "capitulum_kind": "discoid",
     "height_max_m": 2,
     "rosette": "basal",
-    "leaf_length_m": {"min": 0.1, "max": 0.3}
+    "leaf_length_m": {"min": 0.15, "max": 0.4},
+    "leaf_width_m": {"min": 0.06, "max": 0.15}
   },
   "evidence": {
     "traits.seedbank": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Cirsium vulgare: reviews class its seed bank as transient, or persistent but very small."},
@@ -259,7 +259,8 @@
     "traits.capitulum_kind": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 443, Cirsium vulgare: capitulum kind discoid."},
     "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3042723), as no source read gives it."},
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3042723), as no source read gives it."},
-    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3042723), as no source read gives it."}
+    "traits.leaf_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 19 (eFloras taxon_id=200023702, read 2026-11-08), Cirsium vulgare: blades oblong-lanceolate to obovate, 15-40 x 6-15 cm, coarsely 1-2-pinnatifid; cauline progressively reduced distally."},
+    "traits.leaf_width_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 19 (eFloras taxon_id=200023702, read 2026-11-08), Cirsium vulgare: blades oblong-lanceolate to obovate, 15-40 x 6-15 cm, coarsely 1-2-pinnatifid; cauline progressively reduced distally."}
   },
   "provenance": {
     "sources": [

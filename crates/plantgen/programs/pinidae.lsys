@@ -361,9 +361,22 @@
 # stand-grown crown no longer holds foliage that cannot pay for itself.
 # With twig_shade 0, the default, a plant grows as before.
 #
+# Revision 25 (limbs open with depth): a limb leaves the stem at
+# branch_angle from the leader and opens downward toward limb_open as the
+# leader rises above it, by (limb_open - branch_angle)(1 - exp(-d /
+# open_depth)) for its depth d below the treetop in metres (O, its base,
+# reads d each year). Branch angle from upright rises steeply in the top
+# metres of a Douglas-fir's crown and levels off near horizontal below
+# (Roeh and Maguire 1997; Weiskittel, Maguire and Monserud 2007, Forest
+# Ecology and Management 245:96-109, 218 trees and four earlier data
+# sets: from about 15 degrees in the top whorl to 83 by 15 m down). A
+# limb that kept its first angle for life stood its lower crown at the
+# angle of its top. With limb_open 0, the default, a plant grows as
+# before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem pinidae 24;
+lsystem pinidae 25;
 
 # Height of the leader over time: a Chapman-Richards curve,
 # height = height_max * (1 - exp(-height_rate * age))^height_shape.
@@ -387,6 +400,8 @@ param stems = 1;               # stems from one foot, as a clump grows from a bi
 param stem_angle = 15;         # degrees each stem of a clump leans out
 param branch_angle = 64;       # angle between the leader and a new branch
 param upturn = 0.0075;         # how strongly shoots bend toward the sky
+param limb_open = 0;           # with it above 0, the angle from the leader a limb opens to deep in the crown (revision 25); 0: a limb keeps branch_angle
+param open_depth = 5;          # metres below the treetop over which a limb opens 1 - 1/e of the way from branch_angle to limb_open (revision 25)
 param branch_growth = 0.3;     # yearly shoot of a first-order branch in full light
 param branch_reach = 6;        # wood from the stem at which a branch's yearly shoot is half as long
 param apical = 0;              # a first-order branch's yearly shoot in full light is this share of the leader's that year (apical control); 0: branch_growth, slowed by branch_reach
@@ -492,6 +507,7 @@ module D queries light;                 # a dormant bud on the stem (stem_epi)
 module B(n);                            # n stems still to start
 module U(a) queries light;              # a new leader's apex, rising from a dead top for a years (revision 20)
 module P(n, m);                         # new leaders still to start from a dead top, of m
+module O(d) queries position;           # the base of a limb, d metres below the treetop, where it opens toward limb_open (revision 25)
 module J(m, i, l, n);                   # foliage still to draw at i of m places along a held shoot l long, grown over n years (revision 23)
 
 organ spray foliage area spray_area;
@@ -528,21 +544,27 @@ rule A : top_die <= 0
                 - richards(t, height_max, height_rate, height_shape))
                * (leader_shade * min(1, (top * (1 + leader_half) / (top + leader_half) - (1 - leader_shade) * top) / max(0.01, leader_shade)) + (1 - leader_shade) * light) / bud_length)) : whorl)) /(137.5) A;
 
-decompose W(n, m) : n > 0 ->
+decompose W(n, m) : n > 0 && limb_open <= 0 ->
     [ /(360 * n / m + uniform(-20, 20)) &(branch_angle + uniform(-8, 8))
       T(0, 1, 0, upturn) S(1) C(1, 1, 0, 0, 0, 0) ]
     W(n - 1, m);
-decompose W(n, m) : stem_epi > 0 && epi_chance > 0 -> D;
-decompose W(n, m) -> ;
+decompose W(n, m) : (n <= 0 || limb_open <= 0) && stem_epi > 0 && epi_chance > 0 -> D;
+decompose W(n, m) : n <= 0 || limb_open <= 0 -> ;
 
-decompose I(n) : n > 0 ->
+decompose I(n) : n > 0 && limb_open <= 0 ->
     [ /(uniform(0, 360)) &(branch_angle + uniform(-8, 8))
       T(0, 1, 0, upturn) S(1) C(1, interwhorl_vigour, 0, 0, 0, 0) ]
     I(n - 1);
-decompose I(n) -> ;
+decompose I(n) : n <= 0 || limb_open <= 0 -> ;
 
 # A leader shoot nods over in two bends, which straighten over nod_years.
 interpret N -> &(0.5 * nod * max(0, 1 - age / nod_years));
+
+# A limb opens from branch_angle toward limb_open with its depth below the
+# treetop (revision 25).
+rule O(d) -> O(max(0, height - py));
+interpret O(d) : limb_open > 0 -> &((limb_open - branch_angle) * (1 - exp(-d / max(0.1, open_depth))));
+interpret O(d) -> ;
 
 # An apex dies after shade_years starving in deep shade, once its shoot
 # would be too short, on a side shoot after side_years if set, or when its
@@ -676,7 +698,7 @@ rule D : age >= epi_delay && light >= stem_epi_light
          && (richards(t + 1, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))
             / (height_max * height_rate * (height_shape > 1 ? pow(1 - 1 / height_shape, height_shape - 1) : 1)) < stem_epi_rise
          && rand() < stem_epi ->
-    [ /(uniform(0, 360)) &(branch_angle + uniform(-8, 8)) T(0, 1, 0, upturn) S(1) C(1, stem_epi_vigour, 0, 0, 0, 0) ] D;
+    [ /(uniform(0, 360)) &(branch_angle + uniform(-8, 8)) O(0) T(0, 1, 0, upturn) S(1) C(1, stem_epi_vigour, 0, 0, 0, 0) ] D;
 rule E(o, w) : w > 0 && age >= epi_delay && light >= epi_light && rand() < epi_chance ->
     [ /(uniform(0, 360)) &(side_angle) S(o + 1) C(o + 1, 1, 0, w, 0, 0) ] H;
 
@@ -762,3 +784,15 @@ decompose J(m, i, l, n) ->
     spray(spray_base + spray_length * l / m, uniform(-25, 25), spray_droop * 0.5, 1)
     spray(((spray_base + spray_length * l / n) * sqrt(n / m)) * 0.75, 90 + spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1)
     spray(((spray_base + spray_length * l / n) * sqrt(n / m)) * 0.75, -90 - spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1);
+
+# Revision 25: a whorl or interwhorl limb that opens with its depth carries
+# O at its base. These rules come last so that every draw above keeps its
+# site; the rules for W and I above leave these limbs to them.
+decompose W(n, m) : n > 0 && limb_open > 0 ->
+    [ /(360 * n / m + uniform(-20, 20)) &(branch_angle + uniform(-8, 8)) O(0)
+      T(0, 1, 0, upturn) S(1) C(1, 1, 0, 0, 0, 0) ]
+    W(n - 1, m);
+decompose I(n) : n > 0 && limb_open > 0 ->
+    [ /(uniform(0, 360)) &(branch_angle + uniform(-8, 8)) O(0)
+      T(0, 1, 0, upturn) S(1) C(1, interwhorl_vigour, 0, 0, 0, 0) ]
+    I(n - 1);

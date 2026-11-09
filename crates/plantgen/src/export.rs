@@ -1281,6 +1281,9 @@ struct Trials<'a> {
     /// [`KEEP_TRIANGLES`]: a level drawn where one was tried is that
     /// drawing, unless the cap on its sticks takes wood away.
     kept: HashMap<u64, Drawn<'a>>,
+    /// The dials whose count and drawing are the full cover grid's
+    /// ([`Self::exact`]); every other is the search's coarse one.
+    full: std::collections::HashSet<u64>,
 }
 
 /// The most triangles a tried drawing may hold to be kept for the level
@@ -1293,14 +1296,43 @@ impl<'a> Trials<'a> {
         Detail::at(&self.inputs.quality, self.plant.graph.height, dial)
     }
 
+    /// The drawing at `dial` as the search counts it: its clusters'
+    /// cover on the coarse grid ([`crate::mesh::SEARCH_COVER_GRID`]),
+    /// unless it was drawn exactly.
     fn draw(&self, dial: f64) -> Drawn<'a> {
-        Drawn::at(
-            self.drawn,
-            self.inputs,
-            self.plant.seed,
-            self.detail(dial),
-            None,
-        )
+        let draw = || {
+            Drawn::at(
+                self.drawn,
+                self.inputs,
+                self.plant.seed,
+                self.detail(dial),
+                None,
+            )
+        };
+        if self.full.contains(&dial.to_bits()) {
+            draw()
+        } else {
+            crate::mesh::with_cover_grid(crate::mesh::SEARCH_COVER_GRID, draw)
+        }
+    }
+
+    /// The drawing at `dial`'s triangles counted on the full cover grid,
+    /// as its file draws them, from here on what the search counts there.
+    fn exact(&mut self, dial: f64) -> usize {
+        let bits = dial.to_bits();
+        self.full.insert(bits);
+        self.tried.remove(&bits);
+        self.kept.remove(&bits);
+        self.triangles(dial).0
+    }
+
+    /// Drop every kept drawing but those at `chosen` dials and those at
+    /// `from` or past it.
+    fn keep_only(&mut self, chosen: &[f64], from: f64) {
+        self.kept.retain(|&bits, _| {
+            let dial = f64::from_bits(bits);
+            dial >= from || chosen.iter().any(|chosen| chosen.to_bits() == bits)
+        });
     }
 
     /// The drawing at `dial`'s triangles, and the drawing if it was drawn
@@ -1388,6 +1420,7 @@ impl<'a> Trials<'a> {
 /// detail along the dial ([`crate::budget`]) that fits its share, and
 /// never more than the level before it. Without a triangle budget, no
 /// level draws more than the quality's level of its number.
+#[allow(clippy::too_many_lines)]
 fn budgeted(
     inputs: &Inputs,
     plant: &Plant,
@@ -1406,11 +1439,12 @@ fn budgeted(
         drawn: staged.as_ref().unwrap_or(&plant.graph),
         tried: HashMap::new(),
         kept: HashMap::new(),
+        full: std::collections::HashSet::new(),
     };
     // Tiers: shares of the nearest level's triangles as the package
-    // draws it.
+    // draws it, counted exactly: the nearest tier is that drawing.
     let tiers = if budget.tiers {
-        Some(crate::budget::tier_triangles(trials.triangles(0.0).0))
+        Some(crate::budget::tier_triangles(trials.exact(0.0)))
     } else {
         None
     };
@@ -1458,6 +1492,12 @@ fn budgeted(
         let cap = caps[level];
         let (dial, _) = crate::budget::most_detail(finest, |dial| trials.taken(dial, cap, bytes))?;
         dials.push(dial);
+        // The next level searches from this dial up: a drawing kept below
+        // it is drawn for no level (unless the nearest searches again for
+        // the bytes the others leave, below).
+        if budget.bytes.is_none() {
+            trials.keep_only(&dials, dial);
+        }
     }
     let triangles = |level: usize| caps[level];
     // The nearest level takes the bytes the others leave.
@@ -1478,34 +1518,67 @@ fn budgeted(
             }
         }
     }
+    // Only the drawings a level is drawn with are kept while the levels
+    // are written: a large tree's other tries held as much again as its
+    // nearest level.
+    // Only the levels' own drawings drawn on the full cover grid are kept
+    // while the levels are written: a large tree's other tries held as
+    // much again as its nearest level, and the search's coarse ones are
+    // drawn again.
+    trials.keep_only(&dials, f64::INFINITY);
+    let full = std::mem::take(&mut trials.full);
+    trials.kept.retain(|bits, _| full.contains(bits));
     let mut files: Vec<Level> = Vec::with_capacity(LEVELS);
     let mut finer = None;
+    let mut coarsest = 0.0_f64;
     for (level, dial) in dials.into_iter().enumerate() {
-        // The drawing tried at this dial, as `Drawn::at` draws it while
-        // the cap on its sticks takes nothing away (`package::level_mesh`).
-        let drawing = trials
-            .kept
-            .remove(&dial.to_bits())
-            .filter(|tried| finer.is_none_or(|most| tried.mesh.wood.triangle_count() <= most))
-            .unwrap_or_else(|| {
-                Drawn::at(
-                    trials.drawn,
-                    inputs,
-                    trials.plant.seed,
-                    trials.detail(dial),
-                    finer,
-                )
-            });
+        // Each level is drawn on the full cover grid, at its dial or, where
+        // that drawing is over the level's most (the search counted
+        // cover on the coarse grid), at the first coarser dial within it,
+        // the steps doubling from the search's finest. A level is never
+        // finer than the one before it.
+        let most = triangles(level).map(|most| match files.last() {
+            Some(before) if budget.tiers => most.min(before.summary.triangles / 2),
+            _ => most,
+        });
+        let mut dial = dial.max(coarsest);
+        let mut step = crate::budget::STEP;
+        let (drawing, mut written) = loop {
+            // The drawing tried at this dial, as `Drawn::at` draws it while
+            // the cap on its sticks takes nothing away
+            // (`package::level_mesh`).
+            let drawing = trials
+                .kept
+                .remove(&dial.to_bits())
+                .filter(|tried| finer.is_none_or(|most| tried.mesh.wood.triangle_count() <= most))
+                .unwrap_or_else(|| {
+                    Drawn::at(
+                        trials.drawn,
+                        inputs,
+                        trials.plant.seed,
+                        trials.detail(dial),
+                        finer,
+                    )
+                });
+            let written =
+                drawing.file(inputs, plant, settings, rig, level, file(level), regions)?;
+            let fits = most.is_none_or(|most| written.summary.triangles <= most)
+                && given[level].is_none_or(|most| written.glb.len() <= most);
+            if fits || dial >= crate::budget::DIAL_MAX {
+                break (drawing, written);
+            }
+            dial = (dial + step).min(crate::budget::DIAL_MAX);
+            step *= 2.0;
+        };
+        coarsest = dial;
         finer = Some(drawing.mesh.wood.triangle_count());
-        let mut written =
-            drawing.file(inputs, plant, settings, rig, level, file(level), regions)?;
         let (drawn, bytes) = (written.summary.triangles, written.glb.len());
-        // The search counts a drawing's triangles as its file draws them.
+        // The file draws the drawing's triangles as they are counted.
         debug_assert_eq!(drawing.triangles(inputs), drawn);
         written.budget = Some(LevelBudget {
-            triangles: triangles(level),
+            triangles: most,
             bytes: given[level],
-            fits: triangles(level).is_none_or(|most| drawn <= most)
+            fits: most.is_none_or(|most| drawn <= most)
                 && given[level].is_none_or(|most| bytes <= most),
         });
         files.push(written);

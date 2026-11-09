@@ -44,7 +44,7 @@
       "blooms": 1,
       "bloom_size": 0.035,
       "bloom_angle": 120,
-      "leaf_area": 0.177,
+      "leaf_area": 0.198,
       "bloom_area": 0.355,
       "path_half": 2.12
     }
@@ -73,7 +73,6 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "width": 0.32,
           "widest": 0.6,
           "tip": 0.4,
           "base": 0.2,
@@ -126,10 +125,7 @@
   "tier": "procedural_proxy",
   "traits": {
     "bark_colour": [89, 56, 38],
-    "leaf_length_m": {
-      "min": 0.0381,
-      "max": 0.0635
-    },
+    "leaf_length_m": {"min": 0.05, "max": 0.1},
     "height_max_m": {
       "min": 1,
       "max": 5
@@ -139,7 +135,7 @@
     "fruiting_months": [6, 7],
     "height_typical_m": {"min": 1.5, "max": 5},
     "woodiness": "woody",
-    "leaf_width_m": {"min": 0.02, "max": 0.04},
+    "leaf_width_m": {"min": 0.015, "max": 0.04},
     "sexual_system": "dioecious",
     "inflorescence": "raceme",
     "fruit_size_m": {"min": 0.008, "max": 0.012},
@@ -148,11 +144,7 @@
   },
   "evidence": {
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.35, 0.22, 0.15], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
-    "traits.leaf_length_m": {
-      "evidence": "SourceInferred",
-      "source": "jepson-1925-manual",
-      "note": "Jepson (1925), as O. cerasiformis: leaves 3.8 cm to 6.3 cm long (converted from inches)."
-    },
+    "traits.leaf_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (eFloras taxon_id=250100289, read 2026-11-08), Oemleria cerasiformis: blade 5-10(-15) x 1.5-4 cm, base cuneate; Jepson (1925) gives leaves 3.8-6.3 cm long. Length and width both from FNA, so the blade's width over length (0.37) is one flora's."},
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1944",
@@ -245,7 +237,7 @@
     },
     "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2951813), as no source read gives it."},
     "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2951813), as no source read gives it."},
-    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2951813), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (eFloras taxon_id=250100289, read 2026-11-08), Oemleria cerasiformis: blade 5-10(-15) x 1.5-4 cm, base cuneate; Jepson (1925) gives leaves 3.8-6.3 cm long. Length and width both from FNA, so the blade's width over length (0.37) is one flora's."},
     "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2951813), as no source read gives it."},
     "traits.inflorescence": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2951813), as no source read gives it."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2951813), as no source read gives it."},

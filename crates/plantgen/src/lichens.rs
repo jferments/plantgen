@@ -57,6 +57,8 @@ pub struct LichenKind {
     pub growth_m_per_year: f64,
     /// `podetium_cups`.
     pub cups: bool,
+    /// `podetium_tips`: `erect`, `recurved` or `recurved_one_way`.
+    pub tips: String,
     /// `podetium_colour`, linear RGB.
     pub colour: [f32; 3],
     /// `light`: the classes it grows in.
@@ -107,6 +109,35 @@ pub const DEAD_BASE: f32 = 0.45;
 /// the leading branch going on and the others stopping sooner. This
 /// model's choice.
 pub const SIDE_YEARS: f64 = 0.8;
+
+/// The pieces a year's growth is drawn in, so a branch can curve along
+/// its length rather than run straight from fork to fork.
+pub const PIECES_PER_YEAR: u32 = 2;
+
+/// How far a branch curls in a year, about its own fixed axis, so the
+/// branches arc like antlers between their forks (photographs of
+/// C. portentosa, imagekit batch inat-2026-11-08; no source measures
+/// it). This model's choice, in degrees.
+pub const CURL_DEG_PER_YEAR: f64 = 18.0;
+
+/// How far a recurved tip bends over in its last year of growth, away
+/// from upright (British Lichen Society: the terminal branches of
+/// C. rangiferina, C. arbuscula and C. ciliata recurved, C. ciliata's
+/// tips curling down; no source gives the angle). This model's choice,
+/// in degrees.
+pub const RECURVE_DEG: f64 = 35.0;
+
+/// The radius a tip ends in, a share of the branch's: the tips taper to
+/// fine points (photographs of C. portentosa, imagekit batch
+/// inat-2026-11-08). This model's choice.
+pub const TIP_POINT: f64 = 0.3;
+
+/// A spinule's length, a share of a year's growth: the reindeer
+/// lichens' tips end in clusters of short spinules, their branches
+/// forking again within a millimetre or two (photographs of
+/// C. portentosa, imagekit batch inat-2026-11-08: tips about a quarter
+/// of the length between forks). This model's reading of them.
+pub const SPINULE_LENGTH: f64 = 0.25;
 
 fn usual(value: &Value) -> Option<String> {
     match value {
@@ -221,6 +252,10 @@ impl LichenKind {
             .get("podetium_cups")
             .and_then(usual)
             .is_some_and(|state| state == "true");
+        let tips = traits
+            .get("podetium_tips")
+            .and_then(usual)
+            .unwrap_or_else(|| "erect".into());
         Ok(Some(Self {
             name: name.to_string(),
             genus: genus.to_string(),
@@ -233,6 +268,7 @@ impl LichenKind {
             fork_angle,
             growth_m_per_year,
             cups,
+            tips,
             colour,
             light: states(traits.get("light")),
             moisture: states(traits.get("moisture")),
@@ -400,42 +436,92 @@ impl Grower<'_> {
         self.kind.colour.map(|c| c * k)
     }
 
-    /// A branch from `at` along `dir`, `left` years of growth to come.
-    fn branch(&mut self, at: Vec3, dir: Vec3, left: f64, salt: u64) {
+    /// A branch from `at` along `dir`, `left` years of growth to come;
+    /// `heading` is the way its podetium's tips turn over when they all
+    /// turn one way.
+    fn branch(&mut self, at: Vec3, dir: Vec3, left: f64, salt: u64, heading: Vec3) {
         let kind = self.kind;
         if left <= 0.0 {
             return;
         }
-        let step = kind.growth_m_per_year.min(left * kind.growth_m_per_year);
-        let years_here = step / kind.growth_m_per_year;
+        let years_here = left.min(1.0);
+        let next = left - years_here;
         // The radius thins toward the tips: full at the base of the
-        // oldest growth, [`TIP_WIDTH`] of it at a tip.
+        // oldest growth, [`TIP_WIDTH`] of it at a tip, and the last piece
+        // of a tip tapers to [`TIP_POINT`] of that.
         let radius = |left: f64| {
             0.5 * kind.width_m * (TIP_WIDTH + (1.0 - TIP_WIDTH) * (left / self.years).min(1.0))
         };
         // A little wander, so no branch is ruled straight.
         let wobble = across(dir) * (0.25 * (unit(hash_words(&[salt, 1])) - 0.5))
             + dir.cross(across(dir)) * (0.25 * (unit(hash_words(&[salt, 2])) - 0.5));
-        let up_pull = Vec3::new(0.0, UP_PULL, 0.0);
-        let dir = (dir + wobble + up_pull).normalize_or(dir);
-        let to = at + dir * step;
-        let next = left - years_here;
-        let tip = next <= 0.0 || kind.forks <= 1;
-        let colours = (self.colour_at(left), self.colour_at(next.max(0.0)));
-        tube(
-            &mut self.mesh,
-            at,
-            to,
-            (radius(left), radius(next.max(0.0))),
-            colours,
-            self.sides,
-            tip && next <= 0.0,
-        );
-        if next <= 0.0 {
+        let mut dir = (dir + wobble).normalize_or(dir);
+        // The axis this branch curls about, fixed along it, so it arcs.
+        let curl_axis = turned(across(dir), dir, 2.0 * PI * unit(hash_words(&[salt, 7])));
+        // A tip's last year bends over: every which way, or its
+        // podetium's one way.
+        let tip = next <= 0.0;
+        let over = match kind.tips.as_str() {
+            "recurved_one_way" => heading,
+            "recurved" => turned(
+                across(Vec3::new(0.0, 1.0, 0.0)),
+                Vec3::new(0.0, 1.0, 0.0),
+                2.0 * PI * unit(hash_words(&[salt, 8])),
+            ),
+            _ => Vec3::default(),
+        };
+        let pieces = PIECES_PER_YEAR.max(1);
+        let piece = years_here / f64::from(pieces);
+        let mut from = at;
+        let mut age = left;
+        for k in 0..pieces {
+            let last = tip && k + 1 == pieces;
+            let curl = CURL_DEG_PER_YEAR.to_radians() * piece;
+            // Curling on, unless that would turn it down past level:
+            // a podetium grows up out of its mat, never into the ground.
+            let curled = turned(dir, curl_axis, curl);
+            dir = if curled.y < 0.0 && curled.y < dir.y {
+                turned(dir, curl_axis, -curl)
+            } else {
+                curled
+            };
+            dir = (dir + Vec3::new(0.0, UP_PULL * piece, 0.0)).normalize_or(dir);
+            if tip && over.length() > 0.0 {
+                let axis = dir.cross(over).normalize_or(curl_axis);
+                let bend = RECURVE_DEG.to_radians() / f64::from(pieces);
+                // Bend toward `over`, never past it.
+                if dir.dot(over) < libm::cos(bend) {
+                    dir = turned(dir, axis, bend);
+                }
+            }
+            let mut to = from + dir * (piece * kind.growth_m_per_year);
+            to.y = to.y.max(0.0);
+            let after = age - piece;
+            let r1 = if last {
+                radius(0.0) * TIP_POINT
+            } else {
+                radius(after.max(0.0))
+            };
+            let colours = (self.colour_at(age), self.colour_at(after.max(0.0)));
+            tube(
+                &mut self.mesh,
+                from,
+                to,
+                (radius(age), r1),
+                colours,
+                self.sides,
+                last,
+            );
+            from = to;
+            age = after;
+        }
+        if tip {
+            self.spinules(from, dir, salt);
             return;
         }
+        let to = from;
         if kind.forks <= 1 {
-            self.branch(to, dir, next, hash_words(&[salt, 3]));
+            self.branch(to, dir, next, hash_words(&[salt, 3]), heading);
             return;
         }
         // A fork: the leading branch goes on; the others lean out at the
@@ -443,7 +529,7 @@ impl Grower<'_> {
         let turn = 2.0 * PI * unit(hash_words(&[salt, 4]));
         let side = turned(across(dir), dir, turn);
         let lead = turned(dir, side, 0.4 * kind.fork_angle);
-        self.branch(to, lead, next, hash_words(&[salt, 5]));
+        self.branch(to, lead, next, hash_words(&[salt, 5]), heading);
         for k in 1..kind.forks {
             let around = turn + 2.0 * PI * f64::from(k) / f64::from(kind.forks);
             let out = turned(across(dir), dir, around);
@@ -453,6 +539,39 @@ impl Grower<'_> {
                 bent,
                 next * SIDE_YEARS,
                 hash_words(&[salt, 6, u64::from(k)]),
+                heading,
+            );
+        }
+    }
+}
+
+impl Grower<'_> {
+    /// The short spinules a tip ends in: its podetium's forks again, each
+    /// [`SPINULE_LENGTH`] of a year's growth, splayed at the fork angle.
+    fn spinules(&mut self, at: Vec3, dir: Vec3, salt: u64) {
+        let kind = self.kind;
+        if kind.forks <= 1 {
+            return;
+        }
+        let length = SPINULE_LENGTH * kind.growth_m_per_year;
+        let radius = 0.5 * kind.width_m * TIP_WIDTH * TIP_POINT;
+        let colour = self.colour_at(0.0);
+        let turn = 2.0 * PI * unit(hash_words(&[salt, 9]));
+        for k in 0..kind.forks {
+            let around = turn + 2.0 * PI * f64::from(k) / f64::from(kind.forks);
+            let out = turned(across(dir), dir, around);
+            let spine = turned(dir, out, -kind.fork_angle);
+            let mut to = at + spine * length;
+            to.y = to.y.max(0.0);
+            tube(
+                &mut self.mesh,
+                at,
+                to,
+                (radius, 0.3 * radius),
+                (colour, colour),
+                // Three faces: a spinule is too fine to show more.
+                3,
+                true,
             );
         }
     }
@@ -476,6 +595,7 @@ pub fn head_radius(kind: &LichenKind) -> f64 {
             Vec3::new(0.0, 1.0, 0.0),
             years,
             seed,
+            Vec3::new(1.0, 0.0, 0.0),
         );
         sum += grower
             .mesh
@@ -532,7 +652,10 @@ pub fn draw_mat(kind: &LichenKind, options: &MatOptions) -> Mesh {
                 libm::cos(lean),
                 libm::sin(lean) * libm::sin(azimuth),
             );
-            grower.branch(Vec3::new(x, 0.0, z), dir, own, salt);
+            // The way its tips turn over, where they all turn one way.
+            let heading = 2.0 * PI * unit(hash_words(&[salt, 15]));
+            let heading = Vec3::new(libm::cos(heading), 0.0, libm::sin(heading));
+            grower.branch(Vec3::new(x, 0.0, z), dir, own, salt, heading);
         }
     }
     grower.mesh
@@ -558,6 +681,7 @@ mod tests {
         assert_eq!(kind.branching, "rich");
         assert_eq!(kind.forks, 3);
         assert!(!kind.cups);
+        assert_eq!(kind.tips, "recurved");
         assert!((kind.height_m - 0.06).abs() < 1e-12);
         // About a fork a year, a dozen years to its height.
         assert!((kind.years() - 12.0).abs() < 1e-9);

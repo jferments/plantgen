@@ -32,7 +32,7 @@
       "adult_age": 3,
       "bloom_size": 0.04,
       "bloom_angle": 50,
-      "leaf_area": 0.022,
+      "leaf_area": 0.025,
       "bloom_area": 0.308,
       "path_half": 2.35
     }
@@ -65,7 +65,6 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "width": 0.035,
           "widest": 0.5,
           "tip": 0.6,
           "base": 0.6,
@@ -158,12 +157,7 @@
     "generator.params.leaf_area": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Leaf area of a leaf card 1 m long, as plantc atlas measures the narrow leaf drawn (width 0.035)."
-    },
-    "appearance.organs.leaf.shape.width": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "The leaf's width over its blade's length: Abrams and Ferris vol. 4 (1960) gives leaves 5 to 15 cm long and 2 to 6 mm wide, narrowly linear; 0.1 drew them 2 cm wide."
+      "note": "Leaf area of a leaf card 1 m long, as plantc atlas measures the narrow leaf drawn (width 0.04, its flora's width over length)."
     },
     "generator.params.leaf_size": {
       "evidence": "Authored",

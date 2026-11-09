@@ -39,16 +39,28 @@ A broadleaf tree is grown one year at a time, after Pałubicki et al.
 - **Shade kills.** Buds below `shade_death` die, a branch with no living
   bud is shed, and the lower stem clears itself. In the pine family
   `shade_death` follows the species' shade-tolerance class in the Silvics
-  of North America (tolerant 0.06, intermediate 0.1, intolerant 0.15),
-  and a twig of a limb's side branch that stays below its starving light
-  is shed with its needles (`twig_shade`, branch autonomy), so a crown in
-  a stand holds about the leaf its trunk carries.
+  of North America (tolerant 0.06, intermediate 0.1, intolerant 0.15);
+  in the broadleaf decurrent trees it follows the same class (tolerant
+  0.03, intermediate 0.06, intolerant or unstated 0.12), so a stand of
+  tolerant trees holds the leaf measured light under such canopies
+  implies (about 17% of the open's light under red alder, 1.3% under
+  beech at a leaf area index of 5), and a twig of a limb's side branch
+  that stays below a quarter of its starving light is shed with its
+  needles (`twig_shade` 0.25, branch autonomy), so a crown in a stand
+  holds about the leaf its trunk carries and its lower limbs keep their
+  inner twigs.
 - **Wood carries load.** Branches thicken by the pipe model, bend under
   their own weight and their leaves', and hold a set angle from upright by
   reaction wood. The trunk's girth follows the foliage it carries: the
   pine family's pipe values (`pipe_organ`, `pipe_tip`) give a stand-grown
   Douglas-fir the dbh Espinosa Bancalari et al. (1987) measured for its
-  leaf area.
+  leaf area. Pine-family limbs keep a twentieth of each year's sag
+  (`bend_set` 0.05) and spring back from the rest, as Farjon gives their
+  branches horizontal or spreading: keeping more, an old Douglas-fir's
+  side shoots hung in curtains of bare strings. An old conifer's side
+  shoot that grows a few centimetres a year holds its growth and lays it
+  down as one segment every 20 cm (`seg_side`, from `seg_age`), so a
+  500-year tree stays within the segment limit.
 
 The parameters come from rules (§3), not from values set by hand for a
 species. A few species still carry older hand-set values (Oregon white
@@ -149,8 +161,10 @@ In this order:
 3. **Numbers third.** `plantc grow SPECIES --years N` prints sizes against
    the reference lines; `plantc measure` gives crown width and height;
    `plantc grow SPECIES --env interior --years N --light` prints the light
-   down through the stand and the share of leaf in each quarter of the
-   crown's depth, to set beside measured canopy profiles (Parker et al.
+   down through a stand of its like (at the species' own spacing, with
+   its own light tool), the leaf in each 2 m band and the share of leaf
+   in each quarter of the crown's depth, to set beside measured canopy
+   profiles (Parker et al.
    2002) and crown leaf distributions;
    `plantc validate SPECIES --seeds 3` checks every stated character on
    grown plants, as `tests/checks.rs` does. Grow every species of the
@@ -188,6 +202,10 @@ birch closer to their photos. These are still off:
   leader and limb tips drooping. Their leaf sits too high: a 155-year
   Douglas-fir's mid-crown gets about a third of the light Parker et al.
   (2002) measured, and its lowest quarter holds too little leaf.
+  Pine-family limbs now open from steep at the top to near level 15 m
+  down, by Weiskittel et al.'s (2007) Douglas-fir branch angles
+  (`pinidae` revision 25, `limb_open`); pines keep their old angles
+  until theirs are measured, and no limb yet droops at its end.
 - **Seedlings**: a young envelope narrower than the spacing of its
   free-space points can leave a seedling waiting years for a shoot.
 

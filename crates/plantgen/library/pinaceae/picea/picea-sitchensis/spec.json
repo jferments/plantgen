@@ -20,8 +20,6 @@
       "height_shape": 1.4,
       "whorl": 5,
       "interwhorl": 2,
-      "branch_angle": 75,
-      "upturn": 0.01,
       "branch_growth": 0.32,
       "spray_droop": 40,
       "branch_reach": 6.0,

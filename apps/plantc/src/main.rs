@@ -126,6 +126,7 @@ fn run() -> Result<(), Failure> {
         "field" => field_command(&args),
         "moss" => moss_command(&args),
         "logs" => logs_command(&args),
+        "snags" => snags_command(&args),
         "lichen" => lichen_command(&args),
         "render" => render_command(&args),
         "sheet" => sheet_command(&args),
@@ -291,6 +292,13 @@ Usage:
       barked, sagging; traces of bark on faded wood; bare, brown and
       oval, under moss; red-brown, flattened, sunk and half buried.
       Douglas-fir, 6 m and 0.6 m wide unless given, at level 0.
+  plantc snags [--species ID] --render FILE.png [--height M] [--width M]
+               [--level 0-3] [--view VIEW] [--size PIXELS] [--seed N]
+      Draw five snags of a species side by side, decay classes 1 (left)
+      to 5 (right; plantgen::snags): barked with all its limbs and its
+      pointed top; a few limbs, top perhaps broken; limb stubs on a broken
+      stem losing its bark; few or no stubs; bare, rotted and short.
+      Douglas-fir, 20 m tall and 0.6 m across unless given, at level 0.
   plantc lichen --render FILE.png [--kind NAME] [--side M] [--view VIEW]
                 [--size PIXELS] [--seed N]
       Draw a square patch of a lichen's mat on bare ground
@@ -533,6 +541,7 @@ Usage:
                  [--threads N] [--shade attribute|baked]
                  [--compress none|quantize|meshopt] [--attributes all|wind|none]
                  [--triangles N[,N,N,N]] [--max-mib N] [--levels tiers|package]
+                 [--memory-gib N]
       Make N distinct plants of a species, ready to import: each grown from
       its own seed (from --first-seed, 1 unless given, counting up) and
       written as plantc export writes one (STEM-lod0.glb to STEM-lod3.glb
@@ -541,8 +550,11 @@ Usage:
       a fingerprint of its bytes. Seed n is the same plant however many are
       made; the seeds the spec lists are the plants its package keeps.
       Without --env, the species' typical site; without --age, its oldest
-      keyframe. --threads plants grow at once (every core unless given);
-      the files do not depend on it. Levels are tiers (max, high, mid,
+      keyframe. Up to --threads plants grow at once (every core unless
+      given), and no more than fit in --memory-gib (the memory free unless
+      given): on Linux the first grows alone and the rest as many at once
+      as its measure, with a margin, fits. The files depend on neither.
+      Levels are tiers (max, high, mid,
       low) unless --levels package; the export flags are plantc export's.
   plantc fill <community.json>... --tile X,Y --tile-m N [--seed N]
               [--years N] [--stands stands.json] [--out DIR]
@@ -565,8 +577,8 @@ Usage:
       trees, cleared for a lot's or a road edge's ground) as the
       library API's Fill does, and write
       DIR/tiles/X_Y.json (header, ground cover, forest floor and far
-      canopy per stand cell, the logs on its floor, stand numbers) and
-      DIR/tiles/X_Y.bin (32-byte instances;
+      canopy per stand cell, the logs on its floor, its snags, stand
+      numbers) and DIR/tiles/X_Y.bin (32-byte instances;
       docs/LIBRARY-API.md). Each community's stand is developed at each of
       --ages years since disturbance (default 10,20,40,80,160,320,640);
       a stand cell takes the nearest. Without --stands (a StandMap:
@@ -587,7 +599,8 @@ Usage:
       layer seen from above as inventory plots measure it (upper, middle
       and lower trees by thirds of the tallest tree, shrubs, herbs), then
       its forest floor: litter, moss, logs (a hectare, and by decay
-      class) and herbs. --day N (1 to 365, default 196, mid-July) is the
+      class) and herbs, and its snags (a hectare by size and height, as
+      the plots count them, and by decay class). --day N (1 to 365, default 196, mid-July) is the
       day of the year the tile shows: deciduous crowns bare in winter,
       letting light and the far canopy's view through, and herbs that
       die back down; the stand itself is the same every day, and its
@@ -611,7 +624,7 @@ Usage:
       --render draws the filled tile on its mesh, each plant at the
       coarsest level its size in the image allows (each triangle about
       four pixels) and no finer than --level (1 unless given), with its
-      logs and its forest floor's
+      logs, its snags and its forest floor's
       litter and moss, and its --moss moss, as wet as --wet (0 dry to 1
       just rained on; unless given, as often wet as Portland's share of
       rain days on --day, or 0.4); --cut M leaves out all above M
@@ -2687,13 +2700,29 @@ fn grow_command(args: &[String]) -> Result<(), Failure> {
         out!("  reference at {} years: {}", record.age, record.describe());
     }
     if light && let Some(graph) = growth.keyframes.last() {
-        let preset = Conditions::preset(environment);
+        // The stand it grew in: its environment's, spaced as its own
+        // yield tables space it (`variants.stand_spacing`).
+        let preset = Conditions::in_neighbourhood(environment, neighbourhood(&spec, environment));
         let conditions = place
             .as_ref()
             .map_or(preset.clone(), |(place, _)| place.over(&preset));
+        // Its own light tool's voxel and extinction where its program
+        // names them as parameters (broadleaf's), else pinidae's.
+        let light_tool = (
+            spec.generator
+                .params
+                .get("light_cell")
+                .copied()
+                .unwrap_or(0.4),
+            spec.generator
+                .params
+                .get("extinction")
+                .copied()
+                .unwrap_or(0.35),
+        );
         let half = plantgen::light_profile::half_width(graph, &growth.organ_types, &conditions);
         out!(
-            "  light at {} years across its cell, {:.1} m to each side (mean, 10th, median, 90th percentile; mean under its own crown alone):",
+            "  light at {} years across its cell, {:.1} m to each side (mean, 10th, median, 90th percentile; mean under its own crown alone; leaf in the 2 m band):",
             graph.age,
             half
         );
@@ -2702,18 +2731,23 @@ fn grow_command(args: &[String]) -> Result<(), Failure> {
             &growth.organ_types,
             &conditions,
             1.0,
-            (0.4, 0.35),
+            light_tool,
         )
         .map_err(Failure::from)?;
+        // Leaf area in the 2 m band each printed layer stands in.
+        let leaf = plantgen::light_profile::leaf_by_height(graph, &growth.organ_types, 2.0);
         for layer in layers.iter().rev().step_by(2) {
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            let band = (layer.height_m.max(0.0) / 2.0).floor() as usize;
             out!(
-                "    {:>5.1} m  {:.3}  {:.3}  {:.3}  {:.3}  {:.3}",
+                "    {:>5.1} m  {:.3}  {:.3}  {:.3}  {:.3}  {:.3}  leaf {:.1} m²",
                 layer.height_m,
                 layer.mean,
                 layer.p10,
                 layer.median,
                 layer.p90,
-                layer.own
+                layer.own,
+                leaf.get(band).copied().unwrap_or(0.0)
             );
         }
         if let Some(quarters) = plantgen::light_profile::crown_quarters(graph, &growth.organ_types)
@@ -3485,6 +3519,110 @@ fn lichen_command(args: &[String]) -> Result<(), Failure> {
         "wrote {png}: a {side} m patch of {}, {} triangles",
         kind.name,
         mat.triangle_count()
+    );
+    Ok(())
+}
+
+/// `plantc snags`: five snags of a species, decay classes 1 to 5, side by
+/// side, each broken lower the more it has rotted (class 5 at a third of
+/// the height), for a look at [`plantgen::snags::draw`].
+fn snags_command(args: &[String]) -> Result<(), Failure> {
+    let options = Options::parse(
+        args,
+        &[
+            "species", "render", "height", "width", "level", "view", "size", "seed",
+        ],
+    )?;
+    if !options.positional.is_empty() {
+        return Err("`snags` takes its species as `--species ID`".into());
+    }
+    let png = options
+        .flags
+        .get("render")
+        .ok_or("missing `--render FILE.png`")?;
+    let species = options
+        .flags
+        .get("species")
+        .map_or("pseudotsuga-menziesii", String::as_str);
+    let spec = library()
+        .spec(species)
+        .map_err(|error| format!("{species}: {error}"))?;
+    let height: f64 = options.number("height")?.unwrap_or(20.0);
+    let width: f64 = options.number("width")?.unwrap_or(0.6);
+    let level: usize = options.number("level")?.unwrap_or(0);
+    let seed: u64 = options.number("seed")?.unwrap_or(1);
+    let pixels: usize = options.number("size")?.unwrap_or(1600);
+    let gap = (0.25 * height).max(4.0 * width);
+    let mut scene = PlantMesh::default();
+    for decay in 1..=5_u8 {
+        let tall = height * [1.0, 0.85, 0.7, 0.5, 0.33][usize::from(decay - 1)];
+        let shape = plantgen::snags::Shape {
+            height_m: tall,
+            dbh_m: width,
+            top_m: if decay == 1 {
+                0.0
+            } else {
+                (width - plantgen::deadwood::TAPER * (tall - 1.37)).max(0.3 * width)
+            },
+            decay,
+            seed: seed.wrapping_mul(31).wrapping_add(u64::from(decay)),
+        };
+        let mut wood = plantgen::snags::draw(&shape, Some(&spec.appearance), level);
+        let x = (f64::from(decay) - 3.0) * gap;
+        #[allow(clippy::cast_possible_truncation)]
+        let x = x as f32;
+        for position in &mut wood.positions {
+            position[0] += x;
+        }
+        scene = on_host(
+            scene,
+            PlantMesh {
+                wood,
+                ..PlantMesh::default()
+            },
+            0,
+        );
+    }
+    let half = 2.5 * gap + 1.0;
+    let mut ground = mesh::Mesh::default();
+    #[allow(clippy::cast_possible_truncation)]
+    let litter =
+        plantgen::deadwood::LITTER_SRGB.map(|byte| plantgen::texture::srgb_to_linear(byte) as f32);
+    for (x, z) in [(-half, -half), (half, -half), (half, half), (-half, half)] {
+        ground.push(mesh::Vertex::plain(Vec3::new(x, 0.0, z), Vec3::Y, litter));
+    }
+    ground.indices.extend([0, 2, 1, 0, 3, 2]);
+    let templates = Templates::for_plant(&[], &[]).with_bark(spec.appearance.bark_params());
+    let view = match options.flags.get("view") {
+        Some(name) => View::from_name(name).ok_or_else(|| format!("unknown view `{name}`"))?,
+        None => View::Eye,
+    };
+    let image = preview::render_on_site(
+        &scene,
+        &[(&ground, raster::Material::Opaque)],
+        &templates,
+        &PreviewOptions {
+            width: pixels,
+            height: pixels * 3 / 4,
+            view,
+            supersample: 2,
+            figure: false,
+            frame_height: None,
+            frame_reach: Some(half.max(0.6 * height)),
+            focus: None,
+            fit_plant: false,
+        },
+    );
+    let bytes = raster::encode_png(
+        image.width,
+        image.height,
+        &image.to_srgb8(Some(preview::SKY)),
+    )
+    .map_err(|error| format!("cannot encode PNG: {error}"))?;
+    fs::write(png, bytes).map_err(|error| format!("cannot write {png}: {error}"))?;
+    out!(
+        "wrote {png}: five {species} snags, decay classes 1-5, {} triangles at level {level}",
+        scene.triangle_count()
     );
     Ok(())
 }
@@ -6661,6 +6799,7 @@ fn export_command(args: &[String]) -> Result<(), Failure> {
     Ok(())
 }
 
+#[allow(clippy::too_many_lines)]
 fn variants_command(args: &[String]) -> Result<(), Failure> {
     let options = Options::parse(
         args,
@@ -6679,6 +6818,7 @@ fn variants_command(args: &[String]) -> Result<(), Failure> {
             "triangles",
             "max-mib",
             "levels",
+            "memory-gib",
         ],
     )?;
     let (shade, compression, attributes, budget) = export_options(&options, true)?;
@@ -6706,6 +6846,14 @@ fn variants_command(args: &[String]) -> Result<(), Failure> {
     if let Some(threads) = options.number::<usize>("threads")? {
         variants.threads = threads.max(1);
     }
+    if let Some(gib) = options.number::<f64>("memory-gib")? {
+        if gib.is_nan() || gib <= 0.0 {
+            return Err("`--memory-gib` is a size above 0".into());
+        }
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let bytes = (gib * 1_073_741_824.0) as u64;
+        variants.memory = Some(bytes);
+    }
     variants.settings = export::Settings {
         shade,
         compression,
@@ -6728,6 +6876,17 @@ fn variants_command(args: &[String]) -> Result<(), Failure> {
         variants.age.unwrap_or_else(|| generator.default_age()),
         out.display()
     );
+    #[allow(clippy::cast_precision_loss)]
+    if let Some(bytes) = variants.memory.or_else(plantgen::memory::free)
+        && variants.threads > 1
+        && count > 1
+    {
+        out!(
+            "  up to {} at once in {:.1} GiB: the first alone, then as many as fit by its measure",
+            variants.threads.min(count),
+            bytes as f64 / 1_073_741_824.0
+        );
+    }
     let finished = std::sync::atomic::AtomicUsize::new(0);
     let set = generator
         .write_variants_reporting(&variants, &out, &|plant| {
@@ -6982,6 +7141,30 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
         out!(
             "  Cladonia lichen between the grasses {:.0}% of the ground",
             100.0 * lichen
+        );
+    }
+    if !plan.snags.is_empty() {
+        let mut decay = [0_usize; 5];
+        for snag in &plan.snags {
+            decay[usize::from(snag.shape.decay.clamp(1, 5) - 1)] += 1;
+        }
+        let area_ha = plan.tile_m * plan.tile_m / 10_000.0;
+        #[allow(clippy::cast_precision_loss)]
+        let per_ha = |keep: &dyn Fn(&plantgen::snags::Shape) -> bool| {
+            plan.snags.iter().filter(|snag| keep(&snag.shape)).count() as f64 / area_ha
+        };
+        #[allow(clippy::cast_precision_loss)]
+        let mean_dbh =
+            plan.snags.iter().map(|snag| snag.shape.dbh_m).sum::<f64>() / plan.snags.len() as f64;
+        out!(
+            "  snags: {:.0}/ha (under 50 cm {:.0}, 50 cm or more {:.0}; over 5 m tall {:.0}; 50 cm and over 15 m {:.1}), mean dbh {:.0} cm, decay classes 1-5 {}",
+            stats.snags_per_ha,
+            per_ha(&|shape| shape.dbh_m < plantgen::snags::THICK_M),
+            per_ha(&|shape| shape.dbh_m >= plantgen::snags::THICK_M),
+            per_ha(&|shape| shape.height_m > 5.0),
+            per_ha(&|shape| shape.dbh_m >= plantgen::snags::THICK_M && shape.height_m > 15.0),
+            100.0 * mean_dbh,
+            decay.map(|n| n.to_string()).join("/")
         );
     }
     // The floor's moss genera, each its share of all the tile's moss.
@@ -7821,6 +8004,37 @@ fn render_fill(
         // Logs are cheap: never coarser than level 1.
         let drawn = plantgen::deadwood::draw(&log.shape, appearance, level.min(1));
         scene = on_host(scene, placed_log(drawn, log, field.corner, offset), 0);
+    }
+    // The snags, the same way.
+    for snag in &plan.snags {
+        let appearance = appearances
+            .entry(snag.species.clone())
+            .or_insert_with(|| {
+                Library::builtin()
+                    .spec(&snag.species)
+                    .ok()
+                    .map(|spec| spec.appearance)
+            })
+            .as_ref();
+        let mut wood = plantgen::snags::draw(&snag.shape, appearance, level.min(1));
+        let foot = Vec3::new(
+            field.corner[0] + f64::from(snag.position[0]),
+            f64::from(snag.position[2]),
+            field.corner[1] - f64::from(snag.position[1]),
+        ) + offset;
+        for position in &mut wood.positions {
+            *position = (Vec3::new(
+                f64::from(position[0]),
+                f64::from(position[1]),
+                f64::from(position[2]),
+            ) + foot)
+                .to_f32();
+        }
+        let placed = PlantMesh {
+            wood,
+            ..PlantMesh::default()
+        };
+        scene = on_host(scene, placed, 0);
     }
     // `--cut M`: leave out everything more than M metres above the tile's
     // middle, so the forest floor shows from above.

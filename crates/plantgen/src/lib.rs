@@ -71,6 +71,7 @@ pub mod lsys;
 pub mod margins;
 pub mod math;
 pub mod mechanics;
+pub mod memory;
 pub mod mesh;
 pub mod meshopt;
 pub mod mosses;
@@ -91,6 +92,7 @@ pub mod shed;
 pub mod shoots;
 pub mod site;
 pub mod site_field;
+pub mod snags;
 pub mod spec;
 pub mod spikelets;
 pub mod spines;
@@ -1815,9 +1817,63 @@ pub mod venation;
 /// palmately compound with five to seven leaflets (Baum 1995), drawn from
 /// those facts, where a hand-set palmately lobed blade stood in for it.
 ///
-/// 220: a grass tiller keeps its older leaves, dead, while it lives
+/// 220: leaf data the leaf-outline judge flagged. Thirteen blades whose
+/// width was set by hand are drawn as their floras measure them (the
+/// width over length rule): Indian plum and Pacific madrone from FNA,
+/// whose widths replace model estimates, and serviceberry, big
+/// sagebrush, bull thistle, Scouler's willow, evergreen huckleberry,
+/// desert marigold, desert willow, brittlebush and two fawn lilies.
+/// Red baneberry's leaf is ternate, its divisions pinnate (Abrams
+/// 1944), not a seven-part fan. The palmate card draws an even count of
+/// lobes, its upper two either side of a notch at the tip, so the tulip
+/// tree's leaf has its four lobes.
+///
+/// 221: a broadleaf tree's buds die in the shade its shade-tolerance
+/// class allows (`shade_death`, a rule at the decurrent trees): 0.03 of
+/// the open sky's light for a tolerant one, 0.06 for an intermediate one,
+/// 0.12, as every one had, for an intolerant one or one whose class is
+/// not stated. Every broadleaf stand held about 3 m² of leaf over each m²
+/// of its ground, whatever its kind, where under red alder about 17% of
+/// the open's light reaches the understorey (Hanley and Barnard 2014) and
+/// under beech and tulip-poplar at a leaf area index of 5.1, 1.3% (Hudson
+/// et al. 2017). Grown 50 years in a stand of its like, southern magnolia
+/// holds 5.5 m² a m² where it lost every leaf, Oregon ash 4.1 (2.5);
+/// red alder keeps its 3.0. Open-grown crowns stay within the Urban Tree
+/// Database's leaf per crown area.
+///
+/// 222: a pine-family limb opens with its depth below the treetop (`pinidae` revision 25, `limb_open`,
+/// `open_depth`): from about 11 degrees off the leader in the top whorl to
+/// 83 (near level) some 15 m down, the exponential fitted to Weiskittel,
+/// Maguire and Monserud's (2007) Douglas-fir branch angle equation, set
+/// for the family; eight species' hand-set `branch_angle` and `upturn`
+/// are gone (Douglas-fir's 45 kept its lower limbs at 45 degrees above
+/// level for life). Pines keep their angles until theirs are measured.
+/// A bare stub that carries nothing takes a tip's radius but no more than
+/// the shoot it grows from (the pipe tool), so no stub stands thicker than
+/// its parent.
+///
+/// 223: an export drawn to a budget (tiers, `--triangles`, `--max-mib`)
+/// searches its levels' detail with clusters' cover counted on a grid 8
+/// cells a side ([`mesh`]'s `SEARCH_COVER_GRID`) where it counted on 24,
+/// about a ninth of the cost of each try, and draws the levels it picks
+/// on the full grid, each a little coarser where that is over its most.
+/// The nearest tier is counted on the full grid. A 60-year Douglas-fir
+/// grows and exports its tiers in 112 s where it took 138 s, its high
+/// tier 477,946 triangles where it was 484,454 and its mid tier 46,446
+/// (48,486); a 250-year bigleaf maple, whose time is mostly growth, in
+/// 104 s (111 s).
+///
+/// 224: the pine family sheds a starved twig only under a quarter of its
+/// starving light (`twig_shade` 0.25). Shed at the starving light itself,
+/// the twigs inside the lower limbs went too: a 60-year western hemlock in
+/// a stand held 0.21 of its leaf in the lowest quarter of its crown's
+/// depth, where Espinosa Bancalari et al.'s (1987) Douglas-firs hold 0.35
+/// to 0.42; it now holds 0.30. `plantc grow --light` also prints the leaf
+/// in each 2 m band (`light_profile::leaf_by_height`).
+///
+/// 225: a grass tiller keeps its older leaves, dead, while it lives
 /// (grass program revision 11, `dead_leaves`, a rule at the grasses
 /// from a genus's `leaf_life_years`). Fescues, whose leaves live about
 /// five months on tillers of two years (Monteiro 2012), carry a skirt
 /// of straw round their green blades; other grasses grow as before.
-pub const GENERATOR_REVISION: u32 = 220;
+pub const GENERATOR_REVISION: u32 = 225;

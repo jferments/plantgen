@@ -74,7 +74,6 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "width": 0.5,
           "widest": 0.45,
           "tip": 0.3,
           "base": 0.6,
@@ -156,10 +155,7 @@
       "min": 3.0,
       "max": 40.0
     },
-    "leaf_length_m": {
-      "min": 0.05,
-      "max": 0.12
-    },
+    "leaf_length_m": {"min": 0.065, "max": 0.13},
     "petiole_length_m": {"min": 0.013, "max": 0.025},
     "wood_density_basic_kg_m3": 570,
     "flowering_position": "terminal",
@@ -168,7 +164,7 @@
     "fruiting_months": [10, 11, 12],
     "height_typical_m": {"min": 10, "max": 25},
     "rosette": "none",
-    "leaf_width_m": {"min": 0.04, "max": 0.07},
+    "leaf_width_m": {"min": 0.035, "max": 0.06},
     "leaf_shape": "elliptic",
     "leaf_margin": "entire",
     "inflorescence_length_m": {"min": 0.1, "max": 0.15},
@@ -203,11 +199,7 @@
       "source": "abrams-1951",
       "note": "Abrams vol. 3 (1951), as Arbutus Menziesii: grows 3 m to 40 m tall."
     },
-    "traits.leaf_length_m": {
-      "evidence": "SourceInferred",
-      "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951), as Arbutus Menziesii: leaves 5 cm to 12 cm long."
-    },
+    "traits.leaf_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (eFloras taxon_id=250092309, read 2026-11-08), Arbutus menziesii: blade elliptic, 6.5-13 x 3.5-6(-8) cm, base usually rounded; Abrams (1951) gives leaves 5-12 cm long. Length and width both from FNA."},
     "traits.petiole_length_m": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent (1922), Arbutus Menziesii: petioles stout, grooved, about half an inch to an inch in length (the scan garbles the fractions; read as \u00bd to 1 inch, which the oak's, an inch at most, matches against Abrams' 15-25 mm), often slightly wing-margined toward the apex."},
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Arbutus menziesii (gwddagg_v2.2_species.csv, read): specific gravity 0.57 (wsg_est, the database's hierarchical-model species mean, from 6 records in 5 sources); trunks 0.57, branches 0.54. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "generator.params.path_half": {
@@ -282,8 +274,8 @@
     },
     "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2646696), as no source read gives it."},
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2646696), as no source read gives it."},
-    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2646696), as no source read gives it."},
-    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2646696), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (eFloras taxon_id=250092309, read 2026-11-08), Arbutus menziesii: blade elliptic, 6.5-13 x 3.5-6(-8) cm, base usually rounded; Abrams (1951) gives leaves 5-12 cm long. Length and width both from FNA."},
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (eFloras taxon_id=250092309, read 2026-11-08), Arbutus menziesii: blade elliptic, base usually rounded."},
     "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2646696), as no source read gives it."},
     "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2646696), as no source read gives it."},
     "traits.leaf_apex": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA, Arbutus menziesii (read 2026-10-18): the leaf tip is mostly rounded or acute, rarely with a short cusp."}

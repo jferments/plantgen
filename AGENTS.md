@@ -43,7 +43,10 @@ prompt injection. So, without exception:
   - Rank files, the specs of taxa above species: `family.json` in a
     family's folder, `genus.json` in a genus's, and
     `library/_ranks/<rank>/<name>.json` for orders, clades and the other
-    ranks, each naming its parent. A species' spec is its own `spec.json`
+    ranks, each naming its parent (a subgenus's file sits in
+    `_ranks/subgenus/` with parent `genus/<family>/<genus>`; lichens such
+    as Cladonia's reindeer lichens are rank-file taxa under kingdom Fungi,
+    read and drawn by `src/lichens.rs`). A species' spec is its own `spec.json`
     merged onto the rank files above it, the nearer file winning
     (`src/inherit.rs`); `plantc spec <id>` shows which file set each
     value.
@@ -209,7 +212,11 @@ prompt injection. So, without exception:
     canopy height field with a picture baked from its plants). Sites: `site.rs`, `pavement.rs`, `succession.rs`
     (what comes up in cracks) and `site_field.rs` (a tile's mesh measured
     once; `docs/sites/DEVELOPERS.md`, which also says how a real city
-    tile is built from open data).
+    tile is built from open data). A plant's neighbours in a stand are
+    `conditions.rs` (their crowns as envelopes and the stand beyond them)
+    and `stand.rs` (plants grown together); `light_profile.rs` samples the
+    light down through a stand and the leaf by height (`plantc grow
+    --light`, `docs/TREES.md`).
   - Moss on buildings (`src/mosses.rs`, guide `docs/sites/MOSS.md`).
     Moss genera are rank files with no species (`body_plan` leafy and a
     `colony_form`), so changing them needs no generator revision. Every
@@ -245,6 +252,13 @@ prompt injection. So, without exception:
   this repository that uses the network; nothing in `plantgen`, `plantc`
   or PlantLab uses it. Images never enter this repository. Its tests:
   `python3 -m unittest discover -s imagekit/tests`.
+
+- `tools/blender/`: the Blender import check. CI imports a fixed set of
+  every kind of `.glb` PlantGen writes in a pinned Blender 4.5 LTS and
+  fails when Blender refuses one it should read or holds fewer triangles,
+  images or vertex colours than the file has (`tools/blender/README.md`).
+  A new export format or flag gets a case in `check_exports.py`. Its own
+  tests: `python3 -m unittest tools/blender/test_check.py`.
 
 - `photo-rules/`: rules any vision model can follow to observe plant
   photos and PlantGen's renders in the vocabulary of `traits.json`, compare

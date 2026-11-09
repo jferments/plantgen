@@ -87,11 +87,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its photographs show no sky through its crown; drawn four times over (form::MOST_DRAWN) it still shows about 9% between its shoots",
     ),
     (
-        "fraxinus-latifolia",
-        "crown_see_through",
-        "its photographs show about 6% sky; drawn four times over (form::MOST_DRAWN) its crown still shows about 13% from the side, between limbs that run bare to their leafy tips",
-    ),
-    (
         "populus-tremuloides",
         "crown_see_through",
         "its photographs show about 5% sky; drawn four times over (form::MOST_DRAWN) its crown still shows about 9% between its shoots",
@@ -115,11 +110,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "chloranthus-serratus",
         "flower_symmetry",
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
-    ),
-    (
-        "cirsium-vulgare",
-        "leaf_shape",
-        "its pinnatifid blades are drawn on lobed cards whose outline, lobes and all, reads elliptic or obovate as well as oblanceolate, against the lanceolate to oblong blades Abrams and Ferris give",
     ),
     (
         "cladium-mariscus-subsp-jamaicense",

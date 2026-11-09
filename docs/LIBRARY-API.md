@@ -168,24 +168,25 @@ it, calling it as you would, through `plantgen::api` alone.
   `Community`, `Member`, `Layer`, `Origin`, `Fill`, `FillSettings`,
   `Site`, `SiteFactors`, `FieldTile`, `CrackPlant`, `TileId`,
   `StandMap`, `StandCell`, `TilePlan`, `Instance`, `WallClip`, `Cover`,
-  `CoverKind`, `Floor`, `FloorMoss`, `Log`, `LogShape`, `CanopyCell`,
-  `TileStats`, `LayerCover`, `Prototype`, `PrototypeKey`,
-  `PrototypeFiles`, `PrototypePackage`, `read_prototypes` and the
-  constants `INSTANCE_SCHEMA`, `INSTANCE_BYTES`, `PROTOTYPES_FILE`,
-  `STAND_AGES`, `STAND_CELL_M`, `STAND_SCALE`, `TRIANGLE_PIXELS` and
-  `CLIMBER_SPACING_M`. The rest of `plantgen::fill`
-  (`with_colonists`, `tile_crowns`, `cells_per_layout` and the like) is
-  not, and changes with the generator.
+  `CoverKind`, `Floor`, `FloorMoss`, `Log`, `LogShape`, `Snag`,
+  `SnagShape`, `CanopyCell`, `TileStats`, `LayerCover`, `Prototype`,
+  `PrototypeKey`, `PrototypeFiles`, `PrototypePackage`,
+  `read_prototypes` and the constants `INSTANCE_SCHEMA`,
+  `INSTANCE_BYTES`, `PROTOTYPES_FILE`, `STAND_AGES`, `STAND_CELL_M`,
+  `STAND_SCALE`, `TRIANGLE_PIXELS` and `CLIMBER_SPACING_M`. The rest of
+  `plantgen::fill` (`with_colonists`, `tile_crowns`, `cells_per_layout`
+  and the like) is not, and changes with the generator.
 - **What you build and what you read.** The inputs you make yourself
   (`TileId`, `StandMap`, `StandCell`, `Member`, `Community`,
   `CrackPlant`, `Instance`) keep their fields; a field added to one
   raises `API_VERSION`. What a fill makes (`TilePlan`, `Prototype`,
   `PrototypeFiles`, `PrototypePackage`, `Cover`, `Floor`, `FloorMoss`,
-  `Log`, `CanopyCell`, `TileStats`, `LayerCover`) is non-exhaustive: read
-  its fields, and make one only through its constructor (`Cover::of`,
-  `Log::new`), so fields can be added beside them. `FillSettings` and
-  `Site` start from `FillSettings::default()` and `Site::flat`,
-  `Site::from_heightfield` or `Site::from_field`.
+  `Log`, `Snag`, `CanopyCell`, `TileStats`, `LayerCover`) is
+  non-exhaustive: read its fields, and make one only through its
+  constructor (`Cover::of`, `Log::new`, `Snag::new`), so fields can be
+  added beside them. `FillSettings` and `Site` start from
+  `FillSettings::default()` and `Site::flat`, `Site::from_heightfield`
+  or `Site::from_field`.
 - **What changes with `GENERATOR_REVISION`, not the version.** Which
   plants a tile holds, where, how big, and every byte of every file: the
   fill models stands better with each revision. The same communities (in
@@ -419,7 +420,10 @@ it, calling it as you would, through `plantgen::api` alone.
   and shrubs; left out of the JSON where there is none. The lichens
   themselves are library taxa (`lichens::kinds`: the reindeer lichens,
   Cladonia subgenus Cladina, first): a host tints the ground with
-  `LichenKind::far_colour` from afar and draws `lichens::draw_mat` near.
+  `LichenKind::far_colour` from afar and draws `lichens::draw_mat` near
+  (podetia curving between yearly forks, their tips bent over as the
+  kind's `podetium_tips` says and ending in short spinules; about 5 M
+  triangles for a 12 cm patch, so only close by).
 - **Logs** lie on a natural stand's floor (`TilePlan::logs`, the JSON's
   `logs`; none in a planted or kept stand, and on cleared ground only
   those its own trees drop): each with the species it
@@ -438,6 +442,27 @@ it, calling it as you would, through `plantgen::api` alone.
   `plantc logs --render logs.png` draws the five classes side by side.
   `plantc fill ... --render` draws the logs and the floor; `--cut 2.5`
   leaves out everything above 2.5 m to show it.
+- **Snags**, the standing dead trees, stand among a natural stand's
+  trees (`TilePlan::snags`, the JSON's `snags`, left out when there are
+  none; none in a planted or kept stand, and on cleared ground only
+  those of its own trees): each with the species it was, its foot on
+  the floor (as an instance's position) and its shape (`snags::Shape`:
+  height, breast-height width, the width where its top broke off or 0
+  for a top it keeps, decay class 1-5 as the US forest inventory grades
+  them, seed). How many, how thick, how tall and how rotted follow the
+  age of the stand, as the same Douglas-fir plots counted them (Spies,
+  Franklin and Thomas 1988: about 170 a hectare in young stands, mostly
+  thin, and 60 in old growth, half of them 50 cm or more), with the
+  bark and limbs each class keeps from Domke, Woodall and Smith 2011.
+  `stats.snags_per_ha` counts them. Draw each with your own meshes, or
+  with `snags::draw(&snag.shape, appearance, level)`, a mesh in the
+  snag's own frame (up +y, its foot at y = 0): bark sloughing from the
+  top down, all its limbs in class 1 and fewer, shorter stubs after,
+  weathered grey wood, then red-brown rotten wood with moss climbing
+  from the floor, a broken top splintered while the wood is hard and
+  crumbled once it is soft. `plantc snags --render snags.png` draws the
+  five classes side by side, and `plantc fill ... --render` draws them
+  in the tile.
 
 From the command line, `plantc fill` does the same (`--ages` chooses the
 stand ages, `--herbs no` leaves herbs to the ground cover, `--edges no`
@@ -558,7 +583,12 @@ prototype file) imports with every triangle the file holds and every
 card texture. Blender 5.2 imports `--compress meshopt` files whole as
 well; Blender 4.5 refuses them ("Extension EXT_meshopt_compression is
 not available on this addon version"), and after `plantc unpack` imports
-them whole.
+them whole. Since 2026-11-08 CI checks this on every change to the code
+that writes these files, and on `main`: the `blender` job imports a fixed
+set of every kind of export (tiers, variants, a tile's file, cells and
+prototypes, unpacked meshopt, moss) in Blender 4.5 LTS and fails on any
+lost triangle, image or vertex colour (`tools/blender/README.md`, which
+also says how to run it yourself).
 
 Standing dead trees (snags) are not placed yet; fallen logs are
 (`TilePlan::logs`, above). A climber member (layer `climber`) has one
@@ -652,11 +682,40 @@ The first writes 50 yarrows into `variants/achillea-millefolium/`: for
 each, `STEM-lod0.glb` to `STEM-lod3.glb` and `STEM.json`, where STEM is
 `<species>-<environment>-<seed>-<age>y`, and `variants.json` listing them.
 `plantc help` lists every flag: `--first-seed`, `--env`, `--age`, `--day`,
-`--quality`, `--threads`, and `plantc export`'s compression, attribute,
+`--quality`, `--threads`, `--memory-gib`, and `plantc export`'s compression, attribute,
 budget and `--levels` flags (variants draw tiers unless `--levels package`).
 
 Measured on a 4-core cloud machine (2026-11-01): 6 yarrows at 6 years in
 7 s; 4 Douglas-firs at 60 years in 82 s.
+
+### Memory
+
+A large old tree takes a gibibyte or more while it is drawn, so a set
+grows no more plants at once than fit in memory as well as no more than
+`--threads`. On Linux the first plant grows alone; its rise in the
+process's peak memory, with a margin of half again for larger seeds
+(`plantgen::memory::MARGIN`), sets how many grow at once after it within
+`--memory-gib` (`Variants::memory`), or unless given within the memory
+free when the set began: the system's available memory or, under a
+cgroup limit (a CI runner's slice, a container), what that limit leaves.
+Elsewhere as many grow at once as `--threads`. The files do not depend
+on how many grew at once.
+
+Measured on a 4-core, 15 GiB cloud machine (2026-11-08), peak resident
+memory before and after plantgen#395: one 60-year Douglas-fir 2.85 to
+2.47 GiB (heap 2.61 to 1.63 GiB); ten 250-year bigleaf maples on 4
+threads 7.4 to 4.1 GiB; ten 60-year Douglas-firs on 4 threads 10.3 GiB
+to 6.2 GiB. Each plant's own peak fell because `gltf::check` reads one
+accessor at a time and borrows the document instead of copying it, and
+the budget search keeps only the drawings a level is drawn with.
+
+Since revision 223 an export drawn to a budget (tiers, `--triangles`,
+`--max-mib`) searches its levels' detail with leaf clusters' cover
+counted on a coarse grid and draws the levels it picks on the full one:
+one 60-year Douglas-fir took 112 s where it took 138 s (4-core cloud
+machine, 2026-11-09), its high tier 1.3% and mid tier 4% fewer
+triangles. A bigleaf maple gains little (104 s from 111 s): most of its
+time is growth.
 
 The files are glTF 2.0 that need no PlantGen code. Uncompressed and
 quantized files open in Blender, Godot, Unity (glTFast) and three.js;
