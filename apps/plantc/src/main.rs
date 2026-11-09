@@ -126,6 +126,7 @@ fn run() -> Result<(), Failure> {
         "field" => field_command(&args),
         "moss" => moss_command(&args),
         "logs" => logs_command(&args),
+        "lichen" => lichen_command(&args),
         "render" => render_command(&args),
         "sheet" => sheet_command(&args),
         "tiers" => tiers_command(&args),
@@ -290,6 +291,13 @@ Usage:
       barked, sagging; traces of bark on faded wood; bare, brown and
       oval, under moss; red-brown, flattened, sunk and half buried.
       Douglas-fir, 6 m and 0.6 m wide unless given, at level 0.
+  plantc lichen --render FILE.png [--kind NAME] [--side M] [--view VIEW]
+                [--size PIXELS] [--seed N]
+      Draw a square patch of a lichen's mat on bare ground
+      (plantgen::lichens): its podetia, as many to a square metre as a
+      mat holds, each forking once a year to its height, the dying base
+      darkened. Lists the library's lichens. The reindeer lichens
+      (Cladonia subg. Cladina) and a 0.2 m patch unless given.
   plantc moss <site.json> [--years N] [--seed N] [--latitude DEG]
               [--box X0,Y0,Z0,X1,Y1,Z1] [--out COVER.json] [--cover COVER.json]
               [--render FILE.png [--view VIEW] [--size PIXELS] [--from south|north]]
@@ -3392,6 +3400,90 @@ fn logs_command(args: &[String]) -> Result<(), Failure> {
     out!(
         "wrote {png}: five {species} logs, decay classes I-V, {} triangles at level {level}",
         scene.triangle_count()
+    );
+    Ok(())
+}
+
+fn lichen_command(args: &[String]) -> Result<(), Failure> {
+    let options = Options::parse(args, &["render", "kind", "side", "view", "size", "seed"])?;
+    let kinds = plantgen::lichens::kinds(library())?;
+    for kind in &kinds {
+        out!(
+            "{}: {} podetia {:.0} mm tall, {:.1} mm thick, {} branching into {}, {:.1} mm a year ({:.0} years to its height)",
+            kind.name,
+            kind.thallus_form,
+            1000.0 * kind.height_m,
+            1000.0 * kind.width_m,
+            kind.branching,
+            kind.forks,
+            1000.0 * kind.growth_m_per_year,
+            kind.years()
+        );
+    }
+    let Some(png) = options.flags.get("render") else {
+        return Ok(());
+    };
+    let name = options
+        .flags
+        .get("kind")
+        .map_or("Cladonia subg. Cladina", String::as_str);
+    let kind = kinds
+        .iter()
+        .find(|kind| kind.name == name)
+        .ok_or_else(|| format!("no lichen `{name}` in the library"))?;
+    let side: f64 = options.number("side")?.unwrap_or(0.2);
+    let seed: u64 = options.number("seed")?.unwrap_or(1);
+    let pixels: usize = options.number("size")?.unwrap_or(1600);
+    let mat = plantgen::lichens::draw_mat(
+        kind,
+        &plantgen::lichens::MatOptions {
+            side_m: side,
+            seed,
+            ..plantgen::lichens::MatOptions::default()
+        },
+    );
+    let half = 0.5 * side + 0.02;
+    let mut ground = mesh::Mesh::default();
+    #[allow(clippy::cast_possible_truncation)]
+    let soil = [122_u8, 104, 82].map(|byte| plantgen::texture::srgb_to_linear(byte) as f32);
+    for (x, z) in [(-half, -half), (half, -half), (half, half), (-half, half)] {
+        ground.push(mesh::Vertex::plain(Vec3::new(x, 0.0, z), Vec3::Y, soil));
+    }
+    ground.indices.extend([0, 2, 1, 0, 3, 2]);
+    let view = match options.flags.get("view") {
+        Some(name) => View::from_name(name).ok_or_else(|| format!("unknown view `{name}`"))?,
+        None => View::ThreeQuarter,
+    };
+    let image = preview::render_on_site(
+        &PlantMesh::default(),
+        &[
+            (&ground, raster::Material::Opaque),
+            (&mat, raster::Material::Opaque),
+        ],
+        &Templates::for_plant(&[], &[]),
+        &PreviewOptions {
+            width: pixels,
+            height: pixels * 3 / 4,
+            view,
+            supersample: 2,
+            figure: false,
+            frame_height: None,
+            frame_reach: None,
+            focus: Some((Vec3::new(0.0, 0.3 * kind.height_m, 0.0), 2.0 * half)),
+            fit_plant: false,
+        },
+    );
+    let bytes = raster::encode_png(
+        image.width,
+        image.height,
+        &image.to_srgb8(Some(preview::SKY)),
+    )
+    .map_err(|error| format!("cannot encode PNG: {error}"))?;
+    fs::write(png, bytes).map_err(|error| format!("cannot write {png}: {error}"))?;
+    out!(
+        "wrote {png}: a {side} m patch of {}, {} triangles",
+        kind.name,
+        mat.triangle_count()
     );
     Ok(())
 }
@@ -6871,6 +6963,19 @@ fn fill_command(args: &[String]) -> Result<(), Failure> {
             100.0 * thatch
         );
     }
+    #[allow(clippy::cast_precision_loss)]
+    let lichen = plan
+        .cover
+        .iter()
+        .map(|cover| f64::from(cover.floor.lichen))
+        .sum::<f64>()
+        / plan.cover.len().max(1) as f64;
+    if lichen > 0.0 {
+        out!(
+            "  Cladonia lichen between the grasses {:.0}% of the ground",
+            100.0 * lichen
+        );
+    }
     // The floor's moss genera, each its share of all the tile's moss.
     let mut genera = vec![0.0_f64; plan.floor_mosses.len()];
     for cover in &plan.cover {
@@ -7333,6 +7438,12 @@ fn floor_mesh(plan: &api::TilePlan, field: &FieldSite, offset: Vec3) -> mesh::Me
     // Dead grass between a fire-kept prairie's grasses, as its ground
     // look draws it from afar.
     let thatch = plantgen::ground::plant_recipe("thatch").map_or(litter, |recipe| recipe.mean);
+    // Cladonia mats between a prairie's grasses, as they look from afar.
+    let lichen = plantgen::lichens::kinds(Library::builtin())
+        .unwrap_or_default()
+        .iter()
+        .find(|kind| kind.genus == "Cladonia" && kind.branching == "rich")
+        .map_or([0.55, 0.58, 0.6], plantgen::lichens::LichenKind::far_colour);
     // Each floor moss genus's colour from afar, as its colonies draw.
     let kinds = plantgen::mosses::kinds(Library::builtin()).unwrap_or_default();
     let genus_colour: Vec<[f32; 3]> = plan
@@ -7390,12 +7501,17 @@ fn floor_mesh(plan: &api::TilePlan, field: &FieldSite, offset: Vec3) -> mesh::Me
                 .get(cell)
                 .map(|cover| cover.floor)
                 .unwrap_or_default();
-            let (m, l) = (f64::from(floor.moss), f64::from(floor.litter));
+            let (m, l) = (
+                f64::from(floor.moss) + f64::from(floor.lichen),
+                f64::from(floor.litter),
+            );
             let surface = (1.0 - f64::from(floor.wood)).max(1e-6);
             // Moss where the patch noise falls under its share of the
             // floor logs leave, litter over the rest as far as it reaches.
             let n = noise(east, north, 0x0f10);
-            let colour = if n < m / surface {
+            let colour = if n < f64::from(floor.lichen) / surface {
+                lichen
+            } else if n < m / surface {
                 // Which genus: patches of each by its share.
                 let mut pick = noise(east, north, 0x0f20);
                 let mut colour = moss;
