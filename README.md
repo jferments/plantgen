@@ -93,7 +93,9 @@ with every flower, fruit and spine drawn as its own mesh (`--parts on`).*
   sunflower spiral opening from the rim, rays or straps, and seed with its
   pappus; grass and sedge spikelets, with their glumes, florets and bent
   awns; leaves divided into leaflets, pinnate or palmate, once or twice;
-  and leaf margins grown with the blade, each tooth fed by a vein.
+  leaf margins grown with the blade, each tooth fed by a vein; and a
+  palmately lobed blade's base drawn as its flora states it (cuneate,
+  truncate, rounded), heart-shaped round its stalk where none is stated.
   `plantc organs` counts a plant's organs by what they are, down to each
   head's florets, without storing them.
 - **Growth.** Plants are grown, not modelled. Light and crowding shape the
