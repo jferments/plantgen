@@ -186,7 +186,9 @@ and each spikelet's glumes (`plantc organs`), its card textures and the
 ground's looks, building packages, exporting a plant as glTF, listing the
 sources a species' values cite (`plantc sources cite ID` finds every value
 that names one), and a species' characters and what each family has
-stated so far (`plantc traits`, `plantc audit`).
+stated so far (`plantc traits`, `plantc audit`), and where values set by
+hand stand over the library's rules (`plantc hand`; `--rules-only` draws a
+plant with the rules in their place).
 `--library DIR` reads species and programs from a folder on top of the
 built-in ones, so you can write your own.
 

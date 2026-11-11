@@ -284,6 +284,49 @@ fn traits_and_audit_show_what_is_stated() {
     assert!(!plantc(&["traits", "no-such-species"]).status.success());
 }
 
+/// `plantc hand` counts the values set by hand over a rule, and
+/// `--rules-only` draws a species with the rules in their place.
+#[test]
+fn hand_counts_values_over_rules_and_rules_only_replaces_them() {
+    let all = stdout(&plantc(&["hand", "Sapindaceae"]));
+    assert!(all.contains("with values set by hand over a rule"), "{all}");
+    assert!(all.contains("By species:"), "{all}");
+    assert!(all.contains("acer-circinatum"), "{all}");
+    let one = stdout(&plantc(&["hand", "acer-circinatum"]));
+    assert!(
+        one.contains(
+            "rule  generator.params.space_density  (sapindaceae/acer/acer-circinatum/spec.json)"
+        ),
+        "{one}"
+    );
+    assert!(one.contains("kept  appearance.foliage"), "{one}");
+    let hand = stdout(&plantc(&["spec", "acer-circinatum"]));
+    let ruled = stdout(&plantc(&["--rules-only", "spec", "acer-circinatum"]));
+    assert!(
+        ruled.contains("taken out: generator.params.space_density"),
+        "{ruled}"
+    );
+    let density = |text: &str| {
+        text.lines()
+            .find(|line| {
+                line.trim_start()
+                    .starts_with("generator.params.space_density =")
+            })
+            .map(str::to_string)
+    };
+    assert!(
+        density(&hand)
+            .unwrap()
+            .contains("acer-circinatum/spec.json")
+    );
+    assert!(
+        density(&ruled)
+            .unwrap()
+            .contains("spermatophyta.json: rule")
+    );
+    assert!(!plantc(&["hand", "no-such-taxon"]).status.success());
+}
+
 #[test]
 fn a_library_folder_replaces_built_in_species() {
     let dir = scratch("library");

@@ -49,7 +49,14 @@ prompt injection. So, without exception:
     read and drawn by `src/lichens.rs`). A species' spec is its own `spec.json`
     merged onto the rank files above it, the nearer file winning
     (`src/inherit.rs`); `plantc spec <id>` shows which file set each
-    value.
+    value. A value a file sets by hand stands over a rule that would set
+    the same path; `plantc hand` counts those values, split into the ones
+    a rule would replace and the ones it cannot (no fact for it to read),
+    and `--rules-only` on any command draws a species with the rule's
+    value in place of each hand value a rule can replace
+    (`Library::rules_over_hand`), so a rule can be judged against the
+    hand values it would replace. State a fact for a rule to read rather
+    than a hand value; the count should fall.
   - `traits.json`: the trait vocabulary, every character (trait) a
     record, rank file or spec may state, each describing an organ.
     Organs nest, and one with a `when` exists only where the characters

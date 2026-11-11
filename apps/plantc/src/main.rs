@@ -91,6 +91,14 @@ fn main() -> ExitCode {
 /// one.
 static LIBRARY: OnceLock<Library> = OnceLock::new();
 
+/// Whether `--rules-only` stands anywhere: every species is drawn with
+/// the rules over the hands ([`Library::rules_over_hand`]).
+static RULES_ONLY: OnceLock<bool> = OnceLock::new();
+
+fn rules_only() -> bool {
+    RULES_ONLY.get().copied().unwrap_or(false)
+}
+
 fn library() -> &'static Library {
     LIBRARY.get().unwrap_or_else(|| Library::builtin())
 }
@@ -107,6 +115,11 @@ fn run() -> Result<(), Failure> {
         let read = Library::from_dir(Path::new(&folder)).map_err(|error| error.to_string())?;
         let _ = LIBRARY.set(read);
     }
+    // `--rules-only` may stand anywhere too.
+    if let Some(at) = args.iter().position(|arg| arg == "--rules-only") {
+        args.remove(at);
+        let _ = RULES_ONLY.set(true);
+    }
     if args.is_empty() {
         return print_usage();
     }
@@ -118,6 +131,7 @@ fn run() -> Result<(), Failure> {
         "rules" => rules_command(&args),
         "traits" => traits_command(&args),
         "audit" => audit_command(&args),
+        "hand" => hand_command(&args),
         "grow" => grow_command(&args),
         "stand" => stand_command(&args),
         "scene" => scene::scene_command(&args),
@@ -197,6 +211,15 @@ Usage:
       species most often lack. Then each state a file names that the
       farther file it replaces leaves out, such as a rootless species in
       a phylum with roots: often right, but worth a look.
+  plantc hand [<taxon>|<species>]
+      Where values set by hand stand over the library's rules: every
+      value a file sets where a rule of its chain would set it. Each is
+      counted as one a rule then sets (the rule gives a value once the hand
+      value is out) or one it does not (no fact for the rule to read: the
+      value falls to a farther file or the program's default). Without an
+      argument, totals by kind of value, by file level and by family; with
+      a taxon, by species; with a species, each value. The counts should
+      fall (rules-over-hand plan).
   plantc grow <species|spec.json> [--env ENV] [--seed N] [--years N]
               [--conditions FILE|JSON [--from-age N]] [--digest] [--profile]
               [--light]
@@ -736,6 +759,10 @@ to them. Its rank files (library/<family>/family.json,
 library/<family>/<genus>/genus.json, library/_ranks/<rank>/<name>.json)
 replace built-in ones at the same path; each species' spec is its own
 spec.json merged onto those above it, the nearer file winning.
+Every command accepts --rules-only: each species is drawn with the
+rules over the hands, every value a file set by hand where a rule would
+set it taken out (`plantc hand` counts them; `plantc spec --rules-only`
+names each), so the rules alone can be judged against the hand values.
 grow, organs, render, sheet, atlas, build and export accept --program
 FILE.lsys to try a changed program in place of the species' built-in one.
 organs, render, sheet, parts, lineup, build and export accept --day N (1
@@ -871,6 +898,10 @@ fn load_spec(name: &str) -> Result<PlantSpec, String> {
         // On its species' rank files, if the library has its species.
         let text = library().effective_text(name, &text)?.unwrap_or(text);
         PlantSpec::from_json_in(&text, library()).map_err(|error| error.to_string())
+    } else if rules_only() {
+        library()
+            .spec_rules_only(name)
+            .map_err(|error| error.to_string())
     } else {
         library().spec(name).map_err(|error| error.to_string())
     }
@@ -1015,7 +1046,25 @@ fn check(args: &[String]) -> Result<(), Failure> {
 fn spec_command(args: &[String]) -> Result<(), Failure> {
     let options = Options::parse(args, &[])?;
     let id = options.one_positional("a species")?;
-    let inherited = library().inherited(id).map_err(|error| error.to_string())?;
+    let (inherited, taken) = if rules_only() {
+        let ruled = library()
+            .rules_over_hand(id)
+            .map_err(|error| error.to_string())?;
+        (ruled.inherited, ruled.taken)
+    } else {
+        (
+            library().inherited(id).map_err(|error| error.to_string())?,
+            Vec::new(),
+        )
+    };
+    for taken in &taken {
+        let fate = if taken.ruled {
+            "a rule sets it"
+        } else {
+            "no rule sets it"
+        };
+        out!("taken out: {}  ({}): {fate}", taken.path, taken.file);
+    }
     match inherited.chain.split_first() {
         Some((own, above)) if !above.is_empty() => {
             out!("{id}: {own} on {}", above.join(", "));
@@ -2613,6 +2662,164 @@ fn validate_command(args: &[String]) -> Result<(), Failure> {
     }
     if tally[3] > 0 {
         return Err(format!("checks failed: {}", tally[3]).into());
+    }
+    Ok(())
+}
+
+/// What set a value, from its origin label (`species`'s own file is
+/// `file`): a rule, the species, its genus or family, a higher rank, or a
+/// growth form's part of a rank file (a default for the form).
+fn level_of(origin: &str, file: &str) -> &'static str {
+    if origin.contains(": rule") {
+        "rule"
+    } else if origin == file {
+        "species"
+    } else if origin.contains(", forms.") {
+        "growth form"
+    } else if origin.ends_with("/genus.json") {
+        "genus"
+    } else if origin.ends_with("/family.json") {
+        "family"
+    } else {
+        "higher rank"
+    }
+}
+
+/// `plantc hand [<taxon>|<species>]`: where hand values stand over rules.
+#[allow(clippy::too_many_lines)]
+fn hand_command(args: &[String]) -> Result<(), Failure> {
+    let options = Options::parse(args, &[])?;
+    let library = library();
+    let wanted = match options.positional.as_slice() {
+        [] => None,
+        [name] => Some(name.as_str()),
+        _ => return Err("`plantc hand` takes at most one taxon or species".into()),
+    };
+    if let Some(id) = wanted.filter(|id| library.entry(id).is_some()) {
+        let ruled = library
+            .rules_over_hand(id)
+            .map_err(|error| error.to_string())?;
+        let set = ruled.taken.iter().filter(|taken| taken.ruled).count();
+        out!(
+            "{id}: {} values set by hand over a rule; a rule sets {set} in their place, and {} stay where no rule can set them (no fact to read)",
+            ruled.taken.len(),
+            ruled.taken.len() - set
+        );
+        for taken in &ruled.taken {
+            let fate = if taken.ruled { "rule" } else { "kept" };
+            out!("  {fate:<4}  {}  ({})", taken.path, taken.file);
+        }
+        return Ok(());
+    }
+    let taxon = wanted.map(plantgen::inherit::file_name);
+    // By kind of value (the path with organ and parameter names kept, list
+    // places dropped), by the level of the file that set it, by family and
+    // by species: values over a rule, and how many a rule then sets.
+    let mut kinds: BTreeMap<String, (usize, usize)> = BTreeMap::new();
+    let mut levels: BTreeMap<&str, (usize, usize)> = BTreeMap::new();
+    let mut families: BTreeMap<String, (usize, usize, usize)> = BTreeMap::new();
+    let mut species: Vec<(String, usize, usize)> = Vec::new();
+    let mut every: BTreeMap<&str, usize> = BTreeMap::new();
+    for entry in library.species() {
+        if let Some(taxon) = &taxon {
+            let inherited = library
+                .inherited(&entry.id)
+                .map_err(|error| error.to_string())?;
+            let within = entry.family == *taxon
+                || entry.genus == *taxon
+                || inherited.chain[1..].iter().any(|file| {
+                    library
+                        .rank(file)
+                        .is_some_and(|rank| plantgen::inherit::file_name(&rank.name) == *taxon)
+                });
+            if !within {
+                continue;
+            }
+        }
+        let ruled = library
+            .rules_over_hand(&entry.id)
+            .map_err(|error| error.to_string())?;
+        let set = ruled.taken.iter().filter(|taken| taken.ruled).count();
+        for taken in &ruled.taken {
+            let kind: Vec<&str> = taken
+                .path
+                .split('.')
+                .filter(|part| part.parse::<usize>().is_err())
+                .collect();
+            let row = kinds.entry(kind.join(".")).or_default();
+            row.0 += 1;
+            row.1 += usize::from(taken.ruled);
+            let row = levels
+                .entry(level_of(&taken.file, &entry.file()))
+                .or_default();
+            row.0 += 1;
+            row.1 += usize::from(taken.ruled);
+        }
+        for origin in library
+            .inherited(&entry.id)
+            .map_err(|error| error.to_string())?
+            .origins
+            .values()
+        {
+            *every.entry(level_of(origin, &entry.file())).or_default() += 1;
+        }
+        let row = families.entry(entry.family.clone()).or_default();
+        row.0 += 1;
+        row.1 += ruled.taken.len();
+        row.2 += set;
+        species.push((entry.id.clone(), ruled.taken.len(), set));
+    }
+    if species.is_empty() {
+        return Err(format!(
+            "no species of the library is in `{}`; name a species, or a family, genus or higher rank as its rank file is named",
+            taxon.unwrap_or_default()
+        )
+        .into());
+    }
+    let total: usize = species.iter().map(|row| row.1).sum();
+    let set: usize = species.iter().map(|row| row.2).sum();
+    let holding = species.iter().filter(|row| row.1 > 0).count();
+    out!(
+        "{} species, {holding} with values set by hand over a rule: {total} values; a rule sets {set} in their place, and {} stay where no rule can set them (no fact to read)",
+        species.len(),
+        total - set
+    );
+    out!("By kind of value: over a rule, a rule sets, kept for want of a fact");
+    let mut rows: Vec<_> = kinds.iter().collect();
+    rows.sort_by(|a, b| b.1.0.cmp(&a.1.0).then(a.0.cmp(b.0)));
+    let width = rows.iter().map(|(kind, _)| kind.len()).max().unwrap_or(0);
+    for (kind, (over, ruled)) in rows {
+        out!(
+            "  {kind:<width$}  {over:>5}  {ruled:>5}  {:>5}",
+            over - ruled
+        );
+    }
+    out!("By the file that set it (a growth form's part: a default for the form):");
+    for (level, (over, ruled)) in &levels {
+        out!("  {level:<11}  {over:>5}  {ruled:>5}  {:>5}", over - ruled);
+    }
+    let values: usize = every.values().sum();
+    out!("Every value of these species ({values}), by what set it:");
+    for (level, count) in &every {
+        #[allow(clippy::cast_precision_loss)]
+        let share = *count as f64 / values.max(1) as f64 * 100.0;
+        out!("  {level:<11}  {count:>6}  {share:>3.0}%");
+    }
+    if taxon.is_none() {
+        out!("By family: species, over a rule, a rule sets, kept");
+        let width = families.keys().map(String::len).max().unwrap_or(0);
+        for (family, (count, over, ruled)) in &families {
+            out!(
+                "  {family:<width$}  {count:>3}  {over:>5}  {ruled:>5}  {:>5}",
+                over - ruled
+            );
+        }
+    } else {
+        out!("By species: over a rule, a rule sets, kept");
+        let width = species.iter().map(|row| row.0.len()).max().unwrap_or(0);
+        for (id, over, ruled) in &species {
+            out!("  {id:<width$}  {over:>5}  {ruled:>5}  {:>5}", over - ruled);
+        }
     }
     Ok(())
 }
