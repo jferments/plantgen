@@ -25,6 +25,7 @@ use std::process::ExitCode;
 
 use plantgen::library::Library;
 use plantgen::quality;
+use plantgen::spec::Environment;
 use plantlab_scene::{Look, Shot, View};
 use render::Job;
 use sha2::{Digest, Sha256};
@@ -65,19 +66,25 @@ usage:
       size (default 1400x900). --capture saves a picture of the window
       once the plant stands, or after SECONDS with --capture-after, then
       closes it.
-  plantlab thumbs SPECIES... --out DIR [--size PX] [OPTIONS]
+  plantlab thumbs SPECIES... --out DIR [--size PX] [--height PX] [--clear]
+                 [OPTIONS]
       A thumbnail of each species (a library id, or `all`): DIR/ID.png and
-      DIR/ID.json, what the picture shows.
+      DIR/ID.json, what the picture shows. It is square unless --height
+      sets its height (--size is then its width). --clear draws the plant
+      alone on a transparent background, without its ground and scale: a
+      cut-out for a web page or a sprite sheet.
   plantlab review SPECIES... --out DIR [OPTIONS]
       A review sheet of each species: its ages at one scale, the mature
       plant from four sides and close up, and its year when it has
       seasons: DIR/ID-review.png and DIR/ID-review.json.
   plantlab batch JOBS.jsonl --out DIR [--gpu I]
       Run many: one JSON object a line, {\"species\": ID, \"kind\": \"thumb\" or
-      \"review\"} with any of size, day, age, view, quality, look, focus
-      (\"X,Y,Z\") and span. A
-      picture whose sidecar shows the same inputs is skipped, so a stopped
-      batch resumes where it stopped.
+      \"review\"} with any of size, height, day, age, view, quality, look,
+      env, seed, lod, focus (\"X,Y,Z\" or [X, Y, Z, SPAN]), span and scale
+      (on or off), \"background\": \"clear\" for a cut-out, and \"name\",
+      the files' stem (default the species, so name each picture when a
+      species has several). A picture whose sidecar shows the same inputs
+      is skipped, so a stopped batch resumes where it stopped.
   plantlab solari SPECIES --out DIR [--size PX] [--mode realtime|pathtrace]
                   [--frames N] [--cut-cards N] [OPTIONS]
       A spike: one plant lit by Bevy's experimental ray tracing (Solari),
@@ -104,6 +111,8 @@ options:
   --env typical|open|edge|interior|suppressed
                        the site it grows on (default: its typical site)
   --seed N             the variant's seed (default: the spec's first)
+  --lod 0-3            the level of detail, 0 the nearest
+  --scale on|off       the 1.8 m figure or the rod beside it (default on)
   --look review|photo  review (default) is fixed so species compare fairly;
                        photo adds soft shadows, sky light, ambient occlusion,
                        a tone map and supersampling
@@ -157,7 +166,9 @@ struct Request {
     species: Vec<String>,
     out: PathBuf,
     size: u32,
+    height: Option<u32>,
     shot: Shot,
+    clear: bool,
     gpu: Option<usize>,
     force: bool,
 }
@@ -166,7 +177,9 @@ fn parse(args: &[String]) -> Result<Request, String> {
     let mut species = Vec::new();
     let mut out = None;
     let mut size = 512_u32;
+    let mut height = None;
     let mut shot = Shot::thumbnail("");
+    let mut clear = false;
     let mut gpu = None;
     let mut force = false;
     let mut rest = args.iter();
@@ -179,6 +192,8 @@ fn parse(args: &[String]) -> Result<Request, String> {
         match arg.as_str() {
             "--out" => out = Some(PathBuf::from(value("--out")?)),
             "--size" => size = parse_size(&value("--size")?)?,
+            "--height" => height = Some(parse_size(&value("--height")?)?),
+            "--clear" => clear = true,
             "--gpu" => {
                 gpu = Some(
                     value("--gpu")?
@@ -188,7 +203,8 @@ fn parse(args: &[String]) -> Result<Request, String> {
             }
             "--force" => force = true,
             flag @ ("--day" | "--age" | "--view" | "--quality" | "--look" | "--cut-cards"
-            | "--focus" | "--span" | "--parts" | "--env" | "--seed") => {
+            | "--focus" | "--span" | "--parts" | "--env" | "--seed" | "--lod"
+            | "--scale") => {
                 apply(&mut shot, flag.trim_start_matches("--"), &value(flag)?)?;
             }
             flag if flag.starts_with("--") => return Err(format!("unknown flag `{flag}`")),
@@ -210,7 +226,9 @@ fn parse(args: &[String]) -> Result<Request, String> {
         species,
         out,
         size,
+        height,
         shot,
+        clear,
         gpu,
         force,
     })
@@ -222,6 +240,10 @@ fn parse_size(text: &str) -> Result<u32, String> {
         .filter(|px| (64..=4096).contains(px))
         .ok_or_else(|| "the size must be 64 to 4096 pixels".to_string())
 }
+
+/// Metres a close-up shows from the bottom of the picture to the top, as
+/// `plantc render --focus` frames it.
+const FOCUS_SPAN: f64 = 0.5;
 
 /// Set one of a shot's options from its text.
 fn apply(shot: &mut Shot, name: &str, value: &str) -> Result<(), String> {
@@ -266,14 +288,12 @@ fn apply(shot: &mut Shot, name: &str, value: &str) -> Result<(), String> {
         "env" => {
             shot.environment = match value {
                 "typical" => None,
-                other => Some(
-                    plantgen::spec::Environment::from_name(other).ok_or_else(|| {
-                        format!(
-                            "unknown site `{other}`; use typical, open, edge, interior or \
+                other => Some(Environment::from_name(other).ok_or_else(|| {
+                    format!(
+                        "unknown site `{other}`; use typical, open, edge, interior or \
                              suppressed"
-                        )
-                    })?,
-                ),
+                    )
+                })?),
             };
         }
         "seed" => {
@@ -290,17 +310,41 @@ fn apply(shot: &mut Shot, name: &str, value: &str) -> Result<(), String> {
             shot.look = Look::from_name(value)
                 .ok_or_else(|| format!("unknown look `{value}`; use review or photo"))?;
         }
+        other => return apply_framing(shot, other, value),
+    }
+    Ok(())
+}
+
+/// The options that frame a picture: its level of detail, a close-up and the scale figure.
+fn apply_framing(shot: &mut Shot, name: &str, value: &str) -> Result<(), String> {
+    match name {
+        "lod" => {
+            shot.level = value
+                .parse()
+                .ok()
+                .filter(|level| *level <= 3)
+                .ok_or("the level of detail must be 0 to 3")?;
+        }
         "focus" => {
-            let point: Vec<f64> = value
+            // "X,Y,Z" or, from a batch's JSON, [X, Y, Z] or [X, Y, Z, SPAN]
+            let numbers: Vec<f64> = value
+                .trim_start_matches('[')
+                .trim_end_matches(']')
                 .split(',')
                 .map(|part| part.trim().parse())
                 .collect::<Result<_, _>>()
                 .map_err(|_| "`--focus` takes X,Y,Z in metres")?;
-            let [x, y, z] = point[..] else {
-                return Err("`--focus` takes X,Y,Z in metres".into());
+            let span = shot.focus.map_or(FOCUS_SPAN, |(_, span)| span);
+            let (point, span) = match numbers[..] {
+                [x, y, z] => ([x, y, z], span),
+                [x, y, z, span] if span > 0.0 => ([x, y, z], span),
+                _ => {
+                    return Err(
+                        "`--focus` takes X,Y,Z in metres, then optionally a span above 0".into(),
+                    );
+                }
             };
-            let span = shot.focus.map_or(0.5, |(_, span)| span);
-            shot.focus = Some(([x, y, z], span));
+            shot.focus = Some((point, span));
         }
         "span" => {
             let span = value
@@ -311,40 +355,85 @@ fn apply(shot: &mut Shot, name: &str, value: &str) -> Result<(), String> {
             let point = shot.focus.map_or([0.0; 3], |(point, _)| point);
             shot.focus = Some((point, span));
         }
+        "scale" => {
+            shot.scale = match value {
+                "on" | "true" => true,
+                "off" | "false" => false,
+                _ => return Err("the scale is on or off".into()),
+            };
+        }
         other => return Err(format!("unknown option `{other}`")),
     }
     Ok(())
 }
 
+/// How one picture is framed and kept: its size in pixels, whether its
+/// background is clear, and its files' stem when not the default.
+#[derive(Debug, Clone, Default)]
+struct Picture {
+    width: u32,
+    height: Option<u32>,
+    clear: bool,
+    name: Option<String>,
+}
+
+impl Picture {
+    fn square(size: u32) -> Self {
+        Self {
+            width: size,
+            ..Self::default()
+        }
+    }
+}
+
 /// The job for one picture of one species.
-fn job(species: &str, kind: Kind, shot: &Shot, size: u32) -> Result<Job, String> {
+fn job(species: &str, kind: Kind, shot: &Shot, picture: &Picture) -> Result<Job, String> {
     let library = Library::builtin();
-    let shot = Shot {
+    let mut shot = Shot {
         species: species.to_string(),
         ..shot.clone()
     };
+    if picture.clear {
+        // Nothing beside the plant: frame it alone.
+        shot.scale = false;
+    }
     let (name, sheet) = match kind {
         Kind::Thumb => (
             species.to_string(),
-            plantlab_scene::single(shot, size, size),
+            plantlab_scene::single(shot, picture.width, picture.height.unwrap_or(picture.width)),
         ),
         Kind::Review => (
             format!("{species}-review"),
             plantlab_scene::review_sheet(&shot, library)?,
         ),
     };
-    let key = key(species, kind, &sheet, library);
-    Ok(Job { name, sheet, key })
+    let name = picture.name.clone().unwrap_or(name);
+    let key = key(species, kind, &sheet, picture.clear, library);
+    Ok(Job {
+        name,
+        sheet,
+        key,
+        clear: picture.clear,
+    })
 }
 
-/// What decides a picture: the species' spec, the generator's revision
-/// and every tile's settings, hashed.
-fn key(species: &str, kind: Kind, sheet: &plantlab_scene::Sheet, library: &Library) -> String {
+/// What decides a picture: the species' spec, the generator's revision,
+/// every tile's settings and the background, hashed.
+fn key(
+    species: &str,
+    kind: Kind,
+    sheet: &plantlab_scene::Sheet,
+    clear: bool,
+    library: &Library,
+) -> String {
     let mut hash = Sha256::new();
     hash.update(format!(
         "plantlab 1 {kind:?} {}\n",
         plantgen::GENERATOR_REVISION
     ));
+    if clear {
+        hash.update("clear background\n");
+    }
     if let Some(entry) = library.entry(species) {
         hash.update(entry.source());
     }
@@ -392,7 +481,15 @@ fn pictures(args: &[String], kind: Kind) -> Result<(), String> {
     let jobs = request
         .species
         .iter()
-        .map(|id| job(id, kind, &request.shot, request.size))
+        .map(|id| {
+            let picture = Picture {
+                width: request.size,
+                height: request.height,
+                clear: request.clear,
+                name: None,
+            };
+            job(id, kind, &request.shot, &picture)
+        })
         .collect::<Result<Vec<_>, _>>()?;
     run_jobs(jobs, request.out, request.gpu, request.force)
 }
@@ -564,7 +661,7 @@ fn read_batch(text: &str) -> Result<Vec<Job>, String> {
             .ok_or_else(|| at("expected a JSON object".into()))?;
         let mut shot = Shot::thumbnail("");
         let mut kind = Kind::Thumb;
-        let mut size = 512;
+        let mut picture = Picture::square(512);
         let mut species = None;
         for (name, value) in object {
             let text = match value {
@@ -580,12 +677,37 @@ fn read_batch(text: &str) -> Result<Vec<Job>, String> {
                         other => return Err(at(format!("unknown kind `{other}`"))),
                     };
                 }
-                "size" => size = parse_size(&text).map_err(at)?,
+                "size" => picture.width = parse_size(&text).map_err(at)?,
+                "height" => picture.height = Some(parse_size(&text).map_err(at)?),
+                "background" => {
+                    picture.clear = match text.as_str() {
+                        "clear" => true,
+                        "scene" => false,
+                        other => {
+                            return Err(at(format!(
+                                "unknown background `{other}`; use clear or scene"
+                            )));
+                        }
+                    };
+                }
+                "name" => {
+                    let fine = !text.is_empty()
+                        && text
+                            .chars()
+                            .all(|c| c.is_ascii_alphanumeric() || matches!(c, '-' | '_' | '.'))
+                        && !text.starts_with('.');
+                    if !fine {
+                        return Err(at(format!(
+                            "the name `{text}` must be letters, digits, '-', '_' or '.'"
+                        )));
+                    }
+                    picture.name = Some(text);
+                }
                 option => apply(&mut shot, option, &text).map_err(at)?,
             }
         }
         let species = species.ok_or_else(|| at("missing \"species\"".into()))?;
-        jobs.push(job(&species, kind, &shot, size).map_err(at)?);
+        jobs.push(job(&species, kind, &shot, &picture).map_err(at)?);
     }
     Ok(jobs)
 }
@@ -685,10 +807,86 @@ mod tests {
     #[test]
     fn the_same_inputs_give_the_same_key() {
         let shot = Shot::thumbnail("");
-        let a = job("acer-macrophyllum", Kind::Thumb, &shot, 512).expect("a job");
-        let b = job("acer-macrophyllum", Kind::Thumb, &shot, 512).expect("a job");
-        let c = job("acer-macrophyllum", Kind::Thumb, &shot, 256).expect("a job");
+        let a = job(
+            "acer-macrophyllum",
+            Kind::Thumb,
+            &shot,
+            &Picture::square(512),
+        )
+        .expect("a job");
+        let b = job(
+            "acer-macrophyllum",
+            Kind::Thumb,
+            &shot,
+            &Picture::square(512),
+        )
+        .expect("a job");
+        let c = job(
+            "acer-macrophyllum",
+            Kind::Thumb,
+            &shot,
+            &Picture::square(256),
+        )
+        .expect("a job");
         assert_eq!(a.key, b.key);
         assert_ne!(a.key, c.key);
+    }
+
+    #[test]
+    fn a_batch_names_its_cut_outs_and_their_conditions() {
+        let jobs = read_batch(
+            "{\"species\": \"acer-macrophyllum\", \"name\": \"maple.env-edge\", \"env\": \"edge\", \
+              \"lod\": 2, \"seed\": 3, \"size\": 320, \"height\": 400, \"background\": \"clear\"}\n\
+             {\"species\": \"acer-macrophyllum\", \"size\": 320, \"height\": 400}\n",
+        )
+        .expect("reads");
+        let [cut, scene] = jobs.as_slice() else {
+            panic!("two jobs");
+        };
+        assert_eq!(cut.name, "maple.env-edge");
+        assert!(cut.clear && !scene.clear);
+        let close =
+            read_batch("{\"species\": \"x\", \"focus\": [0, 2.5, 0.2, 0.6]}").expect("reads");
+        assert_eq!(
+            close[0].sheet.tiles[0].shot.focus,
+            Some(([0.0, 2.5, 0.2], 0.6))
+        );
+        assert_ne!(cut.key, scene.key);
+        let shot = &cut.sheet.tiles[0].shot;
+        assert_eq!(shot.environment, Some(Environment::Edge));
+        assert_eq!((shot.level, shot.seed, shot.scale), (2, Some(3), false));
+        assert_eq!((cut.sheet.width, cut.sheet.height), (320, 400));
+        assert!((shot.aspect - 0.8).abs() < 1e-12);
+        for bad in [
+            "{\"species\": \"x\", \"name\": \"../up\"}",
+            "{\"species\": \"x\", \"env\": \"moon\"}",
+            "{\"species\": \"x\", \"lod\": 4}",
+            "{\"species\": \"x\", \"background\": \"pink\"}",
+        ] {
+            assert!(read_batch(bad).is_err(), "{bad}");
+        }
+    }
+
+    #[test]
+    fn a_command_line_asks_for_a_cut_out() {
+        let parsed = parse(&args(
+            "acer-macrophyllum --out /tmp/x --size 320 --height 400 --clear --env interior --lod 1 --scale off",
+        ))
+        .expect("parses");
+        assert!(parsed.clear);
+        assert_eq!(parsed.height, Some(400));
+        assert_eq!(parsed.shot.environment, Some(Environment::Interior));
+        assert_eq!(parsed.shot.level, 1);
+        assert!(!parsed.shot.scale);
+        let close = parse(&args(
+            "carnegiea-gigantea --out /tmp/x --focus 0,2.5,0.2,0.6",
+        ))
+        .expect("parses");
+        assert_eq!(close.shot.focus, Some(([0.0, 2.5, 0.2], 0.6)));
+        let close =
+            parse(&args("carnegiea-gigantea --out /tmp/x --focus 0,2.5,0")).expect("parses");
+        assert_eq!(close.shot.focus, Some(([0.0, 2.5, 0.0], FOCUS_SPAN)));
+        assert!(parse(&args("x --out /tmp/x --focus 1,2")).is_err());
+        assert!(parse(&args("x --out /tmp/x --focus 1,2,3,0")).is_err());
     }
 }

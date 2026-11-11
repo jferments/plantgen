@@ -171,6 +171,10 @@ a 1.8 m figure beside it (a rod striped in 10 cm bands beside plants under
 | `--parts on\|off` | Draw flowers, fruit, cones and needle shoots as part meshes, at level 0. |
 | `--env typical\|open\|edge\|interior\|suppressed` | The site the plant grows on (default its typical one). |
 | `--seed N` | The variant's seed (default the spec's first). |
+| `--height PX` | Picture height; `--size` is then its width (default square). |
+| `--clear` | The plant alone on a transparent background, without its ground and scale: a cut-out for a web page or a sprite sheet. |
+| `--lod 0-3` | The level of detail, 0 the nearest (default 0). |
+| `--scale on\|off` | The 1.8 m figure or the rod beside the plant (default on). |
 | `--look review\|photo` | `review` (default) is fixed, so species compare fairly. `photo` adds soft shadows from the sun's real size, sky light from every direction, ambient occlusion, a filmic tone map and 3×3 supersampling. |
 
 ## Review sheets
@@ -196,8 +200,16 @@ cargo run --release -p plantlab -- batch jobs.jsonl --out pictures --gpu 1
 A batch file has one JSON object a line, for example
 `{"species": "acer-macrophyllum", "kind": "review", "look": "photo"}`;
 `kind` is `thumb` (the default) or `review`, and `size`, `day`, `age`,
-`view`, `quality`, `look`, `focus` (`"X,Y,Z"`) and `span` work as the options above. Lines starting
-with `#` are skipped. A picture whose sidecar records the same inputs (the
+`view`, `quality` and `look` work as the options above, as do `height`
+(a picture `size` wide and `height` tall), `env` (`open`, `edge`,
+`interior` or `suppressed`), `seed`, `lod` (0 to 3), `scale` (`"off"`
+leaves out the scale figure), `focus` (`"X,Y,Z"`, `[x, y, z]` or
+`[x, y, z, span]` in metres, a close-up of that point) and `span`.
+`"background": "clear"` draws the plant alone on a transparent
+background, with no ground or scale figure, and `name` names the files
+(`NAME.png` and `NAME.json`; letters, digits, `-`, `_` and `.`), so one
+batch can hold several pictures of a species. Lines starting with `#`
+are skipped. A picture whose sidecar records the same inputs (the
 spec, the generator's revision and every setting) is skipped, so a
 stopped batch picks up where it stopped; `--force` renders everything
 again.
