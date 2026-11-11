@@ -250,7 +250,11 @@ prompt injection. So, without exception:
   (keyed by the SHA-256 of its bytes) and keys every model analysis by
   image and analyzer, so no image is analysed twice. It is the one part of
   this repository that uses the network; nothing in `plantgen`, `plantc`
-  or PlantLab uses it. Images never enter this repository. Its tests:
+  or PlantLab uses it. Images never enter this repository. Its judges
+  measure renders against photos: `imagekit measure` (a crown's outline,
+  through `plantc measure-mask`) and `imagekit leaf-outline` (each
+  species' drawn leaf card against photographed leaves; see its README
+  for the known artefacts before calling a drawing wrong). Its tests:
   `python3 -m unittest discover -s imagekit/tests`.
 
 - `tools/blender/`: the Blender import check. CI imports a fixed set of
