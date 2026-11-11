@@ -315,13 +315,30 @@ fn horizontal(v: Vec3) -> f64 {
 /// pieces, its radius going from `r0` to `r1`, with a cone's point at `c`
 /// when `r1` is near zero.
 #[allow(clippy::too_many_arguments)]
-fn tube(
+pub(crate) fn tube(
     a: Vec3,
     b: Vec3,
     c: Vec3,
     r0: f64,
     r1: f64,
     steps: u32,
+    colour: [f32; 3],
+    born: f64,
+    mesh: &mut Mesh,
+) {
+    tube_round(a, b, c, r0, r1, steps, AROUND, colour, born, mesh);
+}
+
+/// [`tube`] with `around` sides.
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn tube_round(
+    a: Vec3,
+    b: Vec3,
+    c: Vec3,
+    r0: f64,
+    r1: f64,
+    steps: u32,
+    around: u32,
     colour: [f32; 3],
     born: f64,
     mesh: &mut Mesh,
@@ -342,14 +359,14 @@ fn tube(
         let other = along.cross(side);
         let radius = r0 + (r1 - r0) * t;
         let centre = point(t);
-        for k in 0..AROUND {
-            let theta = std::f64::consts::TAU * f64::from(k) / f64::from(AROUND);
+        for k in 0..around {
+            let theta = std::f64::consts::TAU * f64::from(k) / f64::from(around);
             let normal = side * math::cos(theta) + other * math::sin(theta);
             #[allow(clippy::cast_possible_truncation, clippy::cast_precision_loss)]
             mesh.push(Vertex {
                 position: centre + normal * radius,
                 normal,
-                uv: [k as f32 / AROUND as f32, t as f32],
+                uv: [k as f32 / around as f32, t as f32],
                 color: [colour[0], colour[1], colour[2], 1.0],
                 born,
                 shed: None,
@@ -359,10 +376,10 @@ fn tube(
         }
     }
     for step in 0..steps {
-        for k in 0..AROUND {
-            let a0 = first + step * AROUND + k;
-            let a1 = first + step * AROUND + (k + 1) % AROUND;
-            let (b0, b1) = (a0 + AROUND, a1 + AROUND);
+        for k in 0..around {
+            let a0 = first + step * around + k;
+            let a1 = first + step * around + (k + 1) % around;
+            let (b0, b1) = (a0 + around, a1 + around);
             mesh.indices.extend_from_slice(&[a0, b0, a1, a1, b0, b1]);
         }
     }

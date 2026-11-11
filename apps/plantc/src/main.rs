@@ -219,7 +219,7 @@ Usage:
                 [--focus X,Y,Z [--span METRES]] [--parts on] [--figure off]
                 [--conditions FILE|JSON [--from-age N]]
                 [--break snap|WIND|bone:N [--fallen off]] [--leaves off]
-                [--fell HEIGHT[,DEGREES] [--fallen off|notched] [--by saw|ax|beaver]] [--turn DEGREES]
+                [--fell HEIGHT[,DEGREES] [--fallen off|notched] [--by saw|ax|beaver]] [--uproot DEGREES[,TILT]] [--turn DEGREES]
       Render one variant at one age, with a 1.8 m figure for scale, or
       a rod in 10 cm stripes beside a plant lower than 1.5 m (--figure
       off draws neither, for plant-identification models). --focus
@@ -257,7 +257,11 @@ Usage:
       stem deep, a back notch a sixth higher leaving a sixth, both with
       chopped 45-degree faces, chips round the stump); --by beaver
       gnaws it down (Morgan 1868: a band two thirds of the stem high,
-      the stump and log ends left conical, chips at the foot). --turn turns the plant DEGREES about its foot
+      the stump and log ends left conical, chips at the foot). --uproot
+      DEGREES[,TILT] blows it over by the roots towards DEGREES: its root
+      plate (Mattheck and Breloer's radius for its stem, twice the stem
+      deep) tips up about its rim, the roots snapped beyond it, until the
+      stem lies on the ground (or TILT degrees), leaving a pit. --turn turns the plant DEGREES about its foot
       (anticlockwise from above) before the view, --focus points with it.
   plantc stand <stand.json|JSON>
       Grow plants together, each making room for the others' crowns, and
@@ -3046,6 +3050,7 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
             "turn",
             "fell",
             "by",
+            "uproot",
         ],
     )?;
     let day = options.day()?;
@@ -3083,6 +3088,10 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
     }
     if felling.is_some() && (parted || breaking.is_some()) {
         return Err("`--fell` draws without `--parts` or `--break`".into());
+    }
+    let uprooting = options.flags.get("uproot").cloned();
+    if uprooting.is_some() && (parted || breaking.is_some() || felling.is_some()) {
+        return Err("`--uproot` draws without `--parts`, `--break` or `--fell`".into());
     }
     let notched =
         felling.is_some() && options.flags.get("fallen").map(String::as_str) == Some("notched");
@@ -3146,6 +3155,8 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
     let focus = focus.map(|(point, span)| (spun(point, turn), span));
     let bodies = bodies_of(&spec, &growth);
     let mut bloom = None;
+    // An uprooted tree's pit, which the ground is drawn round.
+    let mut pit = None;
     let mut plant = if parted {
         // As a renderer that draws part meshes shows the plant near the
         // camera: each organ of a type with them drawn as one.
@@ -3182,6 +3193,17 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
             .map(|point| (point, (span * 4.0).max(1.0)));
         plantgen::parts::place_near(&mut plant, &looks, &parts, near);
         plant
+    } else if let Some(how) = &uprooting {
+        uprooted_mesh(
+            &spec,
+            graph,
+            how,
+            &looks,
+            &bodies,
+            &lod.for_height(graph.height),
+            level,
+            &mut pit,
+        )?
     } else if let Some(how) = &felling {
         felled_mesh(
             &spec,
@@ -3281,21 +3303,29 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
         }
         None => focus,
     };
-    let image = preview::render(
-        &plant,
-        &templates,
-        &PreviewOptions {
-            width: size,
-            height: size * 5 / 4,
-            view,
-            supersample: 2,
-            figure,
-            fit_plant: !figure,
-            frame_height: None,
-            frame_reach: None,
-            focus,
-        },
-    );
+    let preview_options = PreviewOptions {
+        width: size,
+        height: size * 5 / 4,
+        view,
+        supersample: 2,
+        figure,
+        fit_plant: !figure,
+        frame_height: None,
+        frame_reach: None,
+        focus,
+    };
+    let image = match &pit {
+        Some(up) => preview::render_over(&plant, &[], &templates, &preview_options, &|half| {
+            plantgen::uproot::floor_ring(
+                up,
+                PIT_FLOOR,
+                half / up.plate.radius.max(0.01),
+                preview::GROUND,
+                false,
+            )
+        }),
+        None => preview::render(&plant, &templates, &preview_options),
+    };
     let png = raster::encode_png(
         image.width,
         image.height,
@@ -5236,6 +5266,65 @@ fn felled_mesh(
             felled.butt.origin.x.hypot(felled.butt.origin.z)
         );
     }
+    Ok(plant)
+}
+
+/// `graph` blown over by the roots as `--uproot DEGREES[,TILT]` says: its
+/// root plate tipped up about its rim towards DEGREES (0 = +X), TILT
+/// degrees or until it lies on the ground, the pit beside it and the
+/// forest floor round the pit.
+/// The forest floor drawn round an uprooted tree's pit, in the pit's radii;
+/// the preview's ground starts there.
+const PIT_FLOOR: f64 = 1.6;
+
+#[allow(clippy::too_many_arguments)]
+fn uprooted_mesh(
+    spec: &PlantSpec,
+    graph: &PlantGraph,
+    how: &str,
+    looks: &[Look],
+    bodies: &[BodyLook],
+    lod: &mesh::LodSpec,
+    level: usize,
+    pit: &mut Option<plantgen::uproot::Uprooted>,
+) -> Result<PlantMesh, Failure> {
+    use plantgen::damage;
+    use plantgen::uproot::{self, Earth};
+    let numbers: Vec<f64> = how
+        .split(',')
+        .map(|part| part.trim().parse::<f64>())
+        .collect::<Result<_, _>>()
+        .map_err(|_| format!("`--uproot` takes DEGREES or DEGREES,TILT, found `{how}`"))?;
+    let (degrees, tilt) = match numbers[..] {
+        [degrees] => (degrees, None),
+        [degrees, tilt] => (degrees, Some(tilt.to_radians())),
+        _ => {
+            return Err(format!("`--uproot` takes DEGREES or DEGREES,TILT, found `{how}`").into());
+        }
+    };
+    let angle = degrees.to_radians();
+    let up = uproot::uproot(graph, Vec3::new(angle.cos(), 0.0, angle.sin()), tilt)
+        .ok_or_else(|| format!("{} has no stem to blow over", spec.id))?;
+    let mut plant = mesh::build(graph, looks, bodies, &spec.appearance, lod, level);
+    up.place(&mut plant);
+    let earth = Earth::LOAM;
+    damage::append(
+        &mut plant.wood,
+        &uproot::plate_mesh(&up, &earth, level <= 1),
+    );
+    damage::append(&mut plant.wood, &uproot::pit_mesh(&up, &earth));
+    damage::append(
+        &mut plant.wood,
+        &uproot::floor_ring(&up, 1.0, PIT_FLOOR, earth.floor, true),
+    );
+    out!(
+        "uprooted towards {degrees:.0} degrees: stem {:.0} cm across at breast height; root plate {:.2} m round and {:.2} m deep (Mattheck and Breloer 1994; depth twice the stem, Krisans et al. 2022), tipped {:.0} degrees about its rim",
+        up.stem * 200.0,
+        up.plate.radius,
+        up.plate.depth,
+        up.tilt.to_degrees()
+    );
+    *pit = Some(up);
     Ok(plant)
 }
 

@@ -104,6 +104,7 @@ pub mod templates;
 pub mod texture;
 pub mod tile_scene;
 pub mod traits;
+pub mod uproot;
 pub mod venation;
 
 /// Revision of the generator as a whole: the L-system engine, its tools and
